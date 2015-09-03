@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<composition>
+  <components>
+
+    <!--models-->
+    <modelcomponents>
+
+      <!--model a-->
+      <modelcomponent Caption="Model A Caption" Description="Model A Description" libpath ="ModelA.dll">
+
+        <!--arguments-->
+        <arguments>
+
+          <!--argument-->
+          <argument Id="Input File" Caption="Input File" Description="" type="Normal">
+            <dimensions>
+              <dimension Caption="FileDimension" Description="Dimension for Input File" Length ="1" DimensionType="Constant" />
+            </dimensions>
+
+            <!--input file variable-->
+            <variables>
+              <variable Id="Input File 1" Caption="Input File 1" Description="" type="QFileInfo">
+                <variabledimensions indexes ="0" />
+                <values>
+                  <value Dimensions="0">C:\File.txt</value>
+                </values>
+              </variable>
+            </variables>
+            
+          </argument>
+
+          <!--argument with 2 dimensions and 2 variables-->
+          <argument Id="3x3Argument" Caption="3x3Argument" Description="" type="Normal">
+           
+            <dimensions>
+              <dimension Caption="Dimension1" Description="Dimension1 for Input File" Length ="3" DimensionType="Constant" />
+              <dimension Caption="Dimension2" Description="Dimension2 for Input File" Length ="3" DimensionType="Constant" />
+            </dimensions>
+            
+            <variables>
+              
+              <!--variable with 2 dimensions-->
+              <variable Id="Matrix1" Caption="Matrix1" Description="" type="Double">
+                <variabledimensions indexes ="0,1" />
+                <values>
+                  <value dimensionindexes="0,0">1.2</value>
+                  <value dimensionindexes="0,1">1.2</value>
+                  <value dimensionindexes="0,2">1.2</value>
+                  <value dimensionindexes="1,0">1.2</value>
+                  <value dimensionindexes="1,1">1.2</value>
+                  <value dimensionindexes="1,2">1.2</value>
+                  <value dimensionindexes="1,0">1.2</value>
+                  <value dimensionindexes="1,1">1.2</value>
+                  <value dimensionindexes="1,2">1.2</value>
+                </values>
+              </variable>
+
+              <!--variable with 1 dimension-->
+              <variable Id="Vector1" Caption="Vector1" Description="" type="Double">
+                <variabledimensions indexes ="0" />
+                <values>
+                  <value dimensionindexes="0">1.2</value>
+                  <value dimensionindexes="1">1.2</value>
+                  <value dimensionindexes="2">1.2</value>
+                </values>
+              </variable>
+              
+            </variables>
+          </argument>
+          
+          
+        </arguments>
+      </modelcomponent>
+
+    </modelcomponents>
+
+    <!--adapters-->
+    <adaptedproducerexchangeitemfactorycomponents>
+      <adaptedproducerexchangeitemfactorycomponents id="multiplycomponent" libpath="factory1.dll"/>
+      <adaptedproducerexchangeitemfactorycomponents id="addcomponent" libpath="factory2.dll"/>
+    </adaptedproducerexchangeitemfactorycomponents>
+
+
+  </components>
+  <connections>
+    <connection sourceModelId="ModelA" targetModelId="ModelB">
+      
+      <link>
+        <consumer Id ="consumer1" Caption ="consumer1 caption" Description="consumer1 description"/>
+        <producers>
+          <adaptedproducerexchangeItem Id ="adaptedProducer1" Caption="adaptedProducer1 caption"  Description="adaptedProducer1 description" adaptedproduceritemfactoryId="multiplycomponent">
+            <adaptedproducerexchangeItem Id ="adaptedProducer2" Caption="adaptedProducer2 caption"  Description="adaptedProducer2 description" adaptedproduceritemfactoryId="addcomponent">
+              <producer Id="producer1" Caption="producer1 caption" Description="producer1 description"/>
+            </adaptedproducerexchangeItem>
+          </adaptedproducerexchangeItem>
+        </producers>
+      </link>
+      
+      <link>
+        <consumer Id = "consumer2" Caption = "consumer2 caption" Description = "consumer2 description"/>
+        <producers>
+          <producer Id = "producer2" Caption = "producer2 caption" Description = "producer2 description"/>
+          <producer Id = "producer3" Caption = "producer3 caption" Description = "producer3 description"/>
+        </producers>
+      </link>
+      
+    </connection>
+  </connections>
+</composition>
