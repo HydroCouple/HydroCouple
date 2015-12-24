@@ -19,31 +19,34 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>
 **
 ****************************************************************************/
-#ifndef IGEOMETRYEXCHANGEITEM_H
-#define IGEOMETRYEXCHANGEITEM_H
 
-#include "icomponentexchangeitem.h"
-#include "igeometrycomponentitem.h"
+#ifndef IPROPERTYCHANGED_H
+#define IPROPERTYCHANGED_H
+
+#include <QObject>
 
 namespace HydroCouple
 {
-	namespace Data
+	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
+	/*!
+	*/
+	class IPropertyChanged
 	{
-		namespace Spatial
-		{
 
-			class IGeometryExchangeItem : public virtual IComponentExchangeItem, public virtual IGeometryComponentItem
-			{
-			public:
-				~IGeometryExchangeItem(){}
+	public:
+		virtual ~IPropertyChanged(){}
 
+	signals:
+		//!called to emit signal/event when property of child class changes
+		/*!
+        \param propertyName is a string representing the name of the property
+		\param value is a QVariant representing the value of the property
+		*/
+		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
 
-			};
-		}
-	}
+	};
 }
 
-using namespace HydroCouple::Data::Spatial;
-Q_DECLARE_INTERFACE(IGeometryExchangeItem, "HydroCouple::Data::Spatial::IGeometryExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
 
-#endif // IGEOMETRYEXCHANGEITEM_H
+#endif // IPROPERTYCHANGED_H

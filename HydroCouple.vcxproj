@@ -18,82 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="hydrocouple.h" />
-    <ClInclude Include="iadaptedproducerexchangeitem.h" />
-    <ClInclude Include="iadaptedproducerexchangeitemfactory.h" />
-    <ClInclude Include="iadaptedproducerexchangeitemfactorycomponent.h" />
-    <ClInclude Include="iadaptedproducerexchangeitemfactorycomponentinfo.h" />
-    <ClInclude Include="iargument.h" />
-    <ClInclude Include="icategory.h" />
-    <ClInclude Include="icomponentexchangeitem.h" />
-    <ClInclude Include="icomponentinfo.h" />
-    <ClInclude Include="icomponentitem.h" />
-    <ClInclude Include="icomponentitemchangeevent.h" />
-    <ClInclude Include="icomponentstatuschangeevent.h" />
-    <ClInclude Include="iconsumerexchangeitem.h" />
-    <ClInclude Include="icurve.h" />
-    <ClInclude Include="idescription.h" />
-    <ClInclude Include="idimension.h" />
-    <ClInclude Include="igeometry.h" />
-    <ClInclude Include="igeometryargument.h" />
-    <ClInclude Include="igeometrycollection.h" />
-    <ClInclude Include="igeometrycomponentitem.h" />
-    <ClInclude Include="igeometryexchangeitem.h" />
-    <ClInclude Include="iidentity.h" />
-    <ClInclude Include="iline.h" />
-    <ClInclude Include="ilinearring.h" />
-    <ClInclude Include="ilinestring.h" />
-    <ClInclude Include="imodelcomponent.h" />
-    <ClInclude Include="imodelcomponentinfo.h" />
-    <ClInclude Include="imulticonsumerexchangeitem.h" />
-    <ClInclude Include="imulticurve.h" />
-    <ClInclude Include="imultilinestring.h" />
-    <ClInclude Include="imultipoint.h" />
-    <ClInclude Include="imultipolygon.h" />
-    <ClInclude Include="imultisurface.h" />
-    <ClInclude Include="ipoint.h" />
-    <ClInclude Include="ipolygon.h" />
-    <ClInclude Include="ipolyhedralsurface.h" />
-    <ClInclude Include="iproducerexchangeitem.h" />
-    <ClInclude Include="ipropertychanged.h" />
-    <ClInclude Include="iqualityvariabledefinition.h" />
-    <ClInclude Include="iquantityvariabledefinition.h" />
-    <ClInclude Include="iraster.h" />
-    <ClInclude Include="irasterargument.h" />
-    <ClInclude Include="irasterband.h" />
-    <ClInclude Include="irastercomponentitem.h" />
-    <ClInclude Include="irasterexhangeitem.h" />
-    <ClInclude Include="ispatial.h" />
-    <ClInclude Include="ispatialreferencesystem.h" />
-    <ClInclude Include="isurface.h" />
-    <ClInclude Include="itime.h" />
-    <ClInclude Include="itimeargument.h" />
-    <ClInclude Include="itimecomponentitem.h" />
-    <ClInclude Include="itimeexchangeitem.h" />
-    <ClInclude Include="itimegeometryargument.h" />
-    <ClInclude Include="itimegeometrycomponentitem.h" />
-    <ClInclude Include="itimegeometryexchangeitem.h" />
-    <ClInclude Include="itimerasterargument.h" />
-    <ClInclude Include="itimerastercomponentitem.h" />
-    <ClInclude Include="itimerasterexchangeitem.h" />
-    <ClInclude Include="itimespan.h" />
-    <ClInclude Include="itin.h" />
-    <ClInclude Include="itriangle.h" />
-    <ClInclude Include="iunit.h" />
-    <ClInclude Include="iunitdimensions.h" />
-    <ClInclude Include="ivariable.h" />
-    <ClInclude Include="ivariabledefinition.h" />
-    <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
@@ -132,19 +56,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -224,6 +148,20 @@
       <AdditionalDependencies>qtmain.lib;Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hydrocouple.h" />
+    <ClInclude Include="idescription.h" />
+    <ClInclude Include="ipropertychanged.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
