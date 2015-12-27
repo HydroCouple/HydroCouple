@@ -20,30 +20,26 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef IQUANTITY_H
+#define IQUANTITY_H
 
-#include <QObject>
+#include <ivariabledefinition.h>
+#include <iunit.h>
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
-
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
-		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
-
-	};
+		//!IQuantity specifies values as an amount of some unit, usually as a floating point number.
+		class IQuantity : public virtual IVariableDefinition
+		{
+		public:
+			//!Unit of quantity
+			virtual IUnit* unit() const = 0;
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IQuantity, "HydroCouple::Data::IQuantity/1.0")
 
-#endif // IPROPERTYCHANGED_H
+#endif // IQUANTITY_H

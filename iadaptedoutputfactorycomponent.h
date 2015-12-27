@@ -19,31 +19,29 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>
 **
 ****************************************************************************/
+#ifndef IADAPTEDOUTPUTFACTORYCOMPONENT_H
+#define IADAPTEDOUTPUTFACTORYCOMPONENT_H
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
-
-#include <QObject>
+#include "iadaptedoutputfactory.h"
+#include "iadaptedoutputfactorycomponentinfo.h"
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
+		class IAdaptedOutputFactoryComponent : public virtual IAdaptedOutputFactory
+		{
 
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
-		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
-
-	};
+		public:
+			//!Contains the metadata about the IModelComponent
+			/*!
+			This information includes the developer, component version number, contact url etc.
+			*/
+			virtual IAdaptedOutputFactoryComponentInfo* componentInfo() const = 0;
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IAdaptedOutputFactoryComponent, "HydroCouple::IAdaptedOutputFactoryComponent/1.0")
 
-#endif // IPROPERTYCHANGED_H
+#endif // IADAPTEDOUTPUTFACTORYCOMPONENT_H

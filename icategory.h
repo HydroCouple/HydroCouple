@@ -20,30 +20,39 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef ICATEGORY_H
+#define ICATEGORY_H
 
-#include <QObject>
+#include <idescription.h>
+#include <QVariant>
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
-
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
+		//! The ICategory describes one item of a possible categorization. It is used by the IQuality interface for describing qualitative data.
+		/*!
+		<para>
+		For qualitative data the <see cref="IBaseValueSet"/> exchanged between <see cref="IBaseLinkableComponent"/>s
+		contains one of the possible ICategory instances per data element.
+		</para>
+		<para>
+		A category defines one "class" within a "set of classes".
+		</para>
 		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
-
-	};
+		class ICategory : public virtual IDescription
+		{
+		public:
+			//! value for this category.
+			/*!
+			<example>
+			"blue" in a "red"/"green"/"blue" set.
+			</example>
+			*/
+			virtual QVariant value() const = 0;
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
-
-#endif // IPROPERTYCHANGED_H
+Q_DECLARE_INTERFACE(HydroCouple::Data::ICategory, "HydroCouple::Data::ICategory/1.0")
+#endif // ICATEGORY_H

@@ -20,30 +20,40 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef ICOMPONENTITEM_H
+#define ICOMPONENTITEM_H
 
-#include <QObject>
+#include "imodelcomponent.h"
+#include "idimension.h"
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	//! Data related entities
+	namespace Data
 	{
-
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
+		//!IComponentItem is a fundamental unit of data for a component.
+		/*!
+		This interface is not to be implemented directly, any class is to implement either the IInput or IOutput.
 		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
+		class IComponentItem : public virtual IIdentity
+		{
 
-	};
+		public:
+			//! Gets the owner IModelComponent of this IComponentItem. For an IOutput component item this is the component responsible for providing the content of the IOutput.
+			/*!
+			It is possible for an IComponentItem to have no owner, in this case the method will return nullptr.
+			*/
+			virtual IModelComponent* modelComponent() const = 0;
+
+			//! Gets IDimension s associated with this IComponentItem.
+			/*!
+			*/
+			virtual QList<IDimension*> dimensions() const = 0;
+
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IComponentItem, "HydroCouple::Data::IComponentItem/1.0")
 
-#endif // IPROPERTYCHANGED_H
+#endif // ICOMPONENTITEM_H

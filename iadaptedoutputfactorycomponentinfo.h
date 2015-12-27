@@ -20,30 +20,33 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef IADAPTEDOUTPUTFACTORYCOMPONENTINFO_H
+#define IADAPTEDOUTPUTFACTORYCOMPONENTINFO_H
 
-#include <QObject>
+#include "icomponentinfo.h"
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
+		class IAdaptedOutputFactoryComponent;
 
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
+		//!IAdaptedOutputFactoryComponentInfo interface class provides information about an IAdaptedOutputFactoryComponent.
+		/*!
+		IAdaptedOutputFactoryComponentInfo used to provide metadata on a producer item factory component and create instances of it.
 		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
+		class IAdaptedOutputFactoryComponentInfo : public virtual IComponentInfo
+		{
 
-	};
+		public:
+			//!New IAdaptedOutputFactoryComponent instance
+			/*!
+			*/
+			virtual IAdaptedOutputFactoryComponent* createComponentInstance() const = 0;
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IAdaptedOutputFactoryComponentInfo, "HydroCouple::IAdaptedOutputFactoryComponentInfo/1.0")
 
-#endif // IPROPERTYCHANGED_H
+#endif // IADAPTEDOUTPUTFACTORYCOMPONENTINFO_H

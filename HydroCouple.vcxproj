@@ -157,10 +157,61 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hydrocouple.h" />
+    <ClInclude Include="iadaptedoutput.h" />
+    <ClInclude Include="iadaptedoutputfactory.h" />
+    <ClInclude Include="iadaptedoutputfactorycomponent.h" />
+    <ClInclude Include="iadaptedoutputfactorycomponentinfo.h" />
+    <ClInclude Include="iargument.h" />
+    <ClInclude Include="icategory.h" />
+    <ClInclude Include="icomponentinfo.h" />
+    <CustomBuild Include="hydrocouple.h">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Command>
+    </CustomBuild>
+    <ClInclude Include="icomponentitem.h" />
+    <ClInclude Include="icomponentstatuschangeeventargs.h" />
     <ClInclude Include="idescription.h" />
+    <ClInclude Include="idimension.h" />
+    <ClInclude Include="iexchangeitem.h" />
+    <ClInclude Include="iexchangeitemchangeeventargs.h" />
+    <ClInclude Include="iidentity.h" />
+    <ClInclude Include="iinput.h" />
+    <ClInclude Include="imodelcomponent.h" />
+    <ClInclude Include="imodelcomponentinfo.h" />
+    <ClInclude Include="ioutput.h" />
     <ClInclude Include="ipropertychanged.h" />
+    <ClInclude Include="iquality.h" />
+    <ClInclude Include="iquantity.h" />
+    <ClInclude Include="iunit.h" />
+    <ClInclude Include="iunitdimensions.h" />
+    <ClInclude Include="ivariable.h" />
+    <ClInclude Include="ivariabledefinition.h" />
     <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HydroCouple.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

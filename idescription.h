@@ -30,14 +30,12 @@ namespace HydroCouple
 	//!IDescription interface class provides descriptive information on an HydroCouple entity
 	/*!
 	An entity that is describable has a caption (title or heading)
-	and a description. These are not to be used for identification (see IHIdentifier)
+	and a description. These are not to be used for identification (see IIdentifier)
 	*/
 	class IDescription : public virtual IPropertyChanged
 	{
 
 	public:
-		virtual ~IDescription(){}
-
 		//!Gets caption for the entity.
 		/*!
 		\returns string representing caption for entity

@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="HydroCouple::IDescription">
+    <Position X="26" Y="2.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAgAAIAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>idescription.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::IIdentity">
+    <Position X="17" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>iidentity.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::IComponentInfo">
+    <Position X="3" Y="6.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAUAACAAAAAAAAAgAAAAAAAAAEAMAAAAAAAIAAACAhA=</HashCode>
+      <FileName>icomponentinfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::IComponentStatusChangeEventArgs" Collapsed="true">
+    <Position X="55.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAApAAAAAAIAAQAAAAAAACA=</HashCode>
+      <FileName>icomponentstatuschangeeventargs.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::IModelComponent">
+    <Position X="17" Y="6.5" Width="5.75" />
+    <TypeIdentifier>
+      <HashCode>AAQEAIBAAAAAAARAAAEAAAAAAAAAABAAAAAAGIQEAAA=</HashCode>
+      <FileName>imodelcomponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::IModelComponentInfo">
+    <Position X="0.5" Y="10" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>imodelcomponentinfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::IPropertyChanged">
+    <Position X="25" Y="0.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>ipropertychanged.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IComponentItem">
+    <Position X="27.75" Y="6.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>icomponentitem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IDimension">
+    <Position X="47.25" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>idimension.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IExchangeItem">
+    <Position X="28.5" Y="8.5" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>iexchangeitem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IExchangeItemChangeEventArgs" Collapsed="true">
+    <Position X="57" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAACA=</HashCode>
+      <FileName>iexchangeitemchangeeventargs.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IVariableDefinition">
+    <Position X="36.5" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAQAAAAAAAAAAAAABAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>ivariabledefinition.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IInput">
+    <Position X="31.75" Y="10.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>iinput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IVariable">
+    <Position X="50.25" Y="4.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAABAAAECAAAgIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ivariable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IQuality">
+    <Position X="35.5" Y="7" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>iquality.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IQuantity">
+    <Position X="38.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>iquantity.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::ICategory">
+    <Position X="45" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>icategory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IUnitDimensions">
+    <Position X="40.75" Y="4.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>iunitdimensions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IArgument">
+    <Position X="23.5" Y="8.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAABAAAAAAgAAAQAAAAEAAEAAA=</HashCode>
+      <FileName>iargument.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IAdaptedOutput">
+    <Position X="27.25" Y="13.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAEAAACAAAAAAQAEAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>iadaptedoutput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IOutput">
+    <Position X="27" Y="10.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAAAAAAAAAAAAAIAAAAAAAAECAIAAAAAAAAACAA=</HashCode>
+      <FileName>ioutput.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IAdaptedOutputFactory">
+    <Position X="9.25" Y="6.5" Width="7" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>iadaptedoutputfactory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Data::IAdaptedOutputFactoryComponentInfo">
+    <Position X="4.5" Y="10" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>iadaptedoutputfactorycomponentinfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="HydroCouple::ComponentStatus" Collapsed="true">
+    <Position X="55.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACBAEAAAUAAAAAAAAARAIAAAAAEAAAQAUBAABAAAAAA=</HashCode>
+      <FileName>hydrocouple.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HydroCouple::Data::DimensionType" Collapsed="true">
+    <Position X="57" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>idimension.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="HydroCouple::Data::FundamentalDimension" Collapsed="true">
+    <Position X="55.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAABABACAAAAAAQAAAAAACEAQA=</HashCode>
+      <FileName>iunitdimensions.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

@@ -19,31 +19,35 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>
 **
 ****************************************************************************/
+#ifndef IEXCHANGEITEMCHANGEEVENTARGS_H
+#define IEXCHANGEITEMCHANGEEVENTARGS_H
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
-
-#include <QObject>
+#include <QString>
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
-
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
+		class IExchangeItem;
+		//!The IExchangeItemChangeEventArgs contains the information that will be passed when the IComponentItem fires the componentItemChanged signal.
+		/*!
+		 <para>
+		 Sending exchange item events is optional, so it should not be used as a mechanism to build critical functionality upon.
+		 </para>
 		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
+		class IExchangeItemChangeEventArgs
+		{
+		public:
+			//!IExchangeItem which fired the signal
+			virtual IExchangeItem* exchangeItem() const = 0;
 
-	};
+			//!Gets message associated with the event
+			virtual QString message() const = 0;
+
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IExchangeItemChangeEventArgs, "HydroCouple::Data::IExchangeItemChangeEventArgs/1.0")
 
-#endif // IPROPERTYCHANGED_H
+#endif // IEXCHANGEITEMCHANGEEVENTARGS_H

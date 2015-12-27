@@ -20,30 +20,28 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef IMODELCOMPONENTINFO_H
+#define IMODELCOMPONENTINFO_H
 
-#include <QObject>
+#include <icomponentinfo.h>
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
+	class IModelComponent;
+	//!IModelComponentInfo interface class provides detailed metadata about an IModelComponent
 	/*!
+	The IModelComponentInfo interface is used to provide metadata on a component and create new instances of a component
 	*/
-	class IPropertyChanged
+	class IModelComponentInfo : public virtual IComponentInfo
 	{
 
 	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
+		//!Creates new IModelComponent instance
+		/*!
 		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
-
+		virtual IModelComponent* createComponentInstance() = 0;
 	};
 }
+Q_DECLARE_INTERFACE(HydroCouple::IModelComponentInfo, "HydroCouple::IModelComponentInfo/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
-
-#endif // IPROPERTYCHANGED_H
+#endif // IMODELCOMPONENTINFO_H

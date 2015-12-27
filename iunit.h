@@ -19,31 +19,32 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>
 **
 ****************************************************************************/
+#ifndef IUNIT_H
+#define IUNIT_H
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
-
-#include <QObject>
+#include "idescription.h"
+#include "iunitdimensions.h"
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
+		/// IUnit interface, describing the physical unit of a IQuantity.
+		class IUnit : public virtual IDescription
+		{
+		public:
+			//!Fundamental dimensions of the unit
+			virtual IUnitDimensions* dimensions() const = 0;
 
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
-		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
+			//! Conversion factor to SI ('A' in: SI-value = A * quant-value + B)
+			virtual double  conversionFactorToSI() const = 0;
 
-	};
+			//! OffSet to SI ('B' in: SI-value = A * quant-value + B)
+			virtual double offSetToSI() const = 0;
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IUnit, "HydroCouple::Data::IUnit/1.0")
 
-#endif // IPROPERTYCHANGED_H
+#endif // IUnit_H

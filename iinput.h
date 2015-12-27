@@ -20,30 +20,34 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef IINPUT_H
+#define IINPUT_H
 
-#include <QObject>
+#include "iexchangeitem.h"
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
+		class IOutput;
 
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
-		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
+		//!An IInput item that can accept values for an IModelComponent.
+		class IInput : public virtual IExchangeItem
+		{
 
-	};
+		public:
+			//! Gets the producer this consumer should get its values from.
+			virtual IOutput* getProvider() const = 0;
+
+			//! Sets the producer this consumer should get its values from.
+			virtual void setProvider(IOutput* provider) = 0;
+
+			//! Returns true if this IInput can consume this producer.
+			virtual bool canConsume(const IOutput* provider) const = 0;
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IInput, "HydroCouple::Data::IInput/1.0");
 
-#endif // IPROPERTYCHANGED_H
+#endif // IINPUT_H

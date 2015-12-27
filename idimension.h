@@ -20,30 +20,37 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef IDIMENSION_H
+#define IDIMENSION_H
 
-#include <QObject>
+#include <idescription.h>
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
+		enum DimensionType
+		{
+			Constant,
+			Dynamic
+		};
 
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
-		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
+		class IDimension : public virtual IDescription
+		{
 
-	};
+		public:
+			//! Gets length of dimension
+			/*!
+			*/
+			virtual int length() const = 0;
+
+			//! Gets the dimension length type
+			/*!
+			*/
+			virtual DimensionType lengthType() const = 0;
+		};
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
-
-#endif // IPROPERTYCHANGED_H
+Q_DECLARE_INTERFACE(HydroCouple::Data::IDimension, "HydroCouple::Data::IDimension/1.0")
+#endif // IDIMENSION_H

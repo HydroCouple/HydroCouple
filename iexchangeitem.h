@@ -20,30 +20,34 @@
 **
 ****************************************************************************/
 
-#ifndef IPROPERTYCHANGED_H
-#define IPROPERTYCHANGED_H
+#ifndef IEXCHANGEITEM_H
+#define IEXCHANGEITEM_H
 
-#include <QObject>
+#include "icomponentitem.h"
+//#include "ivariable.h"
+#include "iexchangeitemchangeeventargs.h"
 
 namespace HydroCouple
 {
-	//!IPropertyChanged interface is used to emit signal/event when a property of an object changes
-	/*!
-	*/
-	class IPropertyChanged
+	namespace Data
 	{
+		class IExchangeItem : public virtual IComponentItem
+		{
 
-	public:
-		//!called to emit signal/event when property of child class changes
-		/*!:
-        \param propertyName is a string representing the name of the property
-		\param value is a QVariant representing the value of the property
-		*/
-		virtual void propertyChanged(const QString& propertyName, const QVariant& value) = 0;
+		public:
+			//! IVariable associated with this IExchangeItem.
+			//virtual IVariable* variable() const = 0;
 
-	};
+			//! The componentItemChanged event is fired when the content of an IComponentItem has changed.
+			/*!
+			\param statusChangedEvent provides information about the status change
+			*/
+			virtual void itemChanged(const IExchangeItemChangeEventArgs& statusChangedEvent) = 0;
+		};
+
+	}
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0");
+Q_DECLARE_INTERFACE(HydroCouple::Data::IExchangeItem, "HydroCouple::Data::IExchangeItem/1.0")
 
-#endif // IPROPERTYCHANGED_H
+#endif // IEXCHANGEITEM_H
