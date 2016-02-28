@@ -1,133 +1,53 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;cxx;c;def</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h</Extensions>
-    </Filter>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
-      <Extensions>qrc;*</Extensions>
-      <ParseFiles>false</ParseFiles>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
     </Filter>
     <Filter Include="Generated Files">
       <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
-      <Extensions>moc;h;cpp</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
     </Filter>
-    <Filter Include="Header Files\Data">
-      <UniqueIdentifier>{e808978b-a3d8-4558-b317-a06d7f9d5227}</UniqueIdentifier>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Generated Files\Debug">
-      <UniqueIdentifier>{b2fddbf7-ed34-40db-9cd2-7a6caf39b0b9}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Generated Files\Release">
-      <UniqueIdentifier>{1cb2680d-59ee-44df-9d4c-646d18b42b6b}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="include\hydrocouple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="idescription.h">
+    <ClInclude Include="include\hydrocoupletemporal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ipropertychanged.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="iidentity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="icomponentinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="imodelcomponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="imodelcomponentinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="icomponentstatuschangeeventargs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="iinput.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="icomponentitem.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iexchangeitem.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iexchangeitemchangeeventargs.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="idimension.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="ivariable.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="ivariabledefinition.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iquality.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iquantity.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iunit.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iunitdimensions.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="icategory.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iargument.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iadaptedoutput.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="ioutput.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iadaptedoutputfactorycomponentinfo.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iadaptedoutputfactory.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="iadaptedoutputfactorycomponent.h">
-      <Filter>Header Files\Data</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HydroCouple.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="hydrocouple.h">
+    <CustomBuild Include="include\stdafx.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="include\stdafx.h.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="\\vmware-host\Shared Folders\Documents\Projects\HydroCouple\HydroCouple\HydroCouple_resource.rc" />
   </ItemGroup>
 </Project>

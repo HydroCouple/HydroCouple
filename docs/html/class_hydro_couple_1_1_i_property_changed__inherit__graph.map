@@ -1,0 +1,25 @@
+<map id="HydroCouple::IPropertyChanged" name="HydroCouple::IPropertyChanged">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on an HydroCouple entity. " alt="" coords="509,131,681,267"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_data_1_1_i_category.html" title="The ICategory describes one item of a possible categorization. It is used by the IQuality interface f..." alt="" coords="5,351,144,458"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_data_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. " alt="" coords="168,337,307,473"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_data_1_1_i_unit.html" title="IUnit interface, describing the physical unit of a IQuantity. " alt="" coords="331,337,498,473"/>
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_data_1_1_i_unit_dimensions.html" title="Defines the order of dimension in each FundamentalDimension for a unit. " alt="" coords="523,351,667,458"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_data_1_1_i_value_definition.html" title="IValueDefinition describes a value returned by the getValues function of IValueSet. " alt="" coords="691,329,829,480"/>
+<area shape="rect" id="node10" href="$class_hydro_couple_1_1_data_1_1_i_value_set.html" title="IValueSet provides a multi&#45;dimensional data with its context. " alt="" coords="853,315,1013,495"/>
+<area shape="rect" id="node11" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="1091,359,1240,451"/>
+<area shape="rect" id="node8" href="$class_hydro_couple_1_1_data_1_1_i_quality.html" title="{HydroCouple::Data::\lIQuality\n||+ ~IQuality()\l+ categories()\l+ isOrdered()\l}" alt="" coords="528,609,667,730"/>
+<area shape="rect" id="node9" href="$class_hydro_couple_1_1_data_1_1_i_quantity.html" title="IQuantity specifies values as an amount of some unit, usually as a floating point number..." alt="" coords="691,616,829,723"/>
+<area shape="rect" id="node12" href="$class_hydro_couple_1_1_data_1_1_i_adapted_output_factory.html" title="IAdaptedOutputFactory is used to create instances of IAdaptedProducerExchangeItems ..." alt="" coords="854,609,1069,730"/>
+<area shape="rect" id="node14" href="$class_hydro_couple_1_1_data_1_1_i_component_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="1093,609,1237,730"/>
+<area shape="rect" id="node21" href="$class_hydro_couple_1_1_i_component_info.html" title="IComponentInfo interface class provides information about a component either a IModelComponent or a I..." alt="" coords="1346,543,1539,796"/>
+<area shape="rect" id="node24" href="$class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface class is the core interface in the HydroCouple standard defining a componen..." alt="" coords="1564,557,1772,781"/>
+<area shape="rect" id="node13" href="$class_hydro_couple_1_1_data_1_1_i_adapted_output_factory_component.html" title="IAdaptedOutputFactoryComponent is an IAdaptedOutputFactory generated from an IAdaptedOutputFactoryCom..." alt="" coords="560,888,811,995"/>
+<area shape="rect" id="node15" href="$class_hydro_couple_1_1_data_1_1_i_argument.html" title="IArgument interface class used to set the arguments for components. They can be complex or simple mul..." alt="" coords="835,844,973,1039"/>
+<area shape="rect" id="node16" href="$class_hydro_couple_1_1_data_1_1_i_exchange_item.html" title="IExchangeItem the base data item the can be exchanged between components at runtime. " alt="" coords="997,888,1136,995"/>
+<area shape="rect" id="node20" href="$class_hydro_couple_1_1_data_1_1_temporal_1_1_i_time_component_item.html" title="ITimeComponentItem is an IComponentItem with a temporal attribute. " alt="" coords="1160,866,1365,1017"/>
+<area shape="rect" id="node17" href="$class_hydro_couple_1_1_data_1_1_i_input.html" title="An IInput item that can accept values for an IModelComponent. " alt="" coords="908,1116,1047,1252"/>
+<area shape="rect" id="node18" href="$class_hydro_couple_1_1_data_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. " alt="" coords="1071,1087,1241,1281"/>
+<area shape="rect" id="node19" href="$class_hydro_couple_1_1_data_1_1_i_adapted_output.html" title="An IAdaptedOutput adds one or more data operations on top of an IOutput. " alt="" coords="1071,1329,1241,1509"/>
+<area shape="rect" id="node22" href="$class_hydro_couple_1_1_data_1_1_i_adapted_output_factory_component_info.html" title="IAdaptedOutputFactoryComponentInfo interface class provides information about an IAdaptedOutputFactor..." alt="" coords="1390,888,1661,995"/>
+<area shape="rect" id="node23" href="$class_hydro_couple_1_1_i_model_component_info.html" title="IModelComponentInfo interface class provides detailed metadata about an IModelComponent. " alt="" coords="1685,895,1913,987"/>
+</map>
