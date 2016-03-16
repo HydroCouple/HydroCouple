@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dimensiontype',['DimensionType',['../namespace_hydro_couple_1_1_data.html#a82b3ba6c891a0de4293ac44443b762d3',1,'HydroCouple::Data']]]
+  ['dimensiontype',['DimensionType',['../namespace_hydro_couple.html#af73b69b8ec48a7eb3fa11fdfb331c9ab',1,'HydroCouple']]]
 ];

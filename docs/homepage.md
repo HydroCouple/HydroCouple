@@ -1,12 +1,19 @@
 Introduction                       {#mainpage}
 ============
 
-Example 1
-------------
-This is example 1
 
-Example 2
-------------
-Documentation that will appear on the main page
+\author Caleb Buahin <caleb.buahin@gmail.com>
+\version 1.0.0.0
 
-TOC
+HydroCouple is a component-based modeling interface specification 
+largely based on OpenMI 2.0. It has been specified using C++ and 
+the Qt framework to allow for cross platform compilation and use.
+
+Model Components
+----------------
+
+HydroCouple::IModelComponent s
+
+\tableofcontents
+
+

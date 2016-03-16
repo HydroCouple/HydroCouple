@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['initialized',['Initialized',['../namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03ac40679da152b0054941ecff4ed04b9a2',1,'HydroCouple']]],
-  ['initializing',['Initializing',['../namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a6981f698e60e9a6785da480b7c2f3b43',1,'HydroCouple']]],
-  ['invalid',['Invalid',['../namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a37859216fa080b8aac9644a93d1aee2a',1,'HydroCouple']]]
+  ['failed',['Failed',['../namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a7e67a48b8a07539ef9f0aa0fc82bcc19',1,'HydroCouple']]],
+  ['finished',['Finished',['../namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a18e0a644a8102569a39d04a56612866d',1,'HydroCouple']]],
+  ['finishing',['Finishing',['../namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03af25faa2eca3b0112c73b9a7e5ad38c0c',1,'HydroCouple']]],
+  ['float32',['Float32',['../namespace_hydro_couple_1_1_spatial.html#ae3563ea9d450198e25de5766f335dea4ad7c44aab2ed3eba449a7a38b98597a25',1,'HydroCouple::Spatial']]],
+  ['float64',['Float64',['../namespace_hydro_couple_1_1_spatial.html#ae3563ea9d450198e25de5766f335dea4a07f3ac6fe362e27c8a946e88c888f837',1,'HydroCouple::Spatial']]]
 ];

@@ -1,6 +1,7 @@
 #Author Caleb Amoa Buahin
+#Email caleb.buahin@gmail.com
 #Date 2016
-#License
+#License GNU General Public License (see <http://www.gnu.org/licenses/> for details).
 
 
 TEMPLATE = lib
@@ -11,7 +12,8 @@ QT += core
 
 HEADERS += ./include/hydrocouple.h \
            ./include/hydrocoupletemporal.h \
-           ./include/hydrocouplespatial.h
+           ./include/hydrocouplespatial.h \
+    include/hydrocouplespatiotemporal.h
 
 PRECOMPILED_HEADER += ./include/stdafx.h
 

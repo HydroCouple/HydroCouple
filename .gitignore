@@ -24,6 +24,7 @@ bld/
 GeneratedFiles/
 ipch/
 x64/
+docs/
 
 
 # Visual Studo 2015 cache/options directory

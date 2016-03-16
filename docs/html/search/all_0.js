@@ -1,11 +1,19 @@
 var searchData=
 [
-  ['adaptedoutputfactories',['adaptedOutputFactories',['../class_hydro_couple_1_1_i_model_component.html#a88b9000773d5cb42cbb1e169fa1f30e7',1,'HydroCouple::IModelComponent']]],
-  ['adaptedoutputfactory',['adaptedOutputFactory',['../class_hydro_couple_1_1_data_1_1_i_adapted_output.html#a7b0237811ea43cd9161abee957efea20',1,'HydroCouple::Data::IAdaptedOutput']]],
-  ['adaptedoutputs',['adaptedOutputs',['../class_hydro_couple_1_1_data_1_1_i_output.html#a22f10732f0be9adf82c30802565d12d0',1,'HydroCouple::Data::IOutput']]],
-  ['adaptee',['adaptee',['../class_hydro_couple_1_1_data_1_1_i_adapted_output.html#a838dd64e7a68389469e2da79b30730cf',1,'HydroCouple::Data::IAdaptedOutput']]],
-  ['addadaptedoutput',['addAdaptedOutput',['../class_hydro_couple_1_1_data_1_1_i_output.html#a36e4abc2a30063fd61132574fc6816fe',1,'HydroCouple::Data::IOutput']]],
-  ['addconsumer',['addConsumer',['../class_hydro_couple_1_1_data_1_1_i_output.html#a3165c826dcc819cf78b737a4aa619510',1,'HydroCouple::Data::IOutput']]],
-  ['amountofsubstance',['AmountOfSubstance',['../namespace_hydro_couple_1_1_data.html#a28c65e12c557cd9039f133e9ccd4a66aaf295b46d6f054edcc0a85883cb0fe870',1,'HydroCouple::Data']]],
-  ['arguments',['arguments',['../class_hydro_couple_1_1_i_model_component.html#affc7ec8172ac4cff70dfef6ac0d6ac7b',1,'HydroCouple::IModelComponent::arguments()'],['../class_hydro_couple_1_1_data_1_1_i_adapted_output.html#a38ececbbd05573595ee0a5f16d4625d6',1,'HydroCouple::Data::IAdaptedOutput::arguments()']]]
+  ['abstractmodelcomponent',['AbstractModelComponent',['../class_abstract_model_component.html',1,'AbstractModelComponent'],['../class_abstract_model_component.html#ac42477c253e82a0dbb9cf2595c4e3542',1,'AbstractModelComponent::AbstractModelComponent(AbstractModelComponent *parent=nullptr)'],['../class_abstract_model_component.html#aadfe65c4af520f8c8a21a3f686b6a838',1,'AbstractModelComponent::AbstractModelComponent(const QString &amp;id, const QString &amp;caption, const QString &amp;description, AbstractModelComponent *parent=nullptr)']]],
+  ['abstractmodelcomponent_2ecpp',['abstractmodelcomponent.cpp',['../abstractmodelcomponent_8cpp.html',1,'']]],
+  ['abstractmodelcomponent_2eh',['abstractmodelcomponent.h',['../abstractmodelcomponent_8h.html',1,'']]],
+  ['adaptedoutputfactories',['AdaptedOutputFactories',['../class_abstract_model_component.html#a181fcd944b74de70c0ba5612621be75e',1,'AbstractModelComponent::AdaptedOutputFactories()'],['../class_hydro_couple_1_1_i_model_component.html#a3d935fb27689ab4000dfb15de589d6ed',1,'HydroCouple::IModelComponent::adaptedOutputFactories()'],['../class_abstract_model_component.html#a34346734f239bc521fc9cf2626cd9058',1,'AbstractModelComponent::adaptedOutputFactories()']]],
+  ['adaptedoutputfactory',['adaptedOutputFactory',['../class_hydro_couple_1_1_i_adapted_output.html#a928c23bbf1f318b81e17b534135b22cd',1,'HydroCouple::IAdaptedOutput']]],
+  ['adaptedoutputs',['adaptedOutputs',['../class_hydro_couple_1_1_i_output.html#a224f3327722717af7912e344f3225186',1,'HydroCouple::IOutput']]],
+  ['adaptee',['adaptee',['../class_hydro_couple_1_1_i_adapted_output.html#a6500407e610bfbdcb266b9f9e31dd134',1,'HydroCouple::IAdaptedOutput']]],
+  ['addadaptedoutput',['addAdaptedOutput',['../class_hydro_couple_1_1_i_output.html#ad67f63be635854aa4179ab2680e40141',1,'HydroCouple::IOutput']]],
+  ['addconsumer',['addConsumer',['../class_hydro_couple_1_1_i_output.html#ab14f517d87293a1ec2cea3a1f4fb05e1',1,'HydroCouple::IOutput']]],
+  ['addedge',['addEdge',['../class_hydro_couple_1_1_spatial_1_1_i_vertex.html#a352207655f1b1715b19617294dd1f5ff',1,'HydroCouple::Spatial::IVertex::addEdge()'],['../class_hydro_couple_1_1_spatial_1_1_i_polygon.html#a99fe48f6bda866263f9f2dbd33477953',1,'HydroCouple::Spatial::IPolygon::addEdge()']]],
+  ['addrasterband',['addRasterBand',['../class_hydro_couple_1_1_spatial_1_1_i_raster.html#ad62fe6aa4649f4b58cb28ebc50cd53e9',1,'HydroCouple::Spatial::IRaster']]],
+  ['amountofsubstance',['AmountOfSubstance',['../namespace_hydro_couple.html#a3b0c4ea98032b00a2da319636be02d67a7d436cfef4afbf8aa34b838cc2fa8a60',1,'HydroCouple']]],
+  ['area',['area',['../class_hydro_couple_1_1_spatial_1_1_i_surface.html#a6e22750f5bb5c7f04f7d8ea8ab8b7543',1,'HydroCouple::Spatial::ISurface::area()'],['../class_hydro_couple_1_1_spatial_1_1_i_multi_surface.html#a6a9c7b8afcc50ffe73dbf3b056856345',1,'HydroCouple::Spatial::IMultiSurface::area()']]],
+  ['arguments',['Arguments',['../class_abstract_model_component.html#a177083fc3735e11f28f85df87602a431',1,'AbstractModelComponent::Arguments()'],['../class_hydro_couple_1_1_i_model_component.html#ab0f80772a260e857cb53e7062e6f4198',1,'HydroCouple::IModelComponent::arguments()'],['../class_hydro_couple_1_1_i_adapted_output.html#ab27f38e971c0cef218793a385d84e564',1,'HydroCouple::IAdaptedOutput::arguments()'],['../class_abstract_model_component.html#ab8edb9d182da8ec5e3ef1df23271c614',1,'AbstractModelComponent::arguments()']]],
+  ['authname',['authName',['../class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html#a867cbfb15b9177319787a434a58f1216',1,'HydroCouple::Spatial::ISpatialReferenceSystem']]],
+  ['authsrid',['authSRID',['../class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html#a48964c6e536904351629fdab3af4c0a4',1,'HydroCouple::Spatial::ISpatialReferenceSystem']]]
 ];

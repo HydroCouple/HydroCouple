@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['amountofsubstance',['AmountOfSubstance',['../namespace_hydro_couple_1_1_data.html#a28c65e12c557cd9039f133e9ccd4a66aaf295b46d6f054edcc0a85883cb0fe870',1,'HydroCouple::Data']]]
+  ['amountofsubstance',['AmountOfSubstance',['../namespace_hydro_couple.html#a3b0c4ea98032b00a2da319636be02d67a7d436cfef4afbf8aa34b838cc2fa8a60',1,'HydroCouple']]]
 ];
