@@ -35,7 +35,7 @@
    <div id="projectname">HydroCouple
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">A Component-Based Model Coupling Interface Definition and SDK</div>
+   <div id="projectbrief">A Component-Based Model Coupling Interface Definition</div>
   </td>
  </tr>
  </tbody>
@@ -129,13 +129,19 @@ Inheritance diagram for HydroCouple::IIdentity:</div>
 <div class="dynheader">
 Collaboration diagram for HydroCouple::IIdentity:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_i_identity__coll__graph.svg" width="264" height="456"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_i_identity__coll__graph.svg" width="264" height="491"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa69311baebd14ca6078474103f0b69da"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#aa69311baebd14ca6078474103f0b69da">~IIdentity</a> ()</td></tr>
 <tr class="separator:aa69311baebd14ca6078474103f0b69da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24666a340e03f04eb3a242de6a23ae0e"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#a24666a340e03f04eb3a242de6a23ae0e">MPI_Comm</a> () const  =0</td></tr>
+<tr class="memdesc:a24666a340e03f04eb3a242de6a23ae0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPI_Comm is the communicator in a distributed memory MPI HPC Environment.  <a href="#a24666a340e03f04eb3a242de6a23ae0e">More...</a><br /></td></tr>
+<tr class="separator:a24666a340e03f04eb3a242de6a23ae0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3787aa058e62cd93bb782a1f66894827"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#a3787aa058e62cd93bb782a1f66894827">MPI_Rank</a> () const  =0</td></tr>
+<tr class="memdesc:a3787aa058e62cd93bb782a1f66894827"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPIRank is the rank of the processor in the communicator.  <a href="#a3787aa058e62cd93bb782a1f66894827">More...</a><br /></td></tr>
+<tr class="separator:a3787aa058e62cd93bb782a1f66894827"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6310a9d5339603f3422791b2bd9b4c56"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#a6310a9d5339603f3422791b2bd9b4c56">id</a> () const  =0</td></tr>
 <tr class="memdesc:a6310a9d5339603f3422791b2bd9b4c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a unique identifier for the entity.  <a href="#a6310a9d5339603f3422791b2bd9b4c56">More...</a><br /></td></tr>
 <tr class="separator:a6310a9d5339603f3422791b2bd9b4c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -218,15 +224,57 @@ Additional Inherited Members</h2></td></tr>
 <p>An id must be unique within its context but does not need to be globally unique. For example, the id of an input exchange item must be unique in the list of inputs of a <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>, but a similar Id might be used by an exchange item of another <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>.</p>
 <dl class="section return"><dt>Returns</dt><dd>An id as a String. </dd></dl>
 
-<p>Implemented in <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#ade60cbe579516a15c95e50bdc6e700e8">HydroCouple::Spatial::IEdge</a>, and <a class="el" href="class_identity.html#a6d12d67baa0107e66869be4858859889">Identity</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a24666a340e03f04eb3a242de6a23ae0e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void* HydroCouple::IIdentity::MPI_Comm </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_i_identity_a6310a9d5339603f3422791b2bd9b4c56_icgraph.svg" width="470" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<p>MPI_Comm is the communicator in a distributed memory MPI HPC Environment. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
 </div>
 </div>
-</p>
+<a class="anchor" id="a3787aa058e62cd93bb782a1f66894827"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IIdentity::MPI_Rank </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>MPIRank is the rank of the processor in the communicator. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>

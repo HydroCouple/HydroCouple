@@ -3,8 +3,6 @@ var NAVTREE =
   [ "HydroCouple", "index.html", [
     [ "Introduction", "index.html", null ],
     [ "HydroCouple", "md__Users_calebbuahin_Documents_Projects_HydroCouple_HydroCouple_README.html", null ],
-    [ "HydroCoupleSDK", "md__Users_calebbuahin_Documents_Projects_HydroCouple_HydroCoupleSDK_Readme.html", null ],
-    [ "Todo List", "todo.html", null ],
     [ "Bug List", "bug.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
@@ -20,10 +18,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
-        [ "Properties", "functions_prop.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "Functions", "functions_func.html", "functions_func" ]
       ] ]
     ] ],
     [ "Files", null, [
@@ -38,9 +33,10 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_d_k_2include_2stdafx_8h.html",
-"class_hydro_couple_1_1_spatial_1_1_i2_d_regular_grid.html#aba2f2063bf2463b482af7a091673ef42",
-"class_hydro_couple_1_1_temporal_1_1_i_time.html#a06e2a68aafa8a82017d3b7f5ac928f33"
+"annotated.html",
+"class_hydro_couple_1_1_spatial_1_1_i_linear_ring.html#a8b09ac6bcee47c5f130a00f29f8505cd",
+"class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_argument.html#aac088ed25e649ff085854375f1268ddc",
+"hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507aefa6b01282b37db3095f73ee3d8d63cb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

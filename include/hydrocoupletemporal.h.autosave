@@ -173,7 +173,9 @@ namespace HydroCouple
              */
             virtual ~ITimeArgument(){}
 
-            //!Set ITimes associated with this ITimeArgument. Dont forget to update timeSpace and timeDimension accordingly
+            /*! 
+             * \brief Set ITimes associated with this ITimeArgument. Dont forget to update timeSpace and timeDimension accordingly.
+             */ 
             virtual void  setTimes(const QList<ITime*>& times) = 0;
 
             /*!

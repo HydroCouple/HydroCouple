@@ -304,6 +304,19 @@ namespace HydroCouple
          virtual ~IIdentity() {}
          
          /*!
+          * \brief MPI_Comm is the communicator in a distributed memory MPI HPC Environment.
+          * \return
+          */
+         virtual void* MPI_Comm() const = 0;
+
+
+         /*!
+          * \brief MPIRank is the rank of the processor in the communicator.
+          * \return
+          */
+         virtual int MPI_Rank() const = 0;
+
+         /*!
           * \brief Gets a unique identifier for the entity.
           *
           * \details An id must be unique within its context but
@@ -704,39 +717,45 @@ namespace HydroCouple
          virtual void componentStatusChanged(const IComponentStatusChangeEventArgs& statusChangedEvent) = 0;
    };
    
-   //!IDimension provides the properties of the dimensions of a vairable.
+   /*!
+    * \brief IDimension provides the properties of the dimensions of a vairable.
+    */
    class IDimension : public virtual IDescription
    {
-         
       public:
          virtual ~IDimension() {}
          
          /*!
-             * \brief Dimension name.
-             * \returns The name of this dimension.
-             */
+          * \brief Dimension name.
+          * \returns The name of this dimension.
+          */
          virtual QString name() const = 0;
          
          //! Gets length of dimension.
          /*!
-             */
+          */
          virtual int length() const = 0;
          
          //! Gets the dimension length type.
          /*!
-             */
+          */
          virtual DimensionType lengthType() const = 0;
    };
    
-   //! IValueDefinition describes a value returned by the getValues function of IValueSet
    /*!
-    * This interface is not meant to be implemented directly.
+    * \brief IValueDefinition describes a value returned by the getValues() function of IValueSet.
+    *
+    * \details This interface is not meant to be implemented directly.
     * Instead, implement either IQuality or IQuantity or a
     * custom derived vale definition interface.
     */
    class IValueDefinition : public virtual IDescription
    {
       public:
+
+         /*!
+          * \brief ~IValueDefinition
+          */
          virtual ~IValueDefinition() {}
          
          /*!
@@ -750,7 +769,7 @@ namespace HydroCouple
          //!The value representing that data is missing.
          virtual QVariant missingValue() const = 0;
          
-         //!Gets the default value of the argument
+         //!Gets the default value of the argument.
          virtual QVariant defaultValue() const = 0;
          
          /*!
@@ -819,11 +838,16 @@ namespace HydroCouple
       public:
          virtual ~IQuality() {}
          
-         //! Returns a list of the possible ICategory allowed for this IQuality If the quality is not ordered the list contains
-         //! the ICategory's in an unspecified order. When it is ordered the list contains the ICategory's in the same sequence.
+         /*!
+          * \returns A list of the possible ICategory allowed for this IQuality
+          * If the quality is not ordered the list contains the ICategory's in an unspecified order.
+          * When it is ordered the list contains the ICategory's in the same sequence.
+          */
          virtual QList<ICategory*> categories() const = 0;
          
-         //! Checks if the IQuality is defined by an ordered set of ICategory or not.
+         /*!
+          * \brief Checks if the IQuality is defined by an ordered set of ICategory or not.
+          */
          virtual bool isOrdered() const = 0;
    };
    
@@ -907,6 +931,18 @@ namespace HydroCouple
           */
          virtual IModelComponent* modelComponent() const = 0;
          
+
+          /*!
+           * \brief Gets the identity of IModelComponent of this IComponentItem.For an IOutput component item this is the component
+           * responsible for providing the content of the IOutput.
+           *
+           * \details It is possible for an IComponentItem to have no owner, in this case the method will return nullptr.
+           * This property has been added so that in a distributed memory environment
+           *
+           * \return an IModelComponent object that is the parent of this IComponentItem
+           */
+         virtual IIdentity* modelComponentId() const = 0;
+
          /*!
           * \brief provides the dimensions associated with this IComponentItem.
           *
@@ -931,34 +967,53 @@ namespace HydroCouple
           */
          virtual IComponentItem* componentItem() const = 0;
          
-         //!Subset of the IDimension objects from the IComponentItem that are related to this this IValueSet
+   
+         //!Gets a single value for given dimension indexes specified.
          /*!
+          * \param dimensionIndexes are the indexes for the data to be obtained.
+		  * \param data is the output QVariant where data is to be written.
           */
-         virtual QList<IDimension*> dimensions() const = 0;
+         virtual void getValue(size_t dimensionIndexes[], QVariant& data) const = 0;
          
-         //!IDimension s related to this IValueSet
+         //!Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
          /*!
-          *Returns the length (max index count) of the dimension specified by the
-          *given indices. To get the size of the first dimension, use a zero-length
-          *integer array as input argument. Length of indices must be a least one
-          *smaller than the dimensions().
-          * \param dimensionIndexes represents the indexes for the IDimension to retrieve the length.
+          * \param dimensionIndexes are the indexes for the data to be obtained.
+          * \param stride is the size for hyperslab from which to copy data.
+          * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
           */
-         virtual int getDimensionLength(const QList<int>& dimensionIndexes) const = 0;
-         
-         //!Gets value for given dimension indexes
+         virtual void getValues(size_t dimensionIndexes[], size_t stride[],  QVariant* data) const = 0;
+
+         //!Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
          /*!
-          * \param dimensionIndexes for the IDimension to retrieve the length
+          * \param dimensionIndexes are the indexes for the data to be obtained.
+          * \param stride is the size for hyperslab from which to copy data.
+          * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
           */
-         virtual QVariant getValue(int dimensionIndexes[]) const = 0;
-         
-         //!sets value for given dimension indexes
+         virtual void getValues(size_t dimensionIndexes[], size_t stride[],  void* data) const = 0;
+
+         //!Sets a single value for given dimension indexes specified.
          /*!
-          * \param dimensionIndexes for the IDimension to retrieve the length
-          * \param value to set
-          */
-         virtual void setValue(int dimensionIndexes[], const QVariant& value) = 0;
-         
+         * \param dimensionIndexes are the indexes for where data is to be writted.
+         * \param data is the input QVariant to be written.
+         */
+         virtual void setValue(size_t dimensionIndexes[], const QVariant& data) = 0;
+
+         //!Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
+         /*!
+         * \param dimensionIndexes are the indexes for where data is to be written.
+         * \param stride is the size for hyperslab where data is to be written.
+         * \param data is the input multi dimensional array to be written.
+         */
+         virtual void setValues(size_t dimensionIndexes[], size_t stride[], const QVariant* data) = 0;
+
+         //!Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
+         /*!
+         * \param dimensionIndexes are the indexes for where data is to be written.
+         * \param stride is the size for hyperslab where data is to be written.
+         * \param data is the input multi dimensional array to be written.
+         */
+         virtual void setValues(size_t dimensionIndexes[], size_t stride[], const void* data) = 0;
+
          //!IValueDefinition for this IValueSet defines the variable type associated with this object
          /*!
           * \returns the variable definition for this variable. This is either a
@@ -1081,6 +1136,10 @@ namespace HydroCouple
       public:
          virtual ~IExchangeItem() {}
          
+         /*!
+                 */
+         virtual IValueSet* values() const = 0;
+
          /*!
           * \brief The componentItemChanged event is fired when
           * the content of an IComponentItem has changed.

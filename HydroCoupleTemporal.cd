@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HydroCouple::Temporal::ITime">
+    <Position X="12.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocoupletemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Temporal::ITimeSpan">
+    <Position X="12.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocoupletemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Temporal::ITimeComponentItem">
+    <Position X="4.25" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAIAAAgAABAABAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocoupletemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Temporal::ITimeArgument">
+    <Position X="2" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>include\hydrocoupletemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Temporal::ITimeExchangeItem">
+    <Position X="7" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocoupletemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

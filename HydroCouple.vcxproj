@@ -11,28 +11,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F399C367-DA84-3421-9E17-AA1DC35191DF}</ProjectGuid>
+    <ProjectGuid>{B4F5D974-DFDC-3EAB-9963-41C5A8641EB9}</ProjectGuid>
     <RootNamespace>HydroCouple</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <PlatformToolSet>v140</PlatformToolSet>
-    <OutputDirectory>debug\</OutputDirectory>
+    <OutputDirectory>bin\debug\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <IntermediateDirectory>debug\</IntermediateDirectory>
-    <PrimaryOutput>HydroCouple1</PrimaryOutput>
+    <IntermediateDirectory>bin\debug\</IntermediateDirectory>
+    <PrimaryOutput>HydroCouple</PrimaryOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <PlatformToolSet>v140</PlatformToolSet>
-    <OutputDirectory>release\</OutputDirectory>
+    <OutputDirectory>bin\release\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <IntermediateDirectory>release\</IntermediateDirectory>
-    <PrimaryOutput>HydroCouple1</PrimaryOutput>
+    <IntermediateDirectory>bin\release\</IntermediateDirectory>
+    <PrimaryOutput>HydroCouple</PrimaryOutput>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -44,19 +44,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">HydroCouple1</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin\debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">bin\debug\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">HydroCouple</TargetName>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">HydroCouple1</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin\release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">bin\release\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">HydroCouple</TargetName>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;C:\Qt\5.5.1_amd64\qtbase\include;C:\Qt\5.5.1_amd64\qtbase\include\QtGui;C:\Qt\5.5.1_amd64\qtbase\include\QtCore;debug;C:\Qt\5.5.1_amd64\qtbase\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;include;C:\Qt\5.5.1_amd64\qtbase\include;C:\Qt\5.5.1_amd64\qtbase\include\QtGui;C:\Qt\5.5.1_amd64\qtbase\include\QtCore;debug;C:\Qt\5.5.1_amd64\qtbase\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:strictStrings -Zc:throwingNew -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -85,7 +85,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <LinkDLL>true</LinkDLL>
-      <OutputFile>$(OutDir)\HydroCouple1.dll</OutputFile>
+      <OutputFile>$(OutDir)\HydroCouple.dll</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <SubSystem>Windows</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -102,7 +102,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;C:\Qt\5.5.1_amd64\qtbase\include;C:\Qt\5.5.1_amd64\qtbase\include\QtGui;C:\Qt\5.5.1_amd64\qtbase\include\QtCore;release;C:\Qt\5.5.1_amd64\qtbase\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;include;C:\Qt\5.5.1_amd64\qtbase\include;C:\Qt\5.5.1_amd64\qtbase\include\QtGui;C:\Qt\5.5.1_amd64\qtbase\include\QtCore;release;C:\Qt\5.5.1_amd64\qtbase\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:strictStrings -Zc:throwingNew -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -132,7 +132,7 @@
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <LinkDLL>true</LinkDLL>
       <LinkIncremental>false</LinkIncremental>
-      <OutputFile>$(OutDir)\HydroCouple1.dll</OutputFile>
+      <OutputFile>$(OutDir)\HydroCouple.dll</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <SubSystem>Windows</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -152,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\hydrocouple.h" />
+    <ClInclude Include="include\hydrocouplespatial.h" />
+    <ClInclude Include="include\hydrocouplespatiotemporal.h" />
     <ClInclude Include="include\hydrocoupletemporal.h" />
     <CustomBuild Include="include\stdafx.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">echo /*-------------------------------------------------------------------- &gt;include\stdafx.h.cpp
@@ -233,7 +235,11 @@ echo #include "stdafx.h"&gt;&gt;include\stdafx.h.cpp</Command>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="\\vmware-host\Shared Folders\Documents\Projects\HydroCouple\HydroCouple\HydroCouple_resource.rc" />
+    <ResourceCompile Include="Z:\Documents\Projects\HydroCouple\HydroCouple\HydroCouple_resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HydroCouple.cd" />
+    <None Include="HydroCoupleTemporal.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

@@ -179,6 +179,13 @@ namespace HydroCouple
          public:
             virtual ~IGeometry(){}
 
+
+            /*!
+             * \brief index of the geometry if it is part of a collection.
+             * \return index of the geometry in a collection.
+             */
+            virtual int index() const = 0;
+
             /*!
              * \brief The inherent dimension of this geometric object, which must be less than or equal to the coordinate dimension.
              *  In non - homogeneous collections, this will return the largest topological dimension of the contained objects.
@@ -350,7 +357,7 @@ namespace HydroCouple
              * find a point on each geometric object involved, such that the distance
              * between these 2 points is the returned distance between their geometric objects.
              */
-            virtual double distance(IGeometry* geom) const = 0;
+            virtual double distance(const IGeometry* geom) const = 0;
 
             /*!
              * \brief Returns a geometric object that represents all Points whose distance
@@ -623,7 +630,6 @@ namespace HydroCouple
        */
       class IMultiLineString : public virtual IMultiCurve
       {
-
          public:
             virtual ~IMultiLineString(){}
 
@@ -687,7 +693,7 @@ namespace HydroCouple
              * \brief the id number assigned to the edge.
              * \returns the id of this edge. This id() will be positive.
              */
-            virtual int id()  const = 0;
+            virtual int index()  const = 0;
 
             /*!
              * \brief Change the id of this edge.
@@ -1026,6 +1032,25 @@ namespace HydroCouple
 
       };
 
+      //************************************************************************
+
+      /*!
+       * \brief The INetwork class.
+       */
+      class INetwork : public virtual IMultiLineString
+      {
+         public:
+            /*!
+             * \brief ~Network
+             */
+            virtual ~INetwork(){}
+
+            /*!
+             * \brief An arbitrary vertex from which traversal can be conducted.
+             */
+            virtual IVertex* vertex() const ;
+      };
+
       /*!
        * \brief An IPolyhedralSurface is a contiguous collection of polygons,
        * which share common boundary segments.
@@ -1164,6 +1189,8 @@ namespace HydroCouple
             virtual ITriangle* patch(int index) const = 0;
       };
 
+      //************************************************************************
+
       class IRasterBand;
 
       /*!
@@ -1178,12 +1205,12 @@ namespace HydroCouple
             /*!
              * \brief Number of pixels in the x direction.
              */
-            virtual int xSize() const = 0;
+            virtual size_t xSize() const = 0;
 
             /*!
              * \brief Number of pixels in y direction.
              */
-            virtual int ySize() const = 0;
+            virtual size_t ySize() const = 0;
 
             /*!
              * \brief Number of raster bands.
@@ -1227,10 +1254,10 @@ namespace HydroCouple
             virtual ~IRasterBand(){}
 
             //!Number of pixels in the x direction
-            virtual int xSize() const = 0;
+            virtual size_t xSize() const = 0;
 
             //!Number of pixels in y direction
-            virtual int ySize() const = 0;
+            virtual size_t ySize() const = 0;
 
             //!Parent IRaster of this IRasterBand
             virtual IRaster* raster() const = 0;
@@ -1246,7 +1273,7 @@ namespace HydroCouple
                * \param ySize is the height of the region of the band to be accessed in lines.</param>
                * \param image is the pointer to where data is to be written. Delete after use.
                */
-            virtual void read(int xOffset, int yOffset, int xSize, int ySize, void* image) const = 0;
+            virtual void read(size_t xOffset, size_t yOffset, size_t xSize, size_t ySize, void* image) const = 0;
 
             /*!
                * \brief Writes image into the raster band.
@@ -1256,13 +1283,15 @@ namespace HydroCouple
                * \param ySize is the height of the region of the band to be accessed in lines.</param>
                * \param image is the pointer to where data is to be written. Delete after use.
               */
-            virtual void write(int xOffset, int yOffset, int xSize, int ySize, const void* image) = 0;
+            virtual void write(size_t xOffset, size_t yOffset, size_t xSize, size_t ySize, const void* image) = 0;
 
             /*!
                * The nodata value for this IRasterBand.
                */
             virtual double noData() const = 0;
       };
+
+      //************************************************************************
 
       /*!
        * \brief The types of regular grids.
@@ -1278,12 +1307,12 @@ namespace HydroCouple
       };
 
       /*!
-       * \brief The I2DRegularGrid class
+       * \brief The IRegularGrid2D class
        */
-      class I2DRegularGrid : public virtual IIdentity
+      class IRegularGrid2D : public virtual IIdentity
       {
          public:
-            virtual ~I2DRegularGrid(){}
+            virtual ~IRegularGrid2D(){}
 
             virtual RegularGridType gridType() const  = 0;
 
@@ -1305,7 +1334,7 @@ namespace HydroCouple
              * \param yNodeIndex the y-node index
              * \return returns x location coordinate for the x-node and y-node provided
              */
-            double xNodeLocation(int xNodeIndex , int yNodeIndex) const = 0;
+            virtual double xNodeLocation(int xNodeIndex , int yNodeIndex) const = 0;
 
 
             /*!
@@ -1314,7 +1343,7 @@ namespace HydroCouple
              * \param yNodeIndex the y-node index
              * \return returns y location coordinate for the x-node and y-node provided
              */
-            double yNodeLocation(int xNodeIndex , int yNodeIndex) const = 0;
+            virtual double yNodeLocation(int xNodeIndex , int yNodeIndex) const = 0;
 
             /*!
              * \brief isActive is a bool indicating whether a cell is active.
@@ -1322,16 +1351,16 @@ namespace HydroCouple
              * \param yCellIndex the y cell index for the cell. Must be less than numYNodes() - 1.
              * \return a bool indicating whether a cell is active.
              */
-            bool isActive(int xCellIndex , int yCellIndex) const = 0;
+            virtual bool isActive(int xCellIndex , int yCellIndex) const = 0;
       };
 
       /*!
-       * \brief The I3DRegularGrid class
+       * \brief The IRegularGrid3D class
        */
-      class I3DRegularGrid : public virtual I2DRegularGrid
+      class IRegularGrid3D : public virtual IRegularGrid2D
       {
          public:
-            virtual ~I3DRegularGrid(){}
+            virtual ~IRegularGrid3D(){}
 
             /*!
              * \brief numZNodes represents the number of nodes in the z direction.
@@ -1346,7 +1375,7 @@ namespace HydroCouple
              * \param zNodeIndex the z-node index
              * \return returns z location coordinate for the x-node, y-node, and z-node indexes.
              */
-            double zNodeLocation(int xNode , int yNode , int zNode) const = 0;
+            virtual double zNodeLocation(int xNode , int yNode , int zNode) const = 0;
 
             /*!
              * \brief isActive is a bool indicating whether a cell is active.
@@ -1355,8 +1384,10 @@ namespace HydroCouple
              * \param zCellIndex the z cell index for the cell. Must be less than numZNodes() - 1.
              * \return a bool indicating whether a cell is active.
              */
-            bool isActive(int xCellIndex , int yCellIndex , int zCellIndex) const = 0;
+            virtual bool isActive(int xCellIndex , int yCellIndex , int zCellIndex) const = 0;
       };
+
+      //************************************************************************
 
       /*!
        * \brief IGeometryComponentItem represents IGeometryCollection IComponentItem.
@@ -1383,6 +1414,67 @@ namespace HydroCouple
       };
 
       /*!
+       * \brief The IGeometryValueSet class
+       */
+      class IGeometryValueSet : public virtual IValueSet
+      {
+         public:
+            virtual ~IGeometryValueSet(){}
+
+            /*!
+             * \returns The IGeometryComponentItem associated with this IGeometryValueSet.
+             */
+            virtual IGeometryComponentItem* geometryComponentItem() const = 0;
+
+            //!Gets a single value for given geometry dimension index.
+            /*!
+             * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
+             * \param data is the output QVariant where data is to be written.
+             */
+            virtual void getValue(size_t geometryDimensionIndex, QVariant& data) const = 0;
+
+            //!Gets a multi-dimensional array of values for given dimension geometry dimension index and size for a hyperslab.
+            /*!
+             * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
+             * \param stride is the size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(size_t geometryDimensionIndex, size_t stride,  QVariant* data) const = 0;
+
+            //!Gets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
+            /*!
+             * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
+             * \param stride is the size for hyperslab from which to copy data.
+             * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
+             */
+            virtual void getValues(size_t geometryDimensionIndex, size_t stride,  void* data) const = 0;
+
+            //!Sets a single value for given geometry dimension index.
+            /*!
+             * \param geometryDimensionIndex is the geometry dimension index where data is to be written.
+             * \param data is the input QVariant to be written.
+             */
+            virtual void setValue(size_t geometryDimensionIndex, const QVariant& data) = 0;
+
+            //!Sets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
+            /*!
+             * \param geometryDimensionIndex is the geometry dimension index where data is to be written.
+             * \param stride is the size for hyperslab where data is to be written.
+             * \param data is the input multi dimensional array to be written.
+             */
+            virtual void setValues(size_t geometryDimensionIndex, size_t stride, const QVariant* data) = 0;
+
+            //!Sets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
+            /*!
+             * \param geometryDimensionIndex is the geometry dimension index where data is to be written.
+             * \param stride is the size for hyperslab where data is to be written.
+             * \param data is the input multi dimensional array to be written.
+             */
+            virtual void setValues(size_t geometryDimensionIndex , size_t stride, const void* data) = 0;
+
+      };
+
+      /*!
        * \brief An IGeometryArgument class is an IArgument class with a geometry component.
        */
       class IGeometryArgument : public virtual IArgument , public virtual IGeometryComponentItem
@@ -1399,6 +1491,12 @@ namespace HydroCouple
              */
             virtual void setGeometryCollection(IGeometryCollection* geomtery) = 0;
 
+            /*!
+             * \brief IGeometryValueSet objects associated with this IGeometryArgument.
+             * \returns A list of IGeometryValueSet objects associated with this IGeometryArgument.
+             */
+            virtual QList<IGeometryValueSet*> geometryValueSets() const = 0;
+
       };
 
       /*!
@@ -1407,9 +1505,148 @@ namespace HydroCouple
       class IGeometryExchangeItem : public virtual IExchangeItem, public virtual IGeometryComponentItem
       {
          public:
+            /*!
+             * \brief ~IGeometryExchangeItem
+             */
             virtual ~IGeometryExchangeItem(){}
 
+            /*!
+             * \brief IGeometryValueSet  associated with this IGeometryExchangeItem.
+             * \returns An IGeometryValueSet associated with this IGeometryExchangeItem.
+             */
+            virtual IGeometryValueSet* geometryValues() const = 0;
       };
+
+      //************************************************************************
+
+      /*!
+       * \brief ITINComponentItem represents ITIN IComponentItem.
+       */
+      class ITINComponentItem : public virtual IComponentItem
+      {
+         public:
+            virtual ~ITINComponentItem(){}
+
+            /*!
+             * \returns The IDimension for this ITINComponentItem triangles.
+             */
+            virtual IDimension* patchDimension() const = 0;
+
+            /*!
+             * \returns The ITriangle associated with this ITINComponentItem.
+             */
+            virtual ITriangle* polyhedralSurface() const = 0;
+
+            /*!
+             * \returns An IPolygon for the patch index.
+             */
+            virtual ITriangle* geometry(int patchIndex) const = 0;
+      };
+
+      /*!
+       * \brief The ITINValueSet class.
+       */
+      class ITINValueSet : public virtual IValueSet
+      {
+         public:
+            virtual ~ITINValueSet(){}
+
+            /*!
+             * \returns The ITINComponentItem associated with this ITINValueSet .
+             */
+            virtual ITINComponentItem* TINComponentItem() const = 0;
+
+            //!Gets a single value for given patch dimension index.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+             * \param data is the output QVariant where data is to be written.
+             */
+            virtual void getValue(size_t patchDimensionIndex, QVariant& data) const = 0;
+
+            //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+             * \param stride is the size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(size_t patchDimensionIndex, size_t stride,  QVariant* data) const = 0;
+
+            //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+             * \param stride is the size for hyperslab from which to copy data.
+             * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
+             */
+            virtual void getValues(size_t patchDimensionIndex, size_t stride,  void* data) const = 0;
+
+            //!Sets a single value for given patch dimension index.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index where data is to be written.
+             * \param data is the input QVariant to be written.
+             */
+            virtual void setValue(size_t patchDimensionIndex, const QVariant& data) = 0;
+
+            //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index where data is to be written.
+             * \param stride is the size for hyperslab where data is to be written.
+             * \param data is the input multi dimensional array to be written.
+             */
+            virtual void setValues(size_t patchDimensionIndex, size_t stride, const QVariant* data) = 0;
+
+            //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index where data is to be written.
+             * \param stride is the size for hyperslab where data is to be written.
+             * \param data is the input multi dimensional array to be written.
+             */
+            virtual void setValues(size_t patchDimensionIndex , size_t stride, const void* data) = 0;
+
+      };
+
+      /*!
+       * \brief An ITINArgument class is an IArgument class with an ITIN component.
+       */
+      class ITINArgument : public virtual IArgument , public virtual ITINComponentItem
+      {
+         public:
+
+            /*!
+             * \brief ~IPolyhedralSurfaceArgument.
+             */
+            virtual ~ITINArgument(){}
+
+            /*!
+             * \brief Sets an IPolyhedralSurface associated with this IPolyhedralSurfaceArgument.
+             * Update Appropriate dimensions.
+             *
+             */
+            virtual void setTIN(ITIN* TINSurface) = 0;
+
+            /*!
+             * \brief IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
+             * \returns A list of IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
+             */
+            virtual QList<ITINValueSet*> patchValueSets() const = 0;
+      };
+
+      /*!
+       * \brief An ITINExchangeItem class with an TIN component.
+       */
+      class ITINExchangeItem : public virtual IExchangeItem, public virtual ITINComponentItem
+      {
+         public:
+            virtual ~ITINExchangeItem(){}
+
+            /*!
+             * \brief ITINValueSet associated with this ITINExchangeItem.
+             * \returns A ITINValueSet objects associated with this ITINExchangeItem.
+             */
+            virtual ITINValueSet* patchValues() const = 0;
+      };
+
+
+      //************************************************************************
 
       /*!
        * \brief IPolyhedralSurfaceComponentItem represents IPolyhedralSurface IComponentItem.
@@ -1436,12 +1673,76 @@ namespace HydroCouple
       };
 
       /*!
+       * \brief The IPolyhedralSurfaceValueSet class.
+       */
+      class IPolyhedralSurfaceValueSet : public virtual IValueSet
+      {
+         public:
+            virtual ~IPolyhedralSurfaceValueSet(){}
+
+            /*!
+             * \returns The IPolyhedralSurfaceComponentItem associated with this IPolyhedralSurfaceValueSet .
+             */
+            virtual IPolyhedralSurfaceComponentItem* polyhedralSurfaceComponentItem() const = 0;
+
+            //!Gets a single value for given patch dimension index.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+             * \param data is the output QVariant where data is to be written.
+             */
+            virtual void getValue(size_t patchDimensionIndex, QVariant& data) const = 0;
+
+            //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+             * \param stride is the size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(size_t patchDimensionIndex, size_t stride,  QVariant* data) const = 0;
+
+            //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+             * \param stride is the size for hyperslab from which to copy data.
+             * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
+             */
+            virtual void getValues(size_t patchDimensionIndex, size_t stride,  void* data) const = 0;
+
+            //!Sets a single value for given patch dimension index.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index where data is to be written.
+             * \param data is the input QVariant to be written.
+             */
+            virtual void setValue(size_t patchDimensionIndex, const QVariant& data) = 0;
+
+            //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index where data is to be written.
+             * \param stride is the size for hyperslab where data is to be written.
+             * \param data is the input multi dimensional array to be written.
+             */
+            virtual void setValues(size_t patchDimensionIndex, size_t stride, const QVariant* data) = 0;
+
+            //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
+            /*!
+             * \param patchDimensionIndex is the patch dimension index where data is to be written.
+             * \param stride is the size for hyperslab where data is to be written.
+             * \param data is the input multi dimensional array to be written.
+             */
+            virtual void setValues(size_t patchDimensionIndex , size_t stride, const void* data) = 0;
+
+      };
+
+      /*!
        * \brief An IPolyhedralSurfaceArgument class is an IArgument class with an IPolyhedralSurface component.
        */
       class IPolyhedralSurfaceArgument : public virtual IArgument , public virtual IPolyhedralSurfaceComponentItem
       {
-
          public:
+
+            /*!
+             * \brief ~IPolyhedralSurfaceArgument.
+             */
             virtual ~IPolyhedralSurfaceArgument(){}
 
             /*!
@@ -1451,6 +1752,11 @@ namespace HydroCouple
              */
             virtual void setPolyhedralSurface(IPolyhedralSurface* geomtery) = 0;
 
+            /*!
+             * \brief IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
+             * \returns A list of IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
+             */
+            virtual QList<IPolyhedralSurfaceValueSet*> patchValueSets() const = 0;
       };
 
       /*!
@@ -1461,7 +1767,15 @@ namespace HydroCouple
          public:
             virtual ~IPolyhedralSurfaceExchangeItem(){}
 
+            /*!
+             * \brief IPolyhedralSurfaceValueSet associated with this IPolyhedralSurfaceExchangeItem.
+             * \returns A IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceExchangeItem.
+             */
+            virtual IPolyhedralSurfaceValueSet* patchValues() const = 0;
       };
+
+
+      //************************************************************************
 
       /*!
        * \brief An IRasterComponentItem represents an IRaster IComponentItem.
@@ -1500,12 +1814,94 @@ namespace HydroCouple
       };
 
       /*!
+       * \brief The IRasterValueSet class.
+       */
+      class IRasterValueSet : public virtual IValueSet
+      {
+         public:
+
+            /*!
+             * \brief ~IRasterValueSet
+             */
+            virtual ~IRasterValueSet(){}
+
+            /*!
+             * \returns The IRasterComponentItem associated with this IRasterValueSet .
+             */
+            virtual IRasterComponentItem* rasterComponentItem() const = 0;
+
+
+            /*!
+             * \brief Gets a single value for given x, y, raster band indexes.
+             * \param xindex is the x dimension index from where to obtain the requested data.
+             * \param yindex is the y dimension index from where to obtain the requested data.
+             * \param band is the band dimension index from where to obtain the requested data.
+             * \param data is the output QVariant where data is to be written.
+             */
+            virtual void getValue(size_t xindex, size_t yindex, int band, QVariant& data) const = 0;
+
+            /*!
+             * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xindex is the x dimension index from where to obtain the requested data.
+             * \param yindex is the y dimension index from where to obtain the requested data.
+             * \param band is the band dimension index from where to obtain the requested data.
+             * \param xstride is the x size for hyperslab from which to copy data.
+             * \param ystride is the x size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  QVariant* data) const = 0;
+
+            /*!
+             * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xindex is the x dimension index from where to obtain the requested data.
+             * \param yindex is the y dimension index from where to obtain the requested data.
+             * \param band is the band dimension index from where to obtain the requested data.
+             * \param xstride is the x size for hyperslab from which to copy data.
+             * \param ystride is the x size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  void* data) const = 0;
+
+            /*!
+             * \brief Sets a single value for given x, y, raster band indexes.
+             * \param xindex is the x dimension index where to set data.
+             * \param yindex is the y dimension index where to set data.
+             * \param band is the band dimension index where to set data.
+             * \param data is the input QVariant to be written.
+             */
+            virtual void setValue(size_t xindex, size_t yindex, int band, const QVariant& data) = 0;
+
+            /*!
+             * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xindex is the x dimension index where to set data.
+             * \param yindex is the y dimension index where to set data.
+             * \param band is the band dimension index where to set data.
+             * \param xstride is the x size for hyperslab where data is to be written.
+             * \param ystride is the y size for hyperslab where data is to be written.
+             * \param data is the input QVariant array to be written.
+             */
+            virtual void setValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  const QVariant* data) = 0;
+
+            /*!
+             * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xindex is the x dimension index where to set data.
+             * \param yindex is the y dimension index where to set data.
+             * \param band is the band dimension index where to set data.
+             * \param xstride is the x size for hyperslab where data is to be written.
+             * \param ystride is the y size for hyperslab where data is to be written.
+             * \param data is the input array to be written.
+             */
+            virtual void setValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  const void* data) = 0;
+
+      };
+
+      /*!
        * \brief An  IRasterArgument is an IArgument with an IRaster.
        */
       class IRasterArgument : public virtual IArgument, public virtual IRasterComponentItem
       {
          public:
-           virtual ~IRasterArgument(){}
+            virtual ~IRasterArgument(){}
 
             /*!
              * \brief Set IRaster associated with IRasterArgument.
@@ -1513,6 +1909,12 @@ namespace HydroCouple
              * \param raster IRaster to set.
              */
             virtual void setRaster(IRaster* raster) = 0;
+
+            /*!
+             * \brief IRasterValueSet objects associated with this IRasterArgument.
+             * \returns A list of IRasterValueSet objects associated with this IRasterArgument.
+             */
+            virtual QList<IRasterValueSet*> rasterValueSets() const = 0;
       };
 
       /*!
@@ -1521,28 +1923,33 @@ namespace HydroCouple
       class IRasterExhangeItem : public virtual IExchangeItem, public virtual IRasterComponentItem
       {
          public:
+
+            /*!
+             * \brief ~IRasterExhangeItem.
+             */
             virtual ~IRasterExhangeItem(){}
 
+            /*!
+             * \brief IRasterValueSet associated with this IRasterExhangeItem.
+             * \returns An IRasterValueSet object associated with this IRasterExhangeItem.
+             */
+            virtual IRasterValueSet* rasterValues() const = 0;
       };
 
+      //************************************************************************
+
       /*!
-       * \brief An I2DRegularGridComponentItem represents an I2DRegularGrid IComponentItem
+       * \brief An IRegularGrid2DComponentItem represents an IRegularGrid2D IComponentItem
        */
-      class I2DRegularGridComponentItem : public virtual IComponentItem
+      class IRegularGrid2DComponentItem : public virtual IComponentItem
       {
 
          public:
-            virtual ~I2DRegularGridComponentItem(){}
 
             /*!
-             * \brief Number of X nodes IDimension.
+             * \brief ~IRegularGrid2DComponentItem.
              */
-            virtual IDimension* numXNodesDimension() const = 0;
-
-            /*!
-             * \brief Number of Y nodes IDimension.
-             */
-            virtual IDimension* numYNodesDimension() const = 0;
+            virtual ~IRegularGrid2DComponentItem(){}
 
             /*!
              * \brief Number of X cells IDimension.
@@ -1555,85 +1962,265 @@ namespace HydroCouple
             virtual IDimension* numYCellsDimension() const = 0;
 
             /*!
-             * \brief I2DRegularGrid grid associated with this I2DRegularGridComponentItem.
+             * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
             */
-            virtual I2DRegularGrid* grid() const = 0;
+            virtual IRegularGrid2D* grid() const = 0;
 
       };
 
       /*!
-       * \brief An I3DRegularGridComponentItem represents an I3DRegularGrid IComponentItem
+       * \brief The IRegularGrid2DValueSet class.
        */
-      class I3DRegularGridComponentItem : public virtual I2DRegularGridComponentItem
+      class IRegularGrid2DValueSet : public virtual IValueSet
+      {
+         public:
+
+            /*!
+             * \brief ~IRegularGrid2DValueSet.
+             */
+            virtual ~IRegularGrid2DValueSet(){}
+
+            /*!
+             * \brief regularGrid2DComponentItem
+             * \return
+             */
+            virtual IRegularGrid2DComponentItem* regularGrid2DComponentItem() const = 0;
+
+            /*!
+             * \brief Gets the value for the xcell index and ycell index.
+             * \param xCellIndex the x dimension index for the cell from which data is to be retrieved.
+             * \param yCellIndex the y dimension index for the cell from which data is to be retrieved.
+             * \param data is output into which the requested data is to be written.
+             */
+            virtual void getValue(int xCellIndex, int yCellIndex, QVariant& data) const = 0;
+
+            /*!
+             * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xCellIndex is the x dimension index from where to obtain the requested data.
+             * \param yCellIndex is the y dimension index from where to obtain the requested data.
+             * \param xCellStride is the xcell size for hyperslab from which to copy data.
+             * \param yCellStride is the ycell size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(int xCellIndex, int yCellIndex, int xCellStride, int yCellStride, QVariant* data) const = 0;
+
+            /*!
+             * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xCellIndex is the x dimension index from where to obtain the requested data.
+             * \param yCellIndex is the y dimension index from where to obtain the requested data.
+             * \param xCellStride is the xcell size for hyperslab from which to copy data.
+             * \param yCellStride is the ycell size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(int xCellIndex, int yCellIndex, int xCellStride, int yCellStride, void* data) const = 0;
+
+            /*!
+             * \brief Sets the value for the xcell index and ycell index.
+             * \param xCellIndex the x dimension index for the cell from which data is to be written.
+             * \param yCellIndex the y dimension index for the cell from which data is to be written.
+             * \param data is input data to be written.
+             */
+            virtual void setValue(int xCellIndex, int yCellIndex, const QVariant& data) = 0;
+
+            /*!
+             * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
+             * \param xCellIndex is the x dimension index where to write data.
+             * \param yCellIndex is the y dimension index where to write data.
+             * \param xCellStride is the xcell size for hyperslab where data is to be written.
+             * \param yCellStride is the ycell size for hyperslab where data is to be written.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void setValues(int xCellIndex, int yCellIndex, int xCellStride, int yCellStride, QVariant* data) = 0;
+
+            /*!
+             * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
+             * \param xCellIndex is the x dimension index where to write data.
+             * \param yCellIndex is the y dimension index where to write data.
+             * \param xCellStride is the xcell size for hyperslab where data is to be written.
+             * \param yCellStride is the ycell size for hyperslab where data is to be written.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void setValues(int xCellIndex, int yCellIndex, int xCellStride, int yCellStride, void* data) = 0;
+      };
+
+      /*!
+       * \brief An  IRegularGrid2DArgument is an IArgument with an IRegularGrid2DComponentItem.
+       */
+      class IRegularGrid2DArgument : public virtual IArgument, public virtual IRegularGrid2DComponentItem
+      {
+         public:
+            virtual ~IRegularGrid2DArgument(){}
+
+            /*!
+             * \brief Set IRegularGrid2D associated with IRegularGrid2DArgument.
+              */
+            virtual void setGrid(IRegularGrid2D* grid) = 0;
+
+            /*!
+             * \brief IRegularGrid2DValueSet objects associated with this IRegularGrid2DArgument.
+             * \returns A list of IRegularGrid2DValueSet objects associated with this IRegularGrid2DArgument.
+             */
+            virtual QList<IRegularGrid2DValueSet*> regular2DValueSets() const = 0;
+      };
+
+      /*!
+       * \brief An IRegularGrid2DExhangeItem is an IExchangeItem with an IRegularGrid2DComponentItem.
+       */
+      class IRegularGrid2DExhangeItem : public virtual IExchangeItem, public virtual IRegularGrid2DComponentItem
+      {
+         public:
+            virtual ~IRegularGrid2DExhangeItem(){}
+
+            /*!
+             * \brief IRegularGrid2DValueSet associated with this IRegularGrid2DExhangeItem.
+             * \returns An IRegularGrid2DValueSet object associated with this IRegularGrid2DExhangeItem.
+             */
+            virtual IRegularGrid2DValueSet* regular2DValues() const = 0;
+
+      };
+
+      //************************************************************************
+
+      /*!
+       * \brief An IRegularGrid3DComponentItem represents an IRegularGrid3D IComponentItem
+       */
+      class IRegularGrid3DComponentItem : public virtual IRegularGrid2DComponentItem
       {
 
          public:
-            virtual ~I2DRegularGridComponentItem(){}
-
-            /*!
-             * \brief Number of Z nodes IDimension.
-             */
-            virtual IDimension* numZNodesDimension() const = 0;
-
+            virtual ~IRegularGrid3DComponentItem(){}
 
             /*!
              * \brief Number of Z cells IDimension.
              */
             virtual IDimension* numZCellsDimension() const = 0;
 
-
             /*!
-             * \brief  I3DRegularGrid grid associated with this I3DRegularGridComponentItem.
+             * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
             */
-            virtual I3DRegularGrid* grid() const = 0;
+            virtual IRegularGrid3D* grid() const = 0;
 
       };
 
       /*!
-       * \brief An  I2DRegularGridArgument is an IArgument with an I2DRegularGridComponentItem.
+       * \brief The IRegularGrid3DValueSet class.
        */
-      class I2DRegularGridArgument : public virtual IArgument, public virtual I2DRegularGridComponentItem
+      class IRegularGrid3DValueSet : public virtual IValueSet
       {
          public:
-           virtual ~I2DRegularGridArgument(){}
 
             /*!
-             * \brief Set I2DRegularGrid associated with I2DRegularGridArgument.
-              */
-            virtual void setGrid(I2DRegularGrid* grid) = 0;
-      };
-
-      /*!
-       * \brief An  I3DRegularGridArgument is an IArgument with an I3DRegularGridComponentItem.
-       */
-      class I3DRegularGridArgument : public virtual IArgument, public virtual I3DRegularGridComponentItem
-      {
-         public:
-            virtual ~I3DRegularGridArgument(){}
+             * \brief ~IRegularGrid3DValueSet.
+             */
+            virtual ~IRegularGrid3DValueSet(){}
 
             /*!
-             * \brief Set I2DRegularGrid associated with I2DRegularGridArgument.
+             * \brief regularGrid2DComponentItem
+             * \return
+             */
+            virtual IRegularGrid3DComponentItem* regularGrid3DComponentItem() const = 0;
+
+            /*!
+             * \brief Gets the value for the xcell index and ycell index.
+             * \param xCellIndex the x dimension index for the cell from which data is to be retrieved.
+             * \param yCellIndex the y dimension index for the cell from which data is to be retrieved.
+             * \param zCellIndex the z dimension index for the cell from which data is to be retrieved.
+             * \param data is output into which the requested data is to be written.
+             */
+            virtual void getValue(int xCellIndex, int yCellIndex, int zCellIndex, QVariant& data) const = 0;
+
+            /*!
+             * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xCellIndex is the x dimension index from where to obtain the requested data.
+             * \param yCellIndex is the y dimension index from where to obtain the requested data.
+             * \param zCellIndex is the z dimension index from where to obtain the requested data.
+             * \param xCellStride is the xcell size for hyperslab from which to copy data.
+             * \param yCellStride is the ycell size for hyperslab from which to copy data.
+             * \param zCellStride is the zcell size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(int xCellIndex, int yCellIndex, int zCellIndex, int xCellStride, int yCellStride, int zCellStride, QVariant* data) const = 0;
+
+            /*!
+             * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+             * \param xCellIndex is the x dimension index from where to obtain the requested data.
+             * \param yCellIndex is the y dimension index from where to obtain the requested data.
+             * \param zCellIndex is the z dimension index from where to obtain the requested data.
+             * \param xCellStride is the xcell size for hyperslab from which to copy data.
+             * \param yCellStride is the ycell size for hyperslab from which to copy data.
+             * \param zCellStride is the zcell size for hyperslab from which to copy data.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void getValues(int xCellIndex, int yCellIndex, int zCellIndex, int xCellStride, int yCellStride, int zCellStride,  void* data) const = 0;
+
+            /*!
+             * \brief Sets the value for the xcell index and ycell index.
+             * \param xCellIndex the x dimension index for the cell from which data is to be written.
+             * \param yCellIndex the y dimension index for the cell from which data is to be written.
+             * \param zCellIndex the z dimension index for the cell from which data is to be written.
+             * \param data is input data to be written.
+             */
+            virtual void setValue(int xCellIndex, int yCellIndex, int zCellIndex, const QVariant& data) = 0;
+
+            /*!
+             * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
+             * \param xCellIndex is the x dimension index where to write data.
+             * \param yCellIndex is the y dimension index where to write data.
+             * \param zCellIndex is the z dimension index where to write data.
+             * \param xCellStride is the xcell size for hyperslab where data is to be written.
+             * \param yCellStride is the ycell size for hyperslab where data is to be written.
+             * \param zCellStride is the zcell size for hyperslab where data is to be written.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void setValues(int xCellIndex, int yCellIndex, int zCellIndex, int xCellStride, int yCellStride, int zCellStride, QVariant* data) = 0;
+
+            /*!
+             * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
+             * \param xCellIndex is the x dimension index where to write data.
+             * \param yCellIndex is the y dimension index where to write data.
+             * \param zCellIndex is the z dimension index where to write data.
+             * \param xCellStride is the xcell size for hyperslab where data is to be written.
+             * \param yCellStride is the ycell size for hyperslab where data is to be written.
+             * \param zCellStride is the zcell size for hyperslab where data is to be written.
+             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+             */
+            virtual void setValues(int xCellIndex, int yCellIndex, int zCellIndex, int xCellStride, int yCellStride, int zCellStride, void* data) = 0;
+      };
+
+      /*!
+       * \brief An  IRegularGrid3DArgument is an IArgument with an IRegularGrid3DComponentItem.
+       */
+      class IRegularGrid3DArgument : public virtual IArgument, public virtual IRegularGrid3DComponentItem
+      {
+         public:
+            virtual ~IRegularGrid3DArgument(){}
+
+            /*!
+             * \brief Set IRegularGrid2D associated with IRegularGrid2DArgument.
               */
-            virtual void setGrid(I3DRegularGrid* grid) = 0;
+            virtual void setGrid(IRegularGrid3D* grid) = 0;
+
+
+            /*!
+             * \brief IRegularGrid3DValueSet objects associated with this IRegularGrid3DArgument.
+             * \returns A list of IRegularGrid2DValueSet objects associated with this IRegularGrid3DArgument.
+             */
+            virtual QList<IRegularGrid3DValueSet*> regular3DValueSets() const = 0;
       };
 
       /*!
-       * \brief An I2DRegularGridExhangeItem is an IExchangeItem with an I2DRegularGridComponentItem.
+       * \brief An IRegularGrid3DExhangeItem is an IExchangeItem with an IRegularGrid3DComponentItem.
        */
-      class I2DRegularGridExhangeItem : public virtual IExchangeItem, public virtual I2DRegularGridComponentItem
+      class IRegularGrid3DExhangeItem : public virtual IExchangeItem, public virtual IRegularGrid3DComponentItem
       {
          public:
-            virtual ~I2DRegularGridExhangeItem(){}
+            virtual ~IRegularGrid3DExhangeItem(){}
 
-      };
-
-      /*!
-       * \brief An I3DRegularGridExhangeItem is an IExchangeItem with an I3DRegularGridComponentItem.
-       */
-      class I3DRegularGridExhangeItem : public virtual IExchangeItem, public virtual I3DRegularGridComponentItem
-      {
-         public:
-           virtual ~I3DRegularGridExhangeItem(){}
+            /*!
+             * \brief IRegularGrid3DValueSet associated with this IRegularGrid3DExhangeItem.
+             * \returns An IRegularGrid3DValueSet object associated with this IRegularGrid3DExhangeItem.
+             */
+            virtual IRegularGrid3DValueSet* regular3DValues() const = 0;
 
       };
 
@@ -1658,33 +2245,44 @@ Q_DECLARE_INTERFACE(HydroCouple::Spatial::IMultiSurface, "HydroCouple::Spatial::
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolygon, "HydroCouple::Spatial::IPolygon/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IMultiPolygon, "HydroCouple::Spatial::IMultiPolygon/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITriangle, "HydroCouple::Spatial::ITriangle/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::INetwork, "HydroCouple::Spatial::INetwork/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurface, "HydroCouple::Spatial::IPolyhedralSurface/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITIN, "HydroCouple::Spatial::ITIN/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRaster, "HydroCouple::Spatial::IRaster/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterBand, "HydroCouple::Spatial::IRasterBand/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I2DRegularGrid, "HydroCouple::Spatial::I2DRegularGrid/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I3DRegularGrid, "HydroCouple::Spatial::I3DRegularGrid/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2D, "HydroCouple::Spatial::IRegularGrid2D/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3D, "HydroCouple::Spatial::IRegularGrid3D/1.0")
 
 
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryComponentItem, "HydroCouple::Spatial::IGeometryComponentItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryValueSet, "HydroCouple::Spatial::IGeometryValueSet/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryArgument, "HydroCouple::Spatial::IGeometryArgument/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryExchangeItem, "HydroCouple::Spatial::IGeometryExchangeItem/1.0")
 
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINComponentItem, "HydroCouple::Spatial::ITINComponentItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINValueSet, "HydroCouple::Spatial::ITINValueSet/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINArgument, "HydroCouple::Spatial::ITINArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINExchangeItem, "HydroCouple::Spatial::ITINExchangeItem/1.0")
+
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceComponentItem, "HydroCouple::Spatial::IPolyhedralSurfaceComponentItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceValueSet, "HydroCouple::Spatial::IPolyhedralSurfaceValueSet/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceArgument, "HydroCouple::Spatial::IPolyhedralSurfaceArgument/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceExchangeItem, "HydroCouple::Spatial::IPolyhedralSurfaceExchangeItem/1.0")
 
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterComponentItem, "HydroCouple::Spatial::IRasterComponentItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterValueSet, "HydroCouple::Spatial::IRasterValueSet/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterArgument, "HydroCouple::Spatial::IRasterArgument/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterExhangeItem, "HydroCouple::Spatial::IRasterExhangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I2DRegularGridComponentItem, "HydroCouple::Spatial::I2DRegularGridComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I2DRegularGridArgument, "HydroCouple::Spatial::I2DRegularGridArgument/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I2DRegularGridExhangeItem, "HydroCouple::Spatial::I2DRegularGridExhangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DComponentItem, "HydroCouple::Spatial::IRegularGrid2DComponentItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DValueSet, "HydroCouple::Spatial::IRegularGrid2DValueSet/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DArgument, "HydroCouple::Spatial::IRegularGrid2DArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DExhangeItem, "HydroCouple::Spatial::IRegularGrid2DExhangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I3DRegularGridComponentItem, "HydroCouple::Spatial::I3DRegularGridComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I3DRegularGridArgument, "HydroCouple::Spatial::I3DRegularGridArgument/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::I3DRegularGridExhangeItem, "HydroCouple::Spatial::I3DRegularGridExhangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DComponentItem, "HydroCouple::Spatial::IRegularGrid3DComponentItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DValueSet, "HydroCouple::Spatial::IRegularGrid3DValueSet/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DArgument, "HydroCouple::Spatial::IRegularGrid3DArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DExhangeItem, "HydroCouple::Spatial::IRegularGrid3DExhangeItem/1.0")
 
 #endif // HYDROCOUPLESPATIAL
 

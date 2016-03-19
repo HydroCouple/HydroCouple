@@ -35,7 +35,7 @@
    <div id="projectname">HydroCouple
    &#160;<span id="projectnumber">1.0.0</span>
    </div>
-   <div id="projectbrief">A Component-Based Model Coupling Interface Definition and SDK</div>
+   <div id="projectbrief">A Component-Based Model Coupling Interface Definition</div>
   </td>
  </tr>
  </tbody>
@@ -135,6 +135,7 @@ Collaboration diagram for HydroCouple::Temporal::ITimeComponentItem:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae677abf05c65c1e74a6b9a5fec91311c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_item.html#ae677abf05c65c1e74a6b9a5fec91311c">~ITimeComponentItem</a> ()</td></tr>
+<tr class="memdesc:ae677abf05c65c1e74a6b9a5fec91311c"><td class="mdescLeft">&#160;</td><td class="mdescRight">~ITimeComponentItem.  <a href="#ae677abf05c65c1e74a6b9a5fec91311c">More...</a><br /></td></tr>
 <tr class="separator:ae677abf05c65c1e74a6b9a5fec91311c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac430885a4c5efb62aa986fd8b39476d1"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_item.html#ac430885a4c5efb62aa986fd8b39476d1">timeDimension</a> () const  =0</td></tr>
 <tr class="memdesc:ac430885a4c5efb62aa986fd8b39476d1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a> of the times.  <a href="#ac430885a4c5efb62aa986fd8b39476d1">More...</a><br /></td></tr>
@@ -146,7 +147,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aaabc06e00f4604583054ff9dae022ec0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_span.html" title="ITimeSpan specifies a time duration. ">ITimeSpan</a> associated with this dimension.  <a href="#aaabc06e00f4604583054ff9dae022ec0">More...</a><br /></td></tr>
 <tr class="separator:aaabc06e00f4604583054ff9dae022ec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f3cc96eecba756718e6ebd684b589e7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time.html">ITime</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_item.html#a5f3cc96eecba756718e6ebd684b589e7">time</a> (int timeIndex) const  =0</td></tr>
-<tr class="memdesc:a5f3cc96eecba756718e6ebd684b589e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time.html" title="ITime interface based on a Modified Julian Date (number and fraction of days since 00:00 November 17...">ITime</a> for index.  <a href="#a5f3cc96eecba756718e6ebd684b589e7">More...</a><br /></td></tr>
 <tr class="separator:a5f3cc96eecba756718e6ebd684b589e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_component_item"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_component_item')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_component_item.html">HydroCouple::IComponentItem</a></td></tr>
 <tr class="memitem:ade44a9609fd3e4c2526f3c9274e006cb inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_item.html#ade44a9609fd3e4c2526f3c9274e006cb">~IComponentItem</a> ()</td></tr>
@@ -154,12 +154,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f4d75e57daa0e7f7af795ce33309e88 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_model_component.html">IModelComponent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_item.html#a1f4d75e57daa0e7f7af795ce33309e88">modelComponent</a> () const  =0</td></tr>
 <tr class="memdesc:a1f4d75e57daa0e7f7af795ce33309e88 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the owner <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> of this IComponentItem.For an <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a> component item this is the component responsible for providing the content of the <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a>.  <a href="#a1f4d75e57daa0e7f7af795ce33309e88">More...</a><br /></td></tr>
 <tr class="separator:a1f4d75e57daa0e7f7af795ce33309e88 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a732fe81a0ac704a4c91ec5ed24d8e528 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_identity.html">IIdentity</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_item.html#a732fe81a0ac704a4c91ec5ed24d8e528">modelComponentId</a> () const  =0</td></tr>
+<tr class="memdesc:a732fe81a0ac704a4c91ec5ed24d8e528 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the identity of <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> of this IComponentItem.For an <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a> component item this is the component responsible for providing the content of the <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a>.  <a href="#a732fe81a0ac704a4c91ec5ed24d8e528">More...</a><br /></td></tr>
+<tr class="separator:a732fe81a0ac704a4c91ec5ed24d8e528 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab37dd4f3679947397c9a79edd74d0ea1 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_item.html#ab37dd4f3679947397c9a79edd74d0ea1">dimensions</a> () const  =0</td></tr>
 <tr class="memdesc:ab37dd4f3679947397c9a79edd74d0ea1 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">provides the dimensions associated with this <a class="el" href="class_hydro_couple_1_1_i_component_item.html" title="IComponentItem is a fundamental unit of data for a component. ">IComponentItem</a>.  <a href="#ab37dd4f3679947397c9a79edd74d0ea1">More...</a><br /></td></tr>
 <tr class="separator:ab37dd4f3679947397c9a79edd74d0ea1 inherit pub_methods_class_hydro_couple_1_1_i_component_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_identity"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_identity')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_identity.html">HydroCouple::IIdentity</a></td></tr>
 <tr class="memitem:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#aa69311baebd14ca6078474103f0b69da">~IIdentity</a> ()</td></tr>
 <tr class="separator:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24666a340e03f04eb3a242de6a23ae0e inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#a24666a340e03f04eb3a242de6a23ae0e">MPI_Comm</a> () const  =0</td></tr>
+<tr class="memdesc:a24666a340e03f04eb3a242de6a23ae0e inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPI_Comm is the communicator in a distributed memory MPI HPC Environment.  <a href="#a24666a340e03f04eb3a242de6a23ae0e">More...</a><br /></td></tr>
+<tr class="separator:a24666a340e03f04eb3a242de6a23ae0e inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3787aa058e62cd93bb782a1f66894827 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#a3787aa058e62cd93bb782a1f66894827">MPI_Rank</a> () const  =0</td></tr>
+<tr class="memdesc:a3787aa058e62cd93bb782a1f66894827 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPIRank is the rank of the processor in the communicator.  <a href="#a3787aa058e62cd93bb782a1f66894827">More...</a><br /></td></tr>
+<tr class="separator:a3787aa058e62cd93bb782a1f66894827 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6310a9d5339603f3422791b2bd9b4c56 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#a6310a9d5339603f3422791b2bd9b4c56">id</a> () const  =0</td></tr>
 <tr class="memdesc:a6310a9d5339603f3422791b2bd9b4c56 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a unique identifier for the entity.  <a href="#a6310a9d5339603f3422791b2bd9b4c56">More...</a><br /></td></tr>
 <tr class="separator:a6310a9d5339603f3422791b2bd9b4c56 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,6 +222,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>~ITimeComponentItem. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -237,8 +248,7 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Return <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time.html" title="ITime interface based on a Modified Julian Date (number and fraction of days since 00:00 November 17...">ITime</a> for index. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time.html" title="ITime interface based on a Modified Julian Date (number and fraction of days since 00:00 November 17...">ITime</a> for index. </dd></dl>
 
 </div>
 </div>
@@ -264,6 +274,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a> of the times. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a> </dd></dl>
 
 </div>
 </div>
@@ -289,6 +300,14 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ITimes associated with this dimension. </p>
+<dl class="section return"><dt>Returns</dt><dd>QList&lt;ITime*&gt; </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_temporal_1_1_i_time_component_item_ae64e3f2a6b5e107624d7aeaf29017373_icgraph.svg" width="566" height="504"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</p>
 
 </div>
 </div>
