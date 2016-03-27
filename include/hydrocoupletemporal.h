@@ -115,7 +115,7 @@ namespace HydroCouple
              * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t timeDimensionIndex, QVariant& data) const = 0;
+            virtual void getValue(int timeDimensionIndex, QVariant& data) const = 0;
 
             /*!
              * \brief Gets a multi-dimensional array of values for given
@@ -124,7 +124,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t stride, QVariant* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int stride, QVariant* data) const = 0;
 
             /*!
              * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
@@ -132,14 +132,14 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t stride, void* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int stride, void* data) const = 0;
 
             /*!
              * \brief Sets a single value for given time dimension index.
              * \param timeDimensionIndex is the time dimension index where data is to be written.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t timeDimensionIndex, const QVariant& data) = 0;
+            virtual void setValue(int timeDimensionIndex, const QVariant& data) = 0;
 
             /*!
              * \brief Sets a multi-dimensional array of values for given time
@@ -148,7 +148,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex, size_t stride, const QVariant* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int stride, const QVariant* data) = 0;
 
             /*!
              * \brief Sets a multi-dimensional array of values for given
@@ -157,7 +157,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex, size_t stride, const void* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int stride, const void* data) = 0;
 
       };
 
@@ -173,7 +173,9 @@ namespace HydroCouple
              */
             virtual ~ITimeArgument(){}
 
-            //!Set ITimes associated with this ITimeArgument. Dont forget to update timeSpace and timeDimension accordingly
+            /*!
+             * \brief Set ITimes associated with this ITimeArgument. Dont forget to update timeSpace and timeDimension accordingly.
+             */
             virtual void  setTimes(const QList<ITime*>& times) = 0;
 
             /*!
@@ -193,7 +195,7 @@ namespace HydroCouple
 
             /*!
              * \brief ITimeValueSet associated with this ITimeExchangeItem.
-             * \returns A ITimeValueSet objects associated with this ITimeArgument.
+             * \returns A ITimeValueSet objects associated with this ITimeExchangeItem.
              */
             virtual ITimeValueSet* timeValues() const = 0;
       };

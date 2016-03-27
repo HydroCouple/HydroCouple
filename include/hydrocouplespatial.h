@@ -1205,12 +1205,12 @@ namespace HydroCouple
             /*!
              * \brief Number of pixels in the x direction.
              */
-            virtual size_t xSize() const = 0;
+            virtual int xSize() const = 0;
 
             /*!
              * \brief Number of pixels in y direction.
              */
-            virtual size_t ySize() const = 0;
+            virtual int ySize() const = 0;
 
             /*!
              * \brief Number of raster bands.
@@ -1254,10 +1254,10 @@ namespace HydroCouple
             virtual ~IRasterBand(){}
 
             //!Number of pixels in the x direction
-            virtual size_t xSize() const = 0;
+            virtual int xSize() const = 0;
 
             //!Number of pixels in y direction
-            virtual size_t ySize() const = 0;
+            virtual int ySize() const = 0;
 
             //!Parent IRaster of this IRasterBand
             virtual IRaster* raster() const = 0;
@@ -1273,7 +1273,7 @@ namespace HydroCouple
                * \param ySize is the height of the region of the band to be accessed in lines.</param>
                * \param image is the pointer to where data is to be written. Delete after use.
                */
-            virtual void read(size_t xOffset, size_t yOffset, size_t xSize, size_t ySize, void* image) const = 0;
+            virtual void read(int xOffset, int yOffset, int xSize, int ySize, void* image) const = 0;
 
             /*!
                * \brief Writes image into the raster band.
@@ -1283,7 +1283,7 @@ namespace HydroCouple
                * \param ySize is the height of the region of the band to be accessed in lines.</param>
                * \param image is the pointer to where data is to be written. Delete after use.
               */
-            virtual void write(size_t xOffset, size_t yOffset, size_t xSize, size_t ySize, const void* image) = 0;
+            virtual void write(int xOffset, int yOffset, int xSize, int ySize, const void* image) = 0;
 
             /*!
                * The nodata value for this IRasterBand.
@@ -1431,7 +1431,7 @@ namespace HydroCouple
              * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t geometryDimensionIndex, QVariant& data) const = 0;
+            virtual void getValue(int geometryDimensionIndex, QVariant& data) const = 0;
 
             //!Gets a multi-dimensional array of values for given dimension geometry dimension index and size for a hyperslab.
             /*!
@@ -1439,7 +1439,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t geometryDimensionIndex, size_t stride,  QVariant* data) const = 0;
+            virtual void getValues(int geometryDimensionIndex, int stride,  QVariant* data) const = 0;
 
             //!Gets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
             /*!
@@ -1447,14 +1447,14 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
              */
-            virtual void getValues(size_t geometryDimensionIndex, size_t stride,  void* data) const = 0;
+            virtual void getValues(int geometryDimensionIndex, int stride,  void* data) const = 0;
 
             //!Sets a single value for given geometry dimension index.
             /*!
              * \param geometryDimensionIndex is the geometry dimension index where data is to be written.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t geometryDimensionIndex, const QVariant& data) = 0;
+            virtual void setValue(int geometryDimensionIndex, const QVariant& data) = 0;
 
             //!Sets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
             /*!
@@ -1462,7 +1462,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t geometryDimensionIndex, size_t stride, const QVariant* data) = 0;
+            virtual void setValues(int geometryDimensionIndex, int stride, const QVariant* data) = 0;
 
             //!Sets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
             /*!
@@ -1470,7 +1470,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t geometryDimensionIndex , size_t stride, const void* data) = 0;
+            virtual void setValues(int geometryDimensionIndex , int stride, const void* data) = 0;
 
       };
 
@@ -1561,7 +1561,7 @@ namespace HydroCouple
              * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t patchDimensionIndex, QVariant& data) const = 0;
+            virtual void getValue(int patchDimensionIndex, QVariant& data) const = 0;
 
             //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
             /*!
@@ -1569,7 +1569,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t patchDimensionIndex, size_t stride,  QVariant* data) const = 0;
+            virtual void getValues(int patchDimensionIndex, int stride,  QVariant* data) const = 0;
 
             //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -1577,14 +1577,14 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
              */
-            virtual void getValues(size_t patchDimensionIndex, size_t stride,  void* data) const = 0;
+            virtual void getValues(int patchDimensionIndex, int stride,  void* data) const = 0;
 
             //!Sets a single value for given patch dimension index.
             /*!
              * \param patchDimensionIndex is the patch dimension index where data is to be written.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t patchDimensionIndex, const QVariant& data) = 0;
+            virtual void setValue(int patchDimensionIndex, const QVariant& data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -1592,7 +1592,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t patchDimensionIndex, size_t stride, const QVariant* data) = 0;
+            virtual void setValues(int patchDimensionIndex, int stride, const QVariant* data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -1600,7 +1600,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t patchDimensionIndex , size_t stride, const void* data) = 0;
+            virtual void setValues(int patchDimensionIndex , int stride, const void* data) = 0;
 
       };
 
@@ -1690,7 +1690,7 @@ namespace HydroCouple
              * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t patchDimensionIndex, QVariant& data) const = 0;
+            virtual void getValue(int patchDimensionIndex, QVariant& data) const = 0;
 
             //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
             /*!
@@ -1698,7 +1698,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t patchDimensionIndex, size_t stride,  QVariant* data) const = 0;
+            virtual void getValues(int patchDimensionIndex, int stride,  QVariant* data) const = 0;
 
             //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -1706,14 +1706,14 @@ namespace HydroCouple
              * \param stride is the size for hyperslab from which to copy data.
              * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
              */
-            virtual void getValues(size_t patchDimensionIndex, size_t stride,  void* data) const = 0;
+            virtual void getValues(int patchDimensionIndex, int stride,  void* data) const = 0;
 
             //!Sets a single value for given patch dimension index.
             /*!
              * \param patchDimensionIndex is the patch dimension index where data is to be written.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t patchDimensionIndex, const QVariant& data) = 0;
+            virtual void setValue(int patchDimensionIndex, const QVariant& data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -1721,7 +1721,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t patchDimensionIndex, size_t stride, const QVariant* data) = 0;
+            virtual void setValues(int patchDimensionIndex, int stride, const QVariant* data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -1729,7 +1729,7 @@ namespace HydroCouple
              * \param stride is the size for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t patchDimensionIndex , size_t stride, const void* data) = 0;
+            virtual void setValues(int patchDimensionIndex , int stride, const void* data) = 0;
 
       };
 
@@ -1838,7 +1838,7 @@ namespace HydroCouple
              * \param band is the band dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t xindex, size_t yindex, int band, QVariant& data) const = 0;
+            virtual void getValue(int xindex, int yindex, int band, QVariant& data) const = 0;
 
             /*!
              * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -1849,7 +1849,7 @@ namespace HydroCouple
              * \param ystride is the x size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  QVariant* data) const = 0;
+            virtual void getValues(int xindex, int yindex, int band, int xstride, int ystride,  QVariant* data) const = 0;
 
             /*!
              * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -1860,7 +1860,7 @@ namespace HydroCouple
              * \param ystride is the x size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  void* data) const = 0;
+            virtual void getValues(int xindex, int yindex, int band, int xstride, int ystride,  void* data) const = 0;
 
             /*!
              * \brief Sets a single value for given x, y, raster band indexes.
@@ -1869,7 +1869,7 @@ namespace HydroCouple
              * \param band is the band dimension index where to set data.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t xindex, size_t yindex, int band, const QVariant& data) = 0;
+            virtual void setValue(int xindex, int yindex, int band, const QVariant& data) = 0;
 
             /*!
              * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -1880,7 +1880,7 @@ namespace HydroCouple
              * \param ystride is the y size for hyperslab where data is to be written.
              * \param data is the input QVariant array to be written.
              */
-            virtual void setValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  const QVariant* data) = 0;
+            virtual void setValues(int xindex, int yindex, int band, int xstride, int ystride,  const QVariant* data) = 0;
 
             /*!
              * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -1891,7 +1891,7 @@ namespace HydroCouple
              * \param ystride is the y size for hyperslab where data is to be written.
              * \param data is the input array to be written.
              */
-            virtual void setValues(size_t xindex, size_t yindex, int band, size_t xstride, size_t ystride,  const void* data) = 0;
+            virtual void setValues(int xindex, int yindex, int band, int xstride, int ystride,  const void* data) = 0;
 
       };
 

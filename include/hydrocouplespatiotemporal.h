@@ -71,7 +71,7 @@ namespace HydroCouple
              * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t timeDimensionIndex, size_t geometryDimensionIndex, QVariant& data) const = 0;
+            virtual void getValue(int timeDimensionIndex, int geometryDimensionIndex, QVariant& data) const = 0;
 
             //!Gets a multi-dimensional array of values for given dimension time dimension index and size for a hyperslab.
             /*!
@@ -81,7 +81,7 @@ namespace HydroCouple
             * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
             * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
             */
-            virtual void getValues(size_t timeDimensionIndex, size_t geometryDimensionIndex, size_t timeStride, size_t geomStride, QVariant* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int geometryDimensionIndex, int timeStride, int geomStride, QVariant* data) const = 0;
 
             //!Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
             /*!
@@ -91,7 +91,7 @@ namespace HydroCouple
             * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
             * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
             */
-            virtual void getValues(size_t timeDimensionIndex, size_t geometryDimensionIndex, size_t timeStride, size_t geomStride, void* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int geometryDimensionIndex, int timeStride, int geomStride, void* data) const = 0;
 
             //!Sets a single value for given time dimension index.
             /*!
@@ -99,7 +99,7 @@ namespace HydroCouple
             * \param geometryDimensionIndex is the geometry dimension index where data is to be written.
             * \param data is the input QVariant to be written.
             */
-            virtual void setValue(size_t timeDimensionIndex, size_t geometryDimensionIndex, const QVariant& data) = 0;
+            virtual void setValue(int timeDimensionIndex, int geometryDimensionIndex, const QVariant& data) = 0;
 
             //!Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
             /*!
@@ -109,7 +109,7 @@ namespace HydroCouple
             * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
             * \param data is the input multi dimensional array to be written.
             */
-            virtual void setValues(size_t timeDimensionIndex, size_t geometryDimensionIndex, size_t timeStride, size_t geomStride, const QVariant* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int geometryDimensionIndex, int timeStride, int geomStride, const QVariant* data) = 0;
 
             //!Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
             /*!
@@ -119,7 +119,7 @@ namespace HydroCouple
             * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
             * \param data is the input multi dimensional array to be written.
             */
-            virtual void setValues(size_t timeDimensionIndex, size_t geometryDimensionIndex, size_t timeStride, size_t geomStride, const void* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int geometryDimensionIndex, int timeStride, int geomStride, const void* data) = 0;
       };
 
       /*!
@@ -196,7 +196,7 @@ namespace HydroCouple
             /*!
              * \brief ITimeTINValueSet
              */
-            virtual ITimeTINValueSet(){}
+            virtual ~ITimeTINValueSet(){}
 
             /*!
              * \returns The ITimeTINComponentItem associated with this ITimeTINValueSet .
@@ -209,7 +209,7 @@ namespace HydroCouple
              * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t timeDimensionIndex, size_t patchDimensionIndex, QVariant& data) const = 0;
+            virtual void getValue(int timeDimensionIndex, int patchDimensionIndex, QVariant& data) const = 0;
 
             //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
             /*!
@@ -219,7 +219,7 @@ namespace HydroCouple
              * \param patchStride is the size of the patch dimension for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride, QVariant* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride, QVariant* data) const = 0;
 
             //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -229,7 +229,7 @@ namespace HydroCouple
              * \param patchStride is the size of the patch dimension for hyperslab from which to copy data.
              * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride,  void* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride,  void* data) const = 0;
 
             //!Sets a single value for given patch dimension index.
             /*!
@@ -237,7 +237,7 @@ namespace HydroCouple
              * \param patchDimensionIndex is the patch dimension index where data is to be written.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t timeDimensionIndex, size_t patchDimensionIndex, const QVariant& data) = 0;
+            virtual void setValue(int timeDimensionIndex, int patchDimensionIndex, const QVariant& data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -247,7 +247,7 @@ namespace HydroCouple
              * \param patchStride is the size for the patch dimensions hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride, const QVariant* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride, const QVariant* data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -257,7 +257,7 @@ namespace HydroCouple
              * \param patchStride is the size of the time dimension for hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex, size_t patchDimensionIndex , size_t timeStride, size_t patchStride, const void* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int patchDimensionIndex , int timeStride, int patchStride, const void* data) = 0;
 
       };
 
@@ -339,7 +339,7 @@ namespace HydroCouple
             /*!
              * \brief ITimePolyhedralSurfaceValueSet.
              */
-            virtual ITimePolyhedralSurfaceValueSet(){}
+            virtual ~ITimePolyhedralSurfaceValueSet(){}
 
             /*!
              * \returns The ITimePolyhedralSurfaceComponentItem associated with this ITimePolyhedralSurfaceValueSet .
@@ -352,7 +352,7 @@ namespace HydroCouple
              * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t timeDimensionIndex, size_t patchDimensionIndex, QVariant& data) const = 0;
+            virtual void getValue(int timeDimensionIndex, int patchDimensionIndex, QVariant& data) const = 0;
 
             //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
             /*!
@@ -362,7 +362,7 @@ namespace HydroCouple
              * \param patchStride is the size for the patch dimensions hyperslab where data is to be written.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride,  QVariant* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride,  QVariant* data) const = 0;
 
             //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -372,7 +372,7 @@ namespace HydroCouple
              * \param patchStride is the size for the patch dimensions hyperslab where data is to be written.
              * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride,  void* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride,  void* data) const = 0;
 
             //!Sets a single value for given patch dimension index.
             /*!
@@ -382,7 +382,7 @@ namespace HydroCouple
              * \param patchStride is the size for the patch dimensions hyperslab where data is to be written.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride, const QVariant& data) = 0;
+            virtual void setValue(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride, const QVariant& data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -392,7 +392,7 @@ namespace HydroCouple
              * \param patchStride is the size for the patch dimensions hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride, const QVariant* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride, const QVariant* data) = 0;
 
             //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
             /*!
@@ -402,7 +402,7 @@ namespace HydroCouple
              * \param patchStride is the size for the patch dimensions hyperslab where data is to be written.
              * \param data is the input multi dimensional array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex, size_t patchDimensionIndex, size_t timeStride, size_t patchStride, const void* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride, const void* data) = 0;
 
       };
 
@@ -492,7 +492,7 @@ namespace HydroCouple
              * \param band is the band dimension index from where to obtain the requested data.
              * \param data is the output QVariant where data is to be written.
              */
-            virtual void getValue(size_t timeDimensionIndex, size_t xindex, size_t yindex, int band, QVariant& data) const = 0;
+            virtual void getValue(int timeDimensionIndex, int xindex, int yindex, int band, QVariant& data) const = 0;
 
             /*!
              * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -505,7 +505,7 @@ namespace HydroCouple
              * \param ystride is the x size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t xindex, size_t yindex, int band, size_t timeStride, size_t xstride, size_t ystride,  QVariant* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int xindex, int yindex, int band, int timeStride, int xstride, int ystride,  QVariant* data) const = 0;
 
             /*!
              * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -518,7 +518,7 @@ namespace HydroCouple
              * \param ystride is the x size for hyperslab from which to copy data.
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
-            virtual void getValues(size_t timeDimensionIndex, size_t xindex, size_t yindex, int band, size_t timeStride, size_t xstride, size_t ystride,  void* data) const = 0;
+            virtual void getValues(int timeDimensionIndex, int xindex, int yindex, int band, int timeStride, int xstride, int ystride,  void* data) const = 0;
 
             /*!
              * \brief Sets a single value for given x, y, raster band indexes.
@@ -531,7 +531,7 @@ namespace HydroCouple
              * \param ystride is the x size for hyperslab from which to copy data.
              * \param data is the input QVariant to be written.
              */
-            virtual void setValue(size_t timeDimensionIndex, size_t xindex, size_t yindex, int band, size_t timeStride, size_t xstride, size_t ystride, const QVariant& data) = 0;
+            virtual void setValue(int timeDimensionIndex, int xindex, int yindex, int band, int timeStride, int xstride, int ystride, const QVariant& data) = 0;
 
             /*!
              * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -544,7 +544,7 @@ namespace HydroCouple
              * \param ystride is the x size for hyperslab from which to copy data.
              * \param data is the input QVariant array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex, size_t xindex, size_t yindex, int band, size_t timeStride, size_t xstride, size_t ystride,  const QVariant* data) = 0;
+            virtual void setValues(int timeDimensionIndex, int xindex, int yindex, int band, int timeStride, int xstride, int ystride,  const QVariant* data) = 0;
 
             /*!
              * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -557,7 +557,7 @@ namespace HydroCouple
              * \param ystride is the x size for hyperslab from which to copy data.
              * \param data is the input array to be written.
              */
-            virtual void setValues(size_t timeDimensionIndex,size_t xindex, size_t yindex, int band, size_t timeStride, size_t xstride, size_t ystride,  const void* data) = 0;
+            virtual void setValues(int timeDimensionIndex,int xindex, int yindex, int band, int timeStride, int xstride, int ystride,  const void* data) = 0;
 
 
 
@@ -576,14 +576,14 @@ namespace HydroCouple
             /*!
              * \brief Set ITimes associated with this ITimeRasterArgument. Dont forget to update timeSpace and timeDimension accordingly.
              */
-            virtual void  setTimes(const QList<ITime*>& times) = 0;
+            virtual void  setTimes(const QList<HydroCouple::Temporal::ITime*>& times) = 0;
 
             /*!
              * \brief Set IRaster associated with IRasterArgument.
              *
              * \param raster IRaster to set.
              */
-            virtual void setRaster(IRaster* raster) = 0;
+            virtual void setRaster(HydroCouple::Spatial::IRaster* raster) = 0;
 
             /*!
              * \brief ITimeRasterValueSet objects associated with this ITimeRasterArgument.

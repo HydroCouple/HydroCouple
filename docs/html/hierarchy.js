@@ -16,6 +16,7 @@ var hierarchy =
           ] ],
           [ "HydroCouple::IComponentItem", "class_hydro_couple_1_1_i_component_item.html", [
             [ "HydroCouple::IArgument", "class_hydro_couple_1_1_i_argument.html", [
+              [ "HydroCouple::IIdBasedArgument", "class_hydro_couple_1_1_i_id_based_argument.html", null ],
               [ "HydroCouple::Spatial::IGeometryArgument", "class_hydro_couple_1_1_spatial_1_1_i_geometry_argument.html", null ],
               [ "HydroCouple::Spatial::IPolyhedralSurfaceArgument", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_argument.html", null ],
               [ "HydroCouple::Spatial::IRasterArgument", "class_hydro_couple_1_1_spatial_1_1_i_raster_argument.html", null ],
@@ -31,6 +32,7 @@ var hierarchy =
               [ "HydroCouple::Temporal::ITimeArgument", "class_hydro_couple_1_1_temporal_1_1_i_time_argument.html", null ]
             ] ],
             [ "HydroCouple::IExchangeItem", "class_hydro_couple_1_1_i_exchange_item.html", [
+              [ "HydroCouple::IIdBasedExchangeItem", "class_hydro_couple_1_1_i_id_based_exchange_item.html", null ],
               [ "HydroCouple::IInput", "class_hydro_couple_1_1_i_input.html", null ],
               [ "HydroCouple::IOutput", "class_hydro_couple_1_1_i_output.html", [
                 [ "HydroCouple::IAdaptedOutput", "class_hydro_couple_1_1_i_adapted_output.html", null ]
@@ -48,6 +50,10 @@ var hierarchy =
               [ "HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_exchange_item.html", null ],
               [ "HydroCouple::SpatioTemporal::ITimeTINExchangeItem", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_exchange_item.html", null ],
               [ "HydroCouple::Temporal::ITimeExchangeItem", "class_hydro_couple_1_1_temporal_1_1_i_time_exchange_item.html", null ]
+            ] ],
+            [ "HydroCouple::IIdBasedComponentItem", "class_hydro_couple_1_1_i_id_based_component_item.html", [
+              [ "HydroCouple::IIdBasedArgument", "class_hydro_couple_1_1_i_id_based_argument.html", null ],
+              [ "HydroCouple::IIdBasedExchangeItem", "class_hydro_couple_1_1_i_id_based_exchange_item.html", null ]
             ] ],
             [ "HydroCouple::Spatial::IGeometryComponentItem", "class_hydro_couple_1_1_spatial_1_1_i_geometry_component_item.html", [
               [ "HydroCouple::Spatial::IGeometryArgument", "class_hydro_couple_1_1_spatial_1_1_i_geometry_argument.html", null ],
@@ -155,6 +161,7 @@ var hierarchy =
           [ "HydroCouple::IQuantity", "class_hydro_couple_1_1_i_quantity.html", null ]
         ] ],
         [ "HydroCouple::IValueSet", "class_hydro_couple_1_1_i_value_set.html", [
+          [ "HydroCouple::IIdBasedValueSet", "class_hydro_couple_1_1_i_id_based_value_set.html", null ],
           [ "HydroCouple::Spatial::IGeometryValueSet", "class_hydro_couple_1_1_spatial_1_1_i_geometry_value_set.html", null ],
           [ "HydroCouple::Spatial::IPolyhedralSurfaceValueSet", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_value_set.html", null ],
           [ "HydroCouple::Spatial::IRasterValueSet", "class_hydro_couple_1_1_spatial_1_1_i_raster_value_set.html", null ],

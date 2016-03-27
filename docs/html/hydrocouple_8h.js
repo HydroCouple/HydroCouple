@@ -25,6 +25,10 @@ var hydrocouple_8h =
     [ "IAdaptedOutputFactoryComponentInfo", "class_hydro_couple_1_1_i_adapted_output_factory_component_info.html", "class_hydro_couple_1_1_i_adapted_output_factory_component_info" ],
     [ "IAdaptedOutputFactoryComponent", "class_hydro_couple_1_1_i_adapted_output_factory_component.html", "class_hydro_couple_1_1_i_adapted_output_factory_component" ],
     [ "IInput", "class_hydro_couple_1_1_i_input.html", "class_hydro_couple_1_1_i_input" ],
+    [ "IIdBasedComponentItem", "class_hydro_couple_1_1_i_id_based_component_item.html", "class_hydro_couple_1_1_i_id_based_component_item" ],
+    [ "IIdBasedValueSet", "class_hydro_couple_1_1_i_id_based_value_set.html", "class_hydro_couple_1_1_i_id_based_value_set" ],
+    [ "IIdBasedArgument", "class_hydro_couple_1_1_i_id_based_argument.html", "class_hydro_couple_1_1_i_id_based_argument" ],
+    [ "IIdBasedExchangeItem", "class_hydro_couple_1_1_i_id_based_exchange_item.html", "class_hydro_couple_1_1_i_id_based_exchange_item" ],
     [ "HYDROCOUPLE_EXPORT", "hydrocouple_8h.html#ae1eff69fe0f5c0a03920fb8d14ba36f3", null ],
     [ "ComponentStatus", "hydrocouple_8h.html#a5faa3b28d378bbb00134df393c19ba03", [
       [ "Created", "hydrocouple_8h.html#a5faa3b28d378bbb00134df393c19ba03a03894703c08dd9ab7306add54a772750", null ],

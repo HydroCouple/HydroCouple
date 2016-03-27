@@ -8,6 +8,8 @@ TEMPLATE = lib
 VERSION = 1.0.0
 TARGET = HydroCouple
 
+
+
 QT += core
 
 INCLUDEPATH += ./include
