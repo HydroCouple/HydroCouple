@@ -1042,8 +1042,6 @@ namespace HydroCouple
           */
          virtual IValueDefinition* valueDefinition() const = 0;
    };
-
-
    
    /*!
     * \brief IArgument interface class used to set the arguments for components.
@@ -1473,6 +1471,34 @@ namespace HydroCouple
    };
 
    /*!
+    * \brief The IMultiInput class is an IInput class that has multiple outputs supplying data to it.
+    */
+   class IMultiInput : public virtual IInput
+   {
+      public:
+         virtual ~IMultiInput(){}
+
+         /*!
+          * \brief providers
+          * \return
+          */
+         virtual QList<IOutput*> providers() const = 0;
+
+         /*!
+          * \brief addProvider
+          * \param provider
+          */
+         virtual void addProvider(IOutput* provider) = 0;
+
+         /*!
+          * \brief removeProvider
+          * \param provider
+          */
+         virtual void removeProvider(IOutput* provider) = 0;
+
+   };
+
+   /*!
     * \brief The IIdBasedComponentItem class is an idbased IComponentItem
     */
    class IIdBasedComponentItem : public virtual IComponentItem
@@ -1487,13 +1513,13 @@ namespace HydroCouple
           * \brief idDimensions
           * \return
           */
-         virtual IDimension idDimensions() const;
+         virtual IDimension* idDimension() const = 0;
 
          /*!
           * \brief ids
           * \return
           */
-         virtual QList<IIdentity*> ids() const;
+         virtual QList<IIdentity*> ids() const = 0;
    };
 
    /*!
