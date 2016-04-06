@@ -227,7 +227,6 @@ namespace HydroCouple
       Currency
    };
 
-
    /*!
     * \brief IPropertyChanged interface is used to emit signal/event when a property of an object changes.
     */
@@ -528,27 +527,27 @@ namespace HydroCouple
       public:
          virtual ~IModelComponent() {}
          
-         //!Contains the metadata about this IModelComponent instance.
          /*!
+          * \brief Contains the metadata about this IModelComponent instance.
           * \returns An IModelComponentInfo that provides metadata about a component.
           */
          virtual IModelComponentInfo* componentInfo() const = 0;
          
-         //!Parent IModelComponent object from which current component was cloned from.
          /*!
+          * \brief Parent IModelComponent object from which current component was cloned from.
           * \returns The parent IModelComponent from which the current component was created.
           */
          virtual IModelComponent* parent() const = 0;
          
-         //!Deep clones itself including cloning its Data::IArgument.
          /*!
+          * \brief Deep clones itself including cloning its Data::IArgument.
           * \returns A deep clone of the current component. Configuration files and output files
           * must be written to a different location than those of the parent.
           */
-         virtual IModelComponent* clone() const = 0;
+         virtual IModelComponent* clone() = 0;
          
-         //!A list IModelComponent instances cloned from this IModelComponent instance.
          /*!
+          * \brief A list IModelComponent instances cloned from this IModelComponent instance.
           * \returns A list of child components created from the current component.
           */
          virtual QList<IModelComponent*> children() const = 0;
@@ -569,8 +568,9 @@ namespace HydroCouple
           */
          virtual QList<IArgument*> arguments() const = 0;
          
-         //!Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible values
          /*!
+          * \brief Defines current status of the IModelComponent.
+          * See HydroCouple::Componentstatus for the possible values.
           * \details The first status that a component sets is HydroCouple::Created,
           * as soon after it has been created. In this status,
           * Arguments is the only property that may be accessed.
@@ -578,9 +578,10 @@ namespace HydroCouple
           * \returns the current status of this component
           */
          virtual ComponentStatus status() const = 0;
-         
-         //!The list of consumer items for which a component can recieve values.
+
          /*!
+          * \brief The list of consumer items for which a component can recieve values.
+          *
           * \details This property must be accessible after the initialize() method has been
           * invoked and until the validate() method has been invoked. If this property
           * is accessed before the initialize() method has been invoked or after the
@@ -594,8 +595,9 @@ namespace HydroCouple
           */
          virtual QList<IInput*> inputs() const = 0;
          
-         //!The list of IOutputs for which a component can produce results.
          /*!
+          * \brief The list of IOutputs for which a component can produce results.
+          *
           * \details This property must be accessible after the initialize() method has been
           * invoked and until the validate() method has been invoked. If this property
           * is accessed before the initialize() method has been invoked or after the
@@ -614,10 +616,14 @@ namespace HydroCouple
           */
          virtual QList<IOutput*> outputs() const = 0;
          
-         //! Gets a list of IAdaptedOutputFactories, each allowing to create IAdaptedOutput
-         //! item for making outputs fit to inputs in case they do not already do so.
-         /*! Factories can be added to and removed from the list so that
+         /*!
+          * \brief Gets a list of IAdaptedOutputFactories, each allowing
+          * to create IAdaptedOutput item for making outputs fit to
+          * inputs in case they do not already do so.
+          *
+          * \details Factories can be added to and removed from the list so that
           * third-party factories and IAdaptedOutput classes can be introduced.
+          *
           * \returns A list of IAdaptedOutputFactories associated with this component.
           */
          virtual QList<IAdaptedOutputFactory*> adaptedOutputFactories() const = 0;
@@ -648,8 +654,9 @@ namespace HydroCouple
           */
          virtual void initialize() = 0;
          
-         //!Validates the populated instance of the IModelComponent
          /*!
+          * \brief Validates the populated instance of the IModelComponent.
+          *
           * \details This method must be accessible after the initialize() method has been
           * invoked and until the finish() method has been invoked. If this property
           * is accessed before the initialize() method has been invoked or after the
@@ -673,8 +680,9 @@ namespace HydroCouple
           */
          virtual QList<QString> validate() = 0;
          
-         //!Prepares the IModelComponent for calls to the Update method
          /*!
+          * \brief Prepares the IModelComponent for calls to the Update method.
+          *
           * \details Before prepare() is called, the IModelComponent are not required to honor
           * any type of action that retrieves values from the IModelComponent.
           * After prepare() is called, the IModelComponent must be ready for providing values.
@@ -695,8 +703,9 @@ namespace HydroCouple
           */
          virtual void prepare() = 0;
          
-         //! This method is called to let the component update itself, thus reaching its next state.
          /*!
+          * \brief This method is called to let the component update itself, thus reaching its next state.
+          *
           * \details Immediately after this method is invoked, it changes the component's status() to HydroCouple::Updating.
           *
           * \details The type of actions a component takes during the Update method depends
@@ -720,21 +729,26 @@ namespace HydroCouple
           */
          virtual void update(const QList<IOutput*> & requiredOutputs = QList<IOutput*>()) = 0;
          
-         //!The finish() must be invoked as the last of any methods in the IModelComponent interface
          /*!
+          * \brief The finish() must be invoked as the last of any methods in the IModelComponent interface.
+          *
           * \details This method must be accessible after the prepare() method has been invoked.
           * If this method is invoked before the prepare() method has been invoked an
           * exception must be thrown by the IModelComponent.
+          *
           * \details Immediately after the method is invoked, it changes the IModelComponent's status() to HydroCouple::Finishing.
           * Once the finishing is completed, the component changes its status() to
           * HydroCouple::Finished if it can not be restarted,
           * or HydroCouple::Created if it can.
           */
          virtual void finish() = 0;
-         
-         //! The componentStatusChanged() function must be implemented as a signal and emitted when Status of the component changes.
+
+      signals:
          /*!
-          *See HydroCouple::ComponentStatus for the possible states.
+          * \brief The componentStatusChanged() function must be implemented
+          * as a signal and emitted when Status of the component changes.
+          *
+          * \details See HydroCouple::ComponentStatus for the possible states.
           */
          virtual void componentStatusChanged(const IComponentStatusChangeEventArgs& statusChangedEvent) = 0;
    };
@@ -873,14 +887,17 @@ namespace HydroCouple
          virtual bool isOrdered() const = 0;
    };
    
-   //! Defines the order of dimension in each FundamentalDimension for a unit.
+   /*!
+    * \brief Defines the order of dimension in each FundamentalDimension for a unit.
+    */
    class IUnitDimensions : public virtual IDescription
    {
       public:
          virtual ~IUnitDimensions() {}
          
-         //!Returns the power for the requested dimension.
          /*!
+          * \brief Returns the power for the requested dimension.
+          *
           * \param dimension represents the fundamental unit.
           *
           * \details For a quantity such as flow, which may have the unit m<sup>3</sup>/s,
@@ -907,35 +924,49 @@ namespace HydroCouple
          virtual double getPower(HydroCouple::FundamentalUnitDimension dimension) const = 0;
    };
    
-   /// IUnit interface, describing the physical unit of a IQuantity.
+   /*!
+    * \brief IUnit interface, describing the physical unit of a IQuantity.
+    */
    class IUnit : public virtual IDescription
    {
       public:
          virtual ~IUnit() {}
          
-         //!Fundamental dimensions of the unit
+         /*!
+          * \brief Fundamental dimensions of the unit.
+          */
          virtual IUnitDimensions* dimensions() const = 0;
          
-         //! Conversion factor to SI ('A' in: SI-value = A * quant-value + B)
+         /*!
+          * \brief Conversion factor to SI ('A' in: SI-value = A * quant-value + B)
+          */
          virtual double  conversionFactorToSI() const = 0;
          
-         //! OffSet to SI ('B' in: SI-value = A * quant-value + B)
+         /*!
+          * \brief OffSet to SI ('B' in: SI-value = A * quant-value + B).
+          */
          virtual double offSetToSI() const = 0;
    };
    
-   //!IQuantity specifies values as an amount of some unit, usually as a floating point number.
+   /*!
+    * \brief IQuantity specifies values as an amount
+    * of some unit, usually as a floating point number.
+    */
    class IQuantity : public virtual IValueDefinition
    {
       public:
          virtual ~IQuantity() {}
          
-         //!Unit of quantity
+         /*!
+          * \brief Unit of quantity.
+          */
          virtual IUnit* unit() const = 0;
    };
    
-   //!IComponentItem is a fundamental unit of data for a component.
    /*!
-    * This interface is not to be implemented directly.
+    * \brief IComponentItem is a fundamental unit of data for a component.
+    *
+    * \details This interface is not to be implemented directly.
     */
    class IComponentItem : public virtual IIdentity
    {
@@ -977,28 +1008,31 @@ namespace HydroCouple
          virtual QList<IDimension*> dimensions() const = 0;
    };
    
-   //! IValueSet provides a multi-dimensional data with its context.
+   /*!
+    * \brief IValueSet provides a multi-dimensional data with its context.
+    */
    class IValueSet : public virtual IDescription
    {
          
       public:
          virtual ~IValueSet() {}
          
-         //!IComponentItem associated with this IValueSet
          /*!
+          * \brief IComponentItem associated with this IValueSet.
           */
          virtual IComponentItem* componentItem() const = 0;
-         
 
-         //!Gets a single value for given dimension indexes specified.
          /*!
+          * \brief Gets a single value for given dimension indexes specified.
+          *
           * \param dimensionIndexes are the indexes for the data to be obtained.
-                  * \param data is the output QVariant where data is to be written.
+          * \param data is the output QVariant where data is to be written.
           */
          virtual void getValue(int dimensionIndexes[], QVariant& data) const = 0;
          
-         //!Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
          /*!
+          * \brief Gets a multi-dimensional array of values for
+          *  given dimension indexes and size for a hyperslab.
           * \param dimensionIndexes are the indexes for the data to be obtained.
           * \param stride is the size for hyperslab from which to copy data.
           * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
@@ -1662,3 +1696,4 @@ Q_DECLARE_INTERFACE(HydroCouple::IIdBasedValueSet, "HydroCouple::IIdBasedValueSe
 
 
 #endif // HYDROCOUPLE_H
+
