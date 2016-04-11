@@ -167,18 +167,18 @@ namespace HydroCouple
    /*!
     * \brief HydroCouple::DimensionType enumeration.
     */
-   enum DimensionType
+   enum DimensionLengthType
    {
 
       /*!
        * \brief Dimension length is constant for the entire simulation
        */
-      Constant,
+      ConstantLength,
 
       /*!
        * \brief Dimension length changes at runtime.
        */
-      Dynamic
+      DynamicLength
    };
 
    /*!
@@ -267,7 +267,7 @@ namespace HydroCouple
           *
           * \returns QString representing caption for entity.
           */
-         virtual QString getCaption() const = 0;
+         virtual QString caption() const = 0;
          
          /*!
           * \brief Sets caption for the entity.
@@ -282,7 +282,7 @@ namespace HydroCouple
           *
           * \returns QString description of entity.
           */
-         virtual QString getDescription() const = 0;
+         virtual QString description() const = 0;
          
          /*!
           * \brief Gets additional descriptive information for the entity.
@@ -494,13 +494,13 @@ namespace HydroCouple
          /*!
           * \returns The previous ComponentStatus of the component that threw the event.
           */
-         virtual HydroCouple::ComponentStatus oldStatus() const = 0;
+         virtual HydroCouple::ComponentStatus previousStatus() const = 0;
          
          //!Gets the IModelComponent's status after the status change.
          /*!
          * \returns The new ComponentStatus of the component that threw the event.
          */
-         virtual HydroCouple::ComponentStatus newStatus() const = 0;
+         virtual HydroCouple::ComponentStatus status() const = 0;
          
          //!Gets additional information about the status change.
          virtual QString message() const = 0;
@@ -550,7 +550,7 @@ namespace HydroCouple
           * \brief A list IModelComponent instances cloned from this IModelComponent instance.
           * \returns A list of child components created from the current component.
           */
-         virtual QList<IModelComponent*> children() const = 0;
+         virtual QList<IModelComponent*> clones() const = 0;
          
          /*!
           * \brief Arguments needed to let the component do its work. An unmodifiable list of
@@ -756,16 +756,11 @@ namespace HydroCouple
    /*!
     * \brief IDimension provides the properties of the dimensions of a vairable.
     */
-   class IDimension : public virtual IDescription
+   class IDimension : public virtual IIdentity
    {
       public:
          virtual ~IDimension() {}
-         
-         /*!
-          * \brief Dimension name.
-          * \returns The name of this dimension.
-          */
-         virtual QString name() const = 0;
+
          
          //! Gets length of dimension.
          /*!
@@ -775,7 +770,7 @@ namespace HydroCouple
          //! Gets the dimension length type.
          /*!
           */
-         virtual HydroCouple::DimensionType lengthType() const = 0;
+         virtual HydroCouple::DimensionLengthType lengthType() const = 0;
    };
    
    /*!
@@ -1125,6 +1120,7 @@ namespace HydroCouple
          
          //!File type extensions that can be read by this IArgument.
          /*!
+          * \details  File extensions must be specified using the Qt format Images (*.png *.xpm *.jpg)
           * \returns a list of strings for compatible file extensions.
           */
          virtual QList<QString> fileExtensions() const = 0;
