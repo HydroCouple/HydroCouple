@@ -33,36 +33,46 @@ namespace HydroCouple
       /*!
        * \brief ITimeGeometryComponentItem represents an IComponentItem with both temporal and geometric components.
        */
-      class ITimeGeometryComponentItem :
-            public virtual HydroCouple::Temporal::ITimeComponentItem,
-            public virtual HydroCouple::Spatial::IGeometryComponentItem
+      class ITimeGeometryComponentDataItem : public virtual IComponentDataItem
       {
          public:
 
             /*!
              * \brief ~ITimeGeometryComponentItem.
              */
-            virtual ~ITimeGeometryComponentItem(){}
-
-      };
-
-      /*!
-       * \brief The ITimeGeometryValueSet class.
-       */
-      class ITimeGeometryValueSet : public virtual IValueSet
-      {
-         public:
+            virtual ~ITimeGeometryComponentDataItem(){}
 
             /*!
-             * \brief ~ITimeGeometryValueSet.
+             * \returns An IGeometryCollection associated with this IGeometryComponentItem.
              */
-            virtual ~ITimeGeometryValueSet(){}
+            virtual HydroCouple::Spatial::IGeometryCollection* geometryCollection() const = 0;
 
             /*!
-             * \brief ITimeGeometryComponentItem associated with this ITimeGeometryValueSet.
+             * \returns An IGeometry for the geometry index.
              */
-            virtual ITimeGeometryComponentItem* timeGeometryComponentItem() const = 0;
+            virtual HydroCouple::Spatial::IGeometry* geometry(int geometryIndex) const = 0;
 
+            /*!
+             * \returns The IDimension for this IGeometryComponentItem.
+             */
+            virtual IDimension* geometryDimension() const = 0;
+
+            /*!
+             * \brief ITimes associated with this dimension.
+             * \returns QList<ITime*>
+             */
+            virtual QList<HydroCouple::Temporal::ITime*> times() const = 0;
+
+            /*!
+             * \brief ITimeSpan associated with this dimension.
+             */
+            virtual HydroCouple::Temporal::ITimeSpan* timeSpan() const = 0;
+
+            /*!
+             * \brief IDimension of the times.
+             * \returns IDimension
+             */
+            virtual IDimension* timeDimension() const = 0;
 
             /*!
              * \brief Gets a single value for given time dimension index.
@@ -73,8 +83,8 @@ namespace HydroCouple
              */
             virtual void getValue(int timeDimensionIndex, int geometryDimensionIndex, QVariant& data) const = 0;
 
-            //!Gets a multi-dimensional array of values for given dimension time dimension index and size for a hyperslab.
             /*!
+            * \brief Gets a multi-dimensional array of values for given dimension time dimension index and size for a hyperslab.
             * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
             * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
             * \param timeStride is the size for the time dimension for hyperslab from which to copy data.
@@ -120,88 +130,62 @@ namespace HydroCouple
             * \param data is the input multi dimensional array to be written.
             */
             virtual void setValues(int timeDimensionIndex, int geometryDimensionIndex, int timeStride, int geomStride, const void* data) = 0;
-      };
-
-      /*!
-       * \brief The ITimeGeometryArgument class.
-       */
-      class ITimeGeometryArgument :
-            public virtual IArgument,
-            public virtual ITimeGeometryComponentItem
-      {
-         public:
-            virtual ~ITimeGeometryArgument(){}
-
-            //!Set ITimes associated with this ITimeArgument. Dont forget to update timeSpace and timeDimension accordingly
-            virtual void  setTimes(const QList<HydroCouple::Temporal::ITime*>& times) = 0;
-
-            /*!
-             * \brief Sets an IGeometryCollection associated with this IGeometryArgument.
-             * Update Appropriate dimensions.
-             *
-             * \param geometry to set.
-             */
-            virtual void setGeometryCollection(HydroCouple::Spatial::IGeometryCollection* geomtery) = 0;
-
-            /*!
-             * \brief ITimeGeometryValueSet objects associated with this ITimeGeometryArgument.
-             * \returns A list of ITimeGeometryValueSet objects associated with this ITimeGeometryArgument.
-             */
-            virtual QList<ITimeGeometryValueSet*> timeGeometryValueSets() const = 0;
 
       };
 
       /*!
        * \brief The ITimeGeometryExchangeItem class.
        */
-      class ITimeGeometryExchangeItem :
-            public virtual IExchangeItem,
-            public virtual ITimeGeometryComponentItem
+      class ITimeGeometryExchangeItem :  public virtual IExchangeItem,  public virtual ITimeGeometryComponentDataItem
       {
          public:
             virtual ~ITimeGeometryExchangeItem(){}
 
-            /*!
-             * \brief IGeometryValueSet  associated with this IGeometryExchangeItem.
-             * \returns An IGeometryValueSet associated with this IGeometryExchangeItem.
-             */
-            virtual ITimeGeometryValueSet* timeGeometryValues() const = 0;
-
       };
-
-      //************************************************************************
 
       /*!
        * \brief The ITINComponentItem class.
        */
-      class ITimeTINComponentItem :
-            public virtual HydroCouple::Temporal::ITimeComponentItem,
-            public virtual HydroCouple::Spatial::ITINComponentItem
+      class ITimeTINComponentDataItem : public virtual IComponentDataItem
       {
          public:
 
             /*!
              * \brief ~ITimeTINComponentItem.
              */
-            virtual ~ITimeTINComponentItem(){}
-      };
-
-      /*!
-       * \brief The ITimeTINValueSet class.
-       */
-      class ITimeTINValueSet : public virtual IValueSet
-      {
-         public:
+            virtual ~ITimeTINComponentDataItem(){}
 
             /*!
-             * \brief ITimeTINValueSet
+             * \returns The ITIN associated with this ITINComponentDataItem.
              */
-            virtual ~ITimeTINValueSet(){}
+            virtual HydroCouple::Spatial::ITIN* TIN() const = 0;
 
             /*!
-             * \returns The ITimeTINComponentItem associated with this ITimeTINValueSet .
+             * \returns An ITriangle for the patch index.
              */
-            virtual ITimeTINComponentItem* timeTINComponentItem() const = 0;
+            virtual HydroCouple::Spatial::ITriangle* triangle(int patchIndex) const = 0;
+
+            /*!
+             * \returns The ITINPatchDimension for this ITINComponentDataItem triangles.
+             */
+            virtual IDimension* TINPatchDimension() const = 0;
+
+            /*!
+             * \brief ITimes associated with this dimension.
+             * \returns QList<ITime*>
+             */
+            virtual QList<HydroCouple::Temporal::ITime*> times() const = 0;
+
+            /*!
+             * \brief ITimeSpan associated with this dimension.
+             */
+            virtual HydroCouple::Temporal::ITimeSpan* timeSpan() const = 0;
+
+            /*!
+             * \brief IDimension of the times.
+             * \returns IDimension
+             */
+            virtual IDimension* timeDimension() const = 0;
 
             //!Gets a single value for given patch dimension index.
             /*!
@@ -258,93 +242,60 @@ namespace HydroCouple
              * \param data is the input multi dimensional array to be written.
              */
             virtual void setValues(int timeDimensionIndex, int patchDimensionIndex , int timeStride, int patchStride, const void* data) = 0;
-
-      };
-
-      /*!
-       * \brief The ITimeTINArgument class.
-       */
-      class ITimeTINArgument :
-            public virtual IArgument,
-            public virtual ITimeTINComponentItem
-      {
-         public:
-
-            /*!
-             * \brief ~ITimeTINArgument.
-             */
-            virtual ~ITimeTINArgument(){}
-
-            /*!
-             * \brief Set ITimes associated with this ITimeTINArgument.
-             * Dont forget to update timeSpace and timeDimension accordingly.
-             */
-            virtual void  setTimes(const QList<HydroCouple::Temporal::ITime*>& times) = 0;
-
-            /*!
-             * \brief Sets a HydroCouple::Spatial::ITIN associated with this ITimeTINArgument.
-             * Update Appropriate dimensions.
-             *
-             */
-            virtual void setTIN(HydroCouple::Spatial::ITIN* TINSurface) = 0;
-
-            /*!
-             * \brief ITimeTINValueSet objects associated with this ITimeTINArgument.
-             * \returns A list of ITimeTINValueSet objects associated with this ITimeTINArgument.
-             */
-            virtual QList<ITimeTINValueSet*> timeTINValueSets() const = 0;
       };
 
       /*!
        * \brief The ITimeTINExchangeItem class.
        */
-      class ITimeTINExchangeItem :
-            public virtual IExchangeItem,
-            public virtual ITimeTINComponentItem
+      class ITimeTINExchangeItem : public virtual IExchangeItem, public virtual ITimeTINComponentDataItem
       {
          public:
             virtual ~ITimeTINExchangeItem(){}
-
-            /*!
-             * \brief ITimeTINValueSet associated with this ITimeTINExchangeItem.
-             * \returns A ITimeTINValueSet objects associated with this ITimeTINExchangeItem.
-             */
-            virtual ITimeTINValueSet* timeTINValues() const = 0;
       };
-
-      //************************************************************************
 
       /*!
        * \brief The ITimePolyhedralSurfaceComponentItem class.
        */
-      class ITimePolyhedralSurfaceComponentItem :
-            public virtual HydroCouple::Temporal::ITimeComponentItem,
-            public virtual HydroCouple::Spatial::IPolyhedralSurfaceComponentItem
+      class ITimePolyhedralSurfaceComponentDataItem : public virtual IComponentDataItem
       {
          public:
 
             /*!
              * \brief ~ITimePolyhedralSurfaceComponentItem.
              */
-            virtual ~ITimePolyhedralSurfaceComponentItem(){}
-      };
-
-      /*!
-       * \brief The ITimePolyhedralSurfaceValueSet class,
-       */
-      class ITimePolyhedralSurfaceValueSet : public virtual IValueSet
-      {
-         public:
+            virtual ~ITimePolyhedralSurfaceComponentDataItem(){}
 
             /*!
-             * \brief ITimePolyhedralSurfaceValueSet.
+             * \returns The IPolyhedralSurface associated with this IPolyhedralSurfaceDimension.
              */
-            virtual ~ITimePolyhedralSurfaceValueSet(){}
+            virtual HydroCouple::Spatial::IPolyhedralSurface* polyhedralSurface() const = 0;
 
             /*!
-             * \returns The ITimePolyhedralSurfaceComponentItem associated with this ITimePolyhedralSurfaceValueSet .
+             * \returns An IPolygon for the patch index.
              */
-            virtual ITimePolyhedralSurfaceComponentItem* timePolyhedralSurfaceComponentItem() const = 0;
+            virtual HydroCouple::Spatial::IPolygon* polygon(int patchIndex) const = 0;
+
+            /*!
+             * \returns The IDimension for this IPolyhedralSurfaceComponentItem patches.
+             */
+            virtual IDimension* polyhedralSurfacePatchDimension() const = 0;
+
+            /*!
+             * \brief ITimes associated with this dimension.
+             * \returns QList<ITime*>
+             */
+            virtual QList<HydroCouple::Temporal::ITime*> times() const = 0;
+
+            /*!
+             * \brief ITimeSpan associated with this dimension.
+             */
+            virtual HydroCouple::Temporal::ITimeSpan* timeSpan() const = 0;
+
+            /*!
+             * \brief IDimension of the times.
+             * \returns IDimension
+             */
+            virtual IDimension* timeDimension() const = 0;
 
             //!Gets a single value for given patch dimension index.
             /*!
@@ -403,86 +354,61 @@ namespace HydroCouple
              * \param data is the input multi dimensional array to be written.
              */
             virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int timeStride, int patchStride, const void* data) = 0;
-
-      };
-
-      /*!
-       * \brief The ITimePolyhedralSurfaceArgument class.
-       */
-      class ITimePolyhedralSurfaceArgument :
-            public virtual IArgument,
-            public virtual ITimePolyhedralSurfaceComponentItem
-      {
-         public:
-            virtual ~ITimePolyhedralSurfaceArgument(){}
-
-            /*!
-             * \brief Set ITime values associated with this ITimePolyhedralSurfaceArgument.
-             * Dont forget to update timeSpace and timeDimension accordingly.
-             */
-            virtual void  setTimes(const QList<HydroCouple::Temporal::ITime*>& times) = 0;
-
-            /*!
-             * \brief Sets an HydroCouple::Spatial::IPolyhedralSurface associated with this ITimePolyhedralSurfaceArgument.
-             * Update Appropriate dimensions.
-             *
-             */
-            virtual void setPolyhedralSurface(HydroCouple::Spatial::IPolyhedralSurface* geomtery) = 0;
-
-            /*!
-             * \brief ITimePolyhedralSurfaceValueSet objects associated with this ITimePolyhedralSurfaceArgument.
-             * \returns A list of ITimePolyhedralSurfaceValueSet objects associated with this ITimePolyhedralSurfaceArgument.
-             */
-            virtual QList<ITimePolyhedralSurfaceValueSet*> timePatchValueSets() const = 0;
       };
 
       /*!
        * \brief The ITimePolyhedralSurfaceExchangeItem class.
        */
-      class ITimePolyhedralSurfaceExchangeItem :
-            public virtual IExchangeItem,
-            public virtual ITimePolyhedralSurfaceComponentItem
+      class ITimePolyhedralSurfaceExchangeItem : public virtual IExchangeItem, public virtual ITimePolyhedralSurfaceComponentItem
       {
          public:
             virtual ~ITimePolyhedralSurfaceExchangeItem(){}
-
-            /*!
-             * \brief ITimePolyhedralSurfaceValueSet associated with this ITimePolyhedralSurfaceExchangeItem.
-             * \returns A ITimePolyhedralSurfaceValueSet objects associated with this ITimePolyhedralSurfaceExchangeItem.
-             */
-            virtual ITimePolyhedralSurfaceValueSet* timePolyhedralSurfaceValues() const = 0;
-      };
-
-      //************************************************************************
-
-
-      /*!
-       * \brief The ITimeRasterComponentItem class.
-       */
-      class ITimeRasterComponentItem :
-            public virtual HydroCouple::Temporal::ITimeComponentItem,
-            public virtual HydroCouple::Spatial::IRasterComponentItem
-      {
-         public:
-            virtual ~ITimeRasterComponentItem(){}
       };
 
       /*!
-       * \brief The ITimeRasterValueSet class.
+       * \brief The ITimeRasterComponentDataItem class.
        */
-      class ITimeRasterValueSet : public virtual IValueSet
+      class ITimeRasterComponentDataItem : public virtual IComponentDataItem
       {
          public:
+            virtual ~ITimeRasterComponentDataItem(){}
 
             /*!
-             * \brief ~ITimeRasterValueSet
+             * \brief IDimension for xDirection.
              */
-            virtual ~ITimeRasterValueSet(){}
+            virtual IDimension* xDimension() const = 0;
 
             /*!
-             * \returns The ITimeRasterComponentItem associated with this ITimeRasterValueSet .
+             * \brief IDimension for yDirection.
              */
-            virtual ITimeRasterComponentItem* timeRasterComponentItem() const = 0;
+            virtual IDimension* yDimension() const = 0;
+
+            /*!
+             * \brief IDimension for IRasterBands.
+             */
+            virtual IDimension* bandDimension() const = 0;
+
+            /*!
+             * \brief IRaster associated with this IRasterComponentDataItem.
+             */
+            virtual HydroCouple::Spatial::IRaster* raster() const = 0;
+
+            /*!
+             * \brief ITimes associated with this dimension.
+             * \returns QList<ITime*>
+             */
+            virtual QList<HydroCouple::Temporal::ITime*> times() const = 0;
+
+            /*!
+             * \brief ITimeSpan associated with this dimension.
+             */
+            virtual HydroCouple::Temporal::ITimeSpan* timeSpan() const = 0;
+
+            /*!
+             * \brief IDimension of the times.
+             * \returns IDimension
+             */
+            virtual IDimension* timeDimension() const = 0;
 
             /*!
              * \brief Gets a single value for given x, y, raster band indexes.
@@ -559,86 +485,56 @@ namespace HydroCouple
              */
             virtual void setValues(int timeDimensionIndex,int xindex, int yindex, int band, int timeStride, int xstride, int ystride,  const void* data) = 0;
 
-
-
       };
-
-      /*!
-       * \brief The ITimeRasterArgument class.
-       */
-      class ITimeRasterArgument :
-            public virtual IArgument,
-            public virtual ITimeRasterComponentItem
-      {
-         public:
-            virtual ~ITimeRasterArgument(){}
-
-            /*!
-             * \brief Set ITimes associated with this ITimeRasterArgument. Dont forget to update timeSpace and timeDimension accordingly.
-             */
-            virtual void  setTimes(const QList<HydroCouple::Temporal::ITime*>& times) = 0;
-
-            /*!
-             * \brief Set IRaster associated with IRasterArgument.
-             *
-             * \param raster IRaster to set.
-             */
-            virtual void setRaster(HydroCouple::Spatial::IRaster* raster) = 0;
-
-            /*!
-             * \brief ITimeRasterValueSet objects associated with this ITimeRasterArgument.
-             * \returns A list of ITimeRasterValueSet objects associated with this ITimeRasterArgument.
-             */
-            virtual QList<ITimeRasterValueSet*> timeRasterValueSets() const = 0;
-      };
-
 
       /*!
        * \brief The ITimeRasterExchangeItem class.
        */
-      class ITimeRasterExchangeItem :
-            public virtual IExchangeItem,
-            public virtual ITimeRasterComponentItem
+      class ITimeRasterExchangeItem : public virtual IExchangeItem, public virtual ITimeRasterComponentDataItem
       {
          public:
             virtual ~ITimeRasterExchangeItem(){}
-
-            /*!
-             * \brief ITimeRasterValueSet associated with this ITimeRasterExchangeItem.
-             * \returns A ITimeRasterValueSet objects associated with this ITimeRasterExchangeItem.
-             */
-            virtual ITimeRasterValueSet* timeRasterValues() const = 0;
       };
-
-      //************************************************************************
 
       /*!
        * \brief The ITimeRegularGrid2DComponentItem class.
        */
-      class ITimeRegularGrid2DComponentItem :
-            public virtual HydroCouple::Temporal::ITimeComponentItem,
-            public virtual HydroCouple::Spatial::IRegularGrid2DComponentItem
+      class ITimeRegularGrid2DComponentDataItem : private virtual IComponentDataItem
       {
          public:
-            virtual ~ITimeRegularGrid2DComponentItem(){}
-      };
-
-      /*!
-       * \brief The ITimeRegularGrid2DValueSet class.
-       */
-      class ITimeRegularGrid2DValueSet : public virtual IValueSet
-      {
-         public:
+            virtual ~ITimeRegularGrid2DComponentDataItem(){}
 
             /*!
-             * \brief ~ITimeRegularGrid2DValueSet
+             * \brief ITimes associated with this dimension.
+             * \returns QList<ITime*>
              */
-            virtual ~ITimeRegularGrid2DValueSet(){}
+            virtual QList<HydroCouple::Temporal::ITime*> times() const = 0;
 
             /*!
-             * \returns The ITimeRegularGrid2DComponentItem associated with this ITimeRegularGrid2DValueSet.
+             * \brief ITimeSpan associated with this dimension.
              */
-            virtual ITimeRegularGrid2DComponentItem* timeRegularGrid2DComponentItem() const = 0;
+            virtual HydroCouple::Temporal::ITimeSpan* timeSpan() const = 0;
+
+            /*!
+             * \brief IDimension of the times.
+             * \returns IDimension
+             */
+            virtual IDimension* timeDimension() const = 0;
+
+            /*!
+             * \brief Number of X cells IDimension.
+             */
+            virtual IDimension* numXCellsDimension() const = 0;
+
+            /*!
+             * \brief Number of Y cells IDimension.
+             */
+            virtual IDimension* numYCellsDimension() const = 0;
+
+            /*!
+             * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
+            */
+            virtual HydroCouple::Spatial::IRegularGrid2D* grid() const = 0;
 
             /*!
              * \brief Gets the value for the xcell index and ycell index.
@@ -705,84 +601,61 @@ namespace HydroCouple
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
             virtual void setValues(int timeDimensionIndex, int xCellIndex, int yCellIndex, int timeStride, int xCellStride, int yCellStride, void* data) = 0;
-
       };
-
-      /*!
-       * \brief The ITimeRegularGrid2DArgument class.
-       */
-      class ITimeRegularGrid2DArgument :
-            public virtual IArgument,
-            public virtual ITimeRegularGrid2DComponentItem
-      {
-         public:
-            virtual ~ITimeRegularGrid2DArgument(){}
-
-            /*!
-             * \brief Set ITime associated with this ITimeRegularGrid2DArgument.
-             * Dont forget to update timeSpace and timeDimension accordingly.
-             */
-            virtual void  setTimes(const QList<HydroCouple::Temporal::ITime*>& times) = 0;
-
-            /*!
-             * \brief Set HydroCouple::Spatial::IRegularGrid2D associated with ITimeRegularGrid2DArgument.
-              */
-            virtual void setGrid(HydroCouple::Spatial::IRegularGrid2D* grid) = 0;
-
-            /*!
-             * \brief ITimeRegularGrid2DValueSet objects associated with this IRegularGrid2DArgument.
-             * \returns A list of ITimeRegularGrid2DValueSet objects associated with this IRegularGrid2DArgument.
-             */
-            virtual QList<ITimeRegularGrid2DValueSet*> timeRegular2DValueSets() const = 0;
-      };
-
 
       /*!
        * \brief The ITimeRegularGrid2DExchangeItem class.
        */
-      class ITimeRegularGrid2DExchangeItem :
-            public virtual IExchangeItem,
-            public virtual ITimeRegularGrid2DComponentItem
+      class ITimeRegularGrid2DExchangeItem : public virtual IExchangeItem, public virtual ITimeRegularGrid2DComponentDataItem
       {
          public:
             virtual ~ITimeRegularGrid2DExchangeItem(){}
-
-            /*!
-             * \brief ITimeRegularGrid2DValueSet associated with this ITimeRegularGrid2DComponentItem.
-             * \returns A ITimeRegularGrid2DValueSet objects associated with this ITimeRegularGrid2DComponentItem.
-             */
-            virtual ITimeRegularGrid2DValueSet* timeRegularGrid2DValues() const = 0;
       };
-
-      //************************************************************************
 
       /*!
        * \brief The ITimeRegularGrid3DComponentItem class.
        */
-      class ITimeRegularGrid3DComponentItem :
-            public virtual HydroCouple::Temporal::ITimeComponentItem,
-            public virtual HydroCouple::Spatial::IRegularGrid3DComponentItem
+      class ITimeRegularGrid3DComponentDataItem : public virtual IComponentDataItem
       {
          public:
-            virtual ~ITimeRegularGrid3DComponentItem(){}
-      };
-
-
-      /*!
-       * \brief The ITimeRegularGrid3DValueSet class.
-       */
-      class ITimeRegularGrid3DValueSet : public virtual IValueSet
-      {
-         public:
-            /*!
-             * \brief ~ITimeRegularGrid2DValueSet
-             */
-            virtual ~ITimeRegularGrid3DValueSet(){}
+            virtual ~ITimeRegularGrid3DComponentDataItem(){}
 
             /*!
-             * \returns The ITimeRegularGrid3DComponentItem associated with this ITimeRegularGrid3DValueSet.
+             * \brief ITimes associated with this dimension.
+             * \returns QList<ITime*>
              */
-            virtual ITimeRegularGrid3DComponentItem* timeRegularGrid3DComponentItem() const = 0;
+            virtual QList<HydroCouple::Temporal::ITime*> times() const = 0;
+
+            /*!
+             * \brief ITimeSpan associated with this dimension.
+             */
+            virtual HydroCouple::Temporal::ITimeSpan* timeSpan() const = 0;
+
+            /*!
+             * \brief IDimension of the times.
+             * \returns IDimension
+             */
+            virtual IDimension* timeDimension() const = 0;
+
+            /*!
+             * \brief Number of X cells IDimension.
+             */
+            virtual IDimension* numXCellsDimension() const = 0;
+
+            /*!
+             * \brief Number of Y cells IDimension.
+             */
+            virtual IDimension* numYCellsDimension() const = 0;
+
+            /*!
+             * \brief Number of Z cells IDimension.
+             */
+            virtual IDimension* numZCellsDimension() const = 0;
+
+            /*!
+             * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
+            */
+            virtual HydroCouple::Spatial::IRegularGrid3D* grid() const = 0;
 
             /*!
              * \brief Gets the value for the xcell index and ycell index.
@@ -865,86 +738,35 @@ namespace HydroCouple
                                    int timeStride, int xCellStride, int yCellStride, int zCellStride, void* data) = 0;
       };
 
-
-      /*!
-       * \brief The ITimeRegularGrid3DArgument class.
-       */
-      class ITimeRegularGrid3DArgument :
-            public virtual IArgument,
-            public virtual ITimeRegularGrid3DComponentItem
-      {
-         public:
-            virtual ~ITimeRegularGrid3DArgument(){}
-
-            /*!
-             * \brief Set ITime associated with this ITimeRegularGrid3DArgument.
-             * Dont forget to update timeSpace and timeDimension accordingly.
-             */
-            virtual void  setTimes(const QList<HydroCouple::Temporal::ITime*>& times) = 0;
-
-            /*!
-             * \brief Set HydroCouple::Spatial::IRegularGrid3D associated with ITimeRegularGrid3DArgument.
-              */
-            virtual void setGrid(HydroCouple::Spatial::IRegularGrid3D* grid) = 0;
-
-            /*!
-             * \brief ITimeRegularGrid3DValueSet objects associated with this IRegularGrid3DArgument.
-             * \returns A list of ITimeRegularGrid3DValueSet objects associated with this IRegularGrid3DArgument.
-             */
-            virtual QList<ITimeRegularGrid3DValueSet*> timeRegular3DValueSets() const = 0;
-      };
-
-
       /*!
        * \brief The ITimeRegularGrid3DExchangeItem class.
        */
-      class ITimeRegularGrid3DExchangeItem :
-            public virtual IExchangeItem,
-            public virtual ITimeRegularGrid3DComponentItem
+      class ITimeRegularGrid3DExchangeItem : public virtual IExchangeItem, public virtual ITimeRegularGrid3DComponentDataItem
       {
          public:
             virtual ~ITimeRegularGrid3DExchangeItem(){}
 
-
-            /*!
-             * \brief ITimeRegularGrid3DValueSet associated with this ITimeRegularGrid3DComponentItem.
-             * \returns A ITimeRegularGrid3DValueSet objects associated with this ITimeRegularGrid3DComponentItem.
-             */
-            virtual ITimeRegularGrid3DValueSet* timeRegularGrid3DValues() const = 0;
       };
 
    }
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryComponentItem, "HydroCouple::SpatioTemporal::ITimeGeometryComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryValueSet, "HydroCouple::SpatioTemporal::ITimeGeometryValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryArgument, "HydroCouple::SpatioTemporal::ITimeGeometryArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem, "HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem, "HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINComponentItem, "HydroCouple::SpatioTemporal::ITimeTINComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINValueSet, "HydroCouple::SpatioTemporal::ITimeTINValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINArgument, "HydroCouple::SpatioTemporal::ITimeTINArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem, "HydroCouple::SpatioTemporal::ITimeTINComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINExchangeItem, "HydroCouple::SpatioTemporal::ITimeTINExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceValueSet, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterComponentItem, "HydroCouple::SpatioTemporal::ITimeRasterComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterValueSet, "HydroCouple::SpatioTemporal::ITimeRasterValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterArgument, "HydroCouple::SpatioTemporal::ITimeRasterArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterExchangeItem, "HydroCouple::SpatioTemporal::ITimeRasterExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DValueSet, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DValueSet, "HydroCouple::SpatioTemporal::ITimeRegularGrid3DValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument, "HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem/1.0")
-
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
 #endif // HYDROCOUPLESPATIOTEMPORAL
 

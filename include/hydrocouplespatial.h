@@ -32,6 +32,11 @@ namespace HydroCouple
     */
    namespace Spatial
    {
+      class IEdge;
+      class IRasterBand;
+      class IPolygon;
+      class IPolyhedralSurface;
+
       /*!
        * \brief The type of IGeometry.
        */
@@ -179,7 +184,6 @@ namespace HydroCouple
          public:
             virtual ~IGeometry(){}
 
-
             /*!
              * \brief index of the geometry if it is part of a collection.
              * \return index of the geometry in a collection.
@@ -203,17 +207,17 @@ namespace HydroCouple
             virtual int coordinateDimension() const = 0;
 
             /*!
-            * \brief Get the dimension of the coordinates in this object.
-            *
-            * \details Returns an enum representing the instantiable subtype of Geometry of which this
-            * geometric object is an instantiable member.The name of the subtype of Geometry is returned as a string.
-            *
-            * \returns In practice this will return 2 or 3. It can also return 0 in the case of an empty point.
-            */
+             * \brief Get the dimension of the coordinates in this object.
+             *
+             * \details Returns an enum representing the instantiable subtype of Geometry of which this
+             * geometric object is an instantiable member.The name of the subtype of Geometry is returned as a string.
+             *
+             * \returns In practice this will return 2 or 3. It can also return 0 in the case of an empty point.
+             */
             virtual GeometryType geometryType() const = 0;
 
             /*!
-             * Spatial reference system of goemetric object.
+             * \brief Spatial reference system of goemetric object.
              */
             virtual ISpatialReferenceSystem* spatialReferenceSystem() const = 0;
 
@@ -228,20 +232,19 @@ namespace HydroCouple
             virtual IGeometry* envelope() const = 0;
 
             /*!
-             * Exports this geometric object to a specific Well-known Text Representation of Geometry.
+             * \brief Exports this geometric object to a specific Well-known Text Representation of Geometry.
              */
             virtual QString wkt() const = 0;
 
             /*!
-             * Exports this geometric object to a specific Well-known byte Representation of Geometry.
+             * \brief Exports this geometric object to a specific Well-known byte Representation of Geometry.
              */
             virtual unsigned char* wkb(int & size) const = 0;
 
-
-            //!Returns <code>true</code> if this geometric object is the empty Geometry.
             /*!
-              If true, then this geometric object represents the empty point set ∅ for the coordinate space.
-              */
+             * \brief If true, then this geometric object represents the empty point set ∅ for the coordinate space.
+             * \returns <code>true</code> if this geometric object is the empty Geometry.
+             */
             virtual bool isEmpty() const = 0;
 
             /*!
@@ -275,9 +278,9 @@ namespace HydroCouple
             virtual IGeometry* boundary() const = 0;
 
             /** @name Query
-              *Query functions
-              */
-            ///@{
+             *Query functions
+             */
+            //@{
 
             /*!
              * \returns <code>true</code> if this geometric object is spatially equal to geom.
@@ -346,8 +349,7 @@ namespace HydroCouple
             /** @name Spatial Analysis
              *Spatial analysis functions
              */
-            ///@{
-
+            //@{
             /*!
              * \brief Returns the shortest distance between any two
              * Points in the two geometric objects as calculated in
@@ -396,7 +398,7 @@ namespace HydroCouple
              */
             virtual IGeometry* symmetricDifference(const IGeometry* geom) const = 0;
 
-            ///@}
+            //@}
       };
 
       /*!
@@ -496,8 +498,6 @@ namespace HydroCouple
 
 
       };
-
-      class IEdge;
 
       /*!
        * \brief The IVertex class is an IPoint of a topologically aware IGeometry
@@ -676,8 +676,6 @@ namespace HydroCouple
          public:
             virtual ~ILinearRing(){}
       };
-
-      class IPolygon;
 
       /*!
        * \brief A directed edge from one vertex to another, adjacent to two faces.
@@ -876,10 +874,12 @@ namespace HydroCouple
              * \brief The mathematical centroid for this ISurface as a Point.
              * The result is not guaranteed to be on this ISurface.
              */
-
             virtual IPoint* pointOnSurface() const = 0;
 
-            //!
+            /*!
+             * \brief boundaryMultiCurve
+             * \return
+             */
             virtual IMultiCurve* boundaryMultiCurve() const = 0;
       };
 
@@ -912,8 +912,6 @@ namespace HydroCouple
             virtual IPoint* pointOnSurface() const = 0;
 
       };
-
-      class IPolyhedralSurface;
 
       /*!
        * \brief A IPolygon is a planar ISurface defined by 1
@@ -1010,8 +1008,8 @@ namespace HydroCouple
             virtual ~IMultiPolygon(){}
 
             /*!
-               * \returns the index sup(th) polygon in this IMultiPolygon/IGeometryCollection.
-               */
+             * \returns the index sup(th) polygon in this IMultiPolygon/IGeometryCollection.
+             */
             virtual IPolygon* element(int index) const = 0;
       };
 
@@ -1031,8 +1029,6 @@ namespace HydroCouple
             virtual IVertex* p3() const = 0;
 
       };
-
-      //************************************************************************
 
       /*!
        * \brief The INetwork class.
@@ -1189,10 +1185,6 @@ namespace HydroCouple
             virtual ITriangle* patch(int index) const = 0;
       };
 
-      //************************************************************************
-
-      class IRasterBand;
-
       /*!
        * \brief A Raster spatial feature.
        */
@@ -1291,8 +1283,6 @@ namespace HydroCouple
             virtual double noData() const = 0;
       };
 
-      //************************************************************************
-
       /*!
        * \brief The types of regular grids.
        */
@@ -1387,20 +1377,13 @@ namespace HydroCouple
             virtual bool isActive(int xCellIndex , int yCellIndex , int zCellIndex) const = 0;
       };
 
-      //************************************************************************
-
       /*!
        * \brief IGeometryComponentItem represents IGeometryCollection IComponentItem.
        */
-      class IGeometryComponentItem : public virtual IComponentItem
+      class IGeometryComponentDataItem : public virtual IComponentDataItem
       {
          public:
-            virtual ~IGeometryComponentItem(){}
-
-            /*!
-             * \returns The IDimension for this IGeometryComponentItem.
-             */
-            virtual IDimension* geometryDimension() const = 0;
+            virtual ~IGeometryComponentDataItem(){}
 
             /*!
              * \returns An IGeometryCollection associated with this IGeometryComponentItem.
@@ -1411,20 +1394,11 @@ namespace HydroCouple
              * \returns An IGeometry for the geometry index.
              */
             virtual IGeometry* geometry(int geometryIndex) const = 0;
-      };
-
-      /*!
-       * \brief The IGeometryValueSet class
-       */
-      class IGeometryValueSet : public virtual IValueSet
-      {
-         public:
-            virtual ~IGeometryValueSet(){}
 
             /*!
-             * \returns The IGeometryComponentItem associated with this IGeometryValueSet.
+             * \returns The IDimension for this IGeometryComponentItem.
              */
-            virtual IGeometryComponentItem* geometryComponentItem() const = 0;
+            virtual IDimension* geometryDimension() const = 0;
 
             //!Gets a single value for given geometry dimension index.
             /*!
@@ -1475,34 +1449,9 @@ namespace HydroCouple
       };
 
       /*!
-       * \brief An IGeometryArgument class is an IArgument class with a geometry component.
-       */
-      class IGeometryArgument : public virtual IArgument , public virtual IGeometryComponentItem
-      {
-
-         public:
-            virtual ~IGeometryArgument(){}
-
-            /*!
-             * \brief Sets an IGeometryCollection associated with this IGeometryArgument.
-             * Update Appropriate dimensions.
-             *
-             * \param geometry to set.
-             */
-            virtual void setGeometryCollection(IGeometryCollection* geomtery) = 0;
-
-            /*!
-             * \brief IGeometryValueSet objects associated with this IGeometryArgument.
-             * \returns A list of IGeometryValueSet objects associated with this IGeometryArgument.
-             */
-            virtual QList<IGeometryValueSet*> geometryValueSets() const = 0;
-
-      };
-
-      /*!
        * \brief An IExchangeItem class with a geometry component.
        */
-      class IGeometryExchangeItem : public virtual IExchangeItem, public virtual IGeometryComponentItem
+      class IGeometryExchangeItem : public virtual IExchangeItem, public virtual IGeometryComponentDataItem
       {
          public:
             /*!
@@ -1510,51 +1459,30 @@ namespace HydroCouple
              */
             virtual ~IGeometryExchangeItem(){}
 
-            /*!
-             * \brief IGeometryValueSet  associated with this IGeometryExchangeItem.
-             * \returns An IGeometryValueSet associated with this IGeometryExchangeItem.
-             */
-            virtual IGeometryValueSet* geometryValues() const = 0;
-      };
-
-      //************************************************************************
-
-      /*!
-       * \brief ITINComponentItem represents ITIN IComponentItem.
-       */
-      class ITINComponentItem : public virtual IComponentItem
-      {
-         public:
-            virtual ~ITINComponentItem(){}
-
-            /*!
-             * \returns The IDimension for this ITINComponentItem triangles.
-             */
-            virtual IDimension* patchDimension() const = 0;
-
-            /*!
-             * \returns The ITriangle associated with this ITINComponentItem.
-             */
-            virtual ITriangle* polyhedralSurface() const = 0;
-
-            /*!
-             * \returns An IPolygon for the patch index.
-             */
-            virtual ITriangle* geometry(int patchIndex) const = 0;
       };
 
       /*!
-       * \brief The ITINValueSet class.
+       * \brief ITINComponentDataItem represents ITIN IComponentDataItem.
        */
-      class ITINValueSet : public virtual IValueSet
+      class ITINComponentDataItem : public virtual IComponentDataItem
       {
          public:
-            virtual ~ITINValueSet(){}
+            virtual ~ITINComponentDataItem(){}
 
             /*!
-             * \returns The ITINComponentItem associated with this ITINValueSet .
+             * \returns The ITIN associated with this ITINComponentDataItem.
              */
-            virtual ITINComponentItem* TINComponentItem() const = 0;
+            virtual ITIN* TIN() const = 0;
+
+            /*!
+             * \returns An ITriangle for the patch index.
+             */
+            virtual ITriangle* triangle(int patchIndex) const = 0;
+
+            /*!
+             * \returns The ITINPatchDimension for this ITINComponentDataItem triangles.
+             */
+            virtual IDimension* TINPatchDimension() const = 0;
 
             //!Gets a single value for given patch dimension index.
             /*!
@@ -1601,89 +1529,39 @@ namespace HydroCouple
              * \param data is the input multi dimensional array to be written.
              */
             virtual void setValues(int patchDimensionIndex , int stride, const void* data) = 0;
-
-      };
-
-      /*!
-       * \brief An ITINArgument class is an IArgument class with an ITIN component.
-       */
-      class ITINArgument : public virtual IArgument , public virtual ITINComponentItem
-      {
-         public:
-
-            /*!
-             * \brief ~IPolyhedralSurfaceArgument.
-             */
-            virtual ~ITINArgument(){}
-
-            /*!
-             * \brief Sets an IPolyhedralSurface associated with this IPolyhedralSurfaceArgument.
-             * Update Appropriate dimensions.
-             *
-             */
-            virtual void setTIN(ITIN* TINSurface) = 0;
-
-            /*!
-             * \brief IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
-             * \returns A list of IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
-             */
-            virtual QList<ITINValueSet*> patchValueSets() const = 0;
       };
 
       /*!
        * \brief An ITINExchangeItem class with an TIN component.
        */
-      class ITINExchangeItem : public virtual IExchangeItem, public virtual ITINComponentItem
+      class ITINExchangeItem : public virtual IExchangeItem, public virtual ITINComponentDataItem
       {
          public:
             virtual ~ITINExchangeItem(){}
-
-            /*!
-             * \brief ITINValueSet associated with this ITINExchangeItem.
-             * \returns A ITINValueSet objects associated with this ITINExchangeItem.
-             */
-            virtual ITINValueSet* patchValues() const = 0;
       };
-
-
-      //************************************************************************
 
       /*!
        * \brief IPolyhedralSurfaceComponentItem represents IPolyhedralSurface IComponentItem.
        */
-      class IPolyhedralSurfaceComponentItem : public virtual IComponentItem
+      class IPolyhedralSurfaceComponentDataItem : public virtual IComponentDataItem
       {
          public:
-            virtual ~IPolyhedralSurfaceComponentItem(){}
+            virtual ~IPolyhedralSurfaceComponentDataItem(){}
 
             /*!
-             * \returns The IDimension for this IPolyhedralSurfaceComponentItem patches.
-             */
-            virtual IDimension* patchDimension() const = 0;
-
-            /*!
-             * \returns The IPolyhedralSurface associated with this IPolyhedralSurfaceComponentItem.
+             * \returns The IPolyhedralSurface associated with this IPolyhedralSurfaceDimension.
              */
             virtual IPolyhedralSurface* polyhedralSurface() const = 0;
 
             /*!
              * \returns An IPolygon for the patch index.
              */
-            virtual IPolygon* geometry(int patchIndex) const = 0;
-      };
-
-      /*!
-       * \brief The IPolyhedralSurfaceValueSet class.
-       */
-      class IPolyhedralSurfaceValueSet : public virtual IValueSet
-      {
-         public:
-            virtual ~IPolyhedralSurfaceValueSet(){}
+            virtual IPolygon* polygon(int patchIndex) const = 0;
 
             /*!
-             * \returns The IPolyhedralSurfaceComponentItem associated with this IPolyhedralSurfaceValueSet .
+             * \returns The IDimension for this IPolyhedralSurfaceComponentItem patches.
              */
-            virtual IPolyhedralSurfaceComponentItem* polyhedralSurfaceComponentItem() const = 0;
+            virtual IDimension* polyhedralSurfacePatchDimension() const = 0;
 
             //!Gets a single value for given patch dimension index.
             /*!
@@ -1730,66 +1608,25 @@ namespace HydroCouple
              * \param data is the input multi dimensional array to be written.
              */
             virtual void setValues(int patchDimensionIndex , int stride, const void* data) = 0;
-
-      };
-
-      /*!
-       * \brief An IPolyhedralSurfaceArgument class is an IArgument class with an IPolyhedralSurface component.
-       */
-      class IPolyhedralSurfaceArgument : public virtual IArgument , public virtual IPolyhedralSurfaceComponentItem
-      {
-         public:
-
-            /*!
-             * \brief ~IPolyhedralSurfaceArgument.
-             */
-            virtual ~IPolyhedralSurfaceArgument(){}
-
-            /*!
-             * \brief Sets an IPolyhedralSurface associated with this IPolyhedralSurfaceArgument.
-             * Update Appropriate dimensions.
-             *
-             */
-            virtual void setPolyhedralSurface(IPolyhedralSurface* geomtery) = 0;
-
-            /*!
-             * \brief IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
-             * \returns A list of IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceArgument.
-             */
-            virtual QList<IPolyhedralSurfaceValueSet*> patchValueSets() const = 0;
       };
 
       /*!
        * \brief An IPolyhedralSurfaceExchangeItem class with an IPolyhedralSurface component.
        */
-      class IPolyhedralSurfaceExchangeItem : public virtual IExchangeItem, public virtual IPolyhedralSurfaceComponentItem
+      class IPolyhedralSurfaceExchangeItem : public virtual IExchangeItem, public virtual IPolyhedralSurfaceComponentDataItem
       {
          public:
             virtual ~IPolyhedralSurfaceExchangeItem(){}
-
-            /*!
-             * \brief IPolyhedralSurfaceValueSet associated with this IPolyhedralSurfaceExchangeItem.
-             * \returns A IPolyhedralSurfaceValueSet objects associated with this IPolyhedralSurfaceExchangeItem.
-             */
-            virtual IPolyhedralSurfaceValueSet* patchValues() const = 0;
       };
 
-
-      //************************************************************************
-
       /*!
-       * \brief An IRasterComponentItem represents an IRaster IComponentItem.
+       * \brief An IRasterComponentDataItem represents an IRaster IComponentItem.
        */
-      class IRasterComponentItem : public virtual IComponentItem
+      class IRasterComponentDataItem : public virtual IComponentDataItem
       {
 
          public:
             virtual ~IRasterComponentItem(){}
-
-            /*!
-             * \brief IRaster associated with this IComponentItem.
-             */
-            virtual IDimension* rasterDimension() const = 0;
 
             /*!
              * \brief IDimension for xDirection.
@@ -1807,29 +1644,9 @@ namespace HydroCouple
             virtual IDimension* bandDimension() const = 0;
 
             /*!
-             * \brief IRaster associated with this IRasterComponentItem.
+             * \brief IRaster associated with this IRasterComponentDataItem.
              */
             virtual IRaster* raster() const = 0;
-
-      };
-
-      /*!
-       * \brief The IRasterValueSet class.
-       */
-      class IRasterValueSet : public virtual IValueSet
-      {
-         public:
-
-            /*!
-             * \brief ~IRasterValueSet
-             */
-            virtual ~IRasterValueSet(){}
-
-            /*!
-             * \returns The IRasterComponentItem associated with this IRasterValueSet .
-             */
-            virtual IRasterComponentItem* rasterComponentItem() const = 0;
-
 
             /*!
              * \brief Gets a single value for given x, y, raster band indexes.
@@ -1896,31 +1713,9 @@ namespace HydroCouple
       };
 
       /*!
-       * \brief An  IRasterArgument is an IArgument with an IRaster.
-       */
-      class IRasterArgument : public virtual IArgument, public virtual IRasterComponentItem
-      {
-         public:
-            virtual ~IRasterArgument(){}
-
-            /*!
-             * \brief Set IRaster associated with IRasterArgument.
-             *
-             * \param raster IRaster to set.
-             */
-            virtual void setRaster(IRaster* raster) = 0;
-
-            /*!
-             * \brief IRasterValueSet objects associated with this IRasterArgument.
-             * \returns A list of IRasterValueSet objects associated with this IRasterArgument.
-             */
-            virtual QList<IRasterValueSet*> rasterValueSets() const = 0;
-      };
-
-      /*!
        * \brief An IRasterExhangeItem is an IExchangeItem with an IRaster.
        */
-      class IRasterExhangeItem : public virtual IExchangeItem, public virtual IRasterComponentItem
+      class IRasterExhangeItem : public virtual IExchangeItem, public virtual IRasterComponentDataItem
       {
          public:
 
@@ -1929,19 +1724,12 @@ namespace HydroCouple
              */
             virtual ~IRasterExhangeItem(){}
 
-            /*!
-             * \brief IRasterValueSet associated with this IRasterExhangeItem.
-             * \returns An IRasterValueSet object associated with this IRasterExhangeItem.
-             */
-            virtual IRasterValueSet* rasterValues() const = 0;
       };
 
-      //************************************************************************
-
       /*!
-       * \brief An IRegularGrid2DComponentItem represents an IRegularGrid2D IComponentItem
+       * \brief An IRegularGrid2DComponentDataItem represents an IRegularGrid2D IComponentItem
        */
-      class IRegularGrid2DComponentItem : public virtual IComponentItem
+      class IRegularGrid2DComponentDataItem : public virtual IComponentDataItem
       {
 
          public:
@@ -1965,26 +1753,6 @@ namespace HydroCouple
              * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
             */
             virtual IRegularGrid2D* grid() const = 0;
-
-      };
-
-      /*!
-       * \brief The IRegularGrid2DValueSet class.
-       */
-      class IRegularGrid2DValueSet : public virtual IValueSet
-      {
-         public:
-
-            /*!
-             * \brief ~IRegularGrid2DValueSet.
-             */
-            virtual ~IRegularGrid2DValueSet(){}
-
-            /*!
-             * \brief regularGrid2DComponentItem
-             * \return
-             */
-            virtual IRegularGrid2DComponentItem* regularGrid2DComponentItem() const = 0;
 
             /*!
              * \brief Gets the value for the xcell index and ycell index.
@@ -2041,54 +1809,36 @@ namespace HydroCouple
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
             virtual void setValues(int xCellIndex, int yCellIndex, int xCellStride, int yCellStride, void* data) = 0;
-      };
 
-      /*!
-       * \brief An  IRegularGrid2DArgument is an IArgument with an IRegularGrid2DComponentItem.
-       */
-      class IRegularGrid2DArgument : public virtual IArgument, public virtual IRegularGrid2DComponentItem
-      {
-         public:
-            virtual ~IRegularGrid2DArgument(){}
-
-            /*!
-             * \brief Set IRegularGrid2D associated with IRegularGrid2DArgument.
-              */
-            virtual void setGrid(IRegularGrid2D* grid) = 0;
-
-            /*!
-             * \brief IRegularGrid2DValueSet objects associated with this IRegularGrid2DArgument.
-             * \returns A list of IRegularGrid2DValueSet objects associated with this IRegularGrid2DArgument.
-             */
-            virtual QList<IRegularGrid2DValueSet*> regular2DValueSets() const = 0;
       };
 
       /*!
        * \brief An IRegularGrid2DExhangeItem is an IExchangeItem with an IRegularGrid2DComponentItem.
        */
-      class IRegularGrid2DExhangeItem : public virtual IExchangeItem, public virtual IRegularGrid2DComponentItem
+      class IRegularGrid2DExhangeItem : public virtual IExchangeItem, public virtual IRegularGrid2DComponentDataItem
       {
          public:
             virtual ~IRegularGrid2DExhangeItem(){}
-
-            /*!
-             * \brief IRegularGrid2DValueSet associated with this IRegularGrid2DExhangeItem.
-             * \returns An IRegularGrid2DValueSet object associated with this IRegularGrid2DExhangeItem.
-             */
-            virtual IRegularGrid2DValueSet* regular2DValues() const = 0;
-
       };
-
-      //************************************************************************
 
       /*!
        * \brief An IRegularGrid3DComponentItem represents an IRegularGrid3D IComponentItem
        */
-      class IRegularGrid3DComponentItem : public virtual IRegularGrid2DComponentItem
+      class IRegularGrid3DComponentItem : public virtual IComponentDataItem
       {
 
          public:
             virtual ~IRegularGrid3DComponentItem(){}
+
+            /*!
+             * \brief Number of X cells IDimension.
+             */
+            virtual IDimension* numXCellsDimension() const = 0;
+
+            /*!
+             * \brief Number of Y cells IDimension.
+             */
+            virtual IDimension* numYCellsDimension() const = 0;
 
             /*!
              * \brief Number of Z cells IDimension.
@@ -2099,26 +1849,6 @@ namespace HydroCouple
              * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
             */
             virtual IRegularGrid3D* grid() const = 0;
-
-      };
-
-      /*!
-       * \brief The IRegularGrid3DValueSet class.
-       */
-      class IRegularGrid3DValueSet : public virtual IValueSet
-      {
-         public:
-
-            /*!
-             * \brief ~IRegularGrid3DValueSet.
-             */
-            virtual ~IRegularGrid3DValueSet(){}
-
-            /*!
-             * \brief regularGrid2DComponentItem
-             * \return
-             */
-            virtual IRegularGrid3DComponentItem* regularGrid3DComponentItem() const = 0;
 
             /*!
              * \brief Gets the value for the xcell index and ycell index.
@@ -2185,27 +1915,7 @@ namespace HydroCouple
              * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
              */
             virtual void setValues(int xCellIndex, int yCellIndex, int zCellIndex, int xCellStride, int yCellStride, int zCellStride, void* data) = 0;
-      };
 
-      /*!
-       * \brief An  IRegularGrid3DArgument is an IArgument with an IRegularGrid3DComponentItem.
-       */
-      class IRegularGrid3DArgument : public virtual IArgument, public virtual IRegularGrid3DComponentItem
-      {
-         public:
-            virtual ~IRegularGrid3DArgument(){}
-
-            /*!
-             * \brief Set IRegularGrid2D associated with IRegularGrid2DArgument.
-              */
-            virtual void setGrid(IRegularGrid3D* grid) = 0;
-
-
-            /*!
-             * \brief IRegularGrid3DValueSet objects associated with this IRegularGrid3DArgument.
-             * \returns A list of IRegularGrid2DValueSet objects associated with this IRegularGrid3DArgument.
-             */
-            virtual QList<IRegularGrid3DValueSet*> regular3DValueSets() const = 0;
       };
 
       /*!
@@ -2215,13 +1925,6 @@ namespace HydroCouple
       {
          public:
             virtual ~IRegularGrid3DExhangeItem(){}
-
-            /*!
-             * \brief IRegularGrid3DValueSet associated with this IRegularGrid3DExhangeItem.
-             * \returns An IRegularGrid3DValueSet object associated with this IRegularGrid3DExhangeItem.
-             */
-            virtual IRegularGrid3DValueSet* regular3DValues() const = 0;
-
       };
 
    }
@@ -2254,35 +1957,60 @@ Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2D, "HydroCouple::Spatial:
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3D, "HydroCouple::Spatial::IRegularGrid3D/1.0")
 
 
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryComponentItem, "HydroCouple::Spatial::IGeometryComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryValueSet, "HydroCouple::Spatial::IGeometryValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryArgument, "HydroCouple::Spatial::IGeometryArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryComponentDataItem, "HydroCouple::Spatial::IGeometryComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryExchangeItem, "HydroCouple::Spatial::IGeometryExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINComponentItem, "HydroCouple::Spatial::ITINComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINValueSet, "HydroCouple::Spatial::ITINValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINArgument, "HydroCouple::Spatial::ITINArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINComponentDataItem, "HydroCouple::Spatial::ITINComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINExchangeItem, "HydroCouple::Spatial::ITINExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceComponentItem, "HydroCouple::Spatial::IPolyhedralSurfaceComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceValueSet, "HydroCouple::Spatial::IPolyhedralSurfaceValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceArgument, "HydroCouple::Spatial::IPolyhedralSurfaceArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem, "HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceExchangeItem, "HydroCouple::Spatial::IPolyhedralSurfaceExchangeItem/1.0")
 
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterComponentItem, "HydroCouple::Spatial::IRasterComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterValueSet, "HydroCouple::Spatial::IRasterValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterArgument, "HydroCouple::Spatial::IRasterArgument/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterExhangeItem, "HydroCouple::Spatial::IRasterExhangeItem/1.0")
-
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DComponentItem, "HydroCouple::Spatial::IRegularGrid2DComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DValueSet, "HydroCouple::Spatial::IRegularGrid2DValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DArgument, "HydroCouple::Spatial::IRegularGrid2DArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DComponentDataItem, "HydroCouple::Spatial::IRegularGrid2DComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DExhangeItem, "HydroCouple::Spatial::IRegularGrid2DExhangeItem/1.0")
 
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DComponentItem, "HydroCouple::Spatial::IRegularGrid3DComponentItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DValueSet, "HydroCouple::Spatial::IRegularGrid3DValueSet/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DArgument, "HydroCouple::Spatial::IRegularGrid3DArgument/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DExhangeItem, "HydroCouple::Spatial::IRegularGrid3DExhangeItem/1.0")
+
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ISpatialReferenceSystem*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometry*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometryCollection*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiPoint*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IPoint*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IVertex*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ICurve*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiCurve*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiLineString*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ILineString*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ILinearRing*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IEdge*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ISurface*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiSurface*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolygon*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiPolygon*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ITriangle*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::INetwork*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolyhedralSurface*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ITIN*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRaster*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRasterBand*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid2D*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid3D*)
+
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometryComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometryExchangeItem*)
+
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ITINComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::ITINExchangeItem*)
+
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolyhedralSurfaceExchangeItem*)
+
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid2DComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid2DExhangeItem*)
+
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid3DComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid3DExhangeItem*)
 
 #endif // HYDROCOUPLESPATIAL
 
