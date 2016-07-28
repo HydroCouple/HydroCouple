@@ -1,0 +1,4 @@
+<map id="HydroCouple::Temporal::ITimeSpan" name="HydroCouple::Temporal::ITimeSpan">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_temporal_1_1_i_time.html" title="ITime interface based on a Modified Julian Date5 (number and fraction of days since 00:00 November 17..." alt="" coords="37,140,227,280"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="5,5,259,92"/>
+</map>
