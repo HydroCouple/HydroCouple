@@ -1,0 +1,12 @@
+<map id="HydroCouple::Spatial::IGeometryCollection" name="HydroCouple::Spatial::IGeometryCollection">
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_curve.html" title="An IMultiCurve is a 1&#45;dimensional IGeometryCollection whose elements are ICurves. ..." alt="" coords="9,1719,191,1859"/>
+<area shape="rect" id="node9" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_point.html" title="An IMultiPoint is a 0&#45;dimensional IGeometryCollection. " alt="" coords="215,1728,396,1850"/>
+<area shape="rect" id="node10" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_surface.html" title="A MultiSurface is a 2&#45;dimensional GeometryCollection whose elements are Surfaces, all using coordinat..." alt="" coords="420,1710,601,1868"/>
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the hierarchy. " alt="" coords="191,498,420,1474"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="207,346,404,450"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="195,140,416,298"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="179,5,432,92"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_line_string.html" title="An IMultiLineString is an IMultiCurve whose elements are ILineStrings. " alt="" coords="5,1916,195,2038"/>
+<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatial_1_1_i_network.html" title="The INetwork class. " alt="" coords="9,2086,191,2208"/>
+<area shape="rect" id="node11" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_polygon.html" title="An IMultiPolygon is an IMultiSurface whose elements are IPolygons. " alt="" coords="420,1916,601,2038"/>
+</map>

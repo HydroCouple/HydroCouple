@@ -1,0 +1,8 @@
+<map id="HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem" name="HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html" title="ITimeComponentItem is an IComponentItem with a temporal attribute. This class cannot be directly inst..." alt="" coords="5,811,243,969"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="136,498,405,745"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_component_data_item.html" title="IPolyhedralSurfaceComponentItem represents IPolyhedralSurface IComponentItem. " alt="" coords="267,793,568,986"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="172,346,369,450"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="160,140,381,298"/>
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="144,5,397,92"/>
+</map>

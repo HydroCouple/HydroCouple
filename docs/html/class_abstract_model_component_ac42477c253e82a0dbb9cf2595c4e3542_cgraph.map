@@ -1,0 +1,5 @@
+<map id="AbstractModelComponent::AbstractModelComponent" name="AbstractModelComponent::AbstractModelComponent">
+<area shape="rect" id="node2" href="$class_identity.html#a30931aecbd238c1801b9a8ffa7351bed" title="setId " alt="" coords="295,5,436,35"/>
+<area shape="rect" id="node4" href="$class_abstract_model_component.html#adeeb4de83e6ffafd38332ba5c4580fc9" title="Parent IModelComponent object from which current component was cloned from. " alt="" coords="267,59,464,107"/>
+<area shape="rect" id="node3" href="$class_identity.html#a6d12d67baa0107e66869be4858859889" title="Gets a unique identifier for the entity. " alt="" coords="512,5,629,35"/>
+</map>

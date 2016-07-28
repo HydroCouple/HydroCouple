@@ -1,0 +1,14 @@
+<map id="ComponentInfo::~ComponentInfo" name="ComponentInfo::~ComponentInfo">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_component_info.html#a76fe89cc78853de29edd3fdbb1be8a69" title="Name of the current Component. " alt="" coords="327,5,564,53"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_component_info.html#aec30e02081b44559a90c75dc8024079d" title="File path to Component library. " alt="" coords="327,77,564,125"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_component_info.html#aabdd158fd67c99350576cb4dd6f2d65c" title="Sets file path to Component library. " alt="" coords="327,149,564,197"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_component_info.html#a734b2fdf49a3c1237e92d273ed94ce3e" title="File path to Component icon. Must be specified relative to the component library. ..." alt="" coords="327,221,564,269"/>
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_component_info.html#a40681c4287cbc91d9b12e3e7782f72bc" title="Component developer information. " alt="" coords="327,293,564,341"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_i_component_info.html#a2402db50c225ba4dba18ecdad60583d5" title="Publications associated with this component. " alt="" coords="327,365,564,413"/>
+<area shape="rect" id="node8" href="$class_hydro_couple_1_1_i_component_info.html#a19c22fb41b8e3698fd2b323f831ca8de" title="Component license info. " alt="" coords="327,437,564,485"/>
+<area shape="rect" id="node9" href="$class_hydro_couple_1_1_i_component_info.html#a20045ada1e7a5c30ee11f5fbac09ad1e" title="Component copyright info. " alt="" coords="327,509,564,557"/>
+<area shape="rect" id="node10" href="$class_hydro_couple_1_1_i_component_info.html#aea77d368551f6f2bb8cb3755016bd3f6" title="Component developer url. " alt="" coords="307,581,584,611"/>
+<area shape="rect" id="node11" href="$class_hydro_couple_1_1_i_component_info.html#a44a02f33ceb1e49ca4a72fc6ed87a2e4" title="Component developer email. " alt="" coords="327,635,564,682"/>
+<area shape="rect" id="node12" href="$class_hydro_couple_1_1_i_component_info.html#a62f6057385292ad34538fc2b4d242674" title="Component version info. " alt="" coords="327,707,564,754"/>
+<area shape="rect" id="node13" href="$class_hydro_couple_1_1_i_component_info.html#af9aa214f54f818367136d58f7514e16e" title="Component category. " alt="" coords="327,779,564,826"/>
+</map>

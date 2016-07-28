@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="HydroCouple::IAdaptedOutputFactoryComponent">
+    <Position X="7.25" Y="3.5" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocouple.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::IAdaptedOutputFactory">
+    <Position X="5" Y="1" Width="10.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAQAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocouple.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Monaco" Size="11" />
+</ClassDiagram>

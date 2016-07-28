@@ -1,0 +1,5 @@
+<map id="HydroCouple::IQuality" name="HydroCouple::IQuality">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_value_definition.html" title="IValueDefinition describes a value returned by the getValues() function of IValueSet. " alt="" coords="5,346,259,486"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="21,140,243,298"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="5,5,259,92"/>
+</map>

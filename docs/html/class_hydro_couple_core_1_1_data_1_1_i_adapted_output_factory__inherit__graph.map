@@ -1,0 +1,6 @@
+<map id="HydroCoupleCore::Data::IAdaptedOutputFactory" name="HydroCoupleCore::Data::IAdaptedOutputFactory">
+<area shape="rect" id="node5" href="$class_hydro_couple_core_1_1_data_1_1_i_adapted_output_factory_component.html" title="IAdaptedOutputFactoryComponent is an IAdaptedOutputFactory generated from an IAdaptedOutputFactoryCom..." alt="" coords="5,611,262,711"/>
+<area shape="rect" id="node2" href="$class_hydro_couple_core_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. &#160;IIdentity extends the IDescription interface class, and therefore has, next to the id, a caption and a description. " alt="" coords="42,315,225,401"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_core_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="31,140,236,267"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_core_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="39,5,228,92"/>
+</map>

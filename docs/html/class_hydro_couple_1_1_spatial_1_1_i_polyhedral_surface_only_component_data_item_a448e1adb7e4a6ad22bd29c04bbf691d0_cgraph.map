@@ -1,0 +1,6 @@
+<map id="HydroCouple::Spatial::IPolyhedralSurfaceOnlyComponentDataItem::~IPolyhedralSurfaceOnlyComponentDataItem" name="HydroCouple::Spatial::IPolyhedralSurfaceOnlyComponentDataItem::~IPolyhedralSurfaceOnlyComponentDataItem">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_component_data_item.html#a652b695e108f9e3a04f96f1207014b5f" title="Gets a single value for given dimension indexes specified. " alt="" coords="411,5,648,53"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_component_data_item.html#aed149c453986ae14c8365ee7fa7bed3d" title="Gets a multi&#45;dimensional array of values for given dimension indexes and size for a hyperslab..." alt="" coords="411,77,648,125"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_component_data_item.html#a0d2d2c003357ae04bd78c4fc7312c47c" title="Sets a single value for given dimension indexes specified. " alt="" coords="411,149,648,197"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_component_data_item.html#ab51166edc999587d0427d366389eb5ad" title="Sets a multi&#45;dimensional array of values for given dimension indexes and size for a hyperslab..." alt="" coords="411,221,648,269"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="HydroCouple::Spatial::IRasterOnlyArgument" name="HydroCouple::Spatial::IRasterOnlyArgument">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_raster_argument.html" title="An IRasterArgument is an IExchangeItem with an IRaster. " alt="" coords="29,1141,211,1245"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_argument.html" title="IArgument interface class used to set the arguments for components. They can be complex or simple mul..." alt="" coords="5,793,227,1040"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="112,498,381,745"/>
+<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatial_1_1_i_raster_component_data_item.html" title="An IRasterComponentDataItem represents an IRaster IComponentItem. " alt="" coords="251,829,504,1004"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="148,346,345,450"/>
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="136,140,357,298"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="120,5,373,92"/>
+<area shape="rect" id="node9" href="$class_hydro_couple_1_1_spatial_1_1_i_raster_only_component_data_item.html" title="An IRasterComponentDataItem represents an IRaster IComponentItem. " alt="" coords="235,1088,520,1299"/>
+</map>

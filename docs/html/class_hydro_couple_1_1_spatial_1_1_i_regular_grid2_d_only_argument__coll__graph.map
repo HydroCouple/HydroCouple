@@ -1,0 +1,10 @@
+<map id="HydroCouple::Spatial::IRegularGrid2DOnlyArgument" name="HydroCouple::Spatial::IRegularGrid2DOnlyArgument">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_argument.html" title="An IRegularGrid2DArgument is an IExchangeItem with an IRegularGrid2DComponentItem. " alt="" coords="5,1159,243,1263"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_argument.html" title="IArgument interface class used to set the arguments for components. They can be complex or simple mul..." alt="" coords="9,793,231,1040"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="124,498,393,745"/>
+<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_component_data_item.html" title="An IRegularGrid2DComponentDataItem represents an IRegularGrid2D IComponentItem. " alt="" coords="255,829,540,1004"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="160,346,357,450"/>
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="148,140,369,298"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="132,5,385,92"/>
+<area shape="rect" id="node9" href="$class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_only_component_data_item.html" title="An IRegularGrid2DComponentDataItem represents an IRegularGrid2D IComponentItem. " alt="" coords="267,1088,528,1334"/>
+</map>

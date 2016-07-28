@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="HydroCouple::IComponentDataItem" Collapsed="true">
+    <Position X="15.5" Y="0.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAACAAAgIAAAABgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocouple.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Temporal::ITimeComponentDataItem" Collapsed="true">
+    <Position X="3.25" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAgAABAABAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocoupletemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Spatial::IGeometryComponentDataItem" Collapsed="true">
+    <Position X="6.75" Y="2.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>include\hydrocouplespatial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem" Collapsed="true">
+    <Position X="10.5" Y="2.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAQAAAAgAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>include\hydrocouplespatial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Spatial::IRasterComponentDataItem" Collapsed="true">
+    <Position X="18.5" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAQAAAAAAAAAAAAAAAIAAAAABAAAAAAgA=</HashCode>
+      <FileName>include\hydrocouplespatial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Spatial::IRegularGrid2DComponentDataItem" Collapsed="true">
+    <Position X="26.25" Y="2.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAEAAAAAAAAAAkAA=</HashCode>
+      <FileName>include\hydrocouplespatial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Spatial::IRegularGrid3DComponentDataItem" Collapsed="true">
+    <Position X="22" Y="2.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAgAAAAAAAAAAAAEABAAAAAAAAgAA=</HashCode>
+      <FileName>include\hydrocouplespatial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem" Collapsed="true">
+    <Position X="4.75" Y="3.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAIAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>include\hydrocouplespatiotemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem" Collapsed="true">
+    <Position X="12.75" Y="5.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>include\hydrocouplespatiotemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem" Collapsed="true">
+    <Position X="17.5" Y="5.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQCAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocouplespatiotemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem" Collapsed="true">
+    <Position X="13.5" Y="3.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQCAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocouplespatiotemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::SpatioTemporal::ITimeTINComponentDataItem" Collapsed="true">
+    <Position X="9" Y="3.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAIAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\hydrocouplespatiotemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::Spatial::ITINComponentDataItem" Collapsed="true">
+    <Position X="15.25" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAQAAAEAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>include\hydrocouplespatial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem" Collapsed="true">
+    <Position X="6.75" Y="5.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAIAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>include\hydrocouplespatiotemporal.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Monaco" Size="11" />
+</ClassDiagram>

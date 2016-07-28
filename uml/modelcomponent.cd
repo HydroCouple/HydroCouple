@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="HydroCouple::IModelComponent">
+    <Position X="2.5" Y="0.5" Width="10.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAKBAAAAAAABAAAEAAAAAAAAgABAAAAAAGIQEAAA=</HashCode>
+      <FileName>include\hydrocouple.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Monaco" Size="11" />
+</ClassDiagram>

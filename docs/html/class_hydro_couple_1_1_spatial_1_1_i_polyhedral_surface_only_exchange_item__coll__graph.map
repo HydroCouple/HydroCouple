@@ -1,0 +1,10 @@
+<map id="HydroCouple::Spatial::IPolyhedralSurfaceOnlyExchangeItem" name="HydroCouple::Spatial::IPolyhedralSurfaceOnlyExchangeItem">
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_exchange_item.html" title="An IPolyhedralSurfaceExchangeItem class with an IPolyhedralSurface component. " alt="" coords="5,1105,307,1210"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_exchange_item.html" title="IExchangeItem the base data item the can be exchanged between components at runtime. " alt="" coords="41,846,271,933"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="165,498,435,745"/>
+<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_component_data_item.html" title="IPolyhedralSurfaceComponentItem represents IPolyhedralSurface IComponentItem. " alt="" coords="295,793,596,986"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="201,346,399,450"/>
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="189,140,411,298"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="173,5,427,92"/>
+<area shape="rect" id="node9" href="$class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_only_component_data_item.html" title="IPolyhedralSurfaceOnlyComponentDataItem represents IPolyhedralSurface IComponentItem. " alt="" coords="331,1034,624,1281"/>
+</map>

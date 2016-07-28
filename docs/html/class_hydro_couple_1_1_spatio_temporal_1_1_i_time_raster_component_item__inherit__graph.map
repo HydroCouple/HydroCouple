@@ -1,0 +1,10 @@
+<map id="HydroCouple::SpatioTemporal::ITimeRasterComponentItem" name="HydroCouple::SpatioTemporal::ITimeRasterComponentItem">
+<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_argument.html" title="The ITimeRasterArgument class. " alt="" coords="5,1116,243,1273"/>
+<area shape="rect" id="node9" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_exchange_item.html" title="The ITimeRasterExchangeItem class. " alt="" coords="267,1133,512,1256"/>
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_temporal_1_1_i_time_component_item.html" title="ITimeComponentItem is an IComponentItem with a temporal attribute. " alt="" coords="35,731,240,906"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_component_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="137,534,375,674"/>
+<area shape="rect" id="node7" href="$class_hydro_couple_1_1_spatial_1_1_i_raster_component_item.html" title="An IRasterComponentItem represents an IRaster IComponentItem. " alt="" coords="264,722,485,915"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="157,346,355,486"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="145,140,367,298"/>
+<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="129,5,383,92"/>
+</map>
