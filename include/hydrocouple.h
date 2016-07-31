@@ -48,7 +48,7 @@ namespace HydroCouple
   class IOutput;
   class IExchangeItem;
   class IAdaptedOutput;
-  class IAdaptedOutputFacåtory;
+  class IAdaptedOutputFactory;
   class IAdaptedOutputFactoryComponent;
   class IUnit;
 
