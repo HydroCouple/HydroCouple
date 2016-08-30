@@ -7,6 +7,7 @@
 TEMPLATE = lib
 VERSION = 1.0.0
 TARGET = HydroCouple
+CONFIG += debug_and_release
 
 QT += core
 

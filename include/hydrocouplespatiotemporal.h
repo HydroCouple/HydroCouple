@@ -61,19 +61,29 @@ namespace HydroCouple
         virtual IDimension* timeDimension() const = 0;
 
         /*!
-         * \returns An IGeometryCollection associated with this IGeometryComponentItem.
+         * \brief geometryType
+         * \return
          */
-        virtual HydroCouple::Spatial::IGeometryCollection* geometryCollection() const = 0;
+        virtual HydroCouple::Spatial::GeometryType geometryType() const = 0;
 
         /*!
-         * \returns An IGeometry for the geometry index.
+         * \brief geometryCount
+         * \return
          */
-        virtual HydroCouple::Spatial::IGeometry* geometry(int geometryIndex) const = 0;
+        virtual int geometryCount() const = 0;
 
         /*!
-         * \returns The IDimension for this IGeometryComponentItem. Must be the first dimension in the dimensions() list
+         * \brief geometry
+         * \param geometryIndex
+         * \return
          */
-        virtual IDimension* geometryDimension() const = 0;
+        virtual HydroCouple::Spatial::IGeometry *geometry(int geometryIndex) const = 0;
+
+        /*!
+         * \returns The dimesion attributes for the data with the geometry. This can be the field name for an attribute for a shapefile.
+         *  Must be the first dimension in the dimensions() list
+         */
+        virtual HydroCouple::IDimension *geometryDimension() const = 0;
 
         /*!
          * \brief Gets a single value for given time dimension index.
@@ -82,6 +92,7 @@ namespace HydroCouple
          * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
          * \param data is the output QVariant where data is to be written.
          */
+        using IComponentDataItem::getValue;
         virtual void getValue(int timeDimensionIndex, int geometryDimensionIndex, QVariant &data) const = 0;
 
         /*!
@@ -92,6 +103,7 @@ namespace HydroCouple
         * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
         */
+        using IComponentDataItem::getValues;
         virtual void getValues(int timeDimensionIndex, int geometryDimensionIndex, int timeStride, int geomStride, QVariant data[]) const = 0;
 
         /*!
@@ -110,6 +122,7 @@ namespace HydroCouple
          * \param geometryDimensionIndex is the geometry dimension index where data is to be written.
          * \param data is the input QVariant to be written.
          */
+        using IComponentDataItem::setValue;
         virtual void setValue(int timeDimensionIndex, int geometryDimensionIndex, const QVariant &data) = 0;
 
         /*!
@@ -120,6 +133,7 @@ namespace HydroCouple
         * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
         * \param data is the input multi dimensional array to be written.
         */
+        using IComponentDataItem::setValues;
         virtual void setValues(int timeDimensionIndex, int geometryDimensionIndex, int timeStride, int geomStride, const QVariant data[]) = 0;
 
         //!Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
@@ -156,19 +170,20 @@ namespace HydroCouple
 
     };
 
+
     /*==========================================================================================================*/
 
     /*!
-     * \brief The ITINComponentItem class.
+     * \brief The ITimePolyhedralSurfaceComponentItem class.
      */
-    class ITimeTINComponentDataItem : public virtual IComponentDataItem
+    class ITimePolyhedralSurfaceComponentDataItem :  public virtual IComponentDataItem
     {
       public:
 
         /*!
-         * \brief ~ITimeTINComponentItem.
+         * \brief ~ITimePolyhedralSurfaceComponentItem.
          */
-        virtual ~ITimeTINComponentDataItem(){}
+        virtual ~ITimePolyhedralSurfaceComponentDataItem(){}
 
         /*!
          * \brief ITimes associated with this dimension.
@@ -187,107 +202,163 @@ namespace HydroCouple
          */
         virtual IDimension* timeDimension() const = 0;
 
-
         /*!
-           * \returns The ITIN associated with this ITINComponentDataItem.
-           */
-        virtual HydroCouple::Spatial::ITIN* TIN() const = 0;
-
-        /*!
-           * \returns An ITriangle for the patch index.
-           */
-        virtual HydroCouple::Spatial::ITriangle* triangle(int patchIndex) const = 0;
-
-        /*!
-           * \returns The ITINPatchDimension for this ITINComponentDataItem triangles.
-           */
-        virtual IDimension* TINPatchDimension() const = 0;
-
-        /*!
-         * \brief TINEdgeDimension
+         * \brief polyhedralSurfaceDataType
          * \return
          */
-        virtual IDimension* TINEdgeDimension() const = 0;
+        virtual HydroCouple::Spatial::PolyhedralSurfaceDataType polyhedralSurfaceDataType() const = 0;
 
         /*!
-         * \brief TINNodeDimension
+           * \returns The IPolyhedralSurface associated with this IPolyhedralSurfaceDimension.
+           */
+        virtual HydroCouple::Spatial::IPolyhedralSurface* polyhedralSurface() const = 0;
+
+        /*!
+         * \returns The IDimension for this IPolyhedralSurfaceComponentItem patches.
+         */
+        virtual IDimension *patchDimension() const = 0;
+
+        /*!
+         * \brief polyhedralSurfaceEdgeDimension
          * \return
          */
-        virtual IDimension* TINNodeDimension() const = 0;
+        virtual IDimension *patchEdgeDimension() const = 0;
 
         /*!
-         * \brief Gets a single value for given patch dimension index.
+         * \brief polyhedralSurfaceNodeDimensions
+         * \return
+         */
+        virtual IDimension *edgeNodeDimensions() const = 0;
+
+
+        //!Gets a single value for given patch dimension index.
+        /*!
          * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
          * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
          * \param edgeDimensionIndex the index of the edge to retrieve data for.
          * \param nodeDimensionIndex the index of the edge to retrieve data for.
          * \param data is the output QVariant where data is to be written.
          */
+        using IComponentDataItem::getValue;
         virtual void getValue(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex,
-                  int nodeDimensionIndex, QVariant &data) const = 0;
+                              int nodeDimensionIndex, QVariant& data) const = 0;
 
+        //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
         /*!
-         * \brief Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
          * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
          * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
          * \param edgeDimensionIndex the index of the edge to retrieve data for.
          * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param timeStride is the size for hyperslab from which to copy data.
+         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
          * \param patchStride is the size for hyperslab from which to copy data.
          * \param edgeStride is the size for hyperslab from which to copy data.
          * \param nodeStride is the size for hyperslab from which to copy data.
          * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
          */
+        using IComponentDataItem::getValues;
         virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride, QVariant data[]) const = 0;
+                               int timeStride, int patchStride, int edgeStride, int nodeStride, QVariant data[]) const = 0;
 
+        //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
         /*!
-         * \brief Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
          * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
          * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
          * \param edgeDimensionIndex the index of the edge to retrieve data for.
          * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param timeStride is the size for hyperslab from which to copy data.
+         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
          * \param patchStride is the size for hyperslab from which to copy data.
          * \param edgeStride is the size for hyperslab from which to copy data.
          * \param nodeStride is the size for hyperslab from which to copy data.
          * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride, void *data) const = 0;
+                               int timeStride, int patchStride, int edgeStride, int nodeStride,  void *data) const = 0;
 
+        //!Sets a single value for given patch dimension index.
         /*!
-         * \brief Sets a single value for given patch dimension index.
-         * \param timeDimensionIndex is the time dimension index where data is to be written.
-         * \param patchDimensionIndex is the patch dimension index where data is to be written.
+         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
+         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
          * \param edgeDimensionIndex the index of the edge to retrieve data for.
          * \param nodeDimensionIndex the index of the edge to retrieve data for.
          * \param data is the input QVariant to be written.
          */
+        using IComponentDataItem::setValue;
         virtual void setValue(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex,
-                  int nodeDimensionIndex, const QVariant& data) = 0;
-
-        /*!
-         * \brief Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
-         * \param timeDimensionIndex is the time dimension index where data is to be written.
-         * \param patchDimensionIndex is the patch dimension index where data is to be written.
-         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
-         * \param patchStride is the size for the patch dimensions hyperslab where data is to be written.
-         * \param data is the input multi dimensional array to be written.
-         */
-        virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride, const QVariant data[]) = 0;
+                              int nodeDimensionIndex, const QVariant &data) = 0;
 
         //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
         /*!
-         * \param timeDimensionIndex is the time dimension index where data is to be written.
-         * \param patchDimensionIndex is the patch dimension index where data is to be written.
-         * \param timeStride is the size of the time dimension for hyperslab where data is to be written.
-         * \param patchStride is the size of the time dimension for hyperslab where data is to be written.
+         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
+         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+         * \param edgeDimensionIndex the index of the edge to retrieve data for.
+         * \param nodeDimensionIndex the index of the edge to retrieve data for.
+         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
+         * \param patchStride is the size for hyperslab from which to copy data.
+         * \param edgeStride is the size for hyperslab from which to copy data.
+         * \param nodeStride is the size for hyperslab from which to copy data.
+         * \param data is the input multi dimensional array to be written.
+         */
+        using IComponentDataItem::setValues;
+        virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
+                               int timeStride, int patchStride, int edgeStride, int nodeStride, const QVariant data[]) = 0;
+
+        //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
+        /*!
+         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
+         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
+         * \param edgeDimensionIndex the index of the edge to retrieve data for.
+         * \param nodeDimensionIndex the index of the edge to retrieve data for.
+         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
+         * \param patchStride is the size for hyperslab from which to copy data.
+         * \param edgeStride is the size for hyperslab from which to copy data.
+         * \param nodeStride is the size for hyperslab from which to copy data.
          * \param data is the input multi dimensional array to be written.
          */
         virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride, const void *data) = 0;
+                               int timeStride, int patchStride, int edgeStride, int nodeStride, const void *data) = 0;
+    };
+
+    /*!
+     * \brief The ITimePolyhedralSurfaceExchangeItem class.
+     */
+    class ITimePolyhedralSurfaceExchangeItem : public virtual IExchangeItem,
+        public virtual ITimePolyhedralSurfaceComponentDataItem
+    {
+      public:
+        virtual ~ITimePolyhedralSurfaceExchangeItem(){}
+    };
+
+    /*!
+     * \brief The ITimePolyhedralSurfaceArgument class.
+     */
+    class ITimePolyhedralSurfaceArgument : public virtual IArgument,
+        public virtual ITimePolyhedralSurfaceComponentDataItem
+    {
+      public:
+        virtual ~ITimePolyhedralSurfaceArgument(){}
+    };
+
+    /*==========================================================================================================*/
+
+    /*!
+     * \brief The ITINComponentItem class.
+     */
+    class ITimeTINComponentDataItem : public virtual IComponentDataItem,
+        public virtual ITimePolyhedralSurfaceComponentDataItem
+    {
+      public:
+
+        /*!
+         * \brief ~ITimeTINComponentItem.
+         */
+        virtual ~ITimeTINComponentDataItem(){}
+
+
+        /*!
+           * \returns The ITIN associated with this ITINComponentDataItem.
+           */
+        virtual HydroCouple::Spatial::ITIN* TIN() const = 0;
+
     };
 
     /*!
@@ -310,168 +381,6 @@ namespace HydroCouple
         virtual ~ITimeTINArgument(){}
     };
 
-    /*==========================================================================================================*/
-
-    /*!
-     * \brief The ITimePolyhedralSurfaceComponentItem class.
-     */
-    class ITimePolyhedralSurfaceComponentDataItem :  public virtual IComponentDataItem
-    {
-      public:
-
-        /*!
-         * \brief ~ITimePolyhedralSurfaceComponentItem.
-         */
-        virtual ~ITimePolyhedralSurfaceComponentDataItem(){}
-
-
-        /*!
-         * \brief ITimes associated with this dimension.
-         * \returns QList<ITime*>
-         */
-        virtual QList<HydroCouple::Temporal::ITime*> times() const = 0;
-
-        /*!
-         * \brief ITimeSpan associated with this dimension.
-         */
-        virtual HydroCouple::Temporal::ITimeSpan* timeSpan() const = 0;
-
-        /*!
-         * \brief IDimension of the times.
-         * \returns IDimension
-         */
-        virtual IDimension* timeDimension() const = 0;
-
-
-        /*!
-           * \returns The IPolyhedralSurface associated with this IPolyhedralSurfaceDimension.
-           */
-        virtual HydroCouple::Spatial::IPolyhedralSurface* polyhedralSurface() const = 0;
-
-        /*!
-           * \returns An IPolygon for the patch index.
-           */
-        virtual HydroCouple::Spatial::IPolygon* polygon(int patchIndex) const = 0;
-
-        /*!
-           * \returns The IDimension for this IPolyhedralSurfaceComponentItem patches.
-           */
-        virtual IDimension* polyhedralSurfacePatchDimension() const = 0;
-
-        /*!
-         * \brief polyhedralSurfaceEdgeDimension
-         * \return
-         */
-        virtual IDimension* polyhedralSurfaceEdgeDimension() const = 0;
-
-        /*!
-         * \brief polyhedralSurfaceNodeDimensions
-         * \return
-         */
-        virtual IDimension* polyhedralSurfaceNodeDimensions() const = 0;
-
-        //!Gets a single value for given patch dimension index.
-        /*!
-         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
-         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex the index of the edge to retrieve data for.
-         * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param data is the output QVariant where data is to be written.
-         */
-        virtual void getValue(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex,
-                  int nodeDimensionIndex, QVariant& data) const = 0;
-
-        //!Gets a multi-dimensional array of values for given dimension patch dimension index and size for a hyperslab.
-        /*!
-         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
-         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex the index of the edge to retrieve data for.
-         * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
-         * \param patchStride is the size for hyperslab from which to copy data.
-         * \param edgeStride is the size for hyperslab from which to copy data.
-         * \param nodeStride is the size for hyperslab from which to copy data.
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride, QVariant data[]) const = 0;
-
-        //!Gets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
-        /*!
-         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
-         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex the index of the edge to retrieve data for.
-         * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
-         * \param patchStride is the size for hyperslab from which to copy data.
-         * \param edgeStride is the size for hyperslab from which to copy data.
-         * \param nodeStride is the size for hyperslab from which to copy data.
-         * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride,  void *data) const = 0;
-
-        //!Sets a single value for given patch dimension index.
-        /*!
-         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
-         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex the index of the edge to retrieve data for.
-         * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param data is the input QVariant to be written.
-         */
-        virtual void setValue(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex,
-                  int nodeDimensionIndex, const QVariant &data) = 0;
-
-        //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
-        /*!
-         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
-         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex the index of the edge to retrieve data for.
-         * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
-         * \param patchStride is the size for hyperslab from which to copy data.
-         * \param edgeStride is the size for hyperslab from which to copy data.
-         * \param nodeStride is the size for hyperslab from which to copy data.
-         * \param data is the input multi dimensional array to be written.
-         */
-        virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride, const QVariant data[]) = 0;
-
-        //!Sets a multi-dimensional array of values for given patch dimension index and size for a hyperslab.
-        /*!
-         * \param timeDimensionIndex is the time dimension index from where to obtain the requested data.
-         * \param patchDimensionIndex is the patch dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex the index of the edge to retrieve data for.
-         * \param nodeDimensionIndex the index of the edge to retrieve data for.
-         * \param timeStride is the size for the time dimensions hyperslab where data is to be written.
-         * \param patchStride is the size for hyperslab from which to copy data.
-         * \param edgeStride is the size for hyperslab from which to copy data.
-         * \param nodeStride is the size for hyperslab from which to copy data.
-         * \param data is the input multi dimensional array to be written.
-         */
-        virtual void setValues(int timeDimensionIndex, int patchDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                   int timeStride, int patchStride, int edgeStride, int nodeStride, const void *data) = 0;
-    };
-
-    /*!
-     * \brief The ITimePolyhedralSurfaceExchangeItem class.
-     */
-    class ITimePolyhedralSurfaceExchangeItem : public virtual IExchangeItem,
-        public virtual ITimePolyhedralSurfaceComponentDataItem
-    {
-      public:
-        virtual ~ITimePolyhedralSurfaceExchangeItem(){}
-    };
-
-    /*!
-     * \brief The ITimePolyhedralSurfaceArgument class.
-     */
-    class ITimePolyhedralSurfaceArgument : public virtual IArgument,
-        public virtual ITimePolyhedralSurfaceComponentDataItem
-    {
-      public:
-        virtual ~ITimePolyhedralSurfaceArgument(){}
-    };
 
     /*==========================================================================================================*/
 
@@ -530,6 +439,7 @@ namespace HydroCouple
          * \param bandIndex is the band dimension index from where to obtain the requested data.
          * \param data is the output QVariant where data is to be written.
          */
+        using IComponentDataItem::getValue;
         virtual void getValue(int timeDimensionIndex, int xindex, int yindex, int bandIndex, QVariant &data) const = 0;
 
         /*!
@@ -544,6 +454,7 @@ namespace HydroCouple
          * \param bandStride is the band size for hyperslab from which to copy data.
          * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
          */
+        using IComponentDataItem::getValues;
         virtual void getValues(int timeDimensionIndex, int xindex, int yindex,
                                int bandIndex, int timeStride, int xstride, int ystride,
                                int bandStride, QVariant data[]) const = 0;
@@ -572,6 +483,7 @@ namespace HydroCouple
          * \param bandIndex is the band dimension index from where to obtain the requested data.
          * \param data is the input QVariant to be written.
          */
+        using IComponentDataItem::setValue;
         virtual void setValue(int timeDimensionIndex, int xindex, int yindex, int bandIndex, const QVariant &data) = 0;
 
         /*!
@@ -586,6 +498,7 @@ namespace HydroCouple
          * \param bandStride is the band size for hyperslab from which to copy data.
          * \param data is the input QVariant array to be written.
          */
+        using IComponentDataItem::setValues;
         virtual void setValues(int timeDimensionIndex, int xindex, int yindex,
                                int bandIndex, int timeStride, int xstride,
                                int ystride, int bandStride,  const QVariant data[]) = 0;
@@ -614,7 +527,7 @@ namespace HydroCouple
     class ITimeRasterExchangeItem : public virtual IExchangeItem,
         public virtual ITimeRasterComponentDataItem
     {
-       public:
+      public:
         virtual ~ITimeRasterExchangeItem(){}
     };
 
@@ -624,7 +537,7 @@ namespace HydroCouple
     class ITimeRasterArgument : public virtual IArgument,
         public virtual ITimeRasterComponentDataItem
     {
-       public:
+      public:
         virtual ~ITimeRasterArgument(){}
     };
 
@@ -636,7 +549,7 @@ namespace HydroCouple
      */
     class ITimeRegularGrid2DComponentDataItem :  public virtual IComponentDataItem
     {
-       public:
+      public:
 
         virtual ~ITimeRegularGrid2DComponentDataItem(){}
 
@@ -693,6 +606,7 @@ namespace HydroCouple
          * \param cellNodeIndex
          * \param data is output into which the requested data is to be written.
          */
+        using IComponentDataItem::getValue;
         virtual void getValue(int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex, QVariant &data) const = 0;
 
@@ -710,6 +624,7 @@ namespace HydroCouple
          * \param cellNodeStride
          * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
          */
+        using IComponentDataItem::getValues;
         virtual void getValues(int timeDimensionIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex,
                                int timeStride, int xCellStride, int yCellStride, int cellEdgeStride, int cellNodeStride, QVariant data[]) const = 0;
 
@@ -739,6 +654,7 @@ namespace HydroCouple
          * \param cellNodeIndex
          * \param data is input data to be written.
          */
+        using IComponentDataItem::setValue;
         virtual void setValue(int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex, const QVariant &data) = 0;
 
@@ -756,6 +672,7 @@ namespace HydroCouple
          * \param cellNodeStride
          * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
          */
+        using IComponentDataItem::setValues;
         virtual void setValues(int timeDimensionIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex,
                                int timeStride, int xCellStride, int yCellStride, int cellEdgeStride, int cellNodeStride, const QVariant data[]) = 0;
 
@@ -783,7 +700,7 @@ namespace HydroCouple
     class ITimeRegularGrid2DExchangeItem : public virtual IExchangeItem,
         public virtual ITimeRegularGrid2DComponentDataItem
     {
-       public:
+      public:
         virtual ~ITimeRegularGrid2DExchangeItem(){}
     };
 
@@ -793,7 +710,7 @@ namespace HydroCouple
     class ITimeRegularGrid2DArgument : public virtual IArgument,
         public virtual ITimeRegularGrid2DComponentDataItem
     {
-       public:
+      public:
         virtual ~ITimeRegularGrid2DArgument(){}
     };
 
@@ -804,7 +721,7 @@ namespace HydroCouple
      */
     class ITimeRegularGrid3DComponentDataItem :  public virtual IComponentDataItem
     {
-       public:
+      public:
         virtual ~ITimeRegularGrid3DComponentDataItem(){}
 
         /*!
@@ -873,6 +790,7 @@ namespace HydroCouple
          * \param cellNodeIndex
          * \param data is output into which the requested data is to be written.
          */
+        using IComponentDataItem::getValue;
         virtual void getValue(int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex, QVariant &data) const = 0;
 
@@ -893,6 +811,7 @@ namespace HydroCouple
          * \param cellNodeStride
          * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
          */
+        using IComponentDataItem::getValues;
         virtual void getValues(int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                                int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex,
                                int xCellStride, int yCellStride, int zCellStride,
@@ -931,6 +850,7 @@ namespace HydroCouple
          * \param cellNodeIndex
          * \param data is input data to be written.
          */
+        using IComponentDataItem::setValue;
         virtual void setValue(int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex, const QVariant &data) = 0;
 
@@ -951,6 +871,7 @@ namespace HydroCouple
          * \param cellNodeStride
          * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
          */
+        using IComponentDataItem::setValues;
         virtual void setValues(int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                                int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex,
                                int xCellStride, int yCellStride, int zCellStride,
@@ -985,7 +906,7 @@ namespace HydroCouple
     class ITimeRegularGrid3DExchangeItem : public virtual IExchangeItem,
         public virtual ITimeRegularGrid3DComponentDataItem
     {
-       public:
+      public:
 
         virtual ~ITimeRegularGrid3DExchangeItem(){}
 
@@ -997,62 +918,62 @@ namespace HydroCouple
     class ITimeRegularGrid3DArgument : public virtual IArgument,
         public virtual ITimeRegularGrid3DComponentDataItem
     {
-       public:
+      public:
 
         virtual ~ITimeRegularGrid3DArgument(){}
 
     };
 
   }
-  }
+}
 
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem, "HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem, "HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryArgument, "HydroCouple::SpatioTemporal::ITimeGeometryArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem, "HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem, "HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryArgument, "HydroCouple::SpatioTemporal::ITimeGeometryArgument/1.0")
 
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem, "HydroCouple::SpatioTemporal::ITimeTINComponentDataItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINExchangeItem, "HydroCouple::SpatioTemporal::ITimeTINExchangeItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINArgument, "HydroCouple::SpatioTemporal::ITimeTINArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem, "HydroCouple::SpatioTemporal::ITimeTINComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINExchangeItem, "HydroCouple::SpatioTemporal::ITimeTINExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINArgument, "HydroCouple::SpatioTemporal::ITimeTINArgument/1.0")
 
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument/1.0")
 
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterExchangeItem, "HydroCouple::SpatioTemporal::ITimeRasterExchangeItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterArgument, "HydroCouple::SpatioTemporal::ITimeRasterArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterExchangeItem, "HydroCouple::SpatioTemporal::ITimeRasterExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterArgument, "HydroCouple::SpatioTemporal::ITimeRasterArgument/1.0")
 
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument/1.0")
 
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
-  Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument, "HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument, "HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument/1.0")
 
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryArgument*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryExchangeItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryArgument*)
 
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINExchangeItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINArgument*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINExchangeItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINArgument*)
 
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceExchangeItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceArgument*)
 
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterExchangeItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterArgument*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterExchangeItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterArgument*)
 
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DArgument*)
 
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem*)
-  Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DExchangeItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DArgument*)
 
 #endif // HYDROCOUPLESPATIOTEMPORAL_H
 
