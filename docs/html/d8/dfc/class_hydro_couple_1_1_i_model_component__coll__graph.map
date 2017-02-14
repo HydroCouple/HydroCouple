@@ -1,0 +1,5 @@
+<map id="HydroCouple::IModelComponent" name="HydroCouple::IModelComponent">
+<area shape="rect" id="node2" href="$d2/d2a/class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="33,346,231,450"/>
+<area shape="rect" id="node3" href="$db/d64/class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="21,140,243,298"/>
+<area shape="rect" id="node4" href="$dd/dbf/class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="5,5,259,92"/>
+</map>

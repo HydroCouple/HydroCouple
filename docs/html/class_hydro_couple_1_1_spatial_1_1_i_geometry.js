@@ -11,9 +11,12 @@ var class_hydro_couple_1_1_spatial_1_1_i_geometry =
     [ "dimension", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#adeb2e25bae49201783b64022a6580b50", null ],
     [ "disjoint", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#ad0a4cedf93360048b59507d363127ec1", null ],
     [ "distance", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a8b90bf59748e158b683792910963cb51", null ],
-    [ "envelope", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#adcc8862150688c4f6abbbe58ee38da48", null ],
+    [ "envelope", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a6963f078114d35469c072f33904e2093", null ],
     [ "equals", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a05653cdcb38fa70384d69470efd24d67", null ],
     [ "geometryType", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a1d521dd3913741405da0efe3ab9b70d0", null ],
+    [ "getWKB", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a508cb18c954a9b931f3ec04e19f34531", null ],
+    [ "getWKT", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#ad2ae32431583013cfd4d8923c04a16fd", null ],
+    [ "id", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a0acb98a5738f859c39b34169df7acdb3", null ],
     [ "index", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a20e2bb32c54084f082e5dd469c7a4847", null ],
     [ "intersection", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a028051cdc31236947daea7b357ad7800", null ],
     [ "intersects", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a63a33760fa908757532d2f170dfcee3b", null ],
@@ -29,7 +32,5 @@ var class_hydro_couple_1_1_spatial_1_1_i_geometry =
     [ "symmetricDifference", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a77bf932e8a188df9f5d24c25500c96f6", null ],
     [ "touches", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a5efce40f9e855b7a6b4fe81b2b50cb0d", null ],
     [ "unionG", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a1b91fb4f4262a231381a6ce86d655030", null ],
-    [ "within", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a02b85da063f01f76d657d4858be41f46", null ],
-    [ "wkb", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#ad2381ceba2dc9d29e81284731e738ea7", null ],
-    [ "wkt", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#af82ae880f60a9a0ae0a1be23bb1d8232", null ]
+    [ "within", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a02b85da063f01f76d657d4858be41f46", null ]
 ];

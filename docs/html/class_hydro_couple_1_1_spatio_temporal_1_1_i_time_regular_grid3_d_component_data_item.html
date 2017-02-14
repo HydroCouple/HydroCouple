@@ -30,6 +30,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="hydrocouplecomposer.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">HydroCouple
    &#160;<span id="projectnumber">1.0.0</span>
@@ -135,31 +136,46 @@ Collaboration diagram for HydroCouple::SpatioTemporal::ITimeRegularGrid3DCompone
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a51c986d2f99145968cb7a3e5e58b9996"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a51c986d2f99145968cb7a3e5e58b9996">~ITimeRegularGrid3DComponentDataItem</a> ()</td></tr>
 <tr class="separator:a51c986d2f99145968cb7a3e5e58b9996"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f0355b0fdcb62d32a87c881d64d9a76"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a2f0355b0fdcb62d32a87c881d64d9a76">getValue</a> (int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex, QVariant &amp;data) const  =0</td></tr>
-<tr class="memdesc:a2f0355b0fdcb62d32a87c881d64d9a76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the value for the xcell index and ycell index.  <a href="#a2f0355b0fdcb62d32a87c881d64d9a76">More...</a><br /></td></tr>
-<tr class="separator:a2f0355b0fdcb62d32a87c881d64d9a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d63bcc9c42ab77d171941f5ebacb085"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a4d63bcc9c42ab77d171941f5ebacb085">getValues</a> (int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex, int timeStride, int xCellStride, int yCellStride, int zCellStride, QVariant data[]) const  =0</td></tr>
-<tr class="memdesc:a4d63bcc9c42ab77d171941f5ebacb085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension for a hyperslab.  <a href="#a4d63bcc9c42ab77d171941f5ebacb085">More...</a><br /></td></tr>
-<tr class="separator:a4d63bcc9c42ab77d171941f5ebacb085"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9057502e913a8ebc7e85cf132ab9b95c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a9057502e913a8ebc7e85cf132ab9b95c">getValues</a> (int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex, int timeStride, int xCellStride, int yCellStride, int zCellStride, void *data) const  =0</td></tr>
-<tr class="memdesc:a9057502e913a8ebc7e85cf132ab9b95c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension for a hyperslab.  <a href="#a9057502e913a8ebc7e85cf132ab9b95c">More...</a><br /></td></tr>
-<tr class="separator:a9057502e913a8ebc7e85cf132ab9b95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7373e5801ba0806b229bb115b47ea35e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a7373e5801ba0806b229bb115b47ea35e">setValue</a> (int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex, const QVariant &amp;data)=0</td></tr>
-<tr class="memdesc:a7373e5801ba0806b229bb115b47ea35e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the value for the xcell, ycell, and zcell indexes.  <a href="#a7373e5801ba0806b229bb115b47ea35e">More...</a><br /></td></tr>
-<tr class="separator:a7373e5801ba0806b229bb115b47ea35e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0d8d84835009a098cdd5c2d60dac61"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a9f0d8d84835009a098cdd5c2d60dac61">setValues</a> (int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex, int timeStride, int xCellStride, int yCellStride, int zCellStride, const QVariant data[])=0</td></tr>
-<tr class="memdesc:a9f0d8d84835009a098cdd5c2d60dac61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimensions of a hyperslab.  <a href="#a9f0d8d84835009a098cdd5c2d60dac61">More...</a><br /></td></tr>
-<tr class="separator:a9f0d8d84835009a098cdd5c2d60dac61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a0c430331d19281c910be528d6b9e8d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a6a0c430331d19281c910be528d6b9e8d">setValues</a> (int timeDimensionIndex, int xCellIndex, int yCellIndex, int zCellIndex, int timeStride, int xCellStride, int yCellStride, int zCellStride, const void *data)=0</td></tr>
-<tr class="memdesc:a6a0c430331d19281c910be528d6b9e8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimensions of a hyperslab.  <a href="#a6a0c430331d19281c910be528d6b9e8d">More...</a><br /></td></tr>
-<tr class="separator:a6a0c430331d19281c910be528d6b9e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9977fe09e8b280f3517758f31378c6f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d.html">HydroCouple::Spatial::IRegularGrid3D</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#ab9977fe09e8b280f3517758f31378c6f">grid</a> () const  =0</td></tr>
+<tr class="memdesc:ab9977fe09e8b280f3517758f31378c6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.  <a href="#ab9977fe09e8b280f3517758f31378c6f">More...</a><br /></td></tr>
+<tr class="separator:ab9977fe09e8b280f3517758f31378c6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c044f0151d945f866f4715170f2b009"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_hydro_couple_1_1_spatial.html#a1aad85957251af4a9e970c57a12b9a26">HydroCouple::Spatial::MeshDataType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a6c044f0151d945f866f4715170f2b009">meshDataType</a> () const  =0</td></tr>
+<tr class="memdesc:a6c044f0151d945f866f4715170f2b009"><td class="mdescLeft">&#160;</td><td class="mdescRight">meshDataType  <a href="#a6c044f0151d945f866f4715170f2b009">More...</a><br /></td></tr>
+<tr class="separator:a6c044f0151d945f866f4715170f2b009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14e55c9a07c776ef6a175cf203ec75fc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a14e55c9a07c776ef6a175cf203ec75fc">xCellDimension</a> () const  =0</td></tr>
+<tr class="memdesc:a14e55c9a07c776ef6a175cf203ec75fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of X cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>.  <a href="#a14e55c9a07c776ef6a175cf203ec75fc">More...</a><br /></td></tr>
+<tr class="separator:a14e55c9a07c776ef6a175cf203ec75fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80e513280bcc2d41ba0b2399a12efa0d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a80e513280bcc2d41ba0b2399a12efa0d">yCellDimension</a> () const  =0</td></tr>
+<tr class="memdesc:a80e513280bcc2d41ba0b2399a12efa0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of Y cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>.  <a href="#a80e513280bcc2d41ba0b2399a12efa0d">More...</a><br /></td></tr>
+<tr class="separator:a80e513280bcc2d41ba0b2399a12efa0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f08f52937f875312b9034773a269705"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a5f08f52937f875312b9034773a269705">zCellDimension</a> () const  =0</td></tr>
+<tr class="memdesc:a5f08f52937f875312b9034773a269705"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of Z cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>.  <a href="#a5f08f52937f875312b9034773a269705">More...</a><br /></td></tr>
+<tr class="separator:a5f08f52937f875312b9034773a269705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab68f8ca18eaba211ed20d19d9c974fac"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#ab68f8ca18eaba211ed20d19d9c974fac">cellFaceDimension</a> () const  =0</td></tr>
+<tr class="memdesc:ab68f8ca18eaba211ed20d19d9c974fac"><td class="mdescLeft">&#160;</td><td class="mdescRight">cellFaceDimension 0 = Top , 1 = Bottom, 2 = left , 3 = Right, Up = 4, Down = 5  <a href="#ab68f8ca18eaba211ed20d19d9c974fac">More...</a><br /></td></tr>
+<tr class="separator:ab68f8ca18eaba211ed20d19d9c974fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc10cc6794cc70d302be5ff9a8321c5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a0cc10cc6794cc70d302be5ff9a8321c5">cellNodeDimension</a> () const  =0</td></tr>
+<tr class="memdesc:a0cc10cc6794cc70d302be5ff9a8321c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">cellNodeDimension  <a href="#a0cc10cc6794cc70d302be5ff9a8321c5">More...</a><br /></td></tr>
+<tr class="separator:a0cc10cc6794cc70d302be5ff9a8321c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a392827ded28cda3214ff5b6512900a96"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a392827ded28cda3214ff5b6512900a96">getValue</a> (int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex, int cellFaceIndex, int cellNodeIndex, void *data) const  =0</td></tr>
+<tr class="memdesc:a392827ded28cda3214ff5b6512900a96"><td class="mdescLeft">&#160;</td><td class="mdescRight">getValue  <a href="#a392827ded28cda3214ff5b6512900a96">More...</a><br /></td></tr>
+<tr class="separator:a392827ded28cda3214ff5b6512900a96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad800e0b4fced35e915a7ca5ba9986969"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#ad800e0b4fced35e915a7ca5ba9986969">getValues</a> (int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex, int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex, int xCellStride, int yCellStride, int zCellStride, int cellFaceStride, int cellEdgeStride, int cellNodeStride, void *data) const  =0</td></tr>
+<tr class="memdesc:ad800e0b4fced35e915a7ca5ba9986969"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension for a hyperslab.  <a href="#ad800e0b4fced35e915a7ca5ba9986969">More...</a><br /></td></tr>
+<tr class="separator:ad800e0b4fced35e915a7ca5ba9986969"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac836b574cff61913616229cb0917c549"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#ac836b574cff61913616229cb0917c549">setValue</a> (int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex, int cellFaceIndex, int cellNodeIndex, const void *data)=0</td></tr>
+<tr class="memdesc:ac836b574cff61913616229cb0917c549"><td class="mdescLeft">&#160;</td><td class="mdescRight">setValue  <a href="#ac836b574cff61913616229cb0917c549">More...</a><br /></td></tr>
+<tr class="separator:ac836b574cff61913616229cb0917c549"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94725b107066d1dffeb22585bca78afa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a94725b107066d1dffeb22585bca78afa">setValues</a> (int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex, int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex, int xCellStride, int yCellStride, int zCellStride, int cellFaceStride, int cellEdgeStride, int cellNodeStride, const void *data)=0</td></tr>
+<tr class="memdesc:a94725b107066d1dffeb22585bca78afa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimensions of a hyperslab.  <a href="#a94725b107066d1dffeb22585bca78afa">More...</a><br /></td></tr>
+<tr class="separator:a94725b107066d1dffeb22585bca78afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html">HydroCouple::Temporal::ITimeComponentDataItem</a></td></tr>
 <tr class="memitem:a695ebdd6e16065be403c64c74a7799ea inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a695ebdd6e16065be403c64c74a7799ea">~ITimeComponentDataItem</a> ()</td></tr>
 <tr class="memdesc:a695ebdd6e16065be403c64c74a7799ea inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">~ITimeComponentItem.  <a href="#a695ebdd6e16065be403c64c74a7799ea">More...</a><br /></td></tr>
 <tr class="separator:a695ebdd6e16065be403c64c74a7799ea inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dc7848bd1c64ca841110cda677c845b inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time.html">ITime</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a7dc7848bd1c64ca841110cda677c845b">times</a> () const  =0</td></tr>
-<tr class="memdesc:a7dc7848bd1c64ca841110cda677c845b inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">ITimes associated with this dimension.  <a href="#a7dc7848bd1c64ca841110cda677c845b">More...</a><br /></td></tr>
-<tr class="separator:a7dc7848bd1c64ca841110cda677c845b inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f19ade7838d8b0635073bdf018650d6 inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_date_time.html">IDateTime</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a4f19ade7838d8b0635073bdf018650d6">times</a> () const  =0</td></tr>
+<tr class="memdesc:a4f19ade7838d8b0635073bdf018650d6 inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">ITimes associated with this dimension.  <a href="#a4f19ade7838d8b0635073bdf018650d6">More...</a><br /></td></tr>
+<tr class="separator:a4f19ade7838d8b0635073bdf018650d6 inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721d784d1c6d3040ce2af4c90ea819bf inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_span.html">ITimeSpan</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a721d784d1c6d3040ce2af4c90ea819bf">timeSpan</a> () const  =0</td></tr>
 <tr class="memdesc:a721d784d1c6d3040ce2af4c90ea819bf inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_span.html" title="ITimeSpan specifies a time duration. ">ITimeSpan</a> associated with this dimension.  <a href="#a721d784d1c6d3040ce2af4c90ea819bf">More...</a><br /></td></tr>
 <tr class="separator:a721d784d1c6d3040ce2af4c90ea819bf inherit pub_methods_class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,29 +189,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae4230126266b62c4d5089971ded66cc0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the owner <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> of this IComponentItem.For an <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a> component item this is the component responsible for providing the content of the <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a>.  <a href="#ae4230126266b62c4d5089971ded66cc0">More...</a><br /></td></tr>
 <tr class="separator:ae4230126266b62c4d5089971ded66cc0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a57dd3ec8f97fbb3e4b08b78e223715d0">dimensions</a> () const  =0</td></tr>
-<tr class="memdesc:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">provides the dimensions associated with this IComponentItem.  <a href="#a57dd3ec8f97fbb3e4b08b78e223715d0">More...</a><br /></td></tr>
+<tr class="memdesc:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">provides purely descriptive information of the dimensions associated with this IComponentItem  <a href="#a57dd3ec8f97fbb3e4b08b78e223715d0">More...</a><br /></td></tr>
 <tr class="separator:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64bdb3f780a60970e02a5babcc2a9acf inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a64bdb3f780a60970e02a5babcc2a9acf">dimensionLength</a> (const std::vector&lt; int &gt; &amp;dimensionIndexes) const  =0</td></tr>
+<tr class="memdesc:a64bdb3f780a60970e02a5babcc2a9acf inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">dimensionLength returns the length of the dimension specified by the given dimension indexes. To get the size of the first dimension, use a null integer array as input argument. Length of indices must be a least one smaller than the numDimensions()  <a href="#a64bdb3f780a60970e02a5babcc2a9acf">More...</a><br /></td></tr>
+<tr class="separator:a64bdb3f780a60970e02a5babcc2a9acf inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88a8c7f806404a2ffad60260f233bffd inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_value_definition.html">IValueDefinition</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a88a8c7f806404a2ffad60260f233bffd">valueDefinition</a> () const  =0</td></tr>
 <tr class="memdesc:a88a8c7f806404a2ffad60260f233bffd inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_i_value_definition.html" title="IValueDefinition describes a value returned by the getValues() function of IValueSet. ">IValueDefinition</a> for this IValueSet defines the variable type associated with this object.  <a href="#a88a8c7f806404a2ffad60260f233bffd">More...</a><br /></td></tr>
 <tr class="separator:a88a8c7f806404a2ffad60260f233bffd inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a652b695e108f9e3a04f96f1207014b5f inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a652b695e108f9e3a04f96f1207014b5f">getValue</a> (int dimensionIndexes[], QVariant &amp;data) const  =0</td></tr>
-<tr class="memdesc:a652b695e108f9e3a04f96f1207014b5f inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a single value for given dimension indexes specified.  <a href="#a652b695e108f9e3a04f96f1207014b5f">More...</a><br /></td></tr>
-<tr class="separator:a652b695e108f9e3a04f96f1207014b5f inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed149c453986ae14c8365ee7fa7bed3d inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#aed149c453986ae14c8365ee7fa7bed3d">getValues</a> (int dimensionIndexes[], int stride[], QVariant data[]) const  =0</td></tr>
-<tr class="memdesc:aed149c453986ae14c8365ee7fa7bed3d inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#aed149c453986ae14c8365ee7fa7bed3d">More...</a><br /></td></tr>
-<tr class="separator:aed149c453986ae14c8365ee7fa7bed3d inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a462dc11605371d539ccad5af3baf5e99 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a462dc11605371d539ccad5af3baf5e99">getValues</a> (int dimensionIndexes[], int stride[], void *data) const  =0</td></tr>
-<tr class="memdesc:a462dc11605371d539ccad5af3baf5e99 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#a462dc11605371d539ccad5af3baf5e99">More...</a><br /></td></tr>
-<tr class="separator:a462dc11605371d539ccad5af3baf5e99 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d2d2c003357ae04bd78c4fc7312c47c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a0d2d2c003357ae04bd78c4fc7312c47c">setValue</a> (int dimensionIndexes[], const QVariant &amp;data)=0</td></tr>
-<tr class="memdesc:a0d2d2c003357ae04bd78c4fc7312c47c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a single value for given dimension indexes specified.  <a href="#a0d2d2c003357ae04bd78c4fc7312c47c">More...</a><br /></td></tr>
-<tr class="separator:a0d2d2c003357ae04bd78c4fc7312c47c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab51166edc999587d0427d366389eb5ad inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#ab51166edc999587d0427d366389eb5ad">setValues</a> (int dimensionIndexes[], int stride[], const QVariant data[])=0</td></tr>
-<tr class="memdesc:ab51166edc999587d0427d366389eb5ad inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#ab51166edc999587d0427d366389eb5ad">More...</a><br /></td></tr>
-<tr class="separator:ab51166edc999587d0427d366389eb5ad inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a912776ef48c69c673a15201ddb36a5c4 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a912776ef48c69c673a15201ddb36a5c4">setValues</a> (int dimensionIndexes[], int stride[], const void *data)=0</td></tr>
-<tr class="memdesc:a912776ef48c69c673a15201ddb36a5c4 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#a912776ef48c69c673a15201ddb36a5c4">More...</a><br /></td></tr>
-<tr class="separator:a912776ef48c69c673a15201ddb36a5c4 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af77692b88b83fc1b1e0abde57439ab35 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#af77692b88b83fc1b1e0abde57439ab35">getValue</a> (const std::vector&lt; int &gt; &amp;dimensionIndexes, void *data) const  =0</td></tr>
+<tr class="memdesc:af77692b88b83fc1b1e0abde57439ab35 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#af77692b88b83fc1b1e0abde57439ab35">More...</a><br /></td></tr>
+<tr class="separator:af77692b88b83fc1b1e0abde57439ab35 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18f0dcd7de2228176e72e0d41a87a83c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a18f0dcd7de2228176e72e0d41a87a83c">setValue</a> (const std::vector&lt; int &gt; &amp;dimensionIndexes, const void *data)=0</td></tr>
+<tr class="memdesc:a18f0dcd7de2228176e72e0d41a87a83c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#a18f0dcd7de2228176e72e0d41a87a83c">More...</a><br /></td></tr>
+<tr class="separator:a18f0dcd7de2228176e72e0d41a87a83c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_identity"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_identity')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_identity.html">HydroCouple::IIdentity</a></td></tr>
 <tr class="memitem:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#aa69311baebd14ca6078474103f0b69da">~IIdentity</a> ()</td></tr>
 <tr class="separator:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,21 +227,6 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_property_changed"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_property_changed')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_property_changed.html">HydroCouple::IPropertyChanged</a></td></tr>
 <tr class="memitem:a810e76722859d2a63dfe0e541c84ab98 inherit pub_methods_class_hydro_couple_1_1_i_property_changed"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_property_changed.html#a810e76722859d2a63dfe0e541c84ab98">~IPropertyChanged</a> ()</td></tr>
 <tr class="separator:a810e76722859d2a63dfe0e541c84ab98 inherit pub_methods_class_hydro_couple_1_1_i_property_changed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html">HydroCouple::Spatial::IRegularGrid3DComponentDataItem</a></td></tr>
-<tr class="memitem:ae95c695208e006f55dfa159cf45e80f0 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html#ae95c695208e006f55dfa159cf45e80f0">~IRegularGrid3DComponentDataItem</a> ()</td></tr>
-<tr class="separator:ae95c695208e006f55dfa159cf45e80f0 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af803350c33d10b2f05e8c423959c2ea9 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html#af803350c33d10b2f05e8c423959c2ea9">numXCellsDimension</a> () const  =0</td></tr>
-<tr class="memdesc:af803350c33d10b2f05e8c423959c2ea9 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of X cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>.  <a href="#af803350c33d10b2f05e8c423959c2ea9">More...</a><br /></td></tr>
-<tr class="separator:af803350c33d10b2f05e8c423959c2ea9 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af50594db47c84443e7b4d09a7a7b5e08 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html#af50594db47c84443e7b4d09a7a7b5e08">numYCellsDimension</a> () const  =0</td></tr>
-<tr class="memdesc:af50594db47c84443e7b4d09a7a7b5e08 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of Y cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>.  <a href="#af50594db47c84443e7b4d09a7a7b5e08">More...</a><br /></td></tr>
-<tr class="separator:af50594db47c84443e7b4d09a7a7b5e08 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c72791e6e7ac5f0f8fe04aa994911b7 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html#a5c72791e6e7ac5f0f8fe04aa994911b7">numZCellsDimension</a> () const  =0</td></tr>
-<tr class="memdesc:a5c72791e6e7ac5f0f8fe04aa994911b7 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of Z cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>.  <a href="#a5c72791e6e7ac5f0f8fe04aa994911b7">More...</a><br /></td></tr>
-<tr class="separator:a5c72791e6e7ac5f0f8fe04aa994911b7 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4789e8a706f3d5233cde6bd1c138719e inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d.html">IRegularGrid3D</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html#a4789e8a706f3d5233cde6bd1c138719e">grid</a> () const  =0</td></tr>
-<tr class="memdesc:a4789e8a706f3d5233cde6bd1c138719e inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d.html" title="The IRegularGrid3D class. ">IRegularGrid3D</a> grid associated with this IRegularGrid3DComponentItem.  <a href="#a4789e8a706f3d5233cde6bd1c138719e">More...</a><br /></td></tr>
-<tr class="separator:a4789e8a706f3d5233cde6bd1c138719e inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -277,7 +269,59 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a2f0355b0fdcb62d32a87c881d64d9a76"></a>
+<a class="anchor" id="ab68f8ca18eaba211ed20d19d9c974fac"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a>* HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::cellFaceDimension </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>cellFaceDimension 0 = Top , 1 = Bottom, 2 = left , 3 = Right, Up = 4, Down = 5 </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0cc10cc6794cc70d302be5ff9a8321c5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a>* HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::cellNodeDimension </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>cellNodeDimension </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a392827ded28cda3214ff5b6512900a96"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -288,7 +332,7 @@ Here is the call graph for this function:</div>
           <td class="memname">virtual void HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::getValue </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeDimensionIndex</em>, </td>
+          <td class="paramname"><em>timeIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -311,7 +355,19 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">QVariant &amp;&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellFaceIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellNodeIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
@@ -327,21 +383,24 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the value for the xcell index and ycell index. </p>
+<p>getValue </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timeDimensionIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">xCellIndex</td><td>the x dimension index for the cell from which data is to be retrieved. </td></tr>
-    <tr><td class="paramname">yCellIndex</td><td>the y dimension index for the cell from which data is to be retrieved. </td></tr>
-    <tr><td class="paramname">zCellIndex</td><td>the y dimension index for the cell from which data is to be retrieved. </td></tr>
-    <tr><td class="paramname">data</td><td>is output into which the requested data is to be written. </td></tr>
+    <tr><td class="paramname">timeIndex</td><td></td></tr>
+    <tr><td class="paramname">xCellIndex</td><td></td></tr>
+    <tr><td class="paramname">yCellIndex</td><td></td></tr>
+    <tr><td class="paramname">zCellIndex</td><td></td></tr>
+    <tr><td class="paramname">cellFaceIndex</td><td></td></tr>
+    <tr><td class="paramname">cellEdgeIndex</td><td></td></tr>
+    <tr><td class="paramname">cellNodeIndex</td><td></td></tr>
+    <tr><td class="paramname">data</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="a4d63bcc9c42ab77d171941f5ebacb085"></a>
+<a class="anchor" id="ad800e0b4fced35e915a7ca5ba9986969"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -352,7 +411,7 @@ Here is the call graph for this function:</div>
           <td class="memname">virtual void HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::getValues </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeDimensionIndex</em>, </td>
+          <td class="paramname"><em>timeIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -376,7 +435,19 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeStride</em>, </td>
+          <td class="paramname"><em>cellFaceIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellEdgeIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellNodeIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -399,94 +470,20 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">QVariant&#160;</td>
-          <td class="paramname"><em>data</em>[]&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gets a multi-dimensional array of values for given dimension for a hyperslab. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timeDimensionIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">xCellIndex</td><td>is the x dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">yCellIndex</td><td>is the y dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">zCellIndex</td><td>is the z dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">timeStride</td><td>is the time dimension size for hyperslab from which to copy data. </td></tr>
-    <tr><td class="paramname">xCellStride</td><td>is the xcell size for hyperslab from which to copy data. </td></tr>
-    <tr><td class="paramname">yCellStride</td><td>is the ycell size for hyperslab from which to copy data. </td></tr>
-    <tr><td class="paramname">zCellStride</td><td>is the zcell size for hyperslab from which to copy data. </td></tr>
-    <tr><td class="paramname">data</td><td>is the multi dimensional array where data is to be written. Must be allocated beforehand. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a9057502e913a8ebc7e85cf132ab9b95c"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::getValues </td>
-          <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeDimensionIndex</em>, </td>
+          <td class="paramname"><em>cellFaceStride</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>xCellIndex</em>, </td>
+          <td class="paramname"><em>cellEdgeStride</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yCellIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>zCellIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeStride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>xCellStride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yCellStride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>zCellStride</em>, </td>
+          <td class="paramname"><em>cellNodeStride</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -510,14 +507,19 @@ Here is the call graph for this function:</div>
 <p>Gets a multi-dimensional array of values for given dimension for a hyperslab. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timeDimensionIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
+    <tr><td class="paramname">timeIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
     <tr><td class="paramname">xCellIndex</td><td>is the x dimension index from where to obtain the requested data. </td></tr>
     <tr><td class="paramname">yCellIndex</td><td>is the y dimension index from where to obtain the requested data. </td></tr>
     <tr><td class="paramname">zCellIndex</td><td>is the z dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">timeStride</td><td>is the time dimension size for hyperslab from which to copy data. </td></tr>
-    <tr><td class="paramname">xCellStride</td><td>is the ycell size for hyperslab from which to copy data. </td></tr>
+    <tr><td class="paramname">cellFaceIndex</td><td></td></tr>
+    <tr><td class="paramname">cellEdgeIndex</td><td></td></tr>
+    <tr><td class="paramname">cellNodeIndex</td><td></td></tr>
+    <tr><td class="paramname">xCellStride</td><td>is the xcell size for hyperslab from which to copy data. </td></tr>
     <tr><td class="paramname">yCellStride</td><td>is the ycell size for hyperslab from which to copy data. </td></tr>
     <tr><td class="paramname">zCellStride</td><td>is the zcell size for hyperslab from which to copy data. </td></tr>
+    <tr><td class="paramname">cellFaceStride</td><td></td></tr>
+    <tr><td class="paramname">cellEdgeStride</td><td></td></tr>
+    <tr><td class="paramname">cellNodeStride</td><td></td></tr>
     <tr><td class="paramname">data</td><td>is the multi dimensional array where data is to be written. Must be allocated beforehand. </td></tr>
   </table>
   </dd>
@@ -525,7 +527,58 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a7373e5801ba0806b229bb115b47ea35e"></a>
+<a class="anchor" id="ab9977fe09e8b280f3517758f31378c6f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d.html">HydroCouple::Spatial::IRegularGrid3D</a>* HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::grid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>IRegularGrid3D grid associated with this IRegularGrid3DComponentItem. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6c044f0151d945f866f4715170f2b009"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespace_hydro_couple_1_1_spatial.html#a1aad85957251af4a9e970c57a12b9a26">HydroCouple::Spatial::MeshDataType</a> HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::meshDataType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>meshDataType </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac836b574cff61913616229cb0917c549"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -536,7 +589,7 @@ Here is the call graph for this function:</div>
           <td class="memname">virtual void HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::setValue </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeDimensionIndex</em>, </td>
+          <td class="paramname"><em>timeIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -559,7 +612,19 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const QVariant &amp;&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellFaceIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellNodeIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
@@ -575,21 +640,23 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the value for the xcell, ycell, and zcell indexes. </p>
+<p>setValue </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timeDimensionIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">xCellIndex</td><td>the x dimension index for the cell from which data is to be written. </td></tr>
-    <tr><td class="paramname">yCellIndex</td><td>the y dimension index for the cell from which data is to be written. </td></tr>
-    <tr><td class="paramname">zCellIndex</td><td>the z dimension index for the cell from which data is to be written. </td></tr>
-    <tr><td class="paramname">data</td><td>is input data to be written. </td></tr>
+    <tr><td class="paramname">timeIndex</td><td></td></tr>
+    <tr><td class="paramname">xCellIndex</td><td></td></tr>
+    <tr><td class="paramname">yCellIndex</td><td></td></tr>
+    <tr><td class="paramname">zCellIndex</td><td></td></tr>
+    <tr><td class="paramname">cellFaceIndex</td><td></td></tr>
+    <tr><td class="paramname">cellNodeIndex</td><td></td></tr>
+    <tr><td class="paramname">data</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a class="anchor" id="a9f0d8d84835009a098cdd5c2d60dac61"></a>
+<a class="anchor" id="a94725b107066d1dffeb22585bca78afa"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -600,7 +667,7 @@ Here is the call graph for this function:</div>
           <td class="memname">virtual void HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::setValues </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeDimensionIndex</em>, </td>
+          <td class="paramname"><em>timeIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -624,7 +691,19 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeStride</em>, </td>
+          <td class="paramname"><em>cellFaceIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellEdgeIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cellNodeIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -647,94 +726,20 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const QVariant&#160;</td>
-          <td class="paramname"><em>data</em>[]&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets a multi-dimensional array of values for given dimensions of a hyperslab. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timeDimensionIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">xCellIndex</td><td>is the x dimension index where to write data. </td></tr>
-    <tr><td class="paramname">yCellIndex</td><td>is the y dimension index where to write data. </td></tr>
-    <tr><td class="paramname">zCellIndex</td><td>is the z dimension index where to write data. </td></tr>
-    <tr><td class="paramname">timeStride</td><td>is the time dimension size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">xCellStride</td><td>is the xcell size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">yCellStride</td><td>is the ycell size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">zCellStride</td><td>is the zcell size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">data</td><td>is the multi dimensional array where data is to be written. Must be allocated beforehand. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a6a0c430331d19281c910be528d6b9e8d"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::setValues </td>
-          <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeDimensionIndex</em>, </td>
+          <td class="paramname"><em>cellFaceStride</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>xCellIndex</em>, </td>
+          <td class="paramname"><em>cellEdgeStride</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yCellIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>zCellIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeStride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>xCellStride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yCellStride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>zCellStride</em>, </td>
+          <td class="paramname"><em>cellNodeStride</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -758,18 +763,98 @@ Here is the call graph for this function:</div>
 <p>Sets a multi-dimensional array of values for given dimensions of a hyperslab. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timeDimensionIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">xCellIndex</td><td>is the x dimension index where to write data. </td></tr>
-    <tr><td class="paramname">yCellIndex</td><td>is the y dimension index where to write data. </td></tr>
-    <tr><td class="paramname">zCellIndex</td><td>is the y dimension index where to write data. </td></tr>
-    <tr><td class="paramname">timeStride</td><td>is the time dimension size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">xCellStride</td><td>is the xcell dimension size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">yCellStride</td><td>is the ycell dimension size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">zCellStride</td><td>is the ycell dimension size for hyperslab where data is to be written. </td></tr>
+    <tr><td class="paramname">timeIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
+    <tr><td class="paramname">xCellIndex</td><td>is the x dimension index from where to obtain the requested data. </td></tr>
+    <tr><td class="paramname">yCellIndex</td><td>is the y dimension index from where to obtain the requested data. </td></tr>
+    <tr><td class="paramname">zCellIndex</td><td>is the z dimension index from where to obtain the requested data. </td></tr>
+    <tr><td class="paramname">cellFaceIndex</td><td></td></tr>
+    <tr><td class="paramname">cellEdgeIndex</td><td></td></tr>
+    <tr><td class="paramname">cellNodeIndex</td><td></td></tr>
+    <tr><td class="paramname">xCellStride</td><td>is the xcell size for hyperslab from which to copy data. </td></tr>
+    <tr><td class="paramname">yCellStride</td><td>is the ycell size for hyperslab from which to copy data. </td></tr>
+    <tr><td class="paramname">zCellStride</td><td>is the zcell size for hyperslab from which to copy data. </td></tr>
+    <tr><td class="paramname">cellFaceStride</td><td></td></tr>
+    <tr><td class="paramname">cellEdgeStride</td><td></td></tr>
+    <tr><td class="paramname">cellNodeStride</td><td></td></tr>
     <tr><td class="paramname">data</td><td>is the multi dimensional array where data is to be written. Must be allocated beforehand. </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a14e55c9a07c776ef6a175cf203ec75fc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a>* HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::xCellDimension </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of X cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>. </p>
+
+</div>
+</div>
+<a class="anchor" id="a80e513280bcc2d41ba0b2399a12efa0d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a>* HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::yCellDimension </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of Y cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5f08f52937f875312b9034773a269705"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a>* HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem::zCellDimension </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of Z cells <a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a>. </p>
 
 </div>
 </div>

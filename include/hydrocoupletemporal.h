@@ -29,32 +29,31 @@ namespace HydroCouple
   namespace Temporal
   {
     /*!
-     * \brief ITime interface based on a Modified Julian Date5
+     * \brief IDateTime interface based on a Modified Julian Date5
      * (number and fraction of days since 00:00 November 17, 1858).
      */
-    class ITime : public virtual HydroCouple::IPropertyChanged
+    class IDateTime : public virtual HydroCouple::IPropertyChanged
     {
       public:
 
-        virtual ~ITime(){}
+        virtual ~IDateTime(){}
 
         /*!
-         * \brief Date and time as a modified julian day value.
+         * \brief Date and time as a modified julian day value. MJD = JD - 2400000.5
          */
-        virtual double dateTime() const = 0;
+        virtual double modifiedJulianDay() const = 0;
 
-        /*!
-         * \brief setDateTime
-         * \param dateTime
-         */
-        virtual void setDateTime(double dateTime) = 0;
-
+//        /*!
+//         * \brief setDateTime
+//         * \param dateTime
+//         */
+        virtual void setModifiedJulianDay(double dateTime) = 0;
     };
 
     /*!
      * \brief ITimeSpan specifies a time duration.
      */
-    class ITimeSpan : public virtual ITime
+    class ITimeSpan : public virtual IDateTime
     {
 
       public:
@@ -76,14 +75,7 @@ namespace HydroCouple
      */
     class ITimeComponentDataItem : public virtual IComponentDataItem
     {
-
       public:
-
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::getValues;
-        using IComponentDataItem::setValue;
-        using IComponentDataItem::setValues;
-
         /*!
          * \brief ~ITimeComponentItem.
          */
@@ -91,9 +83,9 @@ namespace HydroCouple
 
         /*!
          * \brief ITimes associated with this dimension.
-         * \returns QList<ITime*>
+         * \returns QList<IDateTime*>
          */
-        virtual QList<ITime*> times() const = 0;
+        virtual QList<IDateTime*> times() const = 0;
 
         /*!
          * \brief ITimeSpan associated with this dimension.
@@ -105,22 +97,27 @@ namespace HydroCouple
          * \returns IDimension
          */
         virtual IDimension* timeDimension() const = 0;
+    };
+
+    /*!
+     * \brief The ITimeSeriesComponentDataItem class
+     */
+    class ITimeSeriesComponentDataItem : public virtual ITimeComponentDataItem
+    {
+
+        using IComponentDataItem::getValue;
+        using IComponentDataItem::setValue;
+
+      public:
+
+        virtual ~ITimeSeriesComponentDataItem(){}
 
         /*!
          * \brief Gets a single value for given time dimension index.
          * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param data is the output QVariant where data is to be written.
+         * \param data is pointer to the location where data is to be written.
          */
-        virtual void getValue(int timeIndex, QVariant &data) const = 0;
-
-        /*!
-         * \brief Gets a multi-dimensional array of values for given
-         * dimension time dimension index and size for a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param timeStride is the size for hyperslab from which to copy data.
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void getValues(int timeIndex, int timeStride, QVariant data[]) const = 0;
+        virtual void getValue(int timeIndex, void *data) const = 0;
 
         /*!
          * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
@@ -133,18 +130,9 @@ namespace HydroCouple
         /*!
          * \brief Sets a single value for given time dimension index.
          * \param timeIndex is the time dimension index where data is to be written.
-         * \param data is the input QVariant to be written.
+         * \param data is pointer to the data to be written.
          */
-        virtual void setValue(int timeIndex, const QVariant &data) = 0;
-
-        /*!
-         * \brief Sets a multi-dimensional array of values for given time
-         *  dimension index and size for a hyperslab.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param timeStride is the size for hyperslab where data is to be written.
-         * \param data is the input multi dimensional array to be written.
-         */
-        virtual void setValues(int timeIndex, int timeStride, const QVariant data[]) = 0;
+        virtual void setValue(int timeIndex, const void *data) = 0;
 
         /*!
          * \brief Sets a multi-dimensional array of values for given
@@ -154,66 +142,21 @@ namespace HydroCouple
          * \param data is the input multi dimensional array to be written.
          */
         virtual void setValues(int timeIndex, int timeStride, const void *data) = 0;
-
-    };
-
-    /*!
-     * \brief The ITimeExchangeItem class.This class cannot be directly instantiated and must be implemented as
-     * as an abstract class that can be inherited by its specializations i.e., ITimeSeriesExchangeItem ,  ITimeIdBasedExchangeItem, and other
-     * geotemporal datasets.
-     */
-    class ITimeExchangeItem : public virtual IExchangeItem,
-        public virtual ITimeComponentDataItem
-    {
-      public:
-
-        virtual ~ITimeExchangeItem(){}
-
-    };
-
-    /*!
-     * \brief The ITimeArgument class. his class cannot be directly instantiated and must be implemented as
-     * as an abstract class that can be inherited by its specializations i.e., ITimeSeriesArgument or  ITimeIdBasedArgument,
-     */
-    class ITimeArgument : public virtual IArgument,
-        public virtual ITimeComponentDataItem
-    {
-      public:
-
-        virtual ~ITimeArgument(){}
     };
 
     /*!
      * \brief The ITimeIdBasedComponentDataItem class
      */
-    class ITimeIdBasedComponentDataItem : public virtual IComponentDataItem
+    class ITimeIdBasedComponentDataItem : public virtual IComponentDataItem,
+        public virtual ITimeComponentDataItem
     {
+
+        using IComponentDataItem::getValue;
+        using IComponentDataItem::setValue;
 
       public:
 
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::getValues;
-        using IComponentDataItem::setValue;
-        using IComponentDataItem::setValues;
-
         virtual ~ITimeIdBasedComponentDataItem(){}
-
-        /*!
-         * \brief ITimes associated with this dimension.
-         * \returns QList<ITime*>
-         */
-        virtual QList<ITime*> times() const = 0;
-
-        /*!
-         * \brief ITimeSpan associated with this dimension.
-         */
-        virtual ITimeSpan* timeSpan() const = 0;
-
-        /*!
-         * \brief IDimension of the times.
-         * \returns IDimension
-         */
-        virtual IDimension* timeDimension() const = 0;
 
         /*!
          * \brief identifiers
@@ -231,20 +174,9 @@ namespace HydroCouple
          * \brief Gets a single value for given id dimension index.
          * \param timeIndex is the time dimension index from where to obtain the requested data.
          * \param idIndex is the id dimension index from where to obtain the requested data.
-         * \param data is the output QVariant where data is to be written.
+         * \param data is a pre-allocated pointer to the location data is to be written.
          */
-        virtual void getValue(int timeIndex, int idIndex, QVariant &data) const = 0;
-
-        /*!
-         * \brief Gets a multi-dimensional array of values for given
-         *  id dimension index and size for a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param idIndex is the id dimension index from where to obtain the requested data.
-         * \param timeStride is the size for hyperslab from which to copy data.
-         * \param idStride is the size for hyperslab from which to copy data.
-         * \param data is the 1d array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void getValues(int timeIndex, int idIndex, int timeStride, int idStride, QVariant data[]) const = 0;
+        virtual void getValue(int timeIndex, int idIndex, void *data) const = 0;
 
         /*!
          * \brief Gets a multi-dimensional array of values for given id dimension index and size for a hyperslab.
@@ -260,75 +192,37 @@ namespace HydroCouple
          * \brief Sets a single value for given id dimension index.
          * \param timeIndex is the time dimension index from where to obtain the requested data.
          * \param idIndex is the id dimension index where data is to be written.
-         * \param data is the input QVariant to be written.
+         * \param data is the pointer to a pre-allocated location where data to be written.
          */
-        virtual void setValue(int timeIndex, int idIndex, const QVariant &data) = 0;
+        virtual void setValue(int timeIndex, int idIndex, const void *data) = 0;
 
         /*!
-         * \brief Sets a multi-dimensional array of values for given time
-         *  dimension index and size for a hyperslab.
+         * \brief Sets a multi-dimensional array of values for given
+         * id dimension index and size for a hyperslab.
          * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param idIndex is the time dimension index where data is to be written.
-         * \param timeStride is the id for hyperslab where data is to be written.
-         * \param idStride is the id for hyperslab where data is to be written.
+         * \param idIndex is the id dimension index where data is to be written.
+         * \param timeStride is the size for hyperslab where data is to be written.
+         * \param idStride is the size for hyperslab where data is to be written.
          * \param data is the input 1d array to be written.
          */
-        virtual void setValues(int timeIndex, int idIndex, int timeStride, int idStride, const QVariant data[]) = 0;
-
-        /*!
-             * \brief Sets a multi-dimensional array of values for given
-             * id dimension index and size for a hyperslab.
-             * \param timeIndex is the time dimension index from where to obtain the requested data.
-             * \param idIndex is the id dimension index where data is to be written.
-             * \param timeStride is the size for hyperslab where data is to be written.
-             * \param idStride is the size for hyperslab where data is to be written.
-             * \param data is the input 1d array to be written.
-             */
         virtual void setValues(int timeIndex, int idIndex, int timeStride, int idStride, const void *data) = 0;
-    };
-
-    /*!
-     * \brief The ITimeSeriesIdBasedExchangeItem class
-     */
-    class ITimeIdBasedExchangeItem : public virtual IExchangeItem,
-        public virtual ITimeIdBasedComponentDataItem
-    {
-      public:
-        virtual ~ITimeIdBasedExchangeItem(){}
-    };
-
-    /*!
-     * \brief The ITimeSeriesIdBasedArgument class
-     */
-    class ITimeIdBasedArgument : public virtual ITimeArgument,
-        public virtual ITimeIdBasedComponentDataItem
-    {
-      public:
-        virtual ~ITimeIdBasedArgument(){}
     };
   }
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITime, "HydroCouple::Temporal::ITime/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Temporal::IDateTime, "HydroCouple::Temporal::IDateTime/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeSpan, "HydroCouple::Temporal::ITimeSpan/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeComponentDataItem, "HydroCouple::Temporal::ITimeComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeArgument, "HydroCouple::Temporal::ITimeArgument/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeExchangeItem, "HydroCouple::Temporal::ITimeExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeSeriesComponentDataItem, "HydroCouple::Temporal::ITimeSeriesComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeIdBasedComponentDataItem, "HydroCouple::Temporal::ITimeIdBasedComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeIdBasedExchangeItem, "HydroCouple::Temporal::ITimeIdBasedExchangeItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeIdBasedArgument, "HydroCouple::Temporal::ITimeIdBasedArgument/1.0")
 
-
-Q_DECLARE_METATYPE(HydroCouple::Temporal::ITime*)
-Q_DECLARE_METATYPE(QList<HydroCouple::Temporal::ITime*>)
+Q_DECLARE_METATYPE(HydroCouple::Temporal::IDateTime*)
+Q_DECLARE_METATYPE(QList<HydroCouple::Temporal::IDateTime*>)
 Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeSpan*)
 Q_DECLARE_METATYPE(QList<HydroCouple::Temporal::ITimeSpan*>)
 Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeExchangeItem*)
-Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeArgument*)
+Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeSeriesComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeIdBasedComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeIdBasedExchangeItem*)
-Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeIdBasedArgument*)
 
 #endif // HYDROCOUPLETEMPORAL_H
 

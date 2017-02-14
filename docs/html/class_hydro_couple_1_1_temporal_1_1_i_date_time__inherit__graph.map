@@ -1,0 +1,4 @@
+<map id="HydroCouple::Temporal::IDateTime" name="HydroCouple::Temporal::IDateTime">
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_temporal_1_1_i_time_span.html" title="ITimeSpan specifies a time duration. " alt="" coords="37,328,227,450"/>
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="5,5,259,92"/>
+</map>

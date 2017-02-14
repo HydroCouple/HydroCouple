@@ -1,0 +1,5 @@
+<map id="HydroCouple::Spatial::ISpatialReferenceSystem::~ISpatialReferenceSystem" name="HydroCouple::Spatial::ISpatialReferenceSystem::~ISpatialReferenceSystem">
+<area shape="rect" id="node2" href="$d3/d0b/class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html#a48964c6e536904351629fdab3af4c0a4" title="Returns the Spatial Reference System ID for a geometric object. This will normally be a foreign key t..." alt="" coords="283,5,504,71"/>
+<area shape="rect" id="node3" href="$d3/d0b/class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html#a867cbfb15b9177319787a434a58f1216" title="The Authority Specific Spatial Reference System Identifier. " alt="" coords="283,95,504,160"/>
+<area shape="rect" id="node4" href="$d3/d0b/class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html#a2646a4ec64cb59f257c328f3e7c8e787" title="HydroCouple::Spatial\l::ISpatialReferenceSystem\l::srText" alt="" coords="283,184,504,249"/>
+</map>

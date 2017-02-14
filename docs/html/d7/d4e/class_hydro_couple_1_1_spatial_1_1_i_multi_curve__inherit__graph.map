@@ -1,0 +1,6 @@
+<map id="HydroCouple::Spatial::IMultiCurve" name="HydroCouple::Spatial::IMultiCurve">
+<area shape="rect" id="node4" href="$d3/d70/class_hydro_couple_1_1_spatial_1_1_i_multi_line_string.html" title="An IMultiLineString is an IMultiCurve whose elements are ILineStrings. " alt="" coords="25,1423,215,1545"/>
+<area shape="rect" id="node2" href="$d7/d83/class_hydro_couple_1_1_spatial_1_1_i_geometry_collection.html" title="An IGeometryCollection is a geometric object that is a collection of some number of IGeometry objects..." alt="" coords="13,1047,227,1187"/>
+<area shape="rect" id="node3" href="$d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="5,5,235,999"/>
+<area shape="rect" id="node5" href="$de/d84/class_hydro_couple_1_1_spatial_1_1_i_network.html" title="The INetwork class. " alt="" coords="29,1593,211,1715"/>
+</map>

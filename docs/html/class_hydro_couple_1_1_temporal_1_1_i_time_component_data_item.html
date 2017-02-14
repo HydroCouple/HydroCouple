@@ -30,6 +30,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="hydrocouplecomposer.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">HydroCouple
    &#160;<span id="projectnumber">1.0.0</span>
@@ -116,21 +117,19 @@ $(document).ready(function(){initNavTree('class_hydro_couple_1_1_temporal_1_1_i_
 </div><!--header-->
 <div class="contents">
 
-<p>ITimeComponentItem is an IComponentItem with a temporal attribute. This class cannot be directly instantiated and must be implemented as an abstract class that can be inherited by its specializations e.g., ITimeSeriesComponentDataItem, ITimeSeriesArgument, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html" title="The ITimeIdBasedComponentDataItem class. ">ITimeIdBasedComponentDataItem</a>, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_exchange_item.html" title="The ITimeSeriesIdBasedExchangeItem class. ">ITimeIdBasedExchangeItem</a>, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_argument.html" title="The ITimeSeriesIdBasedArgument class. ">ITimeIdBasedArgument</a>, or other geotemporal datasets.  
+<p>ITimeComponentItem is an IComponentItem with a temporal attribute. This class cannot be directly instantiated and must be implemented as an abstract class that can be inherited by its specializations e.g., <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_series_component_data_item.html" title="The ITimeSeriesComponentDataItem class. ">ITimeSeriesComponentDataItem</a>, ITimeSeriesArgument, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html" title="The ITimeIdBasedComponentDataItem class. ">ITimeIdBasedComponentDataItem</a>, ITimeIdBasedExchangeItem, ITimeIdBasedArgument, or other geotemporal datasets.  
  <a href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="hydrocoupletemporal_8h_source.html">hydrocoupletemporal.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for HydroCouple::Temporal::ITimeComponentDataItem:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <div class="dynheader">
 Collaboration diagram for HydroCouple::Temporal::ITimeComponentDataItem:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -138,29 +137,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a695ebdd6e16065be403c64c74a7799ea"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a695ebdd6e16065be403c64c74a7799ea">~ITimeComponentDataItem</a> ()</td></tr>
 <tr class="memdesc:a695ebdd6e16065be403c64c74a7799ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">~ITimeComponentItem.  <a href="#a695ebdd6e16065be403c64c74a7799ea">More...</a><br /></td></tr>
 <tr class="separator:a695ebdd6e16065be403c64c74a7799ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dc7848bd1c64ca841110cda677c845b"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time.html">ITime</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a7dc7848bd1c64ca841110cda677c845b">times</a> () const  =0</td></tr>
-<tr class="memdesc:a7dc7848bd1c64ca841110cda677c845b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ITimes associated with this dimension.  <a href="#a7dc7848bd1c64ca841110cda677c845b">More...</a><br /></td></tr>
-<tr class="separator:a7dc7848bd1c64ca841110cda677c845b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f19ade7838d8b0635073bdf018650d6"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_date_time.html">IDateTime</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a4f19ade7838d8b0635073bdf018650d6">times</a> () const  =0</td></tr>
+<tr class="memdesc:a4f19ade7838d8b0635073bdf018650d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">ITimes associated with this dimension.  <a href="#a4f19ade7838d8b0635073bdf018650d6">More...</a><br /></td></tr>
+<tr class="separator:a4f19ade7838d8b0635073bdf018650d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721d784d1c6d3040ce2af4c90ea819bf"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_span.html">ITimeSpan</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a721d784d1c6d3040ce2af4c90ea819bf">timeSpan</a> () const  =0</td></tr>
 <tr class="memdesc:a721d784d1c6d3040ce2af4c90ea819bf"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_span.html" title="ITimeSpan specifies a time duration. ">ITimeSpan</a> associated with this dimension.  <a href="#a721d784d1c6d3040ce2af4c90ea819bf">More...</a><br /></td></tr>
 <tr class="separator:a721d784d1c6d3040ce2af4c90ea819bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a0ab7566744b3f801c213c94202c135"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a5a0ab7566744b3f801c213c94202c135">timeDimension</a> () const  =0</td></tr>
 <tr class="memdesc:a5a0ab7566744b3f801c213c94202c135"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_i_dimension.html" title="IDimension provides the properties of the dimensions of a vairable. ">IDimension</a> of the times.  <a href="#a5a0ab7566744b3f801c213c94202c135">More...</a><br /></td></tr>
 <tr class="separator:a5a0ab7566744b3f801c213c94202c135"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a625c50ae137a0de75194425b113fa826"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a625c50ae137a0de75194425b113fa826">getValue</a> (int timeIndex, QVariant &amp;data) const  =0</td></tr>
-<tr class="separator:a625c50ae137a0de75194425b113fa826"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abced75331b65ed86444579d642a9e8c4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#abced75331b65ed86444579d642a9e8c4">getValues</a> (int timeIndex, int stride, QVariant data[]) const  =0</td></tr>
-<tr class="separator:abced75331b65ed86444579d642a9e8c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac00a52e5bb1c8d16eb5e085c0edafc7c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#ac00a52e5bb1c8d16eb5e085c0edafc7c">getValues</a> (int timeIndex, int stride, void *data) const  =0</td></tr>
-<tr class="memdesc:ac00a52e5bb1c8d16eb5e085c0edafc7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.  <a href="#ac00a52e5bb1c8d16eb5e085c0edafc7c">More...</a><br /></td></tr>
-<tr class="separator:ac00a52e5bb1c8d16eb5e085c0edafc7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae54430e744b71ca7ba56c260b6a60fc1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#ae54430e744b71ca7ba56c260b6a60fc1">setValue</a> (int timeIndex, const QVariant &amp;data)=0</td></tr>
-<tr class="separator:ae54430e744b71ca7ba56c260b6a60fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa06934daa52a89835694ce108928e857"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#aa06934daa52a89835694ce108928e857">setValues</a> (int timeIndex, int stride, const QVariant data[])=0</td></tr>
-<tr class="separator:aa06934daa52a89835694ce108928e857"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a786beaed13fe7a32f1532bb9dc8dbba8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a786beaed13fe7a32f1532bb9dc8dbba8">setValues</a> (int timeIndex, int stride, const void *data)=0</td></tr>
-<tr class="memdesc:a786beaed13fe7a32f1532bb9dc8dbba8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.  <a href="#a786beaed13fe7a32f1532bb9dc8dbba8">More...</a><br /></td></tr>
-<tr class="separator:a786beaed13fe7a32f1532bb9dc8dbba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_component_data_item"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_component_data_item')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_component_data_item.html">HydroCouple::IComponentDataItem</a></td></tr>
 <tr class="memitem:a793496d0396b83ef2f2b5aae9fa09d25 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a793496d0396b83ef2f2b5aae9fa09d25">~IComponentDataItem</a> ()</td></tr>
 <tr class="separator:a793496d0396b83ef2f2b5aae9fa09d25 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,29 +153,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae4230126266b62c4d5089971ded66cc0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the owner <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> of this IComponentItem.For an <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a> component item this is the component responsible for providing the content of the <a class="el" href="class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. ">IOutput</a>.  <a href="#ae4230126266b62c4d5089971ded66cc0">More...</a><br /></td></tr>
 <tr class="separator:ae4230126266b62c4d5089971ded66cc0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_hydro_couple_1_1_i_dimension.html">IDimension</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a57dd3ec8f97fbb3e4b08b78e223715d0">dimensions</a> () const  =0</td></tr>
-<tr class="memdesc:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">provides the dimensions associated with this IComponentItem.  <a href="#a57dd3ec8f97fbb3e4b08b78e223715d0">More...</a><br /></td></tr>
+<tr class="memdesc:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">provides purely descriptive information of the dimensions associated with this IComponentItem  <a href="#a57dd3ec8f97fbb3e4b08b78e223715d0">More...</a><br /></td></tr>
 <tr class="separator:a57dd3ec8f97fbb3e4b08b78e223715d0 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64bdb3f780a60970e02a5babcc2a9acf inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a64bdb3f780a60970e02a5babcc2a9acf">dimensionLength</a> (const std::vector&lt; int &gt; &amp;dimensionIndexes) const  =0</td></tr>
+<tr class="memdesc:a64bdb3f780a60970e02a5babcc2a9acf inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">dimensionLength returns the length of the dimension specified by the given dimension indexes. To get the size of the first dimension, use a null integer array as input argument. Length of indices must be a least one smaller than the numDimensions()  <a href="#a64bdb3f780a60970e02a5babcc2a9acf">More...</a><br /></td></tr>
+<tr class="separator:a64bdb3f780a60970e02a5babcc2a9acf inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88a8c7f806404a2ffad60260f233bffd inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_i_value_definition.html">IValueDefinition</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a88a8c7f806404a2ffad60260f233bffd">valueDefinition</a> () const  =0</td></tr>
 <tr class="memdesc:a88a8c7f806404a2ffad60260f233bffd inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_i_value_definition.html" title="IValueDefinition describes a value returned by the getValues() function of IValueSet. ">IValueDefinition</a> for this IValueSet defines the variable type associated with this object.  <a href="#a88a8c7f806404a2ffad60260f233bffd">More...</a><br /></td></tr>
 <tr class="separator:a88a8c7f806404a2ffad60260f233bffd inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a652b695e108f9e3a04f96f1207014b5f inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a652b695e108f9e3a04f96f1207014b5f">getValue</a> (int dimensionIndexes[], QVariant &amp;data) const  =0</td></tr>
-<tr class="memdesc:a652b695e108f9e3a04f96f1207014b5f inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a single value for given dimension indexes specified.  <a href="#a652b695e108f9e3a04f96f1207014b5f">More...</a><br /></td></tr>
-<tr class="separator:a652b695e108f9e3a04f96f1207014b5f inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed149c453986ae14c8365ee7fa7bed3d inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#aed149c453986ae14c8365ee7fa7bed3d">getValues</a> (int dimensionIndexes[], int stride[], QVariant data[]) const  =0</td></tr>
-<tr class="memdesc:aed149c453986ae14c8365ee7fa7bed3d inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#aed149c453986ae14c8365ee7fa7bed3d">More...</a><br /></td></tr>
-<tr class="separator:aed149c453986ae14c8365ee7fa7bed3d inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a462dc11605371d539ccad5af3baf5e99 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a462dc11605371d539ccad5af3baf5e99">getValues</a> (int dimensionIndexes[], int stride[], void *data) const  =0</td></tr>
-<tr class="memdesc:a462dc11605371d539ccad5af3baf5e99 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#a462dc11605371d539ccad5af3baf5e99">More...</a><br /></td></tr>
-<tr class="separator:a462dc11605371d539ccad5af3baf5e99 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d2d2c003357ae04bd78c4fc7312c47c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a0d2d2c003357ae04bd78c4fc7312c47c">setValue</a> (int dimensionIndexes[], const QVariant &amp;data)=0</td></tr>
-<tr class="memdesc:a0d2d2c003357ae04bd78c4fc7312c47c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a single value for given dimension indexes specified.  <a href="#a0d2d2c003357ae04bd78c4fc7312c47c">More...</a><br /></td></tr>
-<tr class="separator:a0d2d2c003357ae04bd78c4fc7312c47c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab51166edc999587d0427d366389eb5ad inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#ab51166edc999587d0427d366389eb5ad">setValues</a> (int dimensionIndexes[], int stride[], const QVariant data[])=0</td></tr>
-<tr class="memdesc:ab51166edc999587d0427d366389eb5ad inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#ab51166edc999587d0427d366389eb5ad">More...</a><br /></td></tr>
-<tr class="separator:ab51166edc999587d0427d366389eb5ad inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a912776ef48c69c673a15201ddb36a5c4 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a912776ef48c69c673a15201ddb36a5c4">setValues</a> (int dimensionIndexes[], int stride[], const void *data)=0</td></tr>
-<tr class="memdesc:a912776ef48c69c673a15201ddb36a5c4 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#a912776ef48c69c673a15201ddb36a5c4">More...</a><br /></td></tr>
-<tr class="separator:a912776ef48c69c673a15201ddb36a5c4 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af77692b88b83fc1b1e0abde57439ab35 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#af77692b88b83fc1b1e0abde57439ab35">getValue</a> (const std::vector&lt; int &gt; &amp;dimensionIndexes, void *data) const  =0</td></tr>
+<tr class="memdesc:af77692b88b83fc1b1e0abde57439ab35 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#af77692b88b83fc1b1e0abde57439ab35">More...</a><br /></td></tr>
+<tr class="separator:af77692b88b83fc1b1e0abde57439ab35 inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18f0dcd7de2228176e72e0d41a87a83c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_component_data_item.html#a18f0dcd7de2228176e72e0d41a87a83c">setValue</a> (const std::vector&lt; int &gt; &amp;dimensionIndexes, const void *data)=0</td></tr>
+<tr class="memdesc:a18f0dcd7de2228176e72e0d41a87a83c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.  <a href="#a18f0dcd7de2228176e72e0d41a87a83c">More...</a><br /></td></tr>
+<tr class="separator:a18f0dcd7de2228176e72e0d41a87a83c inherit pub_methods_class_hydro_couple_1_1_i_component_data_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_identity"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_identity')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_identity.html">HydroCouple::IIdentity</a></td></tr>
 <tr class="memitem:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#aa69311baebd14ca6078474103f0b69da">~IIdentity</a> ()</td></tr>
 <tr class="separator:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -224,7 +200,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:aa9d098be4db3d6618e89a01e6a7ea14a inherit signals_class_hydro_couple_1_1_i_property_changed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>ITimeComponentItem is an IComponentItem with a temporal attribute. This class cannot be directly instantiated and must be implemented as an abstract class that can be inherited by its specializations e.g., ITimeSeriesComponentDataItem, ITimeSeriesArgument, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html" title="The ITimeIdBasedComponentDataItem class. ">ITimeIdBasedComponentDataItem</a>, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_exchange_item.html" title="The ITimeSeriesIdBasedExchangeItem class. ">ITimeIdBasedExchangeItem</a>, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_argument.html" title="The ITimeSeriesIdBasedArgument class. ">ITimeIdBasedArgument</a>, or other geotemporal datasets. </p>
+<div class="textblock"><p>ITimeComponentItem is an IComponentItem with a temporal attribute. This class cannot be directly instantiated and must be implemented as an abstract class that can be inherited by its specializations e.g., <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_series_component_data_item.html" title="The ITimeSeriesComponentDataItem class. ">ITimeSeriesComponentDataItem</a>, ITimeSeriesArgument, <a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html" title="The ITimeIdBasedComponentDataItem class. ">ITimeIdBasedComponentDataItem</a>, ITimeIdBasedExchangeItem, ITimeIdBasedArgument, or other geotemporal datasets. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a695ebdd6e16065be403c64c74a7799ea"></a>
 <div class="memitem">
@@ -249,265 +225,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>~ITimeComponentItem. </p>
 
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item_a695ebdd6e16065be403c64c74a7799ea_cgraph.svg" width="518" height="275"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a625c50ae137a0de75194425b113fa826"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Temporal::ITimeComponentDataItem::getValue </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">QVariant &amp;&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abced75331b65ed86444579d642a9e8c4"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Temporal::ITimeComponentDataItem::getValues </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">QVariant&#160;</td>
-          <td class="paramname"><em>data</em>[]&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ac00a52e5bb1c8d16eb5e085c0edafc7c"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Temporal::ITimeComponentDataItem::getValues </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timeIndex</td><td>is the time dimension index from where to obtain the requested data. </td></tr>
-    <tr><td class="paramname">stride</td><td>is the size for hyperslab from which to copy data. </td></tr>
-    <tr><td class="paramname">data</td><td>is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ae54430e744b71ca7ba56c260b6a60fc1"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Temporal::ITimeComponentDataItem::setValue </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const QVariant &amp;&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa06934daa52a89835694ce108928e857"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Temporal::ITimeComponentDataItem::setValues </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const QVariant&#160;</td>
-          <td class="paramname"><em>data</em>[]&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a786beaed13fe7a32f1532bb9dc8dbba8"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Temporal::ITimeComponentDataItem::setValues </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>timeIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>stride</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const void *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timeIndex</td><td>is the time dimension index where data is to be written. </td></tr>
-    <tr><td class="paramname">stride</td><td>is the size for hyperslab where data is to be written. </td></tr>
-    <tr><td class="paramname">data</td><td>is the input multi dimensional array to be written. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a class="anchor" id="a5a0ab7566744b3f801c213c94202c135"></a>
 <div class="memitem">
 <div class="memproto">
@@ -534,7 +254,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a7dc7848bd1c64ca841110cda677c845b"></a>
+<a class="anchor" id="a4f19ade7838d8b0635073bdf018650d6"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -542,7 +262,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual QList&lt;<a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_time.html">ITime</a>*&gt; HydroCouple::Temporal::ITimeComponentDataItem::times </td>
+          <td class="memname">virtual QList&lt;<a class="el" href="class_hydro_couple_1_1_temporal_1_1_i_date_time.html">IDateTime</a>*&gt; HydroCouple::Temporal::ITimeComponentDataItem::times </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -556,7 +276,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>ITimes associated with this dimension. </p>
-<dl class="section return"><dt>Returns</dt><dd>QList&lt;ITime*&gt; </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>QList&lt;IDateTime*&gt; </dd></dl>
 
 </div>
 </div>

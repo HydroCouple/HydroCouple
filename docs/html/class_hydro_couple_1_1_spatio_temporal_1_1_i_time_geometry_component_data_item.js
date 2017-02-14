@@ -1,10 +1,12 @@
 var class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item =
 [
     [ "~ITimeGeometryComponentDataItem", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a57c46ea91026f9f9bae578261bb89c38", null ],
-    [ "getValue", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a1fdfb452c3d3caf2aedae174f333a066", null ],
-    [ "getValues", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#af32f2312af03540b6266d3efe3c078aa", null ],
-    [ "getValues", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a4d08b200c85598f6534486eb67b78313", null ],
-    [ "setValue", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a91293b8701a718ae3114e2456acd5216", null ],
-    [ "setValues", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a79af6a7de3140685dc91d616853c2e0e", null ],
-    [ "setValues", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a7adf5cd725c73c844e5d617212080579", null ]
+    [ "geometry", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#ab729930974fc9d1e67cb17e415d9c04a", null ],
+    [ "geometryCount", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#ab31e86af0eb1b01a686254bd07e1ef7a", null ],
+    [ "geometryDimension", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a0b762601a658c0453d5eeb32ce223e1d", null ],
+    [ "geometryType", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a8087f3a590e82f45f19af660f8a9aeec", null ],
+    [ "getValue", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a32a3ca50c9e2a3b25155d6b828d8f91a", null ],
+    [ "getValues", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a9f91b596117ad3ba9242bad26dc2601d", null ],
+    [ "setValue", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#abe73873c9f6e8a691ebb00e59f8d32f5", null ],
+    [ "setValues", "class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#ac4073749918519c1b8030ed11500ad08", null ]
 ];

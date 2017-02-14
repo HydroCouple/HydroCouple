@@ -30,6 +30,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="hydrocouplecomposer.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">HydroCouple
    &#160;<span id="projectnumber">1.0.0</span>
@@ -116,224 +117,74 @@ $(document).ready(function(){initNavTree('class_hydro_couple_1_1_spatial_1_1_i_e
 </div><!--header-->
 <div class="contents">
 
-<p>A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski's code from Graphics Gems IV. Original quad-edge data structure due to Guibas and Stolfi (1985).  
+<p>A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski's code from Graphics Gems IV. Original quad-edge data structure due to Guibas and Stolfi (1985). Does not inherit from geometry to reduce size. since each edge has 4 pointers.  
  <a href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="hydrocouplespatial_8h_source.html">hydrocouplespatial.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for HydroCouple::Spatial::IEdge:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_spatial_1_1_i_edge__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-</div>
-<div class="dynheader">
 Collaboration diagram for HydroCouple::Spatial::IEdge:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_spatial_1_1_i_edge__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_hydro_couple_1_1_spatial_1_1_i_edge__coll__graph.svg" width="192" height="294"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a51412d1413313e0a570b9d44ac82746b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a51412d1413313e0a570b9d44ac82746b">~IEdge</a> ()</td></tr>
 <tr class="separator:a51412d1413313e0a570b9d44ac82746b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4de1f1479934228d3986b1fdb4ca0145"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a4de1f1479934228d3986b1fdb4ca0145">setIndex</a> (unsigned int <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a20e2bb32c54084f082e5dd469c7a4847">index</a>)=0</td></tr>
-<tr class="memdesc:a4de1f1479934228d3986b1fdb4ca0145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the id of this edge.  <a href="#a4de1f1479934228d3986b1fdb4ca0145">More...</a><br /></td></tr>
-<tr class="separator:a4de1f1479934228d3986b1fdb4ca0145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50c36dab3dda9fad07432a834e60eae2"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a50c36dab3dda9fad07432a834e60eae2">index</a> () const  =0</td></tr>
+<tr class="memdesc:a50c36dab3dda9fad07432a834e60eae2"><td class="mdescLeft">&#160;</td><td class="mdescRight">unique index identifier  <a href="#a50c36dab3dda9fad07432a834e60eae2">More...</a><br /></td></tr>
+<tr class="separator:a50c36dab3dda9fad07432a834e60eae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab955d3c00330c4dbb85afab70d842247"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html">IVertex</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#ab955d3c00330c4dbb85afab70d842247">orig</a> ()=0</td></tr>
 <tr class="memdesc:ab955d3c00330c4dbb85afab70d842247"><td class="mdescLeft">&#160;</td><td class="mdescRight">The origin <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#ab955d3c00330c4dbb85afab70d842247">More...</a><br /></td></tr>
 <tr class="separator:ab955d3c00330c4dbb85afab70d842247"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb91a0b9dc4c8d289929ed1f29391398"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#acb91a0b9dc4c8d289929ed1f29391398">setOrig</a> (<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html">IVertex</a> *<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#ab955d3c00330c4dbb85afab70d842247">orig</a>)=0</td></tr>
-<tr class="memdesc:acb91a0b9dc4c8d289929ed1f29391398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the origin <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> to a given <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a>.  <a href="#acb91a0b9dc4c8d289929ed1f29391398">More...</a><br /></td></tr>
-<tr class="separator:acb91a0b9dc4c8d289929ed1f29391398"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f2cd6fd41b2cb5c26e507c49409b228"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html">IVertex</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a6f2cd6fd41b2cb5c26e507c49409b228">dest</a> ()=0</td></tr>
 <tr class="memdesc:a6f2cd6fd41b2cb5c26e507c49409b228"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destination <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#a6f2cd6fd41b2cb5c26e507c49409b228">More...</a><br /></td></tr>
 <tr class="separator:a6f2cd6fd41b2cb5c26e507c49409b228"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a4822224ccb9b7380fdcb7944aad575"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a9a4822224ccb9b7380fdcb7944aad575">setDest</a> (<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html">IVertex</a> *<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a6f2cd6fd41b2cb5c26e507c49409b228">dest</a>)=0</td></tr>
-<tr class="memdesc:a9a4822224ccb9b7380fdcb7944aad575"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the destination <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> to a given <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a>.  <a href="#a9a4822224ccb9b7380fdcb7944aad575">More...</a><br /></td></tr>
-<tr class="separator:a9a4822224ccb9b7380fdcb7944aad575"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bfd26cceb92420773affed74c5b318d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a3bfd26cceb92420773affed74c5b318d">left</a> () const  =0</td></tr>
-<tr class="memdesc:a3bfd26cceb92420773affed74c5b318d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The left face of this edge.  <a href="#a3bfd26cceb92420773affed74c5b318d">More...</a><br /></td></tr>
-<tr class="separator:a3bfd26cceb92420773affed74c5b318d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30037623f57cac236406dc92932f610b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a30037623f57cac236406dc92932f610b">setLeft</a> (<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a3bfd26cceb92420773affed74c5b318d">left</a>)=0</td></tr>
-<tr class="memdesc:a30037623f57cac236406dc92932f610b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the left face of this edge to a given face.  <a href="#a30037623f57cac236406dc92932f610b">More...</a><br /></td></tr>
-<tr class="separator:a30037623f57cac236406dc92932f610b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a051ee0edfdf7bed2cbfe955f3037b1"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a7a051ee0edfdf7bed2cbfe955f3037b1">right</a> () const  =0</td></tr>
-<tr class="memdesc:a7a051ee0edfdf7bed2cbfe955f3037b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The right face of this edge.  <a href="#a7a051ee0edfdf7bed2cbfe955f3037b1">More...</a><br /></td></tr>
-<tr class="separator:a7a051ee0edfdf7bed2cbfe955f3037b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a166838b783920d311a3e22ecb11e74d2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a166838b783920d311a3e22ecb11e74d2">setRight</a> (<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *<a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a7a051ee0edfdf7bed2cbfe955f3037b1">right</a>)=0</td></tr>
-<tr class="memdesc:a166838b783920d311a3e22ecb11e74d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the right face of this edge to a given face.  <a href="#a166838b783920d311a3e22ecb11e74d2">More...</a><br /></td></tr>
-<tr class="separator:a166838b783920d311a3e22ecb11e74d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa6837d337c10cb4ed89966ea66455da"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#afa6837d337c10cb4ed89966ea66455da">rot</a> () const  =0</td></tr>
-<tr class="memdesc:afa6837d337c10cb4ed89966ea66455da"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dual of this edge, directed from its right to its left.  <a href="#afa6837d337c10cb4ed89966ea66455da">More...</a><br /></td></tr>
-<tr class="separator:afa6837d337c10cb4ed89966ea66455da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96fde7b5ade72fa984e078fd55c92a49"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a96fde7b5ade72fa984e078fd55c92a49">invRot</a> () const  =0</td></tr>
-<tr class="memdesc:a96fde7b5ade72fa984e078fd55c92a49"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dual of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>, directed from its left to its right.  <a href="#a96fde7b5ade72fa984e078fd55c92a49">More...</a><br /></td></tr>
-<tr class="separator:a96fde7b5ade72fa984e078fd55c92a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b4b1fcc66ab399876530a9b95775352"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a9b4b1fcc66ab399876530a9b95775352">sym</a> () const  =0</td></tr>
-<tr class="memdesc:a9b4b1fcc66ab399876530a9b95775352"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> from the destination to the origin of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#a9b4b1fcc66ab399876530a9b95775352">More...</a><br /></td></tr>
-<tr class="separator:a9b4b1fcc66ab399876530a9b95775352"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a415ddf7c20d0cf5275c6c838a2d7627f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a415ddf7c20d0cf5275c6c838a2d7627f">origNext</a> () const  =0</td></tr>
-<tr class="memdesc:a415ddf7c20d0cf5275c6c838a2d7627f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next ccw edge around (from) the origin of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#a415ddf7c20d0cf5275c6c838a2d7627f">More...</a><br /></td></tr>
-<tr class="separator:a415ddf7c20d0cf5275c6c838a2d7627f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63ae15685d89eb4f5d9228f0d05c337a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a63ae15685d89eb4f5d9228f0d05c337a">origPrev</a> () const  =0</td></tr>
-<tr class="memdesc:a63ae15685d89eb4f5d9228f0d05c337a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next cw edge around (from) the origin of this edge.  <a href="#a63ae15685d89eb4f5d9228f0d05c337a">More...</a><br /></td></tr>
-<tr class="separator:a63ae15685d89eb4f5d9228f0d05c337a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfb1b67a2de908e1fb8b837c6807e1b7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#adfb1b67a2de908e1fb8b837c6807e1b7">destNext</a> () const  =0</td></tr>
-<tr class="memdesc:adfb1b67a2de908e1fb8b837c6807e1b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next ccw edge around (into) the destination of this edge.  <a href="#adfb1b67a2de908e1fb8b837c6807e1b7">More...</a><br /></td></tr>
-<tr class="separator:adfb1b67a2de908e1fb8b837c6807e1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d028d97b5cc394c24693622fef219ab"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a9d028d97b5cc394c24693622fef219ab">destPrev</a> () const  =0</td></tr>
-<tr class="memdesc:a9d028d97b5cc394c24693622fef219ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next cw edge around (into) the destination of this edge.  <a href="#a9d028d97b5cc394c24693622fef219ab">More...</a><br /></td></tr>
-<tr class="separator:a9d028d97b5cc394c24693622fef219ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83f17124dc20a7a41731945b7cf2672c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a83f17124dc20a7a41731945b7cf2672c">leftNext</a> () const  =0</td></tr>
-<tr class="memdesc:a83f17124dc20a7a41731945b7cf2672c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ccw edge around the left face following this edge.  <a href="#a83f17124dc20a7a41731945b7cf2672c">More...</a><br /></td></tr>
-<tr class="separator:a83f17124dc20a7a41731945b7cf2672c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae683b2830502a6214405d2707fa4488d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#ae683b2830502a6214405d2707fa4488d">leftPrev</a> () const  =0</td></tr>
-<tr class="memdesc:ae683b2830502a6214405d2707fa4488d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ccw edge around the left face before this edge.  <a href="#ae683b2830502a6214405d2707fa4488d">More...</a><br /></td></tr>
-<tr class="separator:ae683b2830502a6214405d2707fa4488d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a697b27390519689e4b0fdb6c1136a244"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a697b27390519689e4b0fdb6c1136a244">rightNext</a> () const  =0</td></tr>
-<tr class="memdesc:a697b27390519689e4b0fdb6c1136a244"><td class="mdescLeft">&#160;</td><td class="mdescRight">The edge around the right face ccw following this edge.  <a href="#a697b27390519689e4b0fdb6c1136a244">More...</a><br /></td></tr>
-<tr class="separator:a697b27390519689e4b0fdb6c1136a244"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72341457ce8ece55df78292d75810e62"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a72341457ce8ece55df78292d75810e62">rightPrev</a> () const  =0</td></tr>
-<tr class="memdesc:a72341457ce8ece55df78292d75810e62"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> around the right face ccw before this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#a72341457ce8ece55df78292d75810e62">More...</a><br /></td></tr>
-<tr class="separator:a72341457ce8ece55df78292d75810e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_line.html">HydroCouple::Spatial::ILine</a></td></tr>
-<tr class="memitem:a902222dbe7930062da4029e535d9d57d inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_line.html#a902222dbe7930062da4029e535d9d57d">~ILine</a> ()</td></tr>
-<tr class="separator:a902222dbe7930062da4029e535d9d57d inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_line_string.html">HydroCouple::Spatial::ILineString</a></td></tr>
-<tr class="memitem:a8fefbe2d0c95bccb2eaaf7af175d51d1 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_line_string.html#a8fefbe2d0c95bccb2eaaf7af175d51d1">~ILineString</a> ()</td></tr>
-<tr class="separator:a8fefbe2d0c95bccb2eaaf7af175d51d1 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3da720108efd4ad564b3cf6e43b6a6e2 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_line_string.html#a3da720108efd4ad564b3cf6e43b6a6e2">pointCount</a> () const  =0</td></tr>
-<tr class="memdesc:a3da720108efd4ad564b3cf6e43b6a6e2 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of IPoints in this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_line_string.html" title="An ILineString is a Curve with linear interpolation between Points. Each consecutive pair of Points d...">ILineString</a>.  <a href="#a3da720108efd4ad564b3cf6e43b6a6e2">More...</a><br /></td></tr>
-<tr class="separator:a3da720108efd4ad564b3cf6e43b6a6e2 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cc6fc9df47e0062d2f2de64518c3a92 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_point.html">IPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_line_string.html#a2cc6fc9df47e0062d2f2de64518c3a92">point</a> (int <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a20e2bb32c54084f082e5dd469c7a4847">index</a>) const  =0</td></tr>
-<tr class="separator:a2cc6fc9df47e0062d2f2de64518c3a92 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_line_string"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html">HydroCouple::Spatial::ICurve</a></td></tr>
-<tr class="memitem:a89b81ed7175658dead2689f3866c5710 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html#a89b81ed7175658dead2689f3866c5710">~ICurve</a> ()</td></tr>
-<tr class="separator:a89b81ed7175658dead2689f3866c5710 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a255154420343d28817b2147a2370740e inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html#a255154420343d28817b2147a2370740e">length</a> () const  =0</td></tr>
-<tr class="memdesc:a255154420343d28817b2147a2370740e inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="mdescLeft">&#160;</td><td class="mdescRight">The length of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html" title="A Curve is a 1-dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints. ">ICurve</a> in its associated <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html" title="Spatial Reference System. ">ISpatialReferenceSystem</a>.  <a href="#a255154420343d28817b2147a2370740e">More...</a><br /></td></tr>
-<tr class="separator:a255154420343d28817b2147a2370740e inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a901edeea501c38677590656150a78307 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_point.html">IPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html#a901edeea501c38677590656150a78307">startPoint</a> () const  =0</td></tr>
-<tr class="memdesc:a901edeea501c38677590656150a78307 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="mdescLeft">&#160;</td><td class="mdescRight">The start <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_point.html" title="An IPoint is a 0-dimensional geometric object and represents a single location in coordinate space...">IPoint</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html" title="A Curve is a 1-dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints. ">ICurve</a>.  <a href="#a901edeea501c38677590656150a78307">More...</a><br /></td></tr>
-<tr class="separator:a901edeea501c38677590656150a78307 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fe92831a4ace52d1acc14531ba2c201 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_point.html">IPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html#a5fe92831a4ace52d1acc14531ba2c201">endPoint</a> () const  =0</td></tr>
-<tr class="memdesc:a5fe92831a4ace52d1acc14531ba2c201 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="mdescLeft">&#160;</td><td class="mdescRight">The end <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_point.html" title="An IPoint is a 0-dimensional geometric object and represents a single location in coordinate space...">IPoint</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html" title="A Curve is a 1-dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints. ">ICurve</a>.  <a href="#a5fe92831a4ace52d1acc14531ba2c201">More...</a><br /></td></tr>
-<tr class="separator:a5fe92831a4ace52d1acc14531ba2c201 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6914a927f19062469f86b4e53086eca8 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html#a6914a927f19062469f86b4e53086eca8">isClosed</a> () const  =0</td></tr>
-<tr class="separator:a6914a927f19062469f86b4e53086eca8 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fa3510c577ace8ac5f3f522a14e2562 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_curve.html#a7fa3510c577ace8ac5f3f522a14e2562">isRing</a> () const  =0</td></tr>
-<tr class="separator:a7fa3510c577ace8ac5f3f522a14e2562 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_curve"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">HydroCouple::Spatial::IGeometry</a></td></tr>
-<tr class="memitem:a9c19f99e48a2806c32f87571fbb17c29 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a9c19f99e48a2806c32f87571fbb17c29">~IGeometry</a> ()</td></tr>
-<tr class="separator:a9c19f99e48a2806c32f87571fbb17c29 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20e2bb32c54084f082e5dd469c7a4847 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a20e2bb32c54084f082e5dd469c7a4847">index</a> () const  =0</td></tr>
-<tr class="memdesc:a20e2bb32c54084f082e5dd469c7a4847 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">index of the geometry if it is part of a collection.  <a href="#a20e2bb32c54084f082e5dd469c7a4847">More...</a><br /></td></tr>
-<tr class="separator:a20e2bb32c54084f082e5dd469c7a4847 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adeb2e25bae49201783b64022a6580b50 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#adeb2e25bae49201783b64022a6580b50">dimension</a> () const  =0</td></tr>
-<tr class="memdesc:adeb2e25bae49201783b64022a6580b50 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">The inherent dimension of this geometric object, which must be less than or equal to the coordinate dimension. In non - homogeneous collections, this will return the largest topological dimension of the contained objects.  <a href="#adeb2e25bae49201783b64022a6580b50">More...</a><br /></td></tr>
-<tr class="separator:adeb2e25bae49201783b64022a6580b50 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82062c539ccb10be4051cb1d079a5447 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a82062c539ccb10be4051cb1d079a5447">coordinateDimension</a> () const  =0</td></tr>
-<tr class="memdesc:a82062c539ccb10be4051cb1d079a5447 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the dimension of the coordinates in this object.  <a href="#a82062c539ccb10be4051cb1d079a5447">More...</a><br /></td></tr>
-<tr class="separator:a82062c539ccb10be4051cb1d079a5447 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d521dd3913741405da0efe3ab9b70d0 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespace_hydro_couple_1_1_spatial.html#a9e4db482852fdf6cf83f02dc5fac8507">GeometryType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a1d521dd3913741405da0efe3ab9b70d0">geometryType</a> () const  =0</td></tr>
-<tr class="memdesc:a1d521dd3913741405da0efe3ab9b70d0 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the dimension of the coordinates in this object.  <a href="#a1d521dd3913741405da0efe3ab9b70d0">More...</a><br /></td></tr>
-<tr class="separator:a1d521dd3913741405da0efe3ab9b70d0 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3462e63f90d6365190165ee851655b1a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html">ISpatialReferenceSystem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a3462e63f90d6365190165ee851655b1a">spatialReferenceSystem</a> () const  =0</td></tr>
-<tr class="memdesc:a3462e63f90d6365190165ee851655b1a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="namespace_hydro_couple_1_1_spatial.html" title="HydroCouple&#39;s interfaces that have a spatial component. ">Spatial</a> reference system of goemetric object.  <a href="#a3462e63f90d6365190165ee851655b1a">More...</a><br /></td></tr>
-<tr class="separator:a3462e63f90d6365190165ee851655b1a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcc8862150688c4f6abbbe58ee38da48 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#adcc8862150688c4f6abbbe58ee38da48">envelope</a> () const  =0</td></tr>
-<tr class="memdesc:adcc8862150688c4f6abbbe58ee38da48 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">The minimum bounding box for this Geometry, returned as a <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the hierarchy. ">IGeometry</a>.  <a href="#adcc8862150688c4f6abbbe58ee38da48">More...</a><br /></td></tr>
-<tr class="separator:adcc8862150688c4f6abbbe58ee38da48 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af82ae880f60a9a0ae0a1be23bb1d8232 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#af82ae880f60a9a0ae0a1be23bb1d8232">wkt</a> () const  =0</td></tr>
-<tr class="memdesc:af82ae880f60a9a0ae0a1be23bb1d8232 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exports this geometric object to a specific Well-known Text Representation of Geometry.  <a href="#af82ae880f60a9a0ae0a1be23bb1d8232">More...</a><br /></td></tr>
-<tr class="separator:af82ae880f60a9a0ae0a1be23bb1d8232 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2381ceba2dc9d29e81284731e738ea7 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#ad2381ceba2dc9d29e81284731e738ea7">wkb</a> (int &amp;size) const  =0</td></tr>
-<tr class="memdesc:ad2381ceba2dc9d29e81284731e738ea7 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exports this geometric object to a specific Well-known byte Representation of Geometry.  <a href="#ad2381ceba2dc9d29e81284731e738ea7">More...</a><br /></td></tr>
-<tr class="separator:ad2381ceba2dc9d29e81284731e738ea7 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa049ef7e820332879a949bb47c52078a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#aa049ef7e820332879a949bb47c52078a">isEmpty</a> () const  =0</td></tr>
-<tr class="memdesc:aa049ef7e820332879a949bb47c52078a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, then this geometric object represents the empty point set ∅ for the coordinate space.  <a href="#aa049ef7e820332879a949bb47c52078a">More...</a><br /></td></tr>
-<tr class="separator:aa049ef7e820332879a949bb47c52078a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c809fa36f62d44c52db0f5bdb9bbfa6 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a7c809fa36f62d44c52db0f5bdb9bbfa6">isSimple</a> () const  =0</td></tr>
-<tr class="memdesc:a7c809fa36f62d44c52db0f5bdb9bbfa6 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <code>true</code> if this geometric object has no anomalous geometric points, such as self intersection or self tangency.  <a href="#a7c809fa36f62d44c52db0f5bdb9bbfa6">More...</a><br /></td></tr>
-<tr class="separator:a7c809fa36f62d44c52db0f5bdb9bbfa6 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99aa4ec786347ed181ad6e68c27aa48c inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a99aa4ec786347ed181ad6e68c27aa48c">is3D</a> () const  =0</td></tr>
-<tr class="separator:a99aa4ec786347ed181ad6e68c27aa48c inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39ac7d86a9641ecf998e72195deca07a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a39ac7d86a9641ecf998e72195deca07a">isMeasured</a> () const  =0</td></tr>
-<tr class="separator:a39ac7d86a9641ecf998e72195deca07a inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa99e6c819ac90b8ea5771924b5dcc274 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#aa99e6c819ac90b8ea5771924b5dcc274">boundary</a> () const  =0</td></tr>
-<tr class="memdesc:aa99e6c819ac90b8ea5771924b5dcc274 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the closure of the combinatorial boundary of this geometric object (Reference [1], section 3.12.2).  <a href="#aa99e6c819ac90b8ea5771924b5dcc274">More...</a><br /></td></tr>
-<tr class="separator:aa99e6c819ac90b8ea5771924b5dcc274 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05653cdcb38fa70384d69470efd24d67 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a05653cdcb38fa70384d69470efd24d67">equals</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a05653cdcb38fa70384d69470efd24d67 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0a4cedf93360048b59507d363127ec1 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#ad0a4cedf93360048b59507d363127ec1">disjoint</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:ad0a4cedf93360048b59507d363127ec1 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63a33760fa908757532d2f170dfcee3b inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a63a33760fa908757532d2f170dfcee3b">intersects</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a63a33760fa908757532d2f170dfcee3b inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5efce40f9e855b7a6b4fe81b2b50cb0d inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a5efce40f9e855b7a6b4fe81b2b50cb0d">touches</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a5efce40f9e855b7a6b4fe81b2b50cb0d inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad63b8abf09c7817c13245bbd11413a01 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#ad63b8abf09c7817c13245bbd11413a01">crosses</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:ad63b8abf09c7817c13245bbd11413a01 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02b85da063f01f76d657d4858be41f46 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a02b85da063f01f76d657d4858be41f46">within</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a02b85da063f01f76d657d4858be41f46 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa53b6568dda17367e397aa453918bfb6 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#aa53b6568dda17367e397aa453918bfb6">contains</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:aa53b6568dda17367e397aa453918bfb6 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88f78a7d435d3ab3db97787f688b1499 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a88f78a7d435d3ab3db97787f688b1499">overlaps</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a88f78a7d435d3ab3db97787f688b1499 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54b7e428285c051baeb81e5a568238ac inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a54b7e428285c051baeb81e5a568238ac">relate</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a54b7e428285c051baeb81e5a568238ac inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7668f2150bff5f91be3aa043cd13e2b3 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a7668f2150bff5f91be3aa043cd13e2b3">locateAlong</a> (double value) const  =0</td></tr>
-<tr class="separator:a7668f2150bff5f91be3aa043cd13e2b3 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99fadfd4ac080544e8bf1ef687a08de8 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a99fadfd4ac080544e8bf1ef687a08de8">locateBetween</a> (double mStart, double mEnd) const  =0</td></tr>
-<tr class="separator:a99fadfd4ac080544e8bf1ef687a08de8 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b90bf59748e158b683792910963cb51 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a8b90bf59748e158b683792910963cb51">distance</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="memdesc:a8b90bf59748e158b683792910963cb51 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the shortest distance between any two Points in the two geometric objects as calculated in the spatial reference system of this geometric object.  <a href="#a8b90bf59748e158b683792910963cb51">More...</a><br /></td></tr>
-<tr class="separator:a8b90bf59748e158b683792910963cb51 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46f8ccd43fc7fe53f48372afc72c7a21 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a46f8ccd43fc7fe53f48372afc72c7a21">buffer</a> (double bufferDistance) const  =0</td></tr>
-<tr class="memdesc:a46f8ccd43fc7fe53f48372afc72c7a21 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a geometric object that represents all Points whose distance from this geometric object is less than or equal to distance.  <a href="#a46f8ccd43fc7fe53f48372afc72c7a21">More...</a><br /></td></tr>
-<tr class="separator:a46f8ccd43fc7fe53f48372afc72c7a21 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02d031c50ae8d1acc77fdb7e215df596 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a02d031c50ae8d1acc77fdb7e215df596">convexHull</a> () const  =0</td></tr>
-<tr class="separator:a02d031c50ae8d1acc77fdb7e215df596 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a028051cdc31236947daea7b357ad7800 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a028051cdc31236947daea7b357ad7800">intersection</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a028051cdc31236947daea7b357ad7800 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b91fb4f4262a231381a6ce86d655030 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a1b91fb4f4262a231381a6ce86d655030">unionG</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a1b91fb4f4262a231381a6ce86d655030 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e95f3fa5344b16ae95eb3a629ede2f9 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a0e95f3fa5344b16ae95eb3a629ede2f9">difference</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a0e95f3fa5344b16ae95eb3a629ede2f9 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77bf932e8a188df9f5d24c25500c96f6 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a77bf932e8a188df9f5d24c25500c96f6">symmetricDifference</a> (const <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_geometry.html">IGeometry</a> *geom) const  =0</td></tr>
-<tr class="separator:a77bf932e8a188df9f5d24c25500c96f6 inherit pub_methods_class_hydro_couple_1_1_spatial_1_1_i_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_identity"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_identity')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_identity.html">HydroCouple::IIdentity</a></td></tr>
-<tr class="memitem:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#aa69311baebd14ca6078474103f0b69da">~IIdentity</a> ()</td></tr>
-<tr class="separator:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6310a9d5339603f3422791b2bd9b4c56 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#a6310a9d5339603f3422791b2bd9b4c56">id</a> () const  =0</td></tr>
-<tr class="memdesc:a6310a9d5339603f3422791b2bd9b4c56 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a unique identifier for the entity.  <a href="#a6310a9d5339603f3422791b2bd9b4c56">More...</a><br /></td></tr>
-<tr class="separator:a6310a9d5339603f3422791b2bd9b4c56 inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_description"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_description')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_description.html">HydroCouple::IDescription</a></td></tr>
-<tr class="memitem:ac22c6687c71243d53d2a39dceff15903 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_description.html#ac22c6687c71243d53d2a39dceff15903">~IDescription</a> ()</td></tr>
-<tr class="separator:ac22c6687c71243d53d2a39dceff15903 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b241b4f456cc2a048748434c74b4314 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_description.html#a1b241b4f456cc2a048748434c74b4314">caption</a> () const  =0</td></tr>
-<tr class="memdesc:a1b241b4f456cc2a048748434c74b4314 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets caption for the entity.  <a href="#a1b241b4f456cc2a048748434c74b4314">More...</a><br /></td></tr>
-<tr class="separator:a1b241b4f456cc2a048748434c74b4314 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac07d2ee45f176c51e4fa8c916c473ec4 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_description.html#ac07d2ee45f176c51e4fa8c916c473ec4">setCaption</a> (const QString &amp;<a class="el" href="class_hydro_couple_1_1_i_description.html#a1b241b4f456cc2a048748434c74b4314">caption</a>)=0</td></tr>
-<tr class="memdesc:ac07d2ee45f176c51e4fa8c916c473ec4 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets caption for the entity.  <a href="#ac07d2ee45f176c51e4fa8c916c473ec4">More...</a><br /></td></tr>
-<tr class="separator:ac07d2ee45f176c51e4fa8c916c473ec4 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae42bbb363fa93cfa5eccf86043545029 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_description.html#ae42bbb363fa93cfa5eccf86043545029">description</a> () const  =0</td></tr>
-<tr class="memdesc:ae42bbb363fa93cfa5eccf86043545029 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets additional descriptive information for the entity.  <a href="#ae42bbb363fa93cfa5eccf86043545029">More...</a><br /></td></tr>
-<tr class="separator:ae42bbb363fa93cfa5eccf86043545029 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21a41c2f3dc342e33652b1e084694b6b inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_description.html#a21a41c2f3dc342e33652b1e084694b6b">setDescription</a> (const QString &amp;decription)=0</td></tr>
-<tr class="memdesc:a21a41c2f3dc342e33652b1e084694b6b inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets additional descriptive information for the entity.  <a href="#a21a41c2f3dc342e33652b1e084694b6b">More...</a><br /></td></tr>
-<tr class="separator:a21a41c2f3dc342e33652b1e084694b6b inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_property_changed"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_property_changed')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_property_changed.html">HydroCouple::IPropertyChanged</a></td></tr>
-<tr class="memitem:a810e76722859d2a63dfe0e541c84ab98 inherit pub_methods_class_hydro_couple_1_1_i_property_changed"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_property_changed.html#a810e76722859d2a63dfe0e541c84ab98">~IPropertyChanged</a> ()</td></tr>
-<tr class="separator:a810e76722859d2a63dfe0e541c84ab98 inherit pub_methods_class_hydro_couple_1_1_i_property_changed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header signals_class_hydro_couple_1_1_i_property_changed"><td colspan="2" onclick="javascript:toggleInherit('signals_class_hydro_couple_1_1_i_property_changed')"><img src="closed.png" alt="-"/>&#160;Signals inherited from <a class="el" href="class_hydro_couple_1_1_i_property_changed.html">HydroCouple::IPropertyChanged</a></td></tr>
-<tr class="memitem:aa9d098be4db3d6618e89a01e6a7ea14a inherit signals_class_hydro_couple_1_1_i_property_changed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_property_changed.html#aa9d098be4db3d6618e89a01e6a7ea14a">propertyChanged</a> (const QString &amp;propertyName)=0</td></tr>
-<tr class="memdesc:aa9d098be4db3d6618e89a01e6a7ea14a inherit signals_class_hydro_couple_1_1_i_property_changed"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_hydro_couple_1_1_i_property_changed.html#aa9d098be4db3d6618e89a01e6a7ea14a" title="IPropertyChanged::propertyChanged() is called to emit signal/event when property of child class chang...">IPropertyChanged::propertyChanged()</a> is called to emit signal/event when property of child class changes.  <a href="#aa9d098be4db3d6618e89a01e6a7ea14a">More...</a><br /></td></tr>
-<tr class="separator:aa9d098be4db3d6618e89a01e6a7ea14a inherit signals_class_hydro_couple_1_1_i_property_changed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a894db6292cf1fc16434e8beb3ce7fae4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a894db6292cf1fc16434e8beb3ce7fae4">left</a> ()=0</td></tr>
+<tr class="memdesc:a894db6292cf1fc16434e8beb3ce7fae4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The left face of this edge.  <a href="#a894db6292cf1fc16434e8beb3ce7fae4">More...</a><br /></td></tr>
+<tr class="separator:a894db6292cf1fc16434e8beb3ce7fae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d7c2e468fdb4f6c7afebea0c2868bcd"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a2d7c2e468fdb4f6c7afebea0c2868bcd">right</a> ()=0</td></tr>
+<tr class="memdesc:a2d7c2e468fdb4f6c7afebea0c2868bcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The right face of this edge.  <a href="#a2d7c2e468fdb4f6c7afebea0c2868bcd">More...</a><br /></td></tr>
+<tr class="separator:a2d7c2e468fdb4f6c7afebea0c2868bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1318b121a5129f1dafb54b461a28a22"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#af1318b121a5129f1dafb54b461a28a22">face</a> ()=0</td></tr>
+<tr class="memdesc:af1318b121a5129f1dafb54b461a28a22"><td class="mdescLeft">&#160;</td><td class="mdescRight">The target face of this edge, if dual. Otherwise null if not dual.  <a href="#af1318b121a5129f1dafb54b461a28a22">More...</a><br /></td></tr>
+<tr class="separator:af1318b121a5129f1dafb54b461a28a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb8c84147b7e3eabeb43503136de4ce"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a2bb8c84147b7e3eabeb43503136de4ce">rot</a> ()=0</td></tr>
+<tr class="memdesc:a2bb8c84147b7e3eabeb43503136de4ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dual of this edge, directed from its right to its left.  <a href="#a2bb8c84147b7e3eabeb43503136de4ce">More...</a><br /></td></tr>
+<tr class="separator:a2bb8c84147b7e3eabeb43503136de4ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef9cf4eb6d41058712cce6c527eabcfc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#aef9cf4eb6d41058712cce6c527eabcfc">invRot</a> ()=0</td></tr>
+<tr class="memdesc:aef9cf4eb6d41058712cce6c527eabcfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dual of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>, directed from its left to its right.  <a href="#aef9cf4eb6d41058712cce6c527eabcfc">More...</a><br /></td></tr>
+<tr class="separator:aef9cf4eb6d41058712cce6c527eabcfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bb4ffbc5f60bb34a70e612e25a3f764"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a9bb4ffbc5f60bb34a70e612e25a3f764">sym</a> ()=0</td></tr>
+<tr class="memdesc:a9bb4ffbc5f60bb34a70e612e25a3f764"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> from the destination to the origin of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#a9bb4ffbc5f60bb34a70e612e25a3f764">More...</a><br /></td></tr>
+<tr class="separator:a9bb4ffbc5f60bb34a70e612e25a3f764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e78c167f29efb58fa00a5a6130cad43"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a4e78c167f29efb58fa00a5a6130cad43">origNext</a> ()=0</td></tr>
+<tr class="memdesc:a4e78c167f29efb58fa00a5a6130cad43"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next ccw edge around (from) the origin of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#a4e78c167f29efb58fa00a5a6130cad43">More...</a><br /></td></tr>
+<tr class="separator:a4e78c167f29efb58fa00a5a6130cad43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43e99f771a4014cdd02db37381b959cf"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a43e99f771a4014cdd02db37381b959cf">origPrev</a> ()=0</td></tr>
+<tr class="memdesc:a43e99f771a4014cdd02db37381b959cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next cw edge around (from) the origin of this edge.  <a href="#a43e99f771a4014cdd02db37381b959cf">More...</a><br /></td></tr>
+<tr class="separator:a43e99f771a4014cdd02db37381b959cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad581f53e9dea024e3d642ab684b5a7ba"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#ad581f53e9dea024e3d642ab684b5a7ba">destNext</a> ()=0</td></tr>
+<tr class="memdesc:ad581f53e9dea024e3d642ab684b5a7ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next ccw edge around (into) the destination of this edge.  <a href="#ad581f53e9dea024e3d642ab684b5a7ba">More...</a><br /></td></tr>
+<tr class="separator:ad581f53e9dea024e3d642ab684b5a7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85997d74130d2c34e8bd132df1ac74ee"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a85997d74130d2c34e8bd132df1ac74ee">destPrev</a> ()=0</td></tr>
+<tr class="memdesc:a85997d74130d2c34e8bd132df1ac74ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The next cw edge around (into) the destination of this edge.  <a href="#a85997d74130d2c34e8bd132df1ac74ee">More...</a><br /></td></tr>
+<tr class="separator:a85997d74130d2c34e8bd132df1ac74ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0296a825390a8467f637cbdaf760685"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#ab0296a825390a8467f637cbdaf760685">leftNext</a> ()=0</td></tr>
+<tr class="memdesc:ab0296a825390a8467f637cbdaf760685"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ccw edge around the left face following this edge.  <a href="#ab0296a825390a8467f637cbdaf760685">More...</a><br /></td></tr>
+<tr class="separator:ab0296a825390a8467f637cbdaf760685"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a004ebaa28834431dce4592d59fc6ee4f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a004ebaa28834431dce4592d59fc6ee4f">leftPrev</a> ()=0</td></tr>
+<tr class="memdesc:a004ebaa28834431dce4592d59fc6ee4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ccw edge around the left face before this edge.  <a href="#a004ebaa28834431dce4592d59fc6ee4f">More...</a><br /></td></tr>
+<tr class="separator:a004ebaa28834431dce4592d59fc6ee4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8753c56a1d70bd921917877965dfaa80"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a8753c56a1d70bd921917877965dfaa80">rightNext</a> ()=0</td></tr>
+<tr class="memdesc:a8753c56a1d70bd921917877965dfaa80"><td class="mdescLeft">&#160;</td><td class="mdescRight">The edge around the right face ccw following this edge.  <a href="#a8753c56a1d70bd921917877965dfaa80">More...</a><br /></td></tr>
+<tr class="separator:a8753c56a1d70bd921917877965dfaa80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a94b144de1c64cd7ed75e3c6bbbe92b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html#a8a94b144de1c64cd7ed75e3c6bbbe92b">rightPrev</a> ()=0</td></tr>
+<tr class="memdesc:a8a94b144de1c64cd7ed75e3c6bbbe92b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> around the right face ccw before this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>.  <a href="#a8a94b144de1c64cd7ed75e3c6bbbe92b">More...</a><br /></td></tr>
+<tr class="separator:a8a94b144de1c64cd7ed75e3c6bbbe92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski's code from Graphics Gems IV. Original quad-edge data structure due to Guibas and Stolfi (1985). </p>
+<div class="textblock"><p>A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski's code from Graphics Gems IV. Original quad-edge data structure due to Guibas and Stolfi (1985). Does not inherit from geometry to reduce size. since each edge has 4 pointers. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a51412d1413313e0a570b9d44ac82746b"></a>
 <div class="memitem">
@@ -385,7 +236,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="adfb1b67a2de908e1fb8b837c6807e1b7"></a>
+<a class="anchor" id="ad581f53e9dea024e3d642ab684b5a7ba"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -396,7 +247,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::destNext </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -411,7 +262,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9d028d97b5cc394c24693622fef219ab"></a>
+<a class="anchor" id="a85997d74130d2c34e8bd132df1ac74ee"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -422,7 +273,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::destPrev </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -437,7 +288,59 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a96fde7b5ade72fa984e078fd55c92a49"></a>
+<a class="anchor" id="af1318b121a5129f1dafb54b461a28a22"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a>* HydroCouple::Spatial::IEdge::face </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The target face of this edge, if dual. Otherwise null if not dual. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a50c36dab3dda9fad07432a834e60eae2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual unsigned int HydroCouple::Spatial::IEdge::index </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>unique index identifier </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aef9cf4eb6d41058712cce6c527eabcfc"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -448,7 +351,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::invRot </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -463,7 +366,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3bfd26cceb92420773affed74c5b318d"></a>
+<a class="anchor" id="a894db6292cf1fc16434e8beb3ce7fae4"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -474,7 +377,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a>* HydroCouple::Spatial::IEdge::left </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -489,7 +392,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a83f17124dc20a7a41731945b7cf2672c"></a>
+<a class="anchor" id="ab0296a825390a8467f637cbdaf760685"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -500,7 +403,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::leftNext </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -515,7 +418,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ae683b2830502a6214405d2707fa4488d"></a>
+<a class="anchor" id="a004ebaa28834431dce4592d59fc6ee4f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -526,7 +429,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::leftPrev </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -567,7 +470,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a415ddf7c20d0cf5275c6c838a2d7627f"></a>
+<a class="anchor" id="a4e78c167f29efb58fa00a5a6130cad43"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -578,7 +481,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::origNext </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -593,7 +496,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a63ae15685d89eb4f5d9228f0d05c337a"></a>
+<a class="anchor" id="a43e99f771a4014cdd02db37381b959cf"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -604,7 +507,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::origPrev </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -619,7 +522,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a7a051ee0edfdf7bed2cbfe955f3037b1"></a>
+<a class="anchor" id="a2d7c2e468fdb4f6c7afebea0c2868bcd"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -630,7 +533,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a>* HydroCouple::Spatial::IEdge::right </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -645,7 +548,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a697b27390519689e4b0fdb6c1136a244"></a>
+<a class="anchor" id="a8753c56a1d70bd921917877965dfaa80"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -656,7 +559,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::rightNext </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -671,7 +574,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a72341457ce8ece55df78292d75810e62"></a>
+<a class="anchor" id="a8a94b144de1c64cd7ed75e3c6bbbe92b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -682,7 +585,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::rightPrev </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -697,7 +600,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="afa6837d337c10cb4ed89966ea66455da"></a>
+<a class="anchor" id="a2bb8c84147b7e3eabeb43503136de4ce"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -708,7 +611,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::rot </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -723,167 +626,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9a4822224ccb9b7380fdcb7944aad575"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Spatial::IEdge::setDest </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html">IVertex</a> *&#160;</td>
-          <td class="paramname"><em>dest</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Change the destination <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> to a given <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">dest</td><td>-&gt; the new destination <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>; null if currently unknown </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a4de1f1479934228d3986b1fdb4ca0145"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Spatial::IEdge::setIndex </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Change the id of this edge. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td>is the new id for this edge; must be positive. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a30037623f57cac236406dc92932f610b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Spatial::IEdge::setLeft </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *&#160;</td>
-          <td class="paramname"><em>left</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Change the left face of this edge to a given face. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">left</td><td>-&gt; the new left face of this edge; null if currently unknown </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="acb91a0b9dc4c8d289929ed1f29391398"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Spatial::IEdge::setOrig </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html">IVertex</a> *&#160;</td>
-          <td class="paramname"><em>orig</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Change the origin <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a> to a given <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">orig</td><td>-&gt; the new origin <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_vertex.html" title="The IVertex class is an IPoint of a topologically aware IGeometry. ">IVertex</a> of this <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr...">IEdge</a>; NULL if currently unknown. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a166838b783920d311a3e22ecb11e74d2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::Spatial::IEdge::setRight </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_polygon.html">IPolygon</a> *&#160;</td>
-          <td class="paramname"><em>right</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Change the right face of this edge to a given face. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">right</td><td>-&gt; the new right face of this edge; null if currently unknown </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a9b4b1fcc66ab399876530a9b95775352"></a>
+<a class="anchor" id="a9bb4ffbc5f60bb34a70e612e25a3f764"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -894,7 +637,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">virtual <a class="el" href="class_hydro_couple_1_1_spatial_1_1_i_edge.html">IEdge</a>* HydroCouple::Spatial::IEdge::sym </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>

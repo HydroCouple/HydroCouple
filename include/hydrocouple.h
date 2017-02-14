@@ -501,25 +501,6 @@ namespace HydroCouple
       virtual IModelComponentInfo* componentInfo() const = 0;
 
       /*!
-      * \brief Parent IModelComponent object from which current component was cloned from.
-      * \returns The parent IModelComponent from which the current component was created.
-      */
-      virtual IModelComponent* parent() const = 0;
-
-      /*!
-      * \brief Deep clones itself including cloning its Data::IArgument.
-      * \returns A deep clone of the current component. Configuration files and output files
-      * must be written to a different location than those of the parent.
-      */
-      virtual IModelComponent* clone() = 0;
-
-      /*!
-      * \brief A list IModelComponent instances cloned from this IModelComponent instance.
-      * \returns A list of child components created from the current component.
-      */
-      virtual QList<IModelComponent*> clones() const = 0;
-
-      /*!
       * \brief Arguments needed to let the component do its work. An unmodifiable list of
       * (modifiable) arguments must be returned that is to be used to get
       * information about the arguments and to set argument values.
@@ -708,6 +689,11 @@ namespace HydroCouple
       */
       virtual void finish() = 0;
 
+      /*!
+       * \brief recieveMPIMessage is called for all
+       */
+      virtual void recieveMPIMessage() = 0;
+
     signals:
       /*!
       * \brief The componentStatusChanged() function must be implemented
@@ -716,6 +702,36 @@ namespace HydroCouple
       * \details See HydroCouple::ComponentStatus for the possible states.
       */
       virtual void componentStatusChanged(const QSharedPointer<IComponentStatusChangeEventArgs> &statusChangedEvent) = 0;
+  };
+
+  /*!
+   * \brief The ICloneableModelComponent class
+   */
+  class ICloneableModelComponent : public virtual IModelComponent
+  {
+    public:
+
+      virtual ~ICloneableModelComponent() {}
+
+      /*!
+      * \brief Parent ICloneableModelComponent object from which current component was cloned from.
+      * \returns The parent ICloneableModelComponent from which the current component was created.
+      */
+      virtual ICloneableModelComponent* parent() const = 0;
+
+      /*!
+      * \brief Deep clones itself including cloning its Data::IArgument.
+      * \returns A deep clone of the current component. Configuration files and output files
+      * must be written to a different location than those of the parent.
+      */
+      virtual ICloneableModelComponent* clone() = 0;
+
+      /*!
+      * \brief A list ICloneableModelComponent instances cloned from this IModelComponent instance.
+      * \returns A list of child components created from the current component.
+      */
+      virtual QList<ICloneableModelComponent*> clones() const = 0;
+
   };
 
   /*!
@@ -790,6 +806,7 @@ namespace HydroCouple
   class IQuality : public virtual IValueDefinition
   {
     public:
+
       virtual ~IQuality() {}
 
       /*!
@@ -902,7 +919,6 @@ namespace HydroCouple
    */
   class IComponentDataItem : public virtual IIdentity
   {
-
     public:
 
       virtual ~IComponentDataItem(){}
@@ -930,12 +946,11 @@ namespace HydroCouple
       * given dimension indexes. To get the size of the first dimension, use a null
       * integer array as input argument. Length of indices must be a least one
       * smaller than the numDimensions()
-      * \param dimensionIndexes array of indexes of the dimensions to get the length of.
-      * \param dimensionIndexesLength the length of the dimensionIndexes array.
-      * This value must be less than the number of dimensions.
-      * \return
+      * \param dimensionIndexes array of indexes of the dimensions to get the length of. Its size must be
+      * less than the number of dimensions.
+      * \return length of the last dimension corresponding to the dimensionIndexes provided.
       */
-      virtual int dimensionLength(int dimensionIndexes[] , int dimensionIndexesLength) const = 0;
+      virtual int dimensionLength(const std::vector<int> &dimensionIndexes) const = 0;
 
       /*!
       * \brief IValueDefinition for this IValueSet defines the variable type associated with this object.
@@ -944,51 +959,18 @@ namespace HydroCouple
       virtual IValueDefinition* valueDefinition() const = 0;
 
       /*!
-      * \brief Gets a single value for given dimension indexes specified.
-      * \param dimensionIndexes are the indexes for the data to be obtained.
-      * \param data is the output QVariant where data is to be written.
-      */
-      virtual void getValue(int dimensionIndexes[], QVariant& data) const = 0;
-
-      /*!
-      * \brief Gets a multi-dimensional array of values for
-      *  given dimension indexes and size for a hyperslab.
-      * \param dimensionIndexes are the indexes for the data to be obtained.
-      * \param stride is the size for hyperslab from which to copy data.
-      * \param data is the 1d array where data is to be written. Must be allocated beforehand.
-      */
-      virtual void getValues(int dimensionIndexes[], int stride[],  QVariant data[]) const = 0;
-
-      /*!
       * \brief Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
       * \param dimensionIndexes are the indexes for the data to be obtained.
-      * \param stride is the size for hyperslab from which to copy data.
-      * \param data is a 1d array where data is to be written. Must be allocated beforehand with the correct data type.
+      * \param Pointer to pre-allocated location where data is to be saved.
       */
-      virtual void getValues(int dimensionIndexes[], int stride[],  void *data) const = 0;
-
-      /*!
-      * \brief Sets a single value for given dimension indexes specified.
-      * \param dimensionIndexes are the indexes for where data is to be writted.
-      * \param data is the input QVariant to be written.
-      */
-      virtual void setValue(int dimensionIndexes[], const QVariant &data) = 0;
+      virtual void getValue(const std::vector<int> &dimensionIndexes, void *data) const = 0;
 
       /*!
       * \brief Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
       * \param dimensionIndexes are the indexes for where data is to be written.
-      * \param stride is the size for hyperslab where data is to be written.
-      * \param data is the input 1d array to be written.
+      * \param data is the pointer to the input data to be set.
       */
-      virtual void setValues(int dimensionIndexes[], int stride[], const QVariant data[]) = 0;
-
-      /*!
-      * \brief Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
-      * \param dimensionIndexes are the indexes for where data is to be written.
-      * \param stride is the size for hyperslab where data is to be written.
-      * \param data is the input 1d array to be written.
-      */
-      virtual void setValues(int dimensionIndexes[], int stride[], const void *data) = 0;
+      virtual void setValue(const std::vector<int> &dimensionIndexes, const void *data) = 0;
 
   };
 
@@ -1022,26 +1004,26 @@ namespace HydroCouple
       virtual bool isReadOnly() const = 0;
 
       /*!
-      * \brief XML representation for this IArgument
+      * \brief String/XML representation for this IArgument
       */
       virtual QString toString() const = 0;
 
       /*!
-       * \brief writes data to all files associated with this argument if they exist.
+       * \brief Writes data to files associated with this argument if they exist.
        * \return
        */
-      virtual bool writeToFile() const = 0;
+      virtual void saveData() = 0;
 
       /*!
       * \brief File type extensions that can be read by this IArgument.
       * \details  File extensions must be specified using the Qt format e.g. "Images (*.png *.xpm *.jpg) "
       * \returns a list of strings for compatible file extensions.
       */
-      virtual QStringList inputFileTypeFilters() const = 0;
+      virtual QStringList fileFilters() const = 0;
 
       /*!
-      * \brief Boolean indicating whether this IArgument can read its values from a file.
-      */
+       * \brief Boolean indicating whether this IArgument can read its values from a file.
+       */
       virtual bool canReadFromFile() const = 0;
 
       /*!
@@ -1061,16 +1043,16 @@ namespace HydroCouple
       * \param isFile is a boolean indicating whether the values are in the QString or the file pointed by the QString.
       * \return boolean indicating whether file/string reading was successful
       */
-      virtual bool readValues(const QString& value , bool isFile = false) = 0;
+      virtual bool readValues(const QString& value, QString &message, bool isFile = false) = 0;
 
       /*!
       * \brief Reads values from an equivalent IComponentDataItem. IComponentDataItem has been used instead of IArgument
       * so that outputs from one model can be used as initialization arguments for another.
       * \param argument is the IArgument from which to copy values from.
       * \param isFile is a boolean indicating whether the values are in the QString or the file pointed by the QString.
-      * \return boolean indicating whether file reading was successful.
+Q      * \return boolean indicating whether file reading was successful.
       */
-      virtual bool readValues(const IComponentDataItem* componentDataItem) = 0;
+      virtual bool readValues(const IComponentDataItem* componentDataItem, QString &message) = 0;
   };
 
   /*!
@@ -1116,7 +1098,7 @@ namespace HydroCouple
       *
       * \param statusChangedEvent provides information about the status change
       */
-      virtual void itemChanged(const QSharedPointer<IExchangeItemChangeEventArgs>& statusChangedEvent) = 0;
+      virtual void itemChanged(const QSharedPointer<IExchangeItemChangeEventArgs> &statusChangedEvent) = 0;
   };
 
   /*!
@@ -1159,7 +1141,7 @@ namespace HydroCouple
       * \param consumer that has to be added
       *
       */
-      virtual void addConsumer(IInput* consumer) = 0;
+      virtual void addConsumer(IInput *consumer) = 0;
 
       /*!
       * \brief Remove a consumer.
@@ -1170,7 +1152,7 @@ namespace HydroCouple
       * \param consumer that has to be removed
       *
       */
-      virtual bool removeConsumer(IInput* consumer) = 0;
+      virtual bool removeConsumer(IInput *consumer) = 0;
 
       /*!
       * \brief The adaptedOutputs that have this current output item as adaptee.
@@ -1195,7 +1177,7 @@ namespace HydroCouple
       * \param adaptedOutput is consumer that has to be added
       *
       */
-      virtual void addAdaptedOutput(IAdaptedOutput* adaptedOutput) = 0;
+      virtual void addAdaptedOutput(IAdaptedOutput *adaptedOutput) = 0;
 
       /*!
       * \brief Removes an IAdaptedOutput.
@@ -1206,7 +1188,7 @@ namespace HydroCouple
       * \param adaptedOutput is a consumer that has to be removed.
       *
       */
-      virtual bool removeAdaptedOutput(IAdaptedOutput* adaptedOutput) = 0;
+      virtual bool removeAdaptedOutput(IAdaptedOutput *adaptedOutput) = 0;
 
       /*!
       *
@@ -1222,7 +1204,7 @@ namespace HydroCouple
       * an IExchangeItem as an argument.
       *
       */
-      virtual void update(IInput* querySpecifier) = 0;
+      virtual void update(IInput *querySpecifier) = 0;
   };
 
   /*!
@@ -1437,9 +1419,7 @@ namespace HydroCouple
   class IIdBasedComponentDataItem : public virtual IComponentDataItem
   {
       using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
       using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
 
     public:
       /*!
@@ -1459,21 +1439,13 @@ namespace HydroCouple
       */
       virtual IDimension* identifierDimension() const = 0;
 
-      /*!
-      * \brief Gets a single value for given id dimension index.
-      * \param idIndex is the id dimension index from where to obtain the requested data.
-      * \param data is the output QVariant where data is to be written.
-      */
-      virtual void getValue(int idIndex, QVariant& data) const = 0;
-
-      /*!
+     /*!
       * \brief Gets a multi-dimensional array of values for given
       *  id dimension index and size for a hyperslab.
       * \param idIndex is the id dimension index from where to obtain the requested data.
-      * \param stride is the size for hyperslab from which to copy data.
-      * \param data is the 1d array where data is to be written. Must be allocated beforehand.
+      * \param data is pre-allocated memory where the data will be written.
       */
-      virtual void getValues(int idIndex, int stride, QVariant data[]) const = 0;
+      virtual void getValue(int idIndex, void *data) const = 0;
 
       /*!
       * \brief Gets a multi-dimensional array of values for given id dimension index and size for a hyperslab.
@@ -1484,20 +1456,12 @@ namespace HydroCouple
       virtual void getValues(int idIndex, int stride, void *data) const = 0;
 
       /*!
-      * \brief Sets a single value for given id dimension index.
-      * \param idIndex is the id dimension index where data is to be written.
-      * \param data is the input QVariant to be written.
-      */
-      virtual void setValue(int idIndex, const QVariant &data) = 0;
-
-      /*!
       * \brief Sets a multi-dimensional array of values for given time
       *  dimension index and size for a hyperslab.
-      * \param idIndex is the time dimension index where data is to be written.
-      * \param stride is the id for hyperslab where data is to be written.
-      * \param data is the input 1d array to be written.
+      * \param idIndex is the id dimension index where data is to be written.
+      * \param data is the pre-allocated location where data is to be set.
       */
-      virtual void setValues(int idIndex, int stride, const QVariant data[]) = 0;
+      virtual void setValue(int idIndex, const void *data) = 0;
 
       /*!
       * \brief Sets a multi-dimensional array of values for given
@@ -1507,27 +1471,7 @@ namespace HydroCouple
       * \param data is the input 1d array to be written.
       */
       virtual void setValues(int idIndex, int stride, const void* data) = 0;
-
   };
-
-  /*!
-   * \brief The IIdBasedExchangeItem class.
-   */
-  class IIdBasedExchangeItem : public virtual IExchangeItem, public virtual IIdBasedComponentDataItem
-  {
-    public:
-      virtual ~IIdBasedExchangeItem(){}
-  };
-
-  /*!
-   * \brief The IIdBasedArgument class
-   */
-  class IIdBasedArgument : public virtual IArgument , public virtual IIdBasedComponentDataItem
-  {
-    public:
-      virtual ~IIdBasedArgument(){}
-  };
-
 }
 
 //!HydroCouple Interface Declarations
@@ -1556,8 +1500,6 @@ Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponent, "HydroCouple::I
 Q_DECLARE_INTERFACE(HydroCouple::IInput, "HydroCouple::IInput/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IMultiInput, "HydroCouple::IMultiInput/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IIdBasedComponentDataItem, "HydroCouple::IIdBasedComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IIdBasedExchangeItem, "HydroCouple::IIdBasedExchangeItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IIdBasedArgument, "HydroCouple::IIdBasedArgument/1.0")
 
 //Metatype
 //!HydroCouple Interface Declarations
@@ -1604,11 +1546,6 @@ Q_DECLARE_METATYPE(HydroCouple::IMultiInput*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IMultiInput*>)
 Q_DECLARE_METATYPE(HydroCouple::IIdBasedComponentDataItem*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IIdBasedComponentDataItem*>)
-Q_DECLARE_METATYPE(HydroCouple::IIdBasedExchangeItem*)
-Q_DECLARE_METATYPE(QList<HydroCouple::IIdBasedExchangeItem*>)
-Q_DECLARE_METATYPE(HydroCouple::IIdBasedArgument*)
-
-
 
 #endif // HYDROCOUPLE_H
 

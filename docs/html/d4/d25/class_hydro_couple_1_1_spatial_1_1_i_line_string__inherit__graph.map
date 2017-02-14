@@ -1,0 +1,6 @@
+<map id="HydroCouple::Spatial::ILineString" name="HydroCouple::Spatial::ILineString">
+<area shape="rect" id="node4" href="$d7/ded/class_hydro_couple_1_1_spatial_1_1_i_line.html" title="The ILine class is an ILineString with exactly 2 IPoints. " alt="" coords="5,1476,187,1581"/>
+<area shape="rect" id="node5" href="$da/d82/class_hydro_couple_1_1_spatial_1_1_i_linear_ring.html" title="An ILinearRing is an ILineString that is both isClosed() and isSimple(). " alt="" coords="211,1476,392,1581"/>
+<area shape="rect" id="node2" href="$df/d7f/class_hydro_couple_1_1_spatial_1_1_i_curve.html" title="A Curve is a 1&#45;dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints. " alt="" coords="108,1047,289,1240"/>
+<area shape="rect" id="node3" href="$d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="84,5,313,999"/>
+</map>

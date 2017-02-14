@@ -30,6 +30,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="hydrocouplecomposer.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">HydroCouple
    &#160;<span id="projectnumber">1.0.0</span>
@@ -188,6 +189,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c4619110b5cc19f9a1590025f77fda1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1">finish</a> ()=0</td></tr>
 <tr class="memdesc:a2c4619110b5cc19f9a1590025f77fda1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1" title="The finish() must be invoked as the last of any methods in the IModelComponent interface. ">finish()</a> must be invoked as the last of any methods in the <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> interface.  <a href="#a2c4619110b5cc19f9a1590025f77fda1">More...</a><br /></td></tr>
 <tr class="separator:a2c4619110b5cc19f9a1590025f77fda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa785cd2b33f6d932cfd565e254a07383"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_model_component.html#aa785cd2b33f6d932cfd565e254a07383">recieveMPIMessage</a> ()=0</td></tr>
+<tr class="memdesc:aa785cd2b33f6d932cfd565e254a07383"><td class="mdescLeft">&#160;</td><td class="mdescRight">recieveMPIMessage is called for all  <a href="#aa785cd2b33f6d932cfd565e254a07383">More...</a><br /></td></tr>
+<tr class="separator:aa785cd2b33f6d932cfd565e254a07383"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_identity"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_identity')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_hydro_couple_1_1_i_identity.html">HydroCouple::IIdentity</a></td></tr>
 <tr class="memitem:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_hydro_couple_1_1_i_identity.html#aa69311baebd14ca6078474103f0b69da">~IIdentity</a> ()</td></tr>
 <tr class="separator:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -565,6 +569,31 @@ Public Member Functions</h2></td></tr>
 <p>Immediatly after the method is invoked, it changes the <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to <a class="el" href="namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a39830eed2627e93f76139dd66fd66292" title="The IModelComponent is preparing itself for the first HydroCouple::IValueSet::getValue() call...">HydroCouple::Preparing</a>.</p>
 <p>When the method has finished, the status of the <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has changed to either <a class="el" href="namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a32c4b74fa698bcaa1257a9a16b174067" title="The IModelComponent has succesfully updated itself. ">HydroCouple::Updated</a> or <a class="el" href="namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a7e67a48b8a07539ef9f0aa0fc82bcc19" title="The IModelComponent was requested to perform the actions to be perform before it will either be dispo...">HydroCouple::Failed</a>.</p>
 <p>It is only required that the <a class="el" href="class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> method can be invoked once. If the <a class="el" href="class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> method is invoked more that once and the <a class="el" href="class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> cannot handle this an exception must be thrown. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa785cd2b33f6d932cfd565e254a07383"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::recieveMPIMessage </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>recieveMPIMessage is called for all </p>
 
 </div>
 </div>

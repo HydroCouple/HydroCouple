@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['waitingfordata',['WaitingForData',['../namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a7f0a43ab554b5d4175e5cc88d691f435',1,'HydroCouple']]]
+  ['valid',['Valid',['../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a51807712bc8a08970d44deec04ad2643',1,'HydroCouple']]],
+  ['validating',['Validating',['../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a5ee7265a43abcab3bbbf2e194db6b808',1,'HydroCouple']]]
 ];

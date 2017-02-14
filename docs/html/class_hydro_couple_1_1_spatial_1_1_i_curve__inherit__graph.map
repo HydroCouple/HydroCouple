@@ -1,10 +1,6 @@
 <map id="HydroCouple::Spatial::ICurve" name="HydroCouple::Spatial::ICurve">
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_spatial_1_1_i_line_string.html" title="An ILineString is a Curve with linear interpolation between Points. Each consecutive pair of Points d..." alt="" coords="108,1763,289,1903"/>
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the hierarchy. " alt="" coords="84,498,313,1474"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="100,346,297,450"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="88,140,309,298"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="72,5,325,92"/>
-<area shape="rect" id="node7" href="$class_hydro_couple_1_1_spatial_1_1_i_line.html" title="The ILine class is an ILineString with exactly 2 IPoints. " alt="" coords="5,1951,187,2056"/>
-<area shape="rect" id="node9" href="$class_hydro_couple_1_1_spatial_1_1_i_linear_ring.html" title="An ILinearRing is an ILineString that is both isClosed() and isSimple(). " alt="" coords="211,1951,392,2056"/>
-<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr..." alt="" coords="5,2104,187,2386"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_line_string.html" title="An ILineString is a Curve with linear interpolation between Points. Each consecutive pair of Points d..." alt="" coords="108,1288,289,1428"/>
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="84,5,313,999"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatial_1_1_i_line.html" title="The ILine class is an ILineString with exactly 2 IPoints. " alt="" coords="5,1476,187,1581"/>
+<area shape="rect" id="node5" href="$class_hydro_couple_1_1_spatial_1_1_i_linear_ring.html" title="An ILinearRing is an ILineString that is both isClosed() and isSimple(). " alt="" coords="211,1476,392,1581"/>
 </map>

@@ -1,0 +1,10 @@
+<map id="HydroCouple::IExchangeItem" name="HydroCouple::IExchangeItem">
+<area shape="rect" id="node6" href="$dd/dc3/class_hydro_couple_1_1_i_input.html" title="An IInput item that can accept values for an IModelComponent. " alt="" coords="35,910,208,1050"/>
+<area shape="rect" id="node8" href="$da/dbd/class_hydro_couple_1_1_i_output.html" title="An output exchange item that can deliver values from an IModelComponent. " alt="" coords="249,874,455,1085"/>
+<area shape="rect" id="node2" href="$d8/d52/class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="93,498,363,692"/>
+<area shape="rect" id="node3" href="$d2/d2a/class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="129,346,327,450"/>
+<area shape="rect" id="node4" href="$db/d64/class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="117,140,339,298"/>
+<area shape="rect" id="node5" href="$dd/dbf/class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="101,5,355,92"/>
+<area shape="rect" id="node7" href="$d8/dfd/class_hydro_couple_1_1_i_multi_input.html" title="The IMultiInput class is an IInput class that has multiple outputs supplying data to it..." alt="" coords="5,1151,219,1291"/>
+<area shape="rect" id="node9" href="$d6/d04/class_hydro_couple_1_1_i_adapted_output.html" title="An IAdaptedOutput adds one or more data operations on top of an IOutput. " alt="" coords="243,1133,480,1309"/>
+</map>

@@ -1,6 +1,7 @@
 var namespace_hydro_couple =
 [
     [ "Spatial", "namespace_hydro_couple_1_1_spatial.html", "namespace_hydro_couple_1_1_spatial" ],
+    [ "SpatioTemporal", "namespace_hydro_couple_1_1_spatio_temporal.html", "namespace_hydro_couple_1_1_spatio_temporal" ],
     [ "Temporal", "namespace_hydro_couple_1_1_temporal.html", "namespace_hydro_couple_1_1_temporal" ],
     [ "IAdaptedOutput", "class_hydro_couple_1_1_i_adapted_output.html", "class_hydro_couple_1_1_i_adapted_output" ],
     [ "IAdaptedOutputFactory", "class_hydro_couple_1_1_i_adapted_output_factory.html", "class_hydro_couple_1_1_i_adapted_output_factory" ],
@@ -14,9 +15,7 @@ var namespace_hydro_couple =
     [ "IDimension", "class_hydro_couple_1_1_i_dimension.html", "class_hydro_couple_1_1_i_dimension" ],
     [ "IExchangeItem", "class_hydro_couple_1_1_i_exchange_item.html", "class_hydro_couple_1_1_i_exchange_item" ],
     [ "IExchangeItemChangeEventArgs", "class_hydro_couple_1_1_i_exchange_item_change_event_args.html", "class_hydro_couple_1_1_i_exchange_item_change_event_args" ],
-    [ "IIdBasedArgument", "class_hydro_couple_1_1_i_id_based_argument.html", "class_hydro_couple_1_1_i_id_based_argument" ],
     [ "IIdBasedComponentDataItem", "class_hydro_couple_1_1_i_id_based_component_data_item.html", "class_hydro_couple_1_1_i_id_based_component_data_item" ],
-    [ "IIdBasedExchangeItem", "class_hydro_couple_1_1_i_id_based_exchange_item.html", "class_hydro_couple_1_1_i_id_based_exchange_item" ],
     [ "IIdentity", "class_hydro_couple_1_1_i_identity.html", "class_hydro_couple_1_1_i_identity" ],
     [ "IInput", "class_hydro_couple_1_1_i_input.html", "class_hydro_couple_1_1_i_input" ],
     [ "IModelComponent", "class_hydro_couple_1_1_i_model_component.html", "class_hydro_couple_1_1_i_model_component" ],

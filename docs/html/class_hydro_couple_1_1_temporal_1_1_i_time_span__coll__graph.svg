@@ -21,16 +21,16 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="class_hydro_couple_1_1_temporal_1_1_i_time.html" target="_top" xlink:title="ITime interface based on a Modified Julian Date5 (number and fraction of days since 00:00 November 17...">
-<polygon fill="none" stroke="black" points="24.0039,-128.175 24.0039,-232.185 166.024,-232.185 166.024,-128.175 24.0039,-128.175"/>
-<text text-anchor="start" x="32.0039" y="-220.185" font-family="Monaco" font-size="10.00">HydroCouple::Temporal</text>
-<text text-anchor="middle" x="95.0142" y="-206.85" font-family="Monaco" font-size="10.00">::ITime</text>
-<polyline fill="none" stroke="black" points="24.0039,-197.515 166.024,-197.515 "/>
+<g id="a_node2"><a xlink:href="class_hydro_couple_1_1_temporal_1_1_i_date_time.html" target="_top" xlink:title="IDateTime interface based on a Modified Julian Date5 (number and fraction of days since 00:00 Novembe...">
+<polygon fill="none" stroke="black" points="15.0024,-128.175 15.0024,-232.185 175.026,-232.185 175.026,-128.175 15.0024,-128.175"/>
+<text text-anchor="start" x="23.0024" y="-220.185" font-family="Monaco" font-size="10.00">HydroCouple::Temporal</text>
+<text text-anchor="middle" x="95.0142" y="-206.85" font-family="Monaco" font-size="10.00">::IDateTime</text>
+<polyline fill="none" stroke="black" points="15.0024,-197.515 175.026,-197.515 "/>
 <text text-anchor="middle" x="95.0142" y="-185.515" font-family="Monaco" font-size="10.00"> </text>
-<polyline fill="none" stroke="black" points="24.0039,-176.18 166.024,-176.18 "/>
-<text text-anchor="start" x="32.0039" y="-164.18" font-family="Monaco" font-size="10.00">+ ~ITime()</text>
-<text text-anchor="start" x="32.0039" y="-150.845" font-family="Monaco" font-size="10.00">+ dateTime()</text>
-<text text-anchor="start" x="32.0039" y="-137.51" font-family="Monaco" font-size="10.00">+ setDateTime()</text>
+<polyline fill="none" stroke="black" points="15.0024,-176.18 175.026,-176.18 "/>
+<text text-anchor="start" x="23.0024" y="-164.18" font-family="Monaco" font-size="10.00">+ ~IDateTime()</text>
+<text text-anchor="start" x="23.0024" y="-150.845" font-family="Monaco" font-size="10.00">+ modifiedJulianDay()</text>
+<text text-anchor="start" x="23.0024" y="-137.51" font-family="Monaco" font-size="10.00">+ setModifiedJulianDay()</text>
 </a>
 </g>
 </g>

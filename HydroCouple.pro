@@ -7,6 +7,8 @@
 TEMPLATE = lib
 VERSION = 1.0.0
 TARGET = HydroCouple
+
+CONFIG += c++11
 CONFIG += debug_and_release
 
 QT += core
@@ -23,7 +25,7 @@ PRECOMPILED_HEADER += ./include/stdafx.h
 SOURCES += ./src/stdafx.cpp
 
 
-CONFIG(debug, debug|release) {
+CONFIG(debug, debug|release){
    DESTDIR = ./build/debug
    OBJECTS_DIR = $$DESTDIR/.obj
    MOC_DIR = $$DESTDIR/.moc
@@ -31,7 +33,7 @@ CONFIG(debug, debug|release) {
    UI_DIR = $$DESTDIR/.ui
 }
 
-CONFIG(release, debug|release) {
+CONFIG(release, debug|release){
     DESTDIR = lib
     RELEASE_EXTRAS = ./build/release 
     OBJECTS_DIR = $$RELEASE_EXTRAS/.obj

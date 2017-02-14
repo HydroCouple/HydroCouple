@@ -1,0 +1,5 @@
+<map id="HydroCouple::Spatial::ILine" name="HydroCouple::Spatial::ILine">
+<area shape="rect" id="node2" href="$d1/dc4/class_hydro_couple_1_1_spatial_1_1_i_line_string.html" title="An ILineString is a Curve with linear interpolation between Points. Each consecutive pair of Points d..." alt="" coords="29,1288,211,1428"/>
+<area shape="rect" id="node3" href="$df/d7f/class_hydro_couple_1_1_spatial_1_1_i_curve.html" title="A Curve is a 1&#45;dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints. " alt="" coords="29,1047,211,1240"/>
+<area shape="rect" id="node4" href="$d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="5,5,235,999"/>
+</map>

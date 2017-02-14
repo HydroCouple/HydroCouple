@@ -1,7 +1,4 @@
 <map id="HydroCouple::Spatial::IMultiCurve" name="HydroCouple::Spatial::IMultiCurve">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry_collection.html" title="An IGeometryCollection is a geometric object that is a collection of some number of IGeometry objects..." alt="" coords="25,1522,239,1662"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the hierarchy. " alt="" coords="17,498,247,1474"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="33,346,231,450"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="21,140,243,298"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="5,5,259,92"/>
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry_collection.html" title="An IGeometryCollection is a geometric object that is a collection of some number of IGeometry objects..." alt="" coords="13,1047,227,1187"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="5,5,235,999"/>
 </map>

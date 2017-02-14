@@ -7,8 +7,8 @@ var hydrocouple_8h =
     [ "IModelComponentInfo", "class_hydro_couple_1_1_i_model_component_info.html", "class_hydro_couple_1_1_i_model_component_info" ],
     [ "IComponentStatusChangeEventArgs", "class_hydro_couple_1_1_i_component_status_change_event_args.html", "class_hydro_couple_1_1_i_component_status_change_event_args" ],
     [ "IModelComponent", "class_hydro_couple_1_1_i_model_component.html", "class_hydro_couple_1_1_i_model_component" ],
-    [ "IDimension", "class_hydro_couple_1_1_i_dimension.html", "class_hydro_couple_1_1_i_dimension" ],
     [ "IValueDefinition", "class_hydro_couple_1_1_i_value_definition.html", "class_hydro_couple_1_1_i_value_definition" ],
+    [ "IDimension", "class_hydro_couple_1_1_i_dimension.html", "class_hydro_couple_1_1_i_dimension" ],
     [ "IQuality", "class_hydro_couple_1_1_i_quality.html", "class_hydro_couple_1_1_i_quality" ],
     [ "IUnitDimensions", "class_hydro_couple_1_1_i_unit_dimensions.html", "class_hydro_couple_1_1_i_unit_dimensions" ],
     [ "IUnit", "class_hydro_couple_1_1_i_unit.html", "class_hydro_couple_1_1_i_unit" ],
@@ -25,8 +25,6 @@ var hydrocouple_8h =
     [ "IInput", "class_hydro_couple_1_1_i_input.html", "class_hydro_couple_1_1_i_input" ],
     [ "IMultiInput", "class_hydro_couple_1_1_i_multi_input.html", "class_hydro_couple_1_1_i_multi_input" ],
     [ "IIdBasedComponentDataItem", "class_hydro_couple_1_1_i_id_based_component_data_item.html", "class_hydro_couple_1_1_i_id_based_component_data_item" ],
-    [ "IIdBasedExchangeItem", "class_hydro_couple_1_1_i_id_based_exchange_item.html", "class_hydro_couple_1_1_i_id_based_exchange_item" ],
-    [ "IIdBasedArgument", "class_hydro_couple_1_1_i_id_based_argument.html", "class_hydro_couple_1_1_i_id_based_argument" ],
     [ "HYDROCOUPLE_EXPORT", "hydrocouple_8h.html#ae1eff69fe0f5c0a03920fb8d14ba36f3", null ],
     [ "ArgumentIOType", "hydrocouple_8h.html#acb50990a65befacb083217458f655831", [
       [ "String", "hydrocouple_8h.html#acb50990a65befacb083217458f655831a561890387c527a811f305d319516ec0d", null ],
@@ -47,10 +45,6 @@ var hydrocouple_8h =
       [ "Finishing", "hydrocouple_8h.html#a5faa3b28d378bbb00134df393c19ba03af25faa2eca3b0112c73b9a7e5ad38c0c", null ],
       [ "Finished", "hydrocouple_8h.html#a5faa3b28d378bbb00134df393c19ba03a18e0a644a8102569a39d04a56612866d", null ],
       [ "Failed", "hydrocouple_8h.html#a5faa3b28d378bbb00134df393c19ba03a7e67a48b8a07539ef9f0aa0fc82bcc19", null ]
-    ] ],
-    [ "DimensionLengthType", "hydrocouple_8h.html#a4568abf6cb6695e2f046f3d270e3bd62", [
-      [ "ConstantLength", "hydrocouple_8h.html#a4568abf6cb6695e2f046f3d270e3bd62afa2732b9aa74f7a85494aa511de96750", null ],
-      [ "DynamicLength", "hydrocouple_8h.html#a4568abf6cb6695e2f046f3d270e3bd62ad1f95c2249d95119d12978c8a8a093d4", null ]
     ] ],
     [ "FundamentalUnitDimension", "hydrocouple_8h.html#a3b0c4ea98032b00a2da319636be02d67", [
       [ "Length", "hydrocouple_8h.html#a3b0c4ea98032b00a2da319636be02d67a494ef3058b4cdec51fde2eb12d87a670", null ],

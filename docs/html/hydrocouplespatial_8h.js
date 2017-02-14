@@ -1,6 +1,7 @@
 var hydrocouplespatial_8h =
 [
     [ "ISpatialReferenceSystem", "class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system.html", "class_hydro_couple_1_1_spatial_1_1_i_spatial_reference_system" ],
+    [ "IEnvelope", "class_hydro_couple_1_1_spatial_1_1_i_envelope.html", "class_hydro_couple_1_1_spatial_1_1_i_envelope" ],
     [ "IGeometry", "class_hydro_couple_1_1_spatial_1_1_i_geometry.html", "class_hydro_couple_1_1_spatial_1_1_i_geometry" ],
     [ "IGeometryCollection", "class_hydro_couple_1_1_spatial_1_1_i_geometry_collection.html", "class_hydro_couple_1_1_spatial_1_1_i_geometry_collection" ],
     [ "IPoint", "class_hydro_couple_1_1_spatial_1_1_i_point.html", "class_hydro_couple_1_1_spatial_1_1_i_point" ],
@@ -26,23 +27,12 @@ var hydrocouplespatial_8h =
     [ "IRegularGrid2D", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d" ],
     [ "IRegularGrid3D", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d" ],
     [ "IGeometryComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_geometry_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_geometry_component_data_item" ],
-    [ "IGeometryExchangeItem", "class_hydro_couple_1_1_spatial_1_1_i_geometry_exchange_item.html", "class_hydro_couple_1_1_spatial_1_1_i_geometry_exchange_item" ],
-    [ "IGeometryArgument", "class_hydro_couple_1_1_spatial_1_1_i_geometry_argument.html", "class_hydro_couple_1_1_spatial_1_1_i_geometry_argument" ],
-    [ "ITINComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item" ],
-    [ "ITINExchangeItem", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_exchange_item.html", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_exchange_item" ],
-    [ "ITINArgument", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_argument.html", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_argument" ],
     [ "IPolyhedralSurfaceComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_component_data_item" ],
-    [ "IPolyhedralSurfaceExchangeItem", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_exchange_item.html", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_exchange_item" ],
-    [ "IPolyhedralSurfaceArgument", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_argument.html", "class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface_argument" ],
+    [ "ITINComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item" ],
     [ "IRasterComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_raster_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_raster_component_data_item" ],
-    [ "IRasterExhangeItem", "class_hydro_couple_1_1_spatial_1_1_i_raster_exhange_item.html", "class_hydro_couple_1_1_spatial_1_1_i_raster_exhange_item" ],
-    [ "IRasterArgument", "class_hydro_couple_1_1_spatial_1_1_i_raster_argument.html", "class_hydro_couple_1_1_spatial_1_1_i_raster_argument" ],
     [ "IRegularGrid2DComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_component_data_item" ],
-    [ "IRegularGrid2DExhangeItem", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_exhange_item.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_exhange_item" ],
-    [ "IRegularGrid2DArgument", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_argument.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_argument" ],
     [ "IRegularGrid3DComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item" ],
-    [ "IRegularGrid3DExhangeItem", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_exhange_item.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_exhange_item" ],
-    [ "IRegularGrid3DArgument", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_argument.html", "class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_argument" ],
+    [ "IVectorComponentDataItem", "class_hydro_couple_1_1_spatial_1_1_i_vector_component_data_item.html", "class_hydro_couple_1_1_spatial_1_1_i_vector_component_data_item" ],
     [ "GeometryType", "hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507", [
       [ "Geometry", "hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507ac767da7396a0cb0df6cf4c103964e605", null ],
       [ "Point", "hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507aa9e8ca4930d67b0ea88fb80dcc7a4353", null ],
@@ -112,6 +102,12 @@ var hydrocouplespatial_8h =
       [ "SurfaceZM", "hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507a60ba1f6f1ab65a9be50bbd0df1a36036", null ],
       [ "PolyhedralSurfaceZM", "hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507a5ddc2bdb509768d469aa2802b6533855", null ],
       [ "TINZM", "hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507a27b7b91a665d917911dffcdfe597b15e", null ]
+    ] ],
+    [ "MeshDataType", "hydrocouplespatial_8h.html#a1aad85957251af4a9e970c57a12b9a26", [
+      [ "Node", "hydrocouplespatial_8h.html#a1aad85957251af4a9e970c57a12b9a26a6efda9eb72609478bfe59ba604d86b38", null ],
+      [ "Edge", "hydrocouplespatial_8h.html#a1aad85957251af4a9e970c57a12b9a26a600087eaeac477f9dadc3ee4be23a9da", null ],
+      [ "Face", "hydrocouplespatial_8h.html#a1aad85957251af4a9e970c57a12b9a26adb5a774bc3b2737b77aceefe64a0ad1b", null ],
+      [ "Cell", "hydrocouplespatial_8h.html#a1aad85957251af4a9e970c57a12b9a26ae0d216086af5563273354641c891babc", null ]
     ] ],
     [ "RasterDataType", "hydrocouplespatial_8h.html#ae3563ea9d450198e25de5766f335dea4", [
       [ "Unknown", "hydrocouplespatial_8h.html#ae3563ea9d450198e25de5766f335dea4a4eae89240b3b663bd245fd295cb89f04", null ],

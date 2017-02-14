@@ -1,9 +1,5 @@
 <map id="HydroCouple::Spatial::ILine" name="HydroCouple::Spatial::ILine">
-<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatial_1_1_i_edge.html" title="A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#39;s code fr..." alt="" coords="41,2104,223,2386"/>
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_line_string.html" title="An ILineString is a Curve with linear interpolation between Points. Each consecutive pair of Points d..." alt="" coords="41,1763,223,1903"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_curve.html" title="A Curve is a 1&#45;dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints. " alt="" coords="41,1522,223,1715"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the hierarchy. " alt="" coords="17,498,247,1474"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="33,346,231,450"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="21,140,243,298"/>
-<area shape="rect" id="node7" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="5,5,259,92"/>
+<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_line_string.html" title="An ILineString is a Curve with linear interpolation between Points. Each consecutive pair of Points d..." alt="" coords="29,1288,211,1428"/>
+<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_curve.html" title="A Curve is a 1&#45;dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints. " alt="" coords="29,1047,211,1240"/>
+<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="5,5,235,999"/>
 </map>

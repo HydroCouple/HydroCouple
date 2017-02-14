@@ -13,6 +13,7 @@ var class_hydro_couple_1_1_i_model_component =
     [ "outputs", "class_hydro_couple_1_1_i_model_component.html#a3f4b78a4d3d92b693ce54c8de6a1e3dc", null ],
     [ "parent", "class_hydro_couple_1_1_i_model_component.html#a041c078db008233254ee3a9e3e1f02f5", null ],
     [ "prepare", "class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47", null ],
+    [ "recieveMPIMessage", "class_hydro_couple_1_1_i_model_component.html#aa785cd2b33f6d932cfd565e254a07383", null ],
     [ "status", "class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55", null ],
     [ "update", "class_hydro_couple_1_1_i_model_component.html#a2bdd60cce9a24a95c9257f026ee4e398", null ],
     [ "validate", "class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524", null ]
