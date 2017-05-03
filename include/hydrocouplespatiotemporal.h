@@ -118,7 +118,8 @@ namespace HydroCouple
     /*!
      * \brief The ITimePolyhedralSurfaceComponentItem class.
      */
-    class ITimePolyhedralSurfaceComponentDataItem :  public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    class ITimePolyhedralSurfaceComponentDataItem :
+        public virtual HydroCouple::Temporal::ITimeComponentDataItem
     {
         using IComponentDataItem::getValue;
         using IComponentDataItem::setValue;
@@ -196,35 +197,6 @@ namespace HydroCouple
            */
         virtual HydroCouple::Spatial::ITIN* TIN() const = 0;
 
-        /*!
-         * \brief getValues
-         * \param timeIndex
-         * \param cellDimensionIndex
-         * \param edgeDimensionIndex
-         * \param nodeDimensionIndex
-         * \param timeStride
-         * \param cellStride
-         * \param edgeStride
-         * \param nodeStride
-         * \param data
-         */
-        virtual void getValues(int timeIndex, int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                               int timeStride, int cellStride, int edgeStride, int nodeStride, void *data) const = 0;
-
-        /*!
-         * \brief getValues
-         * \param timeIndex
-         * \param cellDimensionIndex
-         * \param edgeDimensionIndex
-         * \param nodeDimensionIndex
-         * \param timeStride
-         * \param cellStride
-         * \param edgeStride
-         * \param nodeStride
-         * \param data
-         */
-        virtual void setValues(int timeIndex, int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,
-                               int timeStride, int cellStride, int edgeStride, int nodeStride, const void *data) = 0;
     };
 
     /*!
@@ -369,22 +341,6 @@ namespace HydroCouple
          */
         virtual void getValue(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, void *data) const = 0;
 
-        /*!
-         * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xCellIndex is the x dimension index from where to obtain the requested data.
-         * \param yCellIndex is the y dimension index from where to obtain the requested data.
-         * \param cellEdgeIndex
-         * \param cellNodeIndex
-         * \param timeStride is the time dimension size for hyperslab from which to copy data.
-         * \param xCellStride is the xcell size for hyperslab from which to copy data.
-         * \param yCellStride is the ycell size for hyperslab from which to copy data.
-         * \param cellEdgeStride
-         * \param cellNodeStride
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void getValues(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex,
-                               int timeStride, int xCellStride, int yCellStride, int cellEdgeStride, int cellNodeStride, void *data) const = 0;
 
         /*!
          * \brief setValue
@@ -396,23 +352,6 @@ namespace HydroCouple
          * \param data
          */
         virtual void setValue(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, const void *data) = 0;
-
-        /*!
-         * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xCellIndex is the x dimension index from where to obtain the requested data.
-         * \param yCellIndex is the y dimension index from where to obtain the requested data.
-         * \param cellEdgeIndex
-         * \param cellNodeIndex
-         * \param timeStride is the time dimension size for hyperslab from which to copy data.
-         * \param xCellStride is the xcell size for hyperslab from which to copy data.
-         * \param yCellStride is the ycell size for hyperslab from which to copy data.
-         * \param cellEdgeStride
-         * \param cellNodeStride
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void setValues(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex,
-                               int timeStride, int xCellStride, int yCellStride, int cellEdgeStride, int cellNodeStride, const void *data) = 0;
     };
 
     /*!
@@ -480,28 +419,6 @@ namespace HydroCouple
                               int cellFaceIndex, int cellNodeIndex, void *data) const = 0;
 
         /*!
-         * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xCellIndex is the x dimension index from where to obtain the requested data.
-         * \param yCellIndex is the y dimension index from where to obtain the requested data.
-         * \param zCellIndex is the z dimension index from where to obtain the requested data.
-         * \param cellFaceIndex
-         * \param cellEdgeIndex
-         * \param cellNodeIndex
-         * \param xCellStride is the xcell size for hyperslab from which to copy data.
-         * \param yCellStride is the ycell size for hyperslab from which to copy data.
-         * \param zCellStride is the zcell size for hyperslab from which to copy data.
-         * \param cellFaceStride
-         * \param cellEdgeStride
-         * \param cellNodeStride
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void getValues(int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex,
-                               int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex,
-                               int xCellStride, int yCellStride, int zCellStride,
-                               int cellFaceStride, int cellEdgeStride, int cellNodeStride, void *data) const = 0;
-
-        /*!
          * \brief setValue
          * \param timeIndex
          * \param xCellIndex
@@ -514,27 +431,6 @@ namespace HydroCouple
         virtual void setValue(int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellNodeIndex, const void *data) = 0;
 
-        /*!
-         * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xCellIndex is the x dimension index from where to obtain the requested data.
-         * \param yCellIndex is the y dimension index from where to obtain the requested data.
-         * \param zCellIndex is the z dimension index from where to obtain the requested data.
-         * \param cellFaceIndex
-         * \param cellEdgeIndex
-         * \param cellNodeIndex
-         * \param xCellStride is the xcell size for hyperslab from which to copy data.
-         * \param yCellStride is the ycell size for hyperslab from which to copy data.
-         * \param zCellStride is the zcell size for hyperslab from which to copy data.
-         * \param cellFaceStride
-         * \param cellEdgeStride
-         * \param cellNodeStride
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void setValues(int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex,
-                               int cellFaceIndex, int cellEdgeIndex, int cellNodeIndex,
-                               int xCellStride, int yCellStride, int zCellStride,
-                               int cellFaceStride, int cellEdgeStride, int cellNodeStride, const void *data) = 0;
     };
   }
 }

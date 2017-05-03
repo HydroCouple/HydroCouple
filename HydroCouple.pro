@@ -18,7 +18,8 @@ INCLUDEPATH += ./include
 HEADERS += ./include/hydrocouple.h \
            ./include/hydrocoupletemporal.h \
            ./include/hydrocouplespatial.h \
-           ./include/hydrocouplespatiotemporal.h
+           ./include/hydrocouplespatiotemporal.h \
+           ./include/hydrocouplespatialwkb.h
 
 PRECOMPILED_HEADER += ./include/stdafx.h
 

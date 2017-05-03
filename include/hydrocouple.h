@@ -694,7 +694,25 @@ namespace HydroCouple
        */
       virtual void recieveMPIMessage() = 0;
 
+      /*!
+       * \brief referenceDirectory
+       * \details All relative file paths specified that are associated with this component instance are referenced
+       * from this directory. Typically, this will be the directory for the project file for the current composition. Values
+       * are typically set from the Composition GUI and can be referenced internally for saving files and writing
+       * arguments for the component.
+       * \return
+       */
+      virtual QString referenceDirectory() const = 0;
+
+      /*!
+       * \brief setReferenceDirectory
+       * \details sets the reference directory for this component instance.
+       * \param referenceDirectory
+       */
+      virtual void setReferenceDirectory(const QString &referenceDirectory) = 0;
+
     signals:
+
       /*!
       * \brief The componentStatusChanged() function must be implemented
       * as a signal and emitted when Status of the component changes.
@@ -856,7 +874,7 @@ namespace HydroCouple
       * \returns -1
       *
       */
-      virtual double getPower(HydroCouple::FundamentalUnitDimension dimension) const = 0;
+      virtual double getPower(HydroCouple::FundamentalUnitDimension dimension) = 0;
   };
 
   /*!
@@ -959,14 +977,15 @@ namespace HydroCouple
       virtual IValueDefinition* valueDefinition() const = 0;
 
       /*!
-      * \brief Gets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
+      * \brief Gets a multi-dimensional array of value for given dimension indexes.
+      * IndexArray = x + y * InSizeX + z * InSizeX * InSizeY etc;
       * \param dimensionIndexes are the indexes for the data to be obtained.
       * \param Pointer to pre-allocated location where data is to be saved.
       */
       virtual void getValue(const std::vector<int> &dimensionIndexes, void *data) const = 0;
 
       /*!
-      * \brief Sets a multi-dimensional array of values for given dimension indexes and size for a hyperslab.
+      * \brief Sets a multi-dimensional array of values for given dimension indexes.
       * \param dimensionIndexes are the indexes for where data is to be written.
       * \param data is the pointer to the input data to be set.
       */
@@ -984,6 +1003,7 @@ namespace HydroCouple
   {
 
     public:
+
       virtual ~IArgument(){}
 
       /*!
@@ -1050,7 +1070,7 @@ namespace HydroCouple
       * so that outputs from one model can be used as initialization arguments for another.
       * \param argument is the IArgument from which to copy values from.
       * \param isFile is a boolean indicating whether the values are in the QString or the file pointed by the QString.
-Q      * \return boolean indicating whether file reading was successful.
+      * \return boolean indicating whether file reading was successful.
       */
       virtual bool readValues(const IComponentDataItem* componentDataItem, QString &message) = 0;
   };
@@ -1197,14 +1217,14 @@ Q      * \return boolean indicating whether file reading was successful.
       * more details in the query, e.g. time and space.
       *
       * \details One might expect to be the querySpecifier to be of the type IInput, because every input item that calls
-      * the GetValues method needs to add itself as a consumer first.
+      * the getValues method needs to add itself as a consumer first.
       *
       * \details However, the IExchangeItem suffices to  specify what is required. Therefore,
       * to have the flexibility to loosen the "always register as consumer" approach, it is chosen to provide
       * an IExchangeItem as an argument.
       *
       */
-      virtual void update(IInput *querySpecifier) = 0;
+      virtual void updateValues(IInput *querySpecifier) = 0;
   };
 
   /*!
@@ -1375,7 +1395,7 @@ Q      * \return boolean indicating whether file reading was successful.
       *
       * \param provider is the IOutput that supplies the data to this IInput.
       */
-      virtual void setProvider(IOutput* provider) = 0;
+      virtual bool setProvider(IOutput* provider) = 0;
 
       /*!
       * \brief Returns true if this IInput can consume this producer.
@@ -1403,7 +1423,7 @@ Q      * \return boolean indicating whether file reading was successful.
       * \brief addProvider
       * \param provider
       */
-      virtual void addProvider(IOutput* provider) = 0;
+      virtual bool addProvider(IOutput* provider) = 0;
 
       /*!
       * \brief removeProvider
@@ -1439,7 +1459,7 @@ Q      * \return boolean indicating whether file reading was successful.
       */
       virtual IDimension* identifierDimension() const = 0;
 
-     /*!
+      /*!
       * \brief Gets a multi-dimensional array of values for given
       *  id dimension index and size for a hyperslab.
       * \param idIndex is the id dimension index from where to obtain the requested data.

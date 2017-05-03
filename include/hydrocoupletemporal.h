@@ -88,6 +88,19 @@ namespace HydroCouple
         virtual QList<IDateTime*> times() const = 0;
 
         /*!
+         * \brief time
+         * \param timeIndex
+         * \return
+         */
+        virtual IDateTime* time(int timeIndex) const  = 0;
+
+        /*!
+         * \brief timeCount
+         * \return
+         */
+        virtual int timeCount() const = 0;
+
+        /*!
          * \brief ITimeSpan associated with this dimension.
          */
         virtual ITimeSpan* timeSpan() const = 0;

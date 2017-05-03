@@ -48,6 +48,7 @@ namespace HydroCouple
       Point = 1,
       LineString = 2,
       Polygon = 3,
+      Triangle = 17,
       MultiPoint = 4,
       MultiLineString = 5,
       MultiPolygon = 6,
@@ -67,6 +68,7 @@ namespace HydroCouple
       PointZ = 1001,
       LineStringZ = 1002,
       PolygonZ = 1003,
+      TriangleZ = 1017,
       MultiPointZ = 1004,
       MultiLineStringZ = 1005,
       MultiPolygonZ = 1006,
@@ -86,6 +88,7 @@ namespace HydroCouple
       PointM = 2001,
       LineStringM = 2002,
       PolygonM = 2003,
+      TriangleM = 2017,
       MultiPointM = 2004,
       MultiLineStringM = 2005,
       MultiPolygonM = 2006,
@@ -105,6 +108,7 @@ namespace HydroCouple
       PointZM = 3001,
       LineStringZM = 3002,
       PolygonZM = 3003,
+      TriangleZM = 3017,
       MultiPointZM = 3004,
       MultiLineStringZM = 3005,
       MultiPolygonZM = 3006,
@@ -1519,33 +1523,6 @@ namespace HydroCouple
       * \returns The ITIN associated with this ITINComponentDataItem.
       */
         virtual ITIN *TIN() const = 0;
-
-        /*!
-         * \brief getValues
-         * \param cellDimensionIndex
-         * \param faceDimensionIndex
-         * \param nodeDimensionIndex
-         * \param cellStride
-         * \param faceStride
-         * \param nodeStride
-         * \param data
-         */
-        virtual void getValues(int cellDimensionIndex, int faceDimensionIndex, int nodeDimensionIndex,
-                               int cellStride, int faceStride, int nodeStride, void *data) const = 0;
-
-        /*!
-         * \brief setValues
-         * \param cellDimensionIndex
-         * \param faceDimensionIndex
-         * \param nodeDimensionIndex
-         * \param cellStride
-         * \param faceStride
-         * \param nodeStride
-         * \param data
-         */
-        virtual void setValues(int cellDimensionIndex, int faceDimensionIndex, int nodeDimensionIndex,
-                               int cellStride, int faceStride, int nodeStride, const void *data) = 0;
-
     };
 
     /*!
@@ -1588,7 +1565,7 @@ namespace HydroCouple
          */
         virtual void getValue(int xIndex, int yIndex, int band, void *data) const = 0;
 
-       /*!
+        /*!
         * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
         * \param xIndex is the x dimension index from where to obtain the requested data.
         * \param yIndex is the y dimension index from where to obtain the requested data.
@@ -1608,7 +1585,7 @@ namespace HydroCouple
          */
         virtual void setValue(int xIndex, int yIndex, int band, const void *data) = 0;
 
-       /*!
+        /*!
         * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
         * \param xIndex is the x dimension index where to set data.
         * \param yIndex is the y dimension index where to set data.
@@ -1681,21 +1658,6 @@ namespace HydroCouple
         virtual void getValue(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, void *data) const = 0;
 
         /*!
-      * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-      * \param xCellIndex is the x dimension index from where to obtain the requested data.
-      * \param yCellIndex is the y dimension index from where to obtain the requested data.
-      * \param cellEdgeIndex
-      * \param cellNodeIndex
-      * \param xCellStride is the xcell size for hyperslab from which to copy data.
-      * \param yCellStride is the ycell size for hyperslab from which to copy data.
-      * \param cellEdgeStride
-      * \param cellNodeStride
-      * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-      */
-        virtual void getValues(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex,
-                               int xCellStride, int yCellStride, int cellEdgeStride, int cellNodeStride, void *data) const = 0;
-
-        /*!
          * \brief setValue
          * \param xCellIndex
          * \param yCellIndex
@@ -1704,21 +1666,6 @@ namespace HydroCouple
          * \param data
          */
         virtual void setValue(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, const void *data) = 0;
-
-        /*!
-      * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
-      * \param xCellIndex is the x dimension index from where to obtain the requested data.
-      * \param yCellIndex is the y dimension index from where to obtain the requested data.
-      * \param cellEdgeIndex
-      * \param cellNodeIndex
-      * \param xCellStride is the xcell size for hyperslab from which to copy data.
-      * \param yCellStride is the ycell size for hyperslab from which to copy data.
-      * \param cellEdgeStride
-      * \param cellNodeStride
-      * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-      */
-        virtual void setValues(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex,
-                               int xCellStride, int yCellStride, int cellEdgeStride, int cellNodeStride, const void *data) = 0;
 
     };
 
@@ -1787,25 +1734,6 @@ namespace HydroCouple
                               int cellFaceIndex, int cellNodeIndex, void *data) const = 0;
 
         /*!
-      * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-      * \param xCellIndex is the x dimension index from where to obtain the requested data.
-      * \param yCellIndex is the y dimension index from where to obtain the requested data.
-      * \param zCellIndex is the z dimension index from where to obtain the requested data.
-      * \param cellFaceIndex
-      * \param cellNodeIndex
-      * \param xCellStride is the xcell size for hyperslab from which to copy data.
-      * \param yCellStride is the ycell size for hyperslab from which to copy data.
-      * \param zCellStride is the zcell size for hyperslab from which to copy data.
-      * \param cellFaceStride
-      * \param cellNodeStride
-      * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-      */
-        virtual void getValues(int xCellIndex, int yCellIndex, int zCellIndex,
-                               int cellFaceIndex, int cellNodeIndex,
-                               int xCellStride, int yCellStride, int zCellStride,
-                               int cellFaceStride, int cellNodeStride, void *data) const = 0;
-
-        /*!
          * \brief setValue
          * \param xCellIndex
          * \param yCellIndex
@@ -1817,27 +1745,6 @@ namespace HydroCouple
          */
         virtual void setValue(int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellNodeIndex, const void *data) = 0;
-
-        /*!
-      * \brief Sets a multi-dimensional array of values for given dimensions of a hyperslab.
-      * \param xCellIndex is the x dimension index from where to obtain the requested data.
-      * \param yCellIndex is the y dimension index from where to obtain the requested data.
-      * \param zCellIndex is the z dimension index from where to obtain the requested data.
-      * \param cellFaceIndex
-      * \param cellEdgeIndex
-      * \param cellNodeIndex
-      * \param xCellStride is the xcell size for hyperslab from which to copy data.
-      * \param yCellStride is the ycell size for hyperslab from which to copy data.
-      * \param zCellStride is the zcell size for hyperslab from which to copy data.
-      * \param cellFaceStride
-      * \param cellEdgeStride
-      * \param cellNodeStride
-      * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-      */
-        virtual void setValues(int xCellIndex, int yCellIndex, int zCellIndex,
-                               int cellFaceIndex, int cellNodeIndex,
-                               int xCellStride, int yCellStride, int zCellStride,
-                               int cellFaceStride, int cellNodeStride, const void *data) = 0;
 
     };
 
