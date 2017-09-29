@@ -20,13 +20,18 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ]
+        [ "Functions", "functions_func.html", "functions_func" ],
+        [ "Variables", "functions_vars.html", "functions_vars" ],
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ]
       ] ]
     ] ],
     [ "Files", null, [
       [ "File List", "files.html", "files" ],
       [ "File Members", "globals.html", [
         [ "All", "globals.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -36,8 +41,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d6/d72/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html#adc685ae85497e6d2a0cab81e9bda666e",
-"dc/deb/hydrocouplespatial_8h.html#a9e4db482852fdf6cf83f02dc5fac8507a9c1f50eec98983e6900ae4b385281153"
+"d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a8d7644027b0f791c863b096463c2b5b3ad40d996e75feeefa974d4fe4b254b335",
+"d6/db5/struct_linear_ring.html",
+"db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a5e4d4bbd584b680eb27120f8f12190ca",
+"functions_vars_z.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -2,6 +2,7 @@ var dir_d44c64559bbebec7f509842c48db8b23 =
 [
     [ "hydrocouple.h", "d1/d36/hydrocouple_8h.html", "d1/d36/hydrocouple_8h" ],
     [ "hydrocouplespatial.h", "dc/deb/hydrocouplespatial_8h.html", "dc/deb/hydrocouplespatial_8h" ],
+    [ "hydrocouplespatialwkb.h", "d5/d77/hydrocouplespatialwkb_8h.html", "d5/d77/hydrocouplespatialwkb_8h" ],
     [ "hydrocouplespatiotemporal.h", "df/d91/hydrocouplespatiotemporal_8h.html", [
       [ "ITimeGeometryComponentDataItem", "db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html", "db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item" ],
       [ "ITimePolyhedralSurfaceComponentDataItem", "d2/d80/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_polyhedral_surface_component_data_item.html", "d2/d80/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_polyhedral_surface_component_data_item" ],

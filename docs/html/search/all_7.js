@@ -7,6 +7,7 @@ var searchData=
   ['hydrocouple_2eh',['hydrocouple.h',['../d1/d36/hydrocouple_8h.html',1,'']]],
   ['hydrocouple_5fexport',['HYDROCOUPLE_EXPORT',['../d1/d36/hydrocouple_8h.html#ae1eff69fe0f5c0a03920fb8d14ba36f3',1,'hydrocouple.h']]],
   ['hydrocouplespatial_2eh',['hydrocouplespatial.h',['../dc/deb/hydrocouplespatial_8h.html',1,'']]],
+  ['hydrocouplespatialwkb_2eh',['hydrocouplespatialwkb.h',['../d5/d77/hydrocouplespatialwkb_8h.html',1,'']]],
   ['hydrocouplespatiotemporal_2eh',['hydrocouplespatiotemporal.h',['../df/d91/hydrocouplespatiotemporal_8h.html',1,'']]],
   ['hydrocoupletemporal_2eh',['hydrocoupletemporal.h',['../d9/dc7/hydrocoupletemporal_8h.html',1,'']]],
   ['hydrocouple',['HydroCouple',['../md__Users_calebbuahin_Documents_Projects_HydroCouple_HydroCouple_README.html',1,'']]],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['datatype',['dataType',['../d1/da8/class_hydro_couple_1_1_spatial_1_1_i_raster_band.html#a901ed50209b9ad3124da8418913b8a55',1,'HydroCouple::Spatial::IRasterBand']]],
+  ['datatype',['dataType',['../d1/da8/class_hydro_couple_1_1_spatial_1_1_i_raster_band.html#a3311d9705cca317c6d0d51cfda2321c2',1,'HydroCouple::Spatial::IRasterBand']]],
   ['defaultvalue',['defaultValue',['../d9/d22/class_hydro_couple_1_1_i_value_definition.html#a77d4377166b60ec56fd89a4927470fe5',1,'HydroCouple::IValueDefinition']]],
   ['description',['description',['../db/d64/class_hydro_couple_1_1_i_description.html#ae42bbb363fa93cfa5eccf86043545029',1,'HydroCouple::IDescription']]],
   ['dest',['dest',['../d9/d6c/class_hydro_couple_1_1_spatial_1_1_i_edge.html#a6f2cd6fd41b2cb5c26e507c49409b228',1,'HydroCouple::Spatial::IEdge']]],
@@ -12,5 +12,6 @@ var searchData=
   ['dimensions',['dimensions',['../d9/dcc/class_hydro_couple_1_1_i_unit.html#a847ecd57813e78791e048177e1a65c9a',1,'HydroCouple::IUnit::dimensions()'],['../d8/d52/class_hydro_couple_1_1_i_component_data_item.html#a57dd3ec8f97fbb3e4b08b78e223715d0',1,'HydroCouple::IComponentDataItem::dimensions()']]],
   ['disjoint',['disjoint',['../d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html#ad0a4cedf93360048b59507d363127ec1',1,'HydroCouple::Spatial::IGeometry']]],
   ['distance',['distance',['../d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a8b90bf59748e158b683792910963cb51',1,'HydroCouple::Spatial::IGeometry']]],
+  ['documentation',['documentation',['../d3/dd7/class_hydro_couple_1_1_i_component_info.html#a4c0945c14cca7e6f8139d914abaa7e42',1,'HydroCouple::IComponentInfo']]],
   ['duration',['duration',['../d6/d12/class_hydro_couple_1_1_temporal_1_1_i_time_span.html#a138a05f1c53fc4f9801cf9a349544158',1,'HydroCouple::Temporal::ITimeSpan']]]
 ];

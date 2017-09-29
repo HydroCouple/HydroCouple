@@ -78,7 +78,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="44.0059" y="-284.194" font-family="Monaco" font-size="10.00">+ setLibraryFilePath()</text>
 <text text-anchor="start" x="44.0059" y="-270.859" font-family="Monaco" font-size="10.00">+ iconFilePath()</text>
 <text text-anchor="start" x="44.0059" y="-257.524" font-family="Monaco" font-size="10.00">+ vendor()</text>
-<text text-anchor="start" x="44.0059" y="-244.189" font-family="Monaco" font-size="10.00">+ publications()</text>
+<text text-anchor="start" x="44.0059" y="-244.189" font-family="Monaco" font-size="10.00">+ documentation()</text>
 <text text-anchor="start" x="44.0059" y="-230.854" font-family="Monaco" font-size="10.00">+ license()</text>
 <text text-anchor="start" x="44.0059" y="-217.52" font-family="Monaco" font-size="10.00">+ copyright()</text>
 <text text-anchor="start" x="44.0059" y="-204.185" font-family="Monaco" font-size="10.00">+ url()</text>

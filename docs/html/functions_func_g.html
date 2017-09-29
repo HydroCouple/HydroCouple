@@ -83,6 +83,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
+      <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -162,8 +165,8 @@ $(document).ready(function(){initNavTree('functions_func_g.html','');});
 </li>
 <li>geometryType()
 : <a class="el" href="d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a1d521dd3913741405da0efe3ab9b70d0">HydroCouple::Spatial::IGeometry</a>
-, <a class="el" href="d7/d8d/class_hydro_couple_1_1_spatial_1_1_i_geometry_component_data_item.html#ac01ee4c6a58fde61e1e8011a2bbb781c">HydroCouple::Spatial::IGeometryComponentDataItem</a>
-, <a class="el" href="db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a8087f3a590e82f45f19af660f8a9aeec">HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem</a>
+, <a class="el" href="d7/d8d/class_hydro_couple_1_1_spatial_1_1_i_geometry_component_data_item.html#a359af32fb4dbe3d0e9cb21104e565697">HydroCouple::Spatial::IGeometryComponentDataItem</a>
+, <a class="el" href="db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a8c6bf2613309f684aec77cf077acaff4">HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem</a>
 </li>
 <li>geoTransformation()
 : <a class="el" href="d8/d5b/class_hydro_couple_1_1_spatial_1_1_i_raster.html#a0f918dd8435650934c15042844ec3045">HydroCouple::Spatial::IRaster</a>
@@ -172,7 +175,7 @@ $(document).ready(function(){initNavTree('functions_func_g.html','');});
 : <a class="el" href="da/d70/class_hydro_couple_1_1_i_adapted_output_factory.html#af66c1a40ea0d17a90bf65170e44c2e56">HydroCouple::IAdaptedOutputFactory</a>
 </li>
 <li>getPower()
-: <a class="el" href="dc/df4/class_hydro_couple_1_1_i_unit_dimensions.html#a3fd8b34a20feaca04c7d88a8d74b6197">HydroCouple::IUnitDimensions</a>
+: <a class="el" href="dc/df4/class_hydro_couple_1_1_i_unit_dimensions.html#aa17396552cf9a6a4dc0cd1eda1e16388">HydroCouple::IUnitDimensions</a>
 </li>
 <li>getRasterBand()
 : <a class="el" href="d8/d5b/class_hydro_couple_1_1_spatial_1_1_i_raster.html#a2fb7cee15d778f6b2a7c608355ee1031">HydroCouple::Spatial::IRaster</a>
@@ -198,15 +201,9 @@ $(document).ready(function(){initNavTree('functions_func_g.html','');});
 : <a class="el" href="dd/d21/class_hydro_couple_1_1_i_id_based_component_data_item.html#a219d2aaaba80b8efb43b44c96458508b">HydroCouple::IIdBasedComponentDataItem</a>
 , <a class="el" href="d7/d8d/class_hydro_couple_1_1_spatial_1_1_i_geometry_component_data_item.html#a76a4be2d52ec10c169f5daed9fe14e7c">HydroCouple::Spatial::IGeometryComponentDataItem</a>
 , <a class="el" href="db/dc6/class_hydro_couple_1_1_spatial_1_1_i_raster_component_data_item.html#aa3d3de026902367049083aef4ba03419">HydroCouple::Spatial::IRasterComponentDataItem</a>
-, <a class="el" href="d4/d5c/class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_component_data_item.html#adfc01dcd62495548c7210a1fa541ceca">HydroCouple::Spatial::IRegularGrid2DComponentDataItem</a>
-, <a class="el" href="d6/d4f/class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html#a22aa14b98529eebf7cdbc5e0ad7be8bb">HydroCouple::Spatial::IRegularGrid3DComponentDataItem</a>
-, <a class="el" href="d3/d6c/class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item.html#ac1b9f7391a84edf4c57551f86d83f56a">HydroCouple::Spatial::ITINComponentDataItem</a>
 , <a class="el" href="d9/d51/class_hydro_couple_1_1_spatial_1_1_i_vector_component_data_item.html#a05bd6226eeb23fff92b5da64e32119a3">HydroCouple::Spatial::IVectorComponentDataItem</a>
 , <a class="el" href="db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#ab9de6112325dff5df9295eb44c12370f">HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem</a>
 , <a class="el" href="d6/d72/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html#a0ff1e0a45aa3912800a47104ef1e0483">HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem</a>
-, <a class="el" href="d6/da3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid2_d_component_data_item.html#a023021eacaf000cedd0199f453d7afc8">HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem</a>
-, <a class="el" href="db/d99/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#ad800e0b4fced35e915a7ca5ba9986969">HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem</a>
-, <a class="el" href="d6/db3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_component_data_item.html#a4127319a7380f831ca1a9533095b6424">HydroCouple::SpatioTemporal::ITimeTINComponentDataItem</a>
 , <a class="el" href="d0/dd4/class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html#a21c727b6d7910a273e8e0d471d0ba719">HydroCouple::Temporal::ITimeIdBasedComponentDataItem</a>
 , <a class="el" href="de/d0b/class_hydro_couple_1_1_temporal_1_1_i_time_series_component_data_item.html#aa62c870048ee1a0d8aae54e9610b7d08">HydroCouple::Temporal::ITimeSeriesComponentDataItem</a>
 </li>

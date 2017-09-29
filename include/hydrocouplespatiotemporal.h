@@ -50,7 +50,7 @@ namespace HydroCouple
          * \brief geometryType
          * \return
          */
-        virtual HydroCouple::Spatial::GeometryType geometryType() const = 0;
+        virtual HydroCouple::Spatial::IGeometry::GeometryType geometryType() const = 0;
 
         /*!
          * \brief geometryCount
@@ -432,6 +432,82 @@ namespace HydroCouple
                               int cellFaceIndex, int cellNodeIndex, const void *data) = 0;
 
     };
+
+    /*!
+     * \brief The ITimeVectorComponentDataItem class
+     */
+    class ITimeVectorComponentDataItem : public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    {
+        using IComponentDataItem::getValue;
+        using IComponentDataItem::setValue;
+
+      public:
+
+        virtual ~ITimeVectorComponentDataItem(){}
+
+        /*!
+         * \brief locationCount
+         * \return
+         */
+        virtual int locationsCount() const = 0;
+
+        /*!
+         * \brief location
+         * \param pointIndex
+         * \return
+         */
+        virtual HydroCouple::Spatial::IPoint *location(int locationIndex) const = 0;
+
+        /*!
+         * \brief locationsDimension
+         * \return
+         */
+        virtual IDimension *locationsDimension() const = 0;
+
+        /*!
+         * \brief dataTypeDimension alway has a length of 3. 0 = x-direction value,
+         * 1 = y-direction, 2 = z-direction,
+         * \return
+         */
+        virtual IDimension *spatialDimension() const = 0;
+
+        /*!
+         * \brief getValue
+         * \param locationIndex
+         * \param spatialDimensionIndex
+         * \param data
+         */
+        virtual void getValue(int timeIndex, int locationIndex, int spatialDimensionIndex, void *data) const = 0;
+
+        /*!
+         * \brief getValues
+         * \param locationIndex
+         * \param spatialDimensionIndex
+         * \param locationStride
+         * \param spatialDimensionStride
+         * \param data
+         */
+        virtual void getValues(int timeIndex, int locationIndex, int spatialDimensionIndex,
+                               int locationStride, int spatialDimensionStride, void *data) const = 0;
+        /*!
+         * \brief setValue
+         * \param locationIndex
+         * \param spatialDimensionIndex
+         * \param datass1
+         */
+        virtual void setValue(int timeIndex, int locationIndex, int spatialDimensionIndex, const void *data) = 0;
+
+        /*!
+         * \brief setValues
+         * \param locationIndex
+         * \param spatialDimensionIndex
+         * \param locationStride
+         * \param spatialDimensionStride
+         * \param data
+         */
+        virtual void setValues(int timeIndex, int locationIndex, int spatialDimensionIndex,
+                               int locationStride, int spatialDimensionStride, const void *data) = 0;
+    };
   }
 }
 
@@ -441,6 +517,7 @@ Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponent
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem, "HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem/1.0")
 
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem*)
@@ -448,6 +525,7 @@ Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentD
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem*)
 
 #endif // HYDROCOUPLESPATIOTEMPORAL_H
 

@@ -1,5 +1,9 @@
 var class_hydro_couple_1_1_i_argument =
 [
+    [ "ArgumentIOType", "dd/d96/class_hydro_couple_1_1_i_argument.html#a5dd73114287112019131bd83fc88092b", [
+      [ "String", "dd/d96/class_hydro_couple_1_1_i_argument.html#a5dd73114287112019131bd83fc88092bafebe83f8b76c6ad9ea38d8dad7b1cc47", null ],
+      [ "File", "dd/d96/class_hydro_couple_1_1_i_argument.html#a5dd73114287112019131bd83fc88092ba4fdbe514e427c1486e4295a45e1567f1", null ]
+    ] ],
     [ "~IArgument", "dd/d96/class_hydro_couple_1_1_i_argument.html#a9974ea55339aa2a86516cdc5002cec5f", null ],
     [ "canReadFromFile", "dd/d96/class_hydro_couple_1_1_i_argument.html#ae5257ec94c2187088a574a3949fe459c", null ],
     [ "canReadFromString", "dd/d96/class_hydro_couple_1_1_i_argument.html#ab7373f486c7c8859e8db5ada7e28e61a", null ],

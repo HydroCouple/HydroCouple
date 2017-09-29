@@ -98,7 +98,7 @@ var sectionId = 'dynsection-0';
 <text text-anchor="start" x="191" y="-217.52" font-family="Monaco" font-size="10.00">+ adaptedOutputs()</text>
 <text text-anchor="start" x="191" y="-204.185" font-family="Monaco" font-size="10.00">+ addAdaptedOutput()</text>
 <text text-anchor="start" x="191" y="-190.85" font-family="Monaco" font-size="10.00">+ removeAdaptedOutput()</text>
-<text text-anchor="start" x="191" y="-177.515" font-family="Monaco" font-size="10.00">+ update()</text>
+<text text-anchor="start" x="191" y="-177.515" font-family="Monaco" font-size="10.00">+ updateValues()</text>
 </a>
 </g>
 </g>

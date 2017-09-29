@@ -20,7 +20,7 @@
 <text text-anchor="start" x="14.001" y="-156.52" font-family="Monaco" font-size="10.00">+ setLibraryFilePath()</text>
 <text text-anchor="start" x="14.001" y="-143.185" font-family="Monaco" font-size="10.00">+ iconFilePath()</text>
 <text text-anchor="start" x="14.001" y="-129.85" font-family="Monaco" font-size="10.00">+ vendor()</text>
-<text text-anchor="start" x="14.001" y="-116.515" font-family="Monaco" font-size="10.00">+ publications()</text>
+<text text-anchor="start" x="14.001" y="-116.515" font-family="Monaco" font-size="10.00">+ documentation()</text>
 <text text-anchor="start" x="14.001" y="-103.18" font-family="Monaco" font-size="10.00">+ license()</text>
 <text text-anchor="start" x="14.001" y="-89.8447" font-family="Monaco" font-size="10.00">+ copyright()</text>
 <text text-anchor="start" x="14.001" y="-76.5098" font-family="Monaco" font-size="10.00">+ url()</text>

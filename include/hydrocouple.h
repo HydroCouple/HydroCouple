@@ -33,6 +33,28 @@
 # define HYDROCOUPLE_EXPORT Q_DECL_IMPORT
 #endif
 
+/*!
+ * \brief The ByteOrder enum of serialized data
+ */
+enum ByteOrder
+{
+  BigEndian = 0,
+  LittleEndian = 1
+};
+
+/*!
+ * \brief The SerializedData struct
+ */
+struct SerializableData
+{
+    ByteOrder byteOrder;
+    int64_t parentMPIProcessRank;
+    int64_t componentIndex;
+    int64_t numAllocatedMPIProcesses;
+    int64_t *allocatedMPIProcesses;
+    int64_t dataSize;
+    char *data;
+};
 
 /*!
  * \brief HydroCouple namespace contains the core interface specifications
@@ -51,120 +73,8 @@ namespace HydroCouple
   class IAdaptedOutputFactory;
   class IAdaptedOutputFactoryComponent;
   class IUnit;
-
-  /*!
-   * \brief HydroCouple::ComponentStatus is an enumerator that describes the status of
-   *a component over the course of its lifetime.
-   */
-  enum ComponentStatus
-  {
-    /*!
-      * \brief The IModelComponent instance has just been created.
-      * This status must and will be followed by HydroCouple::Initializing.
-      */
-    Created,
-
-    /*!
-      * \brief The IModelComponent is initializing itself.
-      * This status will end in a status change to HydroCouple::Initialized or HydroCouple::Failed.
-      */
-    Initializing,
-
-    /*!
-      * \brief The IModelComponent has succesfully initialized itself by calliing
-      * IModelComponent::initialize(). The connections between its inputs/outputs and those of
-      * other components can be established.
-      *
-      */
-    Initialized,
-
-    /*!
-      * \brief After links between an IModelComponent's inputs/outputs and
-      * those of other components have been established,
-      * the IModelComponent is HydroCouple::Validating whether
-      * its required input will be available when it updates itself,
-      * and whether indeed it will be able to provide the required output during this update.
-      * This Validating status will when the IModelComponent::status()
-      * changes to HydroCouple::Valid or HydroCouple::Invalid.
-      */
-    Validating,
-
-    /*!
-      * \brief The IModelComponent is in a HydroCouple::Valid state.
-      * When updating itself its required input will be available,
-      * and it will be able to provide the required output.
-      */
-    Valid,
-
-    /*!
-      * \brief The IModelComponent wants to update itself,
-      * but is not yet able to perform the actual computation,
-      * because it is still waiting for input data from other components.
-      */
-    WaitingForData,
-
-    /*!
-      * \brief The IModelComponent is in an HydroCouple::Invalid state.
-      * When updating itself not all required input will be available,
-      * and/or it will not be able to provide the required output.
-      * After the user has modified the connections
-      * between the IModelComponent's inputs/outputs and those of
-      * other components, the HydroCouple::Validating state can be entered again
-      */
-    Invalid,
-
-    /*!
-      * \brief The IModelComponent is preparing itself for the first HydroCouple::IValueSet::getValue() call.
-      * This HydroCouple::Preparing state will end in a status change
-      * to HydroCouple::Updated or HydroCouple::Failed.
-      *
-      */
-    Preparing,
-
-    /*!
-      * \brief The IModelComponent is updating itself. It has received
-      * all required input data from other components,
-      * and is now performing the actual computation.
-      * This HydroCouple::Updating state will end in a status change to
-      * HydroCouple::Updated, HydroCouple::Done or HydroCouple::Failed.
-      */
-    Updating,
-
-    /*!
-      * \brief The IModelComponent has succesfully updated itself.
-      */
-    Updated,
-
-    /*!
-      * \brief The last update process that the IModelComponent performed was the final one.
-      * A next call to the HydroCouple::Update method will leave the IModelComponent's internal state unchanged
-      */
-    Done,
-
-    /*!
-      * \brief The IModelComponent was requested to perform the actions to be performed before it will either be
-      * disposed or re-intialized again.Typical actions would be writing
-      * the final result files, close all open files, free memory, etc.
-      * When all required actions have been performed, the status switches to HydroCouple::Created when re-initialization is possible.
-      * The status switches to HydroCouple::Finished when the IModelComponent is to be disposed
-      */
-    Finishing,
-
-    /*!
-      * \brief The IModelComponent has successfully performed its finalization actions.
-      * Re-initialization of the IModelComponent instance is not possible and should not be attempted.
-      * Instead the instance should be disposed, e.g. through the garbage collection mechanism
-      */
-    Finished,
-
-    /*!
-      * \brief The IModelComponent was requested to perform the actions to be perform before it will either
-      * be disposed or re-initialized again. Typical actions would be writing the final result files,
-      * close all open files, free memory, etc. When all required actions have been performed,
-      * the status switches back to Created if the IModelComponent supports being re-initialized.
-      * If it cannot be re-initialized, it can be released from memory */
-    Failed,
-  };
+  class IComponentStatusChangeEventArgs;
+  class IDataExchangeWorkflowComponent;
 
   /*!
    * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
@@ -210,19 +120,6 @@ namespace HydroCouple
     * \brief Fundamental dimension for currency.
     */
     Currency
-  };
-
-  enum ArgumentIOType
-  {
-    /*!
-    * \brief Enumeration indicating that the argument was read from QString.
-    */
-    String,
-
-    /*!
-    * \brief Enumeration indicating that the argument was read from a file.
-    */
-    File
   };
 
   /*!
@@ -355,10 +252,10 @@ namespace HydroCouple
       virtual QString vendor() const = 0;
 
       /*!
-      * \brief Publications associated with this component.
-      * \returns Citations of publications related to this component.
+      * \brief Documentation associated with this component.
+      * \returns Citations of publication related to this component.
       */
-      virtual QStringList publications() const = 0;
+      virtual QStringList documentation() const = 0;
 
       /*!
       * \brief Component license info.
@@ -413,7 +310,7 @@ namespace HydroCouple
       *
       * \returns true if license is valid otherwise false.
       */
-      virtual bool validateLicense(QString& validationMessage) const = 0;
+      virtual bool validateLicense(const QString& licenseInfo, QString& validationMessage) = 0;
   };
 
   /*!
@@ -438,53 +335,6 @@ namespace HydroCouple
   };
 
   /*!
-   * \brief The IComponentStatusChangeEventArgs contains the information that will
-   * be passed when the IModelComponent fires the IModelComponent::statusChanged signal.
-   * \details Sending exchange item events is optional, so it should not be used as a mechanism to build critical functionality upon.
-   */
-  class IComponentStatusChangeEventArgs
-  {
-    public:
-
-      virtual ~IComponentStatusChangeEventArgs() {}
-
-      /*!
-      * \brief Gets the IModelComponent that fired the event.
-      * \returns The IModelComponent that threw the event.
-      */
-      virtual IModelComponent* component() const = 0;
-
-      /*!
-      * \brief Gets the IModelComponent's status before the status change.
-      * \returns The previous ComponentStatus of the component that threw the event.
-      */
-      virtual HydroCouple::ComponentStatus previousStatus() const = 0;
-
-      /*!
-      * \brief Gets the IModelComponent's status after the status change.
-      * \returns The new ComponentStatus of the component that threw the event.
-      */
-      virtual HydroCouple::ComponentStatus status() const = 0;
-
-      /*!
-      * \brief Gets additional information about the status change.
-      */
-      virtual QString message() const = 0;
-
-      /*!
-      * \brief A bool indicating whether this event has a progresss monitor.
-      * \returns True if status has a percent progress otherwise false and the progress bar shows busy.
-      */
-      virtual bool hasProgressMonitor() const = 0;
-
-      /*!
-      * \brief Number between 0 and 100 indicating the progress made by a component in its simulation.
-      * \returns A number between 0 and 100 indicating the progress made by a component.
-      */
-      virtual float percentProgress() const = 0;
-  };
-
-  /*!
    * \brief IModelComponent interface is the core interface in the HydroCouple standard defining a model component.
    */
   class IModelComponent : public virtual IIdentity
@@ -492,7 +342,136 @@ namespace HydroCouple
 
     public:
 
+      /*!
+       * \brief HydroCouple::ComponentStatus is an enumerator that describes the status of
+       * a component over the course of its lifetime.
+       */
+      enum ComponentStatus
+      {
+        /*!
+          * \brief The IModelComponent instance has just been created.
+          * This status must and will be followed by HydroCouple::Initializing.
+          */
+        Created,
+
+        /*!
+          * \brief The IModelComponent is initializing itself.
+          * This status will end in a status change to HydroCouple::Initialized or HydroCouple::Failed.
+          */
+        Initializing,
+
+        /*!
+          * \brief The IModelComponent has succesfully initialized itself by calliing
+          * IModelComponent::initialize(). The connections between its inputs/outputs and those of
+          * other components can be established.
+          *
+          */
+        Initialized,
+
+        /*!
+          * \brief After links between an IModelComponent's inputs/outputs and
+          * those of other components have been established,
+          * the IModelComponent is HydroCouple::Validating whether
+          * its required input will be available when it updates itself,
+          * and whether indeed it will be able to provide the required output during this update.
+          * This Validating status will when the IModelComponent::status()
+          * changes to HydroCouple::Valid or HydroCouple::Invalid.
+          */
+        Validating,
+
+        /*!
+          * \brief The IModelComponent is in a HydroCouple::Valid state.
+          * When updating itself its required input will be available,
+          * and it will be able to provide the required output.
+          */
+        Valid,
+
+        /*!
+          * \brief The IModelComponent wants to update itself,
+          * but is not yet able to perform the actual computation,
+          * because it is still waiting for input data from other components.
+          */
+        WaitingForData,
+
+        /*!
+          * \brief The IModelComponent is in an HydroCouple::Invalid state.
+          * When updating itself not all required input will be available,
+          * and/or it will not be able to provide the required output.
+          * After the user has modified the connections
+          * between the IModelComponent's inputs/outputs and those of
+          * other components, the HydroCouple::Validating state can be entered again
+          */
+        Invalid,
+
+        /*!
+          * \brief The IModelComponent is preparing itself for the first HydroCouple::IValueSet::getValue() call.
+          * This HydroCouple::Preparing state will end in a status change
+          * to HydroCouple::Updated or HydroCouple::Failed.
+          *
+          */
+        Preparing,
+
+        /*!
+          * \brief The IModelComponent is updating itself. It has received
+          * all required input data from other components,
+          * and is now performing the actual computation.
+          * This HydroCouple::Updating state will end in a status change to
+          * HydroCouple::Updated, HydroCouple::Done or HydroCouple::Failed.
+          */
+        Updating,
+
+        /*!
+          * \brief The IModelComponent has succesfully updated itself.
+          */
+        Updated,
+
+        /*!
+          * \brief The last update process that the IModelComponent performed was the final one.
+          * A next call to the HydroCouple::Update method will leave the IModelComponent's internal state unchanged
+          */
+        Done,
+
+        /*!
+          * \brief The IModelComponent was requested to perform the actions to be performed before it will either be
+          * disposed or re-intialized again.Typical actions would be writing
+          * the final result files, close all open files, free memory, etc.
+          * When all required actions have been performed, the status switches to HydroCouple::Created when re-initialization is possible.
+          * The status switches to HydroCouple::Finished when the IModelComponent is to be disposed
+          */
+        Finishing,
+
+        /*!
+          * \brief The IModelComponent has successfully performed its finalization actions.
+          * Re-initialization of the IModelComponent instance is not possible and should not be attempted.
+          * Instead the instance should be disposed, e.g. through the garbage collection mechanism
+          */
+        Finished,
+
+        /*!
+          * \brief The IModelComponent was requested to perform the actions to be perform before it will either
+          * be disposed or re-initialized again. Typical actions would be writing the final result files,
+          * close all open files, free memory, etc. When all required actions have been performed,
+          * the status switches back to Created if the IModelComponent supports being re-initialized.
+          * If it cannot be re-initialized, it can be released from memory */
+        Failed,
+      };
+
+      /*!
+       * \brief ~IModelComponent
+       */
       virtual ~IModelComponent() {}
+
+      /*!
+       * \brief index
+       * \return
+       */
+      virtual int index() const = 0;
+
+      /*!
+       * \brief setIndex
+       * \param index
+       */
+      virtual void setIndex(int index) = 0;
 
       /*!
       * \brief Contains the metadata about this IModelComponent instance.
@@ -675,7 +654,7 @@ namespace HydroCouple
       */
       virtual void update(const QList<IOutput*>& requiredOutputs = QList<IOutput*>()) = 0;
 
-      /*!
+     /*!
       * \brief The finish() must be invoked as the last of any methods in the IModelComponent interface.
       *
       * \details This method must be accessible after the prepare() method has been invoked.
@@ -690,9 +669,74 @@ namespace HydroCouple
       virtual void finish() = 0;
 
       /*!
-       * \brief recieveMPIMessage is called for all
+       * \brief mpiProcess is the MPI process/rank of this component.
+       * \return
        */
-      virtual void recieveMPIMessage() = 0;
+      virtual int mpiProcessRank() const = 0;
+
+      /*!
+       * \brief mpiSetProcess
+       * \param processRank
+       */
+      virtual void mpiSetProcessRank(int processRank) = 0;
+
+      /*!
+       * \brief mpiAllocatedProcesses are the list of MPI processes/ranks allocated to this component.
+       * \return
+       */
+      virtual QSet<int> mpiAllocatedProcesses() const = 0;
+
+      /*!
+       * \brief mpiAllocateResources
+       * \param componentMPIProcess
+       * \param mpiProcessesToAllocate
+       */
+      virtual void mpiAllocateProcesses(const QSet<int> &mpiProcessesToAllocate) = 0;
+
+      /*!
+       * \brief mpiClearAllocatedProcesses
+       */
+      virtual void mpiClearAllocatedProcesses() = 0;
+
+      /*!
+       * \brief mpiProcessMessage message. This message can be received on
+       */
+      virtual void mpiProcessMessage(const SerializableData &data) = 0;
+
+      /*!
+       * \brief gpuPlatform
+       * \param processor
+       * \return
+       */
+      virtual int gpuPlatform(int mpiProcess) const = 0;
+
+      /*!
+       * \brief gpuDevice
+       * \param processor
+       * \return
+       */
+      virtual int gpuDevice(int mpiProcess) const = 0;
+
+      /*!
+       * \brief maxNumGPUBlocksOrWorkGrps specified the maximum number of CUDA blocks or OpenCL workgroups allocated for
+       * the specified MPI Process.
+       * \param mpiProcess
+       * \return
+       */
+      virtual int gpuMaxNumBlocksOrWorkGrps(int mpiProcess) const = 0;
+
+      /*!
+       * \brief allocatedGPUResources
+       * \param processor
+       * \param platform
+       * \param device
+       */
+      virtual void gpuAllocatedResources(int mpiProcess, int gpuPlatform, int gpuDevice, int maxNumGPUBlocksOrWorkGrps) = 0;
+
+      /*!
+       * \brief gpuClearAllocatedResources
+       */
+      virtual void gpuClearAllocatedResources() = 0;
 
       /*!
        * \brief referenceDirectory
@@ -723,6 +767,53 @@ namespace HydroCouple
   };
 
   /*!
+   * \brief The IComponentStatusChangeEventArgs contains the information that will
+   * be passed when the IModelComponent fires the IModelComponent::statusChanged signal.
+   * \details Sending exchange item events is optional, so it should not be used as a mechanism to build critical functionality upon.
+   */
+  class IComponentStatusChangeEventArgs
+  {
+    public:
+
+      virtual ~IComponentStatusChangeEventArgs() {}
+
+      /*!
+      * \brief Gets the IModelComponent that fired the event.
+      * \returns The IModelComponent that threw the event.
+      */
+      virtual IModelComponent* component() const = 0;
+
+      /*!
+      * \brief Gets the IModelComponent's status before the status change.
+      * \returns The previous ComponentStatus of the component that threw the event.
+      */
+      virtual HydroCouple::IModelComponent::ComponentStatus previousStatus() const = 0;
+
+      /*!
+      * \brief Gets the IModelComponent's status after the status change.
+      * \returns The new ComponentStatus of the component that threw the event.
+      */
+      virtual HydroCouple::IModelComponent::ComponentStatus status() const = 0;
+
+      /*!
+      * \brief Gets additional information about the status change.
+      */
+      virtual QString message() const = 0;
+
+      /*!
+      * \brief A bool indicating whether this event has a progresss monitor.
+      * \returns True if status has a percent progress otherwise false and the progress bar shows busy.
+      */
+      virtual bool hasProgressMonitor() const = 0;
+
+      /*!
+      * \brief Number between 0 and 100 indicating the progress made by a component in its simulation.
+      * \returns A number between 0 and 100 indicating the progress made by a component.
+      */
+      virtual float percentProgress() const = 0;
+  };
+
+  /*!
    * \brief The ICloneableModelComponent class
    */
   class ICloneableModelComponent : public virtual IModelComponent
@@ -749,7 +840,6 @@ namespace HydroCouple
       * \returns A list of child components created from the current component.
       */
       virtual QList<ICloneableModelComponent*> clones() const = 0;
-
   };
 
   /*!
@@ -1004,6 +1094,19 @@ namespace HydroCouple
 
     public:
 
+      enum ArgumentIOType
+      {
+        /*!
+        * \brief Enumeration indicating that the argument was read from QString.
+        */
+        String,
+
+        /*!
+        * \brief Enumeration indicating that the argument was read from a file.
+        */
+        File
+      };
+
       virtual ~IArgument(){}
 
       /*!
@@ -1242,7 +1345,6 @@ namespace HydroCouple
    */
   class IAdaptedOutput : public virtual IOutput
   {
-
     public:
       virtual ~IAdaptedOutput() {}
 
@@ -1492,6 +1594,87 @@ namespace HydroCouple
       */
       virtual void setValues(int idIndex, int stride, const void* data) = 0;
   };
+
+  /*!
+   * \brief The IDataExchangeWorkflowComponentInfo class
+   */
+  class IDataExchangeWorkflowComponentInfo:  public virtual IComponentInfo
+  {
+
+    public:
+      virtual ~IDataExchangeWorkflowComponentInfo() {}
+
+      /*!
+      * \brief Creates a new IModelComponent instance.
+      * \returns A new instance of an IModelComponent.
+      */
+      virtual IDataExchangeWorkflowComponent* createComponentInstance() = 0;
+  };
+
+  /*!
+   * \brief The IDataExchangeWorkflowComponent class
+   */
+  class IDataExchangeWorkflowComponent : public virtual IIdentity
+  {
+    public:
+
+      /*!
+       * \brief The WorkflowStatus enum
+       */
+      enum WorkflowStatus
+      {
+        Created,
+        Initializing,
+        Initialized,
+        Updating,
+        Updated,
+        Finishing,
+        Finished,
+        Failed
+      };
+
+      virtual ~IDataExchangeWorkflowComponent() {}
+
+      /*!
+       * \brief initialize
+       */
+      virtual void initialize() = 0;
+
+      /*!
+       * \brief update
+       */
+      virtual void update() = 0;
+
+      /*!
+       * \brief finish
+       */
+      virtual void finish() = 0;
+
+      /*!
+       * \brief status
+       * \return
+       */
+      virtual WorkflowStatus status() const = 0;
+
+      /*!
+       * \brief modelComponents
+       * \return
+       */
+      virtual QList<IModelComponent*> modelComponents() const = 0;
+
+      /*!
+       * \brief addModelComponent
+       * \param component
+       */
+      virtual void addModelComponent(IModelComponent *component) = 0;
+
+      /*!
+       * \brief removeModelComponent
+       * \param component
+       */
+      virtual void removeModelComponent(IModelComponent *component) = 0;
+  };
+
 }
 
 //!HydroCouple Interface Declarations
@@ -1520,6 +1703,8 @@ Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponent, "HydroCouple::I
 Q_DECLARE_INTERFACE(HydroCouple::IInput, "HydroCouple::IInput/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IMultiInput, "HydroCouple::IMultiInput/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IIdBasedComponentDataItem, "HydroCouple::IIdBasedComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::IDataExchangeWorkflowComponentInfo, "HydroCouple::IDataExchangeWorkflowComponentInfo/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::IDataExchangeWorkflowComponent, "HydroCouple::IDataExchangeWorkflowComponent/1.0")
 
 //Metatype
 //!HydroCouple Interface Declarations
@@ -1566,6 +1751,8 @@ Q_DECLARE_METATYPE(HydroCouple::IMultiInput*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IMultiInput*>)
 Q_DECLARE_METATYPE(HydroCouple::IIdBasedComponentDataItem*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IIdBasedComponentDataItem*>)
+Q_DECLARE_METATYPE(HydroCouple::IDataExchangeWorkflowComponentInfo*)
+Q_DECLARE_METATYPE(HydroCouple::IDataExchangeWorkflowComponent*)
 
 #endif // HYDROCOUPLE_H
 

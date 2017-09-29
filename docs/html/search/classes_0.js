@@ -10,6 +10,8 @@ var searchData=
   ['icomponentinfo',['IComponentInfo',['../d3/dd7/class_hydro_couple_1_1_i_component_info.html',1,'HydroCouple']]],
   ['icomponentstatuschangeeventargs',['IComponentStatusChangeEventArgs',['../d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html',1,'HydroCouple']]],
   ['icurve',['ICurve',['../df/d7f/class_hydro_couple_1_1_spatial_1_1_i_curve.html',1,'HydroCouple::Spatial']]],
+  ['idataexchangeworkflowcomponent',['IDataExchangeWorkflowComponent',['../d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html',1,'HydroCouple']]],
+  ['idataexchangeworkflowcomponentinfo',['IDataExchangeWorkflowComponentInfo',['../d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info.html',1,'HydroCouple']]],
   ['idatetime',['IDateTime',['../d6/dd7/class_hydro_couple_1_1_temporal_1_1_i_date_time.html',1,'HydroCouple::Temporal']]],
   ['idescription',['IDescription',['../db/d64/class_hydro_couple_1_1_i_description.html',1,'HydroCouple']]],
   ['idimension',['IDimension',['../dd/dca/class_hydro_couple_1_1_i_dimension.html',1,'HydroCouple']]],

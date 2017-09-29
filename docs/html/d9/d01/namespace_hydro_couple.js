@@ -12,6 +12,8 @@ var namespace_hydro_couple =
     [ "IComponentDataItem", "d8/d52/class_hydro_couple_1_1_i_component_data_item.html", "d8/d52/class_hydro_couple_1_1_i_component_data_item" ],
     [ "IComponentInfo", "d3/dd7/class_hydro_couple_1_1_i_component_info.html", "d3/dd7/class_hydro_couple_1_1_i_component_info" ],
     [ "IComponentStatusChangeEventArgs", "d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html", "d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args" ],
+    [ "IDataExchangeWorkflowComponent", "d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html", "d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component" ],
+    [ "IDataExchangeWorkflowComponentInfo", "d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info.html", "d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info" ],
     [ "IDescription", "db/d64/class_hydro_couple_1_1_i_description.html", "db/d64/class_hydro_couple_1_1_i_description" ],
     [ "IDimension", "dd/dca/class_hydro_couple_1_1_i_dimension.html", "dd/dca/class_hydro_couple_1_1_i_dimension" ],
     [ "IExchangeItem", "d1/dd3/class_hydro_couple_1_1_i_exchange_item.html", "d1/dd3/class_hydro_couple_1_1_i_exchange_item" ],

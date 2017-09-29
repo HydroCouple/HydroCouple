@@ -8,12 +8,18 @@
 // double : double precision number (8 bytes)
 // Building Blocks : Coordinate, LinearRing
 
+/*!
+ * \brief The Point struct
+ */
 struct Point
 {
     double x;
     double y;
 };
 
+/*!
+ * \brief The PointZ struct
+ */
 struct PointZ
 {
     double x;
@@ -21,6 +27,9 @@ struct PointZ
     double z;
 };
 
+/*!
+ * \brief The PointM struct
+ */
 struct PointM
 {
     double x;
@@ -28,6 +37,9 @@ struct PointM
     double m;
 };
 
+/*!
+ * \brief The PointZM struct
+ */
 struct PointZM
 {
     double x;
@@ -36,36 +48,54 @@ struct PointZM
     double m;
 };
 
+/*!
+ * \brief The LinearRing struct
+ */
 struct LinearRing
 {
     uint32_t numPoints;
     Point *points;
 };
 
+/*!
+ * \brief The LinearRingZ struct
+ */
 struct LinearRingZ
 {
     uint32_t numPoints;
     PointZ *points;
 };
 
+/*!
+ * \brief The LinearRingM struct
+ */
 struct LinearRingM
 {
     uint32_t numPoints;
     PointM *points;
 };
 
+/*!
+ * \brief The LinearRingZM struct
+ */
 struct LinearRingZM
 {
     uint32_t numPoints;
     PointZM *points;
 };
 
+/*!
+ * \brief The WKBByteOrder enum
+ */
 enum WKBByteOrder
 {
   wkbXDR = 0, // Big Endian
   wkbNDR = 1 // Little Endian
 };
 
+/*!
+ * \brief The WKBGeometryType enum
+ */
 enum WKBGeometryType
 {
   wkbPoint = 1,
@@ -110,6 +140,9 @@ enum WKBGeometryType
   wkbTinZM = 3016,
 };
 
+/*!
+ * \brief The WKBPoint struct
+ */
 struct WKBPoint
 {
     WKBByteOrder byteOrder;
@@ -117,6 +150,9 @@ struct WKBPoint
     Point point;
 };
 
+/*!
+ * \brief The WKBPointZ struct
+ */
 struct WKBPointZ
 {
     WKBByteOrder byteOrder;
@@ -124,6 +160,9 @@ struct WKBPointZ
     PointZ point;
 };
 
+/*!
+ * \brief The WKBPointM struct
+ */
 struct WKBPointM
 {
     WKBByteOrder byteOrder;
@@ -131,6 +170,9 @@ struct WKBPointM
     PointM point;
 };
 
+/*!
+ * \brief The WKBPointZM struct
+ */
 struct WKBPointZM
 {
     WKBByteOrder byteOrder;
@@ -138,6 +180,9 @@ struct WKBPointZM
     PointZM point;
 };
 
+/*!
+ * \brief The WKBLineString struct
+ */
 struct WKBLineString
 {
     WKBByteOrder byteOrder;
@@ -146,6 +191,9 @@ struct WKBLineString
     Point *points;
 };
 
+/*!
+ * \brief The WKBLineStringZ struct
+ */
 struct WKBLineStringZ
 {
     WKBByteOrder byteOrder;
@@ -154,6 +202,9 @@ struct WKBLineStringZ
     PointZ *points;
 };
 
+/*!
+ * \brief The WKBLineStringM struct
+ */
 struct WKBLineStringM
 {
     WKBByteOrder byteOrder;
@@ -162,6 +213,9 @@ struct WKBLineStringM
     PointM *points;
 };
 
+/*!
+ * \brief The WKBLineStringZM struct
+ */
 struct WKBLineStringZM
 {
     WKBByteOrder byteOrder;
@@ -170,6 +224,9 @@ struct WKBLineStringZM
     PointZM points;
 };
 
+/*!
+ * \brief The WKBPolygon struct
+ */
 struct WKBPolygon
 {
     WKBByteOrder byteOrder;
@@ -178,6 +235,9 @@ struct WKBPolygon
     LinearRing *rings;
 };
 
+/*!
+ * \brief The WKBPolygonZ struct
+ */
 struct WKBPolygonZ
 {
     WKBByteOrder byteOrder;
@@ -186,7 +246,9 @@ struct WKBPolygonZ
     LinearRingZ *rings;
 };
 
-
+/*!
+ * \brief The WKBPolygonM struct
+ */
 struct WKBPolygonM
 {
     WKBByteOrder byteOrder;
@@ -195,6 +257,9 @@ struct WKBPolygonM
     LinearRingM *rings;
 };
 
+/*!
+ * \brief The WKBPolygonZM struct
+ */
 struct WKBPolygonZM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 3003;
@@ -202,6 +267,9 @@ struct WKBPolygonZM {
     LinearRingZM *rings;
 };
 
+/*!
+ * \brief The WKBTriangle struct
+ */
 struct WKBTriangle {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 17;
@@ -209,6 +277,9 @@ struct WKBTriangle {
     LinearRing *rings;
 };
 
+/*!
+ * \brief The WKBTriangleZ struct
+ */
 struct WKBTriangleZ {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 1017;
@@ -216,6 +287,9 @@ struct WKBTriangleZ {
     LinearRingZ *rings;
 };
 
+/*!
+ * \brief The WKBTriangleM struct
+ */
 struct WKBTriangleM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 2017;
@@ -223,6 +297,9 @@ struct WKBTriangleM {
     LinearRingM *rings;
 };
 
+/*!
+ * \brief The WKBTriangleZM struct
+ */
 struct WKBTriangleZM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 3017;
@@ -230,6 +307,9 @@ struct WKBTriangleZM {
     LinearRingZM *rings;
 };
 
+/*!
+ * \brief The WKBPolyhedralSurface struct
+ */
 struct WKBPolyhedralSurface {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 15;
@@ -237,6 +317,9 @@ struct WKBPolyhedralSurface {
     WKBPolygon *polygons;
 };
 
+/*!
+ * \brief The WKBPolyhedralSurfaceZ struct
+ */
 struct WKBPolyhedralSurfaceZ {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=1015;
@@ -244,6 +327,9 @@ struct WKBPolyhedralSurfaceZ {
     WKBPolygonZ *polygons;
 };
 
+/*!
+ * \brief The WKBPolyhedralSurfaceM struct
+ */
 struct WKBPolyhedralSurfaceM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=2015;
@@ -251,6 +337,9 @@ struct WKBPolyhedralSurfaceM {
     WKBPolygonM *polygons;
 };
 
+/*!
+ * \brief The WKBPolyhedralSurfaceZM struct
+ */
 struct WKBPolyhedralSurfaceZM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=3015;
@@ -258,6 +347,9 @@ struct WKBPolyhedralSurfaceZM {
     WKBPolygonZM *polygons;
 };
 
+/*!
+ * \brief The WKBTIN struct
+ */
 struct WKBTIN {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 16;
@@ -265,6 +357,9 @@ struct WKBTIN {
     WKBPolygon *polygons;
 };
 
+/*!
+ * \brief The WKBTINZ struct
+ */
 struct WKBTINZ {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=1016;
@@ -272,6 +367,9 @@ struct WKBTINZ {
     WKBPolygonZ *polygons;
 };
 
+/*!
+ * \brief The WKBTINM struct
+ */
 struct WKBTINM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=2016;
@@ -279,6 +377,9 @@ struct WKBTINM {
     WKBPolygonM *polygons;
 };
 
+/*!
+ * \brief The WKBTINZM struct
+ */
 struct WKBTINZM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=3016;
@@ -286,6 +387,9 @@ struct WKBTINZM {
     WKBPolygonZM *polygons;
 };
 
+/*!
+ * \brief The WKBMultiPoint struct
+ */
 struct WKBMultiPoint {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=4;
@@ -293,6 +397,9 @@ struct WKBMultiPoint {
     WKBPoint *points;
 };
 
+/*!
+ * \brief The WKBMultiPointZ struct
+ */
 struct WKBMultiPointZ {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=1004;
@@ -300,6 +407,9 @@ struct WKBMultiPointZ {
     WKBPointZ *points;
 };
 
+/*!
+ * \brief The WKBMultiPointM struct
+ */
 struct WKBMultiPointM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=2004;
@@ -307,7 +417,9 @@ struct WKBMultiPointM {
     WKBPointM *points;
 };
 
-
+/*!
+ * \brief The WKBMultiPointZM struct
+ */
 struct WKBMultiPointZM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType=3004;
@@ -315,6 +427,9 @@ struct WKBMultiPointZM {
     WKBPointZM *points;
 };
 
+/*!
+ * \brief The WKBMultiLineString struct
+ */
 struct WKBMultiLineString {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 5;
@@ -322,6 +437,9 @@ struct WKBMultiLineString {
     WKBLineString *lineStrings;
 };
 
+/*!
+ * \brief The WKBMultiLineStringZ struct
+ */
 struct WKBMultiLineStringZ {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 1005;
@@ -329,6 +447,9 @@ struct WKBMultiLineStringZ {
     WKBLineStringZ *lineStrings;
 };
 
+/*!
+ * \brief The WKBMultiLineStringM struct
+ */
 struct WKBMultiLineStringM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 2005;
@@ -336,6 +457,9 @@ struct WKBMultiLineStringM {
     WKBLineStringM *lineStrings;
 };
 
+/*!
+ * \brief The WKBMultiLineStringZM struct
+ */
 struct WKBMultiLineStringZM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 3005;
@@ -343,6 +467,9 @@ struct WKBMultiLineStringZM {
     WKBLineStringZM *lineStrings;
 };
 
+/*!
+ * \brief The WKBMultiPolygon struct
+ */
 struct WKBMultiPolygon {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 6;
@@ -350,6 +477,9 @@ struct WKBMultiPolygon {
     WKBPolygon *polygons;
 };
 
+/*!
+ * \brief The WKBMultiPolygonZ struct
+ */
 struct WKBMultiPolygonZ {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 1006;
@@ -357,6 +487,9 @@ struct WKBMultiPolygonZ {
     WKBPolygonZ *polygons;
 };
 
+/*!
+ * \brief The WKBMultiPolygonM struct
+ */
 struct WKBMultiPolygonM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 2006;
@@ -364,6 +497,9 @@ struct WKBMultiPolygonM {
     WKBPolygonM *polygons;
 };
 
+/*!
+ * \brief The WKBMultiPolygonZM struct
+ */
 struct WKBMultiPolygonZM {
     WKBByteOrder byteOrder;
     static uint32_t wkbType = 3006;
@@ -371,8 +507,9 @@ struct WKBMultiPolygonZM {
     WKBPolygonZM *polygons;
 };
 
-
-
+/*!
+ * \brief The WKBGeometryCollection struct
+ */
 struct WKBGeometryCollection {
     WKBByteOrder byte_order;
     static uint32_t wkbType = 7;
@@ -380,6 +517,9 @@ struct WKBGeometryCollection {
     WKBGeometry *geometries;
 };
 
+/*!
+ * \brief The WKBGeometryCollectionZ struct
+ */
 struct WKBGeometryCollectionZ {
     WKBByteOrder byte_order;
     static uint32_t wkbType = 1007;
@@ -387,6 +527,9 @@ struct WKBGeometryCollectionZ {
     WKBGeometryZ *geometries;
 };
 
+/*!
+ * \brief The WKBGeometryCollectionM struct
+ */
 struct WKBGeometryCollectionM {
     WKBByteOrder byte_order;
     static uint32_t wkbType = 2007;
@@ -394,6 +537,9 @@ struct WKBGeometryCollectionM {
     WKBGeometryM *geometries;
 };
 
+/*!
+ * \brief The WKBGeometryCollectionZM struct
+ */
 struct WKBGeometryCollectionZM {
     WKBByteOrder byte_order;
     static uint32_t wkbType = 3007;
@@ -401,6 +547,9 @@ struct WKBGeometryCollectionZM {
     WKBGeometryZM *geometries;
 };
 
+/*!
+ * \brief The WKBGeometry union
+ */
 union WKBGeometry
 {
     WKBPoint point;
@@ -415,6 +564,9 @@ union WKBGeometry
     WKBGeometryCollection collection;
 };
 
+/*!
+ * \brief The WKBGeometryZ union
+ */
 union WKBGeometryZ {
 
     WKBPointZ pointz;
@@ -422,7 +574,7 @@ union WKBGeometryZ {
     WKBPolygonZ polygonz;
     WKBTriangleZ trianglez;
     WKBPolyhedralSurfaceZ Polyhedralsurfacez;
-    WKBTinZ tinz;
+    WKBTINZ tinz;
     WKBMultiPointZ mpointz;
     WKBMultiLineStringZ mlinestringz;
     WKBMultiPolygonZ mpolygonz;
@@ -436,7 +588,7 @@ union WKBGeometryM
     WKBPolygonM polygonm;
     WKBTriangleM trianglem;
     WKBPolyhedralSurfaceM Polyhedralsurfacem;
-    WKBTinM tinm;
+    WKBTINM tinm;
     WKBMultiPointM mpointm;
     WKBMultiLineStringM mlinestringm;
     WKBMultiPolygonM mpolygonm;
@@ -450,7 +602,7 @@ union WKBGeometryZM
     WKBPolygonZM polygonzm;
     WKBTriangleZM trianglezm;
     WKBPolyhedralSurfaceM Polyhedralsurfacezm;
-    WKBTinZM tinzm;
+    WKBTINZM tinzm;
     WKBMultiPointZM mpointzm;
     WKBMultiLineStringZM mlinestringzm;
     WKBMultiPolygonZ mpolygonzm;

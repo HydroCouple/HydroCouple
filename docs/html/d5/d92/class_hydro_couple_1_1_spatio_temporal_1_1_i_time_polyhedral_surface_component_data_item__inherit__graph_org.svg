@@ -10,48 +10,46 @@
 <title>HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem</title>
 <!-- Node1 -->
 <g id="node1" class="node"><title>Node1</title>
-<polygon fill="#bfbfbf" stroke="black" points="0,-154.845 0,-352.199 220.033,-352.199 220.033,-154.845 0,-154.845"/>
-<text text-anchor="start" x="8" y="-340.199" font-family="Monaco" font-size="10.00">HydroCouple::SpatioTemporal</text>
-<text text-anchor="start" x="8" y="-326.864" font-family="Monaco" font-size="10.00">::ITimePolyhedralSurfaceComponent</text>
-<text text-anchor="middle" x="110.017" y="-313.529" font-family="Monaco" font-size="10.00">DataItem</text>
-<polyline fill="none" stroke="black" points="0,-304.194 220.033,-304.194 "/>
-<text text-anchor="middle" x="110.017" y="-292.194" font-family="Monaco" font-size="10.00"> </text>
-<polyline fill="none" stroke="black" points="0,-282.859 220.033,-282.859 "/>
-<text text-anchor="start" x="8" y="-270.859" font-family="Monaco" font-size="10.00">+ ~ITimePolyhedralSurfaceComponent</text>
-<text text-anchor="start" x="8" y="-257.524" font-family="Monaco" font-size="10.00">DataItem()</text>
-<text text-anchor="start" x="8" y="-244.189" font-family="Monaco" font-size="10.00">+ meshDataType()</text>
-<text text-anchor="start" x="8" y="-230.854" font-family="Monaco" font-size="10.00">+ polyhedralSurface()</text>
-<text text-anchor="start" x="8" y="-217.52" font-family="Monaco" font-size="10.00">+ cellDimension()</text>
-<text text-anchor="start" x="8" y="-204.185" font-family="Monaco" font-size="10.00">+ edgeDimension()</text>
-<text text-anchor="start" x="8" y="-190.85" font-family="Monaco" font-size="10.00">+ nodeDimension()</text>
-<text text-anchor="start" x="8" y="-177.515" font-family="Monaco" font-size="10.00">+ getValue()</text>
-<text text-anchor="start" x="8" y="-164.18" font-family="Monaco" font-size="10.00">+ setValue()</text>
+<polygon fill="#bfbfbf" stroke="black" points="0,-128.175 0,-325.529 220.033,-325.529 220.033,-128.175 0,-128.175"/>
+<text text-anchor="start" x="8" y="-313.529" font-family="Monaco" font-size="10.00">HydroCouple::SpatioTemporal</text>
+<text text-anchor="start" x="8" y="-300.194" font-family="Monaco" font-size="10.00">::ITimePolyhedralSurfaceComponent</text>
+<text text-anchor="middle" x="110.017" y="-286.859" font-family="Monaco" font-size="10.00">DataItem</text>
+<polyline fill="none" stroke="black" points="0,-277.524 220.033,-277.524 "/>
+<text text-anchor="middle" x="110.017" y="-265.524" font-family="Monaco" font-size="10.00"> </text>
+<polyline fill="none" stroke="black" points="0,-256.189 220.033,-256.189 "/>
+<text text-anchor="start" x="8" y="-244.189" font-family="Monaco" font-size="10.00">+ ~ITimePolyhedralSurfaceComponent</text>
+<text text-anchor="start" x="8" y="-230.854" font-family="Monaco" font-size="10.00">DataItem()</text>
+<text text-anchor="start" x="8" y="-217.52" font-family="Monaco" font-size="10.00">+ meshDataType()</text>
+<text text-anchor="start" x="8" y="-204.185" font-family="Monaco" font-size="10.00">+ polyhedralSurface()</text>
+<text text-anchor="start" x="8" y="-190.85" font-family="Monaco" font-size="10.00">+ cellDimension()</text>
+<text text-anchor="start" x="8" y="-177.515" font-family="Monaco" font-size="10.00">+ edgeDimension()</text>
+<text text-anchor="start" x="8" y="-164.18" font-family="Monaco" font-size="10.00">+ nodeDimension()</text>
+<text text-anchor="start" x="8" y="-150.845" font-family="Monaco" font-size="10.00">+ getValue()</text>
+<text text-anchor="start" x="8" y="-137.51" font-family="Monaco" font-size="10.00">+ setValue()</text>
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
 <g id="a_node7"><a xlink:href="../../d6/db3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_component_data_item.html" target="_top" xlink:title="The ITINComponentItem class. ">
-<polygon fill="none" stroke="black" points="12.002,-0.5 12.002,-117.845 208.031,-117.845 208.031,-0.5 12.002,-0.5"/>
-<text text-anchor="start" x="20.002" y="-105.845" font-family="Monaco" font-size="10.00">HydroCouple::SpatioTemporal</text>
-<text text-anchor="middle" x="110.017" y="-92.5098" font-family="Monaco" font-size="10.00">::ITimeTINComponentDataItem</text>
-<polyline fill="none" stroke="black" points="12.002,-83.1748 208.031,-83.1748 "/>
-<text text-anchor="middle" x="110.017" y="-71.1748" font-family="Monaco" font-size="10.00"> </text>
-<polyline fill="none" stroke="black" points="12.002,-61.8398 208.031,-61.8398 "/>
-<text text-anchor="start" x="20.002" y="-49.8398" font-family="Monaco" font-size="10.00">+ ~ITimeTINComponentDataItem()</text>
-<text text-anchor="start" x="20.002" y="-36.5049" font-family="Monaco" font-size="10.00">+ TIN()</text>
-<text text-anchor="start" x="20.002" y="-23.1699" font-family="Monaco" font-size="10.00">+ getValues()</text>
-<text text-anchor="start" x="20.002" y="-9.83496" font-family="Monaco" font-size="10.00">+ setValues()</text>
+<polygon fill="none" stroke="black" points="12.002,-0.5 12.002,-91.1748 208.031,-91.1748 208.031,-0.5 12.002,-0.5"/>
+<text text-anchor="start" x="20.002" y="-79.1748" font-family="Monaco" font-size="10.00">HydroCouple::SpatioTemporal</text>
+<text text-anchor="middle" x="110.017" y="-65.8398" font-family="Monaco" font-size="10.00">::ITimeTINComponentDataItem</text>
+<polyline fill="none" stroke="black" points="12.002,-56.5049 208.031,-56.5049 "/>
+<text text-anchor="middle" x="110.017" y="-44.5049" font-family="Monaco" font-size="10.00"> </text>
+<polyline fill="none" stroke="black" points="12.002,-35.1699 208.031,-35.1699 "/>
+<text text-anchor="start" x="20.002" y="-23.1699" font-family="Monaco" font-size="10.00">+ ~ITimeTINComponentDataItem()</text>
+<text text-anchor="start" x="20.002" y="-9.83496" font-family="Monaco" font-size="10.00">+ TIN()</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node7 -->
 <g id="edge6" class="edge"><title>Node1&#45;&gt;Node7</title>
-<path fill="none" stroke="midnightblue" d="M110.017,-144.405C110.017,-135.363 110.017,-126.465 110.017,-118.035"/>
-<polygon fill="none" stroke="midnightblue" points="106.517,-144.657 110.017,-154.657 113.517,-144.657 106.517,-144.657"/>
+<path fill="none" stroke="midnightblue" d="M110.017,-117.885C110.017,-108.677 110.017,-99.7411 110.017,-91.491"/>
+<polygon fill="none" stroke="midnightblue" points="106.517,-117.964 110.017,-127.964 113.517,-117.964 106.517,-117.964"/>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
 <g id="a_node2"><a xlink:href="../../d9/d05/class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html" target="_top" xlink:title="ITimeComponentItem is an IComponentItem with a temporal attribute. This class cannot be directly inst...">
-<polygon fill="none" stroke="black" points="21.0034,-389.199 21.0034,-506.544 199.03,-506.544 199.03,-389.199 21.0034,-389.199"/>
+<polygon fill="none" stroke="black" points="21.0034,-362.529 21.0034,-506.544 199.03,-506.544 199.03,-362.529 21.0034,-362.529"/>
 <text text-anchor="start" x="29.0034" y="-494.544" font-family="Monaco" font-size="10.00">HydroCouple::Temporal</text>
 <text text-anchor="middle" x="110.017" y="-481.209" font-family="Monaco" font-size="10.00">::ITimeComponentDataItem</text>
 <polyline fill="none" stroke="black" points="21.0034,-471.874 199.03,-471.874 "/>
@@ -59,15 +57,17 @@
 <polyline fill="none" stroke="black" points="21.0034,-450.539 199.03,-450.539 "/>
 <text text-anchor="start" x="29.0034" y="-438.539" font-family="Monaco" font-size="10.00">+ ~ITimeComponentDataItem()</text>
 <text text-anchor="start" x="29.0034" y="-425.204" font-family="Monaco" font-size="10.00">+ times()</text>
-<text text-anchor="start" x="29.0034" y="-411.869" font-family="Monaco" font-size="10.00">+ timeSpan()</text>
-<text text-anchor="start" x="29.0034" y="-398.534" font-family="Monaco" font-size="10.00">+ timeDimension()</text>
+<text text-anchor="start" x="29.0034" y="-411.869" font-family="Monaco" font-size="10.00">+ time()</text>
+<text text-anchor="start" x="29.0034" y="-398.534" font-family="Monaco" font-size="10.00">+ timeCount()</text>
+<text text-anchor="start" x="29.0034" y="-385.199" font-family="Monaco" font-size="10.00">+ timeSpan()</text>
+<text text-anchor="start" x="29.0034" y="-371.864" font-family="Monaco" font-size="10.00">+ timeDimension()</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge"><title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M110.017,-378.88C110.017,-370.302 110.017,-361.395 110.017,-352.469"/>
-<polygon fill="none" stroke="midnightblue" points="106.517,-379.16 110.017,-389.16 113.517,-379.16 106.517,-379.16"/>
+<path fill="none" stroke="midnightblue" d="M110.017,-352.338C110.017,-343.614 110.017,-334.673 110.017,-325.78"/>
+<polygon fill="none" stroke="midnightblue" points="106.517,-352.464 110.017,-362.464 113.517,-352.464 106.517,-352.464"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
@@ -89,8 +89,8 @@
 </g>
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge2" class="edge"><title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M110.017,-533.199C110.017,-524.2 110.017,-515.178 110.017,-506.557"/>
-<polygon fill="none" stroke="midnightblue" points="106.517,-533.327 110.017,-543.327 113.517,-533.327 106.517,-533.327"/>
+<path fill="none" stroke="midnightblue" d="M110.017,-533.527C110.017,-524.595 110.017,-515.551 110.017,-506.752"/>
+<polygon fill="none" stroke="midnightblue" points="106.517,-533.543 110.017,-543.543 113.517,-533.543 106.517,-533.543"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>

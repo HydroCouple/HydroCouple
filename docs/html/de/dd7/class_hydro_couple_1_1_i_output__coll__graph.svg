@@ -68,7 +68,7 @@ var sectionId = 'dynsection-1';
 <text text-anchor="start" x="32.0039" y="-49.8398" font-family="Monaco" font-size="10.00">+ adaptedOutputs()</text>
 <text text-anchor="start" x="32.0039" y="-36.5049" font-family="Monaco" font-size="10.00">+ addAdaptedOutput()</text>
 <text text-anchor="start" x="32.0039" y="-23.1699" font-family="Monaco" font-size="10.00">+ removeAdaptedOutput()</text>
-<text text-anchor="start" x="32.0039" y="-9.83496" font-family="Monaco" font-size="10.00">+ update()</text>
+<text text-anchor="start" x="32.0039" y="-9.83496" font-family="Monaco" font-size="10.00">+ updateValues()</text>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>

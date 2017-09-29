@@ -83,6 +83,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
+      <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -162,7 +165,10 @@ $(document).ready(function(){initNavTree('functions_func_s.html','');});
 : <a class="el" href="d6/dd7/class_hydro_couple_1_1_temporal_1_1_i_date_time.html#a0563741ff314c413143028080d78c95e">HydroCouple::Temporal::IDateTime</a>
 </li>
 <li>setProvider()
-: <a class="el" href="dd/dc3/class_hydro_couple_1_1_i_input.html#a5dbd08f733f622d6cb73cddeb31d1021">HydroCouple::IInput</a>
+: <a class="el" href="dd/dc3/class_hydro_couple_1_1_i_input.html#a8ab874b88062919b543e35394bd379e7">HydroCouple::IInput</a>
+</li>
+<li>setReferenceDirectory()
+: <a class="el" href="d3/dae/class_hydro_couple_1_1_i_model_component.html#a9691b2edb3c8649b8af529b896573946">HydroCouple::IModelComponent</a>
 </li>
 <li>setValue()
 : <a class="el" href="d8/d52/class_hydro_couple_1_1_i_component_data_item.html#a18f0dcd7de2228176e72e0d41a87a83c">HydroCouple::IComponentDataItem</a>
@@ -185,15 +191,9 @@ $(document).ready(function(){initNavTree('functions_func_s.html','');});
 : <a class="el" href="dd/d21/class_hydro_couple_1_1_i_id_based_component_data_item.html#a655c89b539f4d55ee1378dd19d77b057">HydroCouple::IIdBasedComponentDataItem</a>
 , <a class="el" href="d7/d8d/class_hydro_couple_1_1_spatial_1_1_i_geometry_component_data_item.html#a1a5eacd73ca63390e701c4e9a2673618">HydroCouple::Spatial::IGeometryComponentDataItem</a>
 , <a class="el" href="db/dc6/class_hydro_couple_1_1_spatial_1_1_i_raster_component_data_item.html#a6c82f0729dae7cbf6b4b33f7bcb2de8c">HydroCouple::Spatial::IRasterComponentDataItem</a>
-, <a class="el" href="d4/d5c/class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d_component_data_item.html#a7e7452ae3570d6707e6041b1416fa6d6">HydroCouple::Spatial::IRegularGrid2DComponentDataItem</a>
-, <a class="el" href="d6/d4f/class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html#a35b0a1d22123a3e383847a90d72570b8">HydroCouple::Spatial::IRegularGrid3DComponentDataItem</a>
-, <a class="el" href="d3/d6c/class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item.html#a2b07ae2ecf3bed547733fb1f1f5bfb75">HydroCouple::Spatial::ITINComponentDataItem</a>
 , <a class="el" href="d9/d51/class_hydro_couple_1_1_spatial_1_1_i_vector_component_data_item.html#adb9cf0b1848538d1de8b0e3b7eb554d3">HydroCouple::Spatial::IVectorComponentDataItem</a>
 , <a class="el" href="db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#aa96ca66ad840f35d87e041f2d317b125">HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem</a>
 , <a class="el" href="d6/d72/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html#a71f8e05bd5c6270fe0785724a63850d2">HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem</a>
-, <a class="el" href="d6/da3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid2_d_component_data_item.html#a9f2a5efe400e965bc057fba10ffa5ef7">HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem</a>
-, <a class="el" href="db/d99/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a94725b107066d1dffeb22585bca78afa">HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem</a>
-, <a class="el" href="d6/db3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_component_data_item.html#a028e7e2dda9fb604d024656cae57360b">HydroCouple::SpatioTemporal::ITimeTINComponentDataItem</a>
 , <a class="el" href="d0/dd4/class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html#a421711a4a76488a4cdd3583eace08248">HydroCouple::Temporal::ITimeIdBasedComponentDataItem</a>
 , <a class="el" href="de/d0b/class_hydro_couple_1_1_temporal_1_1_i_time_series_component_data_item.html#a35cf94e918f596cd2237354fd67ce415">HydroCouple::Temporal::ITimeSeriesComponentDataItem</a>
 </li>
@@ -211,7 +211,8 @@ $(document).ready(function(){initNavTree('functions_func_s.html','');});
 : <a class="el" href="df/d7f/class_hydro_couple_1_1_spatial_1_1_i_curve.html#a901edeea501c38677590656150a78307">HydroCouple::Spatial::ICurve</a>
 </li>
 <li>status()
-: <a class="el" href="d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html#ae6bded01a17e47adff82478dfd5c5b1f">HydroCouple::IComponentStatusChangeEventArgs</a>
+: <a class="el" href="d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html#ac0f6144e15a1720366680debfe7683f5">HydroCouple::IComponentStatusChangeEventArgs</a>
+, <a class="el" href="d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html#a1336436bf18cffb51bc1cd02f4b0bbf0">HydroCouple::IDataExchangeWorkflowComponent</a>
 , <a class="el" href="d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55">HydroCouple::IModelComponent</a>
 </li>
 <li>sym()

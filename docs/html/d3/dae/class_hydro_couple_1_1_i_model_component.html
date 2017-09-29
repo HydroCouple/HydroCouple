@@ -110,6 +110,7 @@ $(document).ready(function(){initNavTree('d3/dae/class_hydro_couple_1_1_i_model_
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d5/dce/class_hydro_couple_1_1_i_model_component-members.html">List of all members</a>  </div>
@@ -125,16 +126,49 @@ $(document).ready(function(){initNavTree('d3/dae/class_hydro_couple_1_1_i_model_
 <div class="dynheader">
 Inheritance diagram for HydroCouple::IModelComponent:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d4/d18/class_hydro_couple_1_1_i_model_component__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d4/d18/class_hydro_couple_1_1_i_model_component__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <div class="dynheader">
 Collaboration diagram for HydroCouple::IModelComponent:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d8/dfc/class_hydro_couple_1_1_i_model_component__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d8/dfc/class_hydro_couple_1_1_i_model_component__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ac03f31f2698581f53a46338242b8bd0f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0f">ComponentStatus</a> { <br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa31199f9b35eefecd904231bbec6ee4ae">Created</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa57c19aecf135f31b9a89bdda6385d242">Initializing</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa13345cbf7e57c14373fdfade59c4f1fa">Initialized</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0faff05047e39c1083f0c9e7324123b39c5">Validating</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa9cd69d06dfc78aabfdfd2bbdc5f58d92">Valid</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa9f9ea6718830c108864effd1bd583ab5">WaitingForData</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0facb829345d516c321440a55d6319160bf">Invalid</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fae89c041a8d224152098291a9c660aeca">Preparing</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa740129adacab91e3d34b4235a8aa9260">Updating</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fae96068c5849c31292bbff257590fc386">Updated</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0face82f82d140cd28f05693aee6be58584">Done</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa4f63eb5f39904c6fbb589dff8280b39a">Finishing</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa96a568f1e2ea65bd205539e20e104dd9">Finished</a>, 
+<br />
+&#160;&#160;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0fa5db527c56b091334eaa04931ffa6c47c">Failed</a>
+<br />
+ }<tr class="memdesc:ac03f31f2698581f53a46338242b8bd0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">HydroCouple::ComponentStatus is an enumerator that describes the status of a component over the course of its lifetime.  <a href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0f">More...</a><br /></td></tr>
+</td></tr>
+<tr class="separator:ac03f31f2698581f53a46338242b8bd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
 <tr class="memitem:a158b9894be9c5ecf60810abefc1519ed"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a158b9894be9c5ecf60810abefc1519ed">componentStatusChanged</a> (const QSharedPointer&lt; <a class="el" href="../../d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html">IComponentStatusChangeEventArgs</a> &gt; &amp;statusChangedEvent)=0</td></tr>
@@ -155,7 +189,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a100d789f779e9eab7a058ffe546b46f0"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="../../dd/d96/class_hydro_couple_1_1_i_argument.html">IArgument</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a100d789f779e9eab7a058ffe546b46f0">arguments</a> () const  =0</td></tr>
 <tr class="memdesc:a100d789f779e9eab7a058ffe546b46f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arguments needed to let the component do its work. An unmodifiable list of (modifiable) arguments must be returned that is to be used to get information about the arguments and to set argument values.  <a href="#a100d789f779e9eab7a058ffe546b46f0">More...</a><br /></td></tr>
 <tr class="separator:a100d789f779e9eab7a058ffe546b46f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac179ca2956b761b8b6c0922a02f9ef55"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03">ComponentStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55">status</a> () const  =0</td></tr>
+<tr class="memitem:ac179ca2956b761b8b6c0922a02f9ef55"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0f">ComponentStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55">status</a> () const  =0</td></tr>
 <tr class="memdesc:ac179ca2956b761b8b6c0922a02f9ef55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines current status of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>. See HydroCouple::Componentstatus for the possible values.  <a href="#ac179ca2956b761b8b6c0922a02f9ef55">More...</a><br /></td></tr>
 <tr class="separator:ac179ca2956b761b8b6c0922a02f9ef55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a882e69c51cbf2c070a40447a477623e1"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="../../dd/dc3/class_hydro_couple_1_1_i_input.html">IInput</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a882e69c51cbf2c070a40447a477623e1">inputs</a> () const  =0</td></tr>
@@ -182,9 +216,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c4619110b5cc19f9a1590025f77fda1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1">finish</a> ()=0</td></tr>
 <tr class="memdesc:a2c4619110b5cc19f9a1590025f77fda1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1" title="The finish() must be invoked as the last of any methods in the IModelComponent interface. ">finish()</a> must be invoked as the last of any methods in the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> interface.  <a href="#a2c4619110b5cc19f9a1590025f77fda1">More...</a><br /></td></tr>
 <tr class="separator:a2c4619110b5cc19f9a1590025f77fda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa785cd2b33f6d932cfd565e254a07383"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aa785cd2b33f6d932cfd565e254a07383">recieveMPIMessage</a> ()=0</td></tr>
-<tr class="memdesc:aa785cd2b33f6d932cfd565e254a07383"><td class="mdescLeft">&#160;</td><td class="mdescRight">recieveMPIMessage is called for all  <a href="#aa785cd2b33f6d932cfd565e254a07383">More...</a><br /></td></tr>
-<tr class="separator:aa785cd2b33f6d932cfd565e254a07383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae44eb7f8dfd1dcc566457f233c7bcd8d"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ae44eb7f8dfd1dcc566457f233c7bcd8d">mpiCommunicator</a> () const  =0</td></tr>
+<tr class="memdesc:ae44eb7f8dfd1dcc566457f233c7bcd8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiCommunicator  <a href="#ae44eb7f8dfd1dcc566457f233c7bcd8d">More...</a><br /></td></tr>
+<tr class="separator:ae44eb7f8dfd1dcc566457f233c7bcd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a641e6e84375eb77c9e6fec3dd7a2864c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a641e6e84375eb77c9e6fec3dd7a2864c">mpiProcessor</a> () const  =0</td></tr>
+<tr class="memdesc:a641e6e84375eb77c9e6fec3dd7a2864c"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiProcessor of the current component;  <a href="#a641e6e84375eb77c9e6fec3dd7a2864c">More...</a><br /></td></tr>
+<tr class="separator:a641e6e84375eb77c9e6fec3dd7a2864c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a961a25f2bf901f5b47ded06008841741"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a961a25f2bf901f5b47ded06008841741">mpiAllocatedProcessors</a> () const  =0</td></tr>
+<tr class="memdesc:a961a25f2bf901f5b47ded06008841741"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocatedProcessors  <a href="#a961a25f2bf901f5b47ded06008841741">More...</a><br /></td></tr>
+<tr class="separator:a961a25f2bf901f5b47ded06008841741"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d9d602798083f49b36699cf311924a9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a0d9d602798083f49b36699cf311924a9">allocateMPIResources</a> (int communicator, int rank, const QList&lt; int &gt; &amp;allocatedProcessors)=0</td></tr>
+<tr class="memdesc:a0d9d602798083f49b36699cf311924a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocateMPIResources  <a href="#a0d9d602798083f49b36699cf311924a9">More...</a><br /></td></tr>
+<tr class="separator:a0d9d602798083f49b36699cf311924a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e4484c145a7e2e8dd663679f371b319"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a4e4484c145a7e2e8dd663679f371b319">processMPIMessage</a> (const <a class="el" href="../../db/d66/struct_serialized_data.html">SerializedData</a> &amp;data)=0</td></tr>
+<tr class="memdesc:a4e4484c145a7e2e8dd663679f371b319"><td class="mdescLeft">&#160;</td><td class="mdescRight">recieveMPIMessage message. This message can be received on  <a href="#a4e4484c145a7e2e8dd663679f371b319">More...</a><br /></td></tr>
+<tr class="separator:a4e4484c145a7e2e8dd663679f371b319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab327fdb3e7d70a8fc766b5ae2f4fa4ac"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ab327fdb3e7d70a8fc766b5ae2f4fa4ac">referenceDirectory</a> () const  =0</td></tr>
+<tr class="memdesc:ab327fdb3e7d70a8fc766b5ae2f4fa4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">referenceDirectory  <a href="#ab327fdb3e7d70a8fc766b5ae2f4fa4ac">More...</a><br /></td></tr>
+<tr class="separator:ab327fdb3e7d70a8fc766b5ae2f4fa4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9691b2edb3c8649b8af529b896573946"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a9691b2edb3c8649b8af529b896573946">setReferenceDirectory</a> (const QString &amp;<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ab327fdb3e7d70a8fc766b5ae2f4fa4ac">referenceDirectory</a>)=0</td></tr>
+<tr class="memdesc:a9691b2edb3c8649b8af529b896573946"><td class="mdescLeft">&#160;</td><td class="mdescRight">setReferenceDirectory  <a href="#a9691b2edb3c8649b8af529b896573946">More...</a><br /></td></tr>
+<tr class="separator:a9691b2edb3c8649b8af529b896573946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_identity"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_identity')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d2/d2a/class_hydro_couple_1_1_i_identity.html">HydroCouple::IIdentity</a></td></tr>
 <tr class="memitem:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d2a/class_hydro_couple_1_1_i_identity.html#aa69311baebd14ca6078474103f0b69da">~IIdentity</a> ()</td></tr>
 <tr class="separator:aa69311baebd14ca6078474103f0b69da inherit pub_methods_class_hydro_couple_1_1_i_identity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,7 +264,66 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> interface is the core interface in the <a class="el" href="../../d9/d01/namespace_hydro_couple.html" title="HydroCouple namespace contains the core interface specifications for the HydroCouple component-based ...">HydroCouple</a> standard defining a model component. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a class="anchor" id="ac03f31f2698581f53a46338242b8bd0f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0f">HydroCouple::IModelComponent::ComponentStatus</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>HydroCouple::ComponentStatus is an enumerator that describes the status of a component over the course of its lifetime. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa31199f9b35eefecd904231bbec6ee4ae"></a>Created&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> instance has just been created. This status must and will be followed by HydroCouple::Initializing. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa57c19aecf135f31b9a89bdda6385d242"></a>Initializing&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> is initializing itself. This status will end in a status change to HydroCouple::Initialized or HydroCouple::Failed. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa13345cbf7e57c14373fdfade59c4f1fa"></a>Initialized&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has succesfully initialized itself by calliing <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">IModelComponent::initialize()</a>. The connections between its inputs/outputs and those of other components can be established. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0faff05047e39c1083f0c9e7324123b39c5"></a>Validating&#160;</td><td class="fielddoc">
+<p>After links between an <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s inputs/outputs and those of other components have been established, the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> is HydroCouple::Validating whether its required input will be available when it updates itself, and whether indeed it will be able to provide the required output during this update. This Validating status will when the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55" title="Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible valu...">IModelComponent::status()</a> changes to HydroCouple::Valid or HydroCouple::Invalid. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa9cd69d06dfc78aabfdfd2bbdc5f58d92"></a>Valid&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> is in a HydroCouple::Valid state. When updating itself its required input will be available, and it will be able to provide the required output. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa9f9ea6718830c108864effd1bd583ab5"></a>WaitingForData&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> wants to update itself, but is not yet able to perform the actual computation, because it is still waiting for input data from other components. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0facb829345d516c321440a55d6319160bf"></a>Invalid&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> is in an HydroCouple::Invalid state. When updating itself not all required input will be available, and/or it will not be able to provide the required output. After the user has modified the connections between the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s inputs/outputs and those of other components, the HydroCouple::Validating state can be entered again. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fae89c041a8d224152098291a9c660aeca"></a>Preparing&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> is preparing itself for the first HydroCouple::IValueSet::getValue() call. This HydroCouple::Preparing state will end in a status change to HydroCouple::Updated or HydroCouple::Failed. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa740129adacab91e3d34b4235a8aa9260"></a>Updating&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> is updating itself. It has received all required input data from other components, and is now performing the actual computation. This HydroCouple::Updating state will end in a status change to HydroCouple::Updated, HydroCouple::Done or HydroCouple::Failed. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fae96068c5849c31292bbff257590fc386"></a>Updated&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has succesfully updated itself. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0face82f82d140cd28f05693aee6be58584"></a>Done&#160;</td><td class="fielddoc">
+<p>The last update process that the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> performed was the final one. A next call to the HydroCouple::Update method will leave the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s internal state unchanged. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa4f63eb5f39904c6fbb589dff8280b39a"></a>Finishing&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> was requested to perform the actions to be performed before it will either be disposed or re-intialized again.Typical actions would be writing the final result files, close all open files, free memory, etc. When all required actions have been performed, the status switches to HydroCouple::Created when re-initialization is possible. The status switches to HydroCouple::Finished when the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> is to be disposed. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa96a568f1e2ea65bd205539e20e104dd9"></a>Finished&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has successfully performed its finalization actions. Re-initialization of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> instance is not possible and should not be attempted. Instead the instance should be disposed, e.g. through the garbage collection mechanism. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ac03f31f2698581f53a46338242b8bd0fa5db527c56b091334eaa04931ffa6c47c"></a>Failed&#160;</td><td class="fielddoc">
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> was requested to perform the actions to be perform before it will either be disposed or re-initialized again. Typical actions would be writing the final result files, close all open files, free memory, etc. When all required actions have been performed, the status switches back to Created if the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> supports being re-initialized. If it cannot be re-initialized, it can be released from memory. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="afd991730576a343d5a8ba850e1c73b66"></a>
 <div class="memitem">
 <div class="memproto">
@@ -261,6 +372,56 @@ Public Member Functions</h2></td></tr>
 <p>Gets a list of IAdaptedOutputFactories, each allowing to create <a class="el" href="../../d6/d04/class_hydro_couple_1_1_i_adapted_output.html" title="An IAdaptedOutput adds one or more data operations on top of an IOutput. ">IAdaptedOutput</a> item for making outputs fit to inputs in case they do not already do so. </p>
 <p>Factories can be added to and removed from the list so that third-party factories and <a class="el" href="../../d6/d04/class_hydro_couple_1_1_i_adapted_output.html" title="An IAdaptedOutput adds one or more data operations on top of an IOutput. ">IAdaptedOutput</a> classes can be introduced.</p>
 <dl class="section return"><dt>Returns</dt><dd>A list of IAdaptedOutputFactories associated with this component. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0d9d602798083f49b36699cf311924a9"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::allocateMPIResources </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>communicator</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>rank</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QList&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>allocatedProcessors</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>allocateMPIResources </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">communicator</td><td></td></tr>
+    <tr><td class="paramname">rank</td><td></td></tr>
+    <tr><td class="paramname">allocatedProcessors</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -341,7 +502,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a158b9894be9c5ecf60810abefc1519ed" title="The componentStatusChanged() function must be implemented as a signal and emitted when Status of the ...">componentStatusChanged()</a> function must be implemented as a signal and emitted when Status of the component changes. </p>
-<p>See <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03" title="HydroCouple::ComponentStatus is an enumerator that describes the status of a component over the cours...">HydroCouple::ComponentStatus</a> for the possible states. </p>
+<p>See HydroCouple::ComponentStatus for the possible states. </p>
 
 </div>
 </div>
@@ -368,7 +529,7 @@ Public Member Functions</h2></td></tr>
 
 <p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1" title="The finish() must be invoked as the last of any methods in the IModelComponent interface. ">finish()</a> must be invoked as the last of any methods in the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> interface. </p>
 <p>This method must be accessible after the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> method has been invoked. If this method is invoked before the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> method has been invoked an exception must be thrown by the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>.</p>
-<p>Immediately after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55" title="Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible valu...">status()</a> to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03af25faa2eca3b0112c73b9a7e5ad38c0c" title="The IModelComponent was requested to perform the actions to be performed before it will either be dis...">HydroCouple::Finishing</a>. Once the finishing is completed, the component changes its <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55" title="Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible valu...">status()</a> to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a18e0a644a8102569a39d04a56612866d" title="The IModelComponent has successfully performed its finalization actions. Re-initialization of the IMo...">HydroCouple::Finished</a> if it can not be restarted, or <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a03894703c08dd9ab7306add54a772750" title="The IModelComponent instance has just been created. This status must and will be followed by HydroCou...">HydroCouple::Created</a> if it can. </p>
+<p>Immediately after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55" title="Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible valu...">status()</a> to HydroCouple::Finishing. Once the finishing is completed, the component changes its <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55" title="Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible valu...">status()</a> to HydroCouple::Finished if it can not be restarted, or HydroCouple::Created if it can. </p>
 
 </div>
 </div>
@@ -395,9 +556,9 @@ Public Member Functions</h2></td></tr>
 
 <p>Initializes the current <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>. </p>
 <p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method must be invoked before any other method or property in the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> interface is invoked or accessed, except for the Arguments property.</p>
-<p>Immediately after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a6981f698e60e9a6785da480b7c2f3b43" title="The IModelComponent is initializing itself. This status will end in a status change to HydroCouple::I...">HydroCouple::Initializing</a>. When the method is executed and an error occurs, the status of the component will change to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a7e67a48b8a07539ef9f0aa0fc82bcc19" title="The IModelComponent was requested to perform the actions to be perform before it will either be dispo...">HydroCouple::Failed</a>, and an exception will be thrown. If the component initializes succesfully, the status is changed to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03ac40679da152b0054941ecff4ed04b9a2" title="The IModelComponent has succesfully initialized itself by calliing IModelComponent::initialize(). The connections between its inputs/outputs and those of other components can be established. ">HydroCouple::Initialized</a>.</p>
-<p>When the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been finished and the status is <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03ac40679da152b0054941ecff4ed04b9a2" title="The IModelComponent has succesfully initialized itself by calliing IModelComponent::initialize(). The connections between its inputs/outputs and those of other components can be established. ">HydroCouple::Initialized</a>, the properties Id, Caption, Description, Inputs, Outputs, have been set, and the method <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524" title="Validates the populated instance of the IModelComponent. ">validate()</a> can be called.</p>
-<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method can be invoked as long as a component is either <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a03894703c08dd9ab7306add54a772750" title="The IModelComponent instance has just been created. This status must and will be followed by HydroCou...">HydroCouple::Created</a> <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a7e67a48b8a07539ef9f0aa0fc82bcc19" title="The IModelComponent was requested to perform the actions to be perform before it will either be dispo...">HydroCouple::Failed</a>, or <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03ac40679da152b0054941ecff4ed04b9a2" title="The IModelComponent has succesfully initialized itself by calliing IModelComponent::initialize(). The connections between its inputs/outputs and those of other components can be established. ">HydroCouple::Initialized</a></p>
+<p>Immediately after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to HydroCouple::Initializing. When the method is executed and an error occurs, the status of the component will change to HydroCouple::Failed, and an exception will be thrown. If the component initializes succesfully, the status is changed to HydroCouple::Initialized.</p>
+<p>When the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been finished and the status is HydroCouple::Initialized, the properties Id, Caption, Description, Inputs, Outputs, have been set, and the method <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524" title="Validates the populated instance of the IModelComponent. ">validate()</a> can be called.</p>
+<p>The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method can be invoked as long as a component is either HydroCouple::Created HydroCouple::Failed, or HydroCouple::Initialized</p>
 <dl class="section remark"><dt>Remarks</dt><dd>The method will typically populate the component based on the values specified in its arguments, which can be retrieved with arguments. Settings can be used to read input files, allocate memory, and organize input and output exchange items. </dd></dl>
 
 </div>
@@ -426,6 +587,84 @@ Public Member Functions</h2></td></tr>
 <p>The list of consumer items for which a component can recieve values. </p>
 <p>This property must be accessible after the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been invoked and until the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524" title="Validates the populated instance of the IModelComponent. ">validate()</a> method has been invoked. If this property is accessed before the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been invoked or after the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524" title="Validates the populated instance of the IModelComponent. ">validate()</a> method has been invoked and the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> cannot handle this an exception must be thrown.</p>
 <dl class="section return"><dt>Returns</dt><dd>This method basically returns references to IInputs items. There is no guarantee that the list of objects is not altered by other components after it has been returned. It is the responsibility of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> to make sure that such possible alterations do not subsequently corrupt the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a961a25f2bf901f5b47ded06008841741"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual QList&lt;int&gt; HydroCouple::IModelComponent::mpiAllocatedProcessors </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>allocatedProcessors </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae44eb7f8dfd1dcc566457f233c7bcd8d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IModelComponent::mpiCommunicator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>mpiCommunicator </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a641e6e84375eb77c9e6fec3dd7a2864c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IModelComponent::mpiProcessor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>mpiProcessor of the current component; </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -481,13 +720,13 @@ Public Member Functions</h2></td></tr>
 <p>Prepares the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> for calls to the Update method. </p>
 <p>Before <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> is called, the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> are not required to honor any type of action that retrieves values from the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>. After <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> is called, the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> must be ready for providing values.</p>
 <p>This method must be accessible after the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been invoked and until the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1" title="The finish() must be invoked as the last of any methods in the IModelComponent interface. ">finish()</a> method has been invoked. If this property is accessed before the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been invoked or after the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1" title="The finish() must be invoked as the last of any methods in the IModelComponent interface. ">finish()</a> method has been invoked and the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> cannot handle this an exception must be thrown.</p>
-<p>Immediatly after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a39830eed2627e93f76139dd66fd66292" title="The IModelComponent is preparing itself for the first HydroCouple::IValueSet::getValue() call...">HydroCouple::Preparing</a>.</p>
-<p>When the method has finished, the status of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has changed to either <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a32c4b74fa698bcaa1257a9a16b174067" title="The IModelComponent has succesfully updated itself. ">HydroCouple::Updated</a> or <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a7e67a48b8a07539ef9f0aa0fc82bcc19" title="The IModelComponent was requested to perform the actions to be perform before it will either be dispo...">HydroCouple::Failed</a>.</p>
+<p>Immediatly after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to HydroCouple::Preparing.</p>
+<p>When the method has finished, the status of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has changed to either HydroCouple::Updated or HydroCouple::Failed.</p>
 <p>It is only required that the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> method can be invoked once. If the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a69556f124b1568595011cb87741e1d47" title="Prepares the IModelComponent for calls to the Update method. ">prepare()</a> method is invoked more that once and the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> cannot handle this an exception must be thrown. </p>
 
 </div>
 </div>
-<a class="anchor" id="aa785cd2b33f6d932cfd565e254a07383"></a>
+<a class="anchor" id="a4e4484c145a7e2e8dd663679f371b319"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -495,9 +734,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void HydroCouple::IModelComponent::recieveMPIMessage </td>
+          <td class="memname">virtual void HydroCouple::IModelComponent::processMPIMessage </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="../../db/d66/struct_serialized_data.html">SerializedData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -508,7 +748,65 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>recieveMPIMessage is called for all </p>
+<p>recieveMPIMessage message. This message can be received on </p>
+
+</div>
+</div>
+<a class="anchor" id="ab327fdb3e7d70a8fc766b5ae2f4fa4ac"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual QString HydroCouple::IModelComponent::referenceDirectory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>referenceDirectory </p>
+<p>All relative file paths specified that are associated with this component instance are referenced from this directory. Typically, this will be the directory for the project file for the current composition. Values are typically set from the Composition GUI and can be referenced internally for saving files and writing arguments for the component. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9691b2edb3c8649b8af529b896573946"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::setReferenceDirectory </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>referenceDirectory</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>setReferenceDirectory </p>
+<p>sets the reference directory for this component instance. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">referenceDirectory</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -520,7 +818,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03">ComponentStatus</a> HydroCouple::IModelComponent::status </td>
+          <td class="memname">virtual <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac03f31f2698581f53a46338242b8bd0f">ComponentStatus</a> HydroCouple::IModelComponent::status </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -534,7 +832,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Defines current status of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>. See HydroCouple::Componentstatus for the possible values. </p>
-<p>The first status that a component sets is <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a03894703c08dd9ab7306add54a772750" title="The IModelComponent instance has just been created. This status must and will be followed by HydroCou...">HydroCouple::Created</a>, as soon after it has been created. In this status, Arguments is the only property that may be accessed. </p><dl class="section return"><dt>Returns</dt><dd>the current status of this component </dd></dl>
+<p>The first status that a component sets is HydroCouple::Created, as soon after it has been created. In this status, Arguments is the only property that may be accessed. </p><dl class="section return"><dt>Returns</dt><dd>the current status of this component </dd></dl>
 
 </div>
 </div>
@@ -561,9 +859,9 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This method is called to let the component update itself, thus reaching its next state. </p>
-<p>Immediately after this method is invoked, it changes the component's <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55" title="Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible valu...">status()</a> to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a5d9d424626d3e678ab95de1a4badbefb" title="The IModelComponent is updating itself. It has received all required input data from other components...">HydroCouple::Updating</a>.</p>
+<p>Immediately after this method is invoked, it changes the component's <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac179ca2956b761b8b6c0922a02f9ef55" title="Defines current status of the IModelComponent. See HydroCouple::Componentstatus for the possible valu...">status()</a> to HydroCouple::Updating.</p>
 <p>The type of actions a component takes during the Update method depends on the type of component. A numerical model that progresses in time will typically compute a time step. A database whould typically look at the consumers of its output items, and perform one or more queries to be able to provide the values that the consumers require. A GIS system would typically re-evaluate the values in a grid coverage, so that its output output items can provide up-to-date values.</p>
-<p>If the Update method is performed succesfully, the component sets its state to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a32c4b74fa698bcaa1257a9a16b174067" title="The IModelComponent has succesfully updated itself. ">HydroCouple::Updated</a>, unless after this <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2bdd60cce9a24a95c9257f026ee4e398" title="This method is called to let the component update itself, thus reaching its next state. ">update()</a> action the component is at the end of its computation, in which case it will be set its State to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03af40fdd5edbc491eda64fde975e89ae53" title="The last update process that the IModelComponent performed was the final one. A next call to the Hydr...">HydroCouple::Done</a>. If during the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2bdd60cce9a24a95c9257f026ee4e398" title="This method is called to let the component update itself, thus reaching its next state. ">update()</a> method a problem arises, the component sets its state to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a7e67a48b8a07539ef9f0aa0fc82bcc19" title="The IModelComponent was requested to perform the actions to be perform before it will either be dispo...">HydroCouple::Failed</a>, and throws an exception.</p>
+<p>If the Update method is performed succesfully, the component sets its state to HydroCouple::Updated, unless after this <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2bdd60cce9a24a95c9257f026ee4e398" title="This method is called to let the component update itself, thus reaching its next state. ">update()</a> action the component is at the end of its computation, in which case it will be set its State to HydroCouple::Done. If during the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2bdd60cce9a24a95c9257f026ee4e398" title="This method is called to let the component update itself, thus reaching its next state. ">update()</a> method a problem arises, the component sets its state to HydroCouple::Failed, and throws an exception.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">requiredOutputs</td><td>is an optional parameter lets the caller specify the specific producer items that should be updated. If the length is 0, the component will at least update its producer items that have consumers, or all its output items, depending on the component's implementation. </td></tr>
@@ -597,9 +895,9 @@ Public Member Functions</h2></td></tr>
 <p>Validates the populated instance of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>. </p>
 <p>This method must be accessible after the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been invoked and until the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1" title="The finish() must be invoked as the last of any methods in the IModelComponent interface. ">finish()</a> method has been invoked. If this property is accessed before the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f" title="Initializes the current IModelComponent. ">initialize()</a> method has been invoked or after the Finish method has been invoked and the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> cannot handle this an exception must be thrown.</p>
 <p>The method will and must be invoked after the various provider/consumer relations between this component's exchange items and the exchange items of other components present in the composition.</p>
-<p>Immediately after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a5ee7265a43abcab3bbbf2e194db6b808" title="After links between an IModelComponent&#39;s inputs/outputs and those of other components have been estab...">HydroCouple::Validating</a>.</p>
-<p>When the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524" title="Validates the populated instance of the IModelComponent. ">validate()</a> method has finished, the status of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has changed to either Valid or <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a37859216fa080b8aac9644a93d1aee2a" title="The IModelComponent is in an HydroCouple::Invalid state. When updating itself not all required input ...">HydroCouple::Invalid</a>.</p>
-<dl class="section return"><dt>Returns</dt><dd>Returns an array of strings of length 0 if there are no messages at all. If there are messages while the components status is <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a51807712bc8a08970d44deec04ad2643" title="The IModelComponent is in a HydroCouple::Valid state. When updating itself its required input will be...">HydroCouple::Valid</a>, the messages are purely informative. If there are messages while the components status is HydroCouple::Componentstatus. <a class="el" href="../../d9/d01/namespace_hydro_couple.html#a5faa3b28d378bbb00134df393c19ba03a37859216fa080b8aac9644a93d1aee2a" title="The IModelComponent is in an HydroCouple::Invalid state. When updating itself not all required input ...">HydroCouple::Invalid</a> when at least one of the messages indicates a fatal error. </dd></dl>
+<p>Immediately after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to HydroCouple::Validating.</p>
+<p>When the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524" title="Validates the populated instance of the IModelComponent. ">validate()</a> method has finished, the status of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has changed to either Valid or HydroCouple::Invalid.</p>
+<dl class="section return"><dt>Returns</dt><dd>Returns an array of strings of length 0 if there are no messages at all. If there are messages while the components status is HydroCouple::Valid, the messages are purely informative. If there are messages while the components status is HydroCouple::Componentstatus. HydroCouple::Invalid when at least one of the messages indicates a fatal error. </dd></dl>
 
 </div>
 </div>

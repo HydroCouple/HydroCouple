@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['rasterdatatype',['RasterDataType',['../d8/d20/namespace_hydro_couple_1_1_spatial.html#ae3563ea9d450198e25de5766f335dea4',1,'HydroCouple::Spatial']]],
-  ['regulargridtype',['RegularGridType',['../d8/d20/namespace_hydro_couple_1_1_spatial.html#aaf7f0055c26634e2d7cfd7ccde680d53',1,'HydroCouple::Spatial']]]
+  ['meshdatatype',['MeshDataType',['../d8/d20/namespace_hydro_couple_1_1_spatial.html#a1aad85957251af4a9e970c57a12b9a26',1,'HydroCouple::Spatial']]]
 ];

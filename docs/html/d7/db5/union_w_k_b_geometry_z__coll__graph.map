@@ -1,0 +1,14 @@
+<map id="WKBGeometryZ" name="WKBGeometryZ">
+<area shape="rect" id="node9" href="$d8/dc4/struct_w_k_b_geometry_collection_z.html" title="The WKBGeometryCollectionZ struct. " alt="" coords="539,979,736,1101"/>
+<area shape="rect" id="node2" href="$d4/d74/struct_w_k_b_multi_line_string_z.html" title="The WKBMultiLineStringZ struct. " alt="" coords="147,638,320,760"/>
+<area shape="rect" id="node3" href="$d9/dd3/struct_w_k_b_line_string_z.html" title="The WKBLineStringZ struct. " alt="" coords="167,346,300,468"/>
+<area shape="rect" id="node4" href="$d6/d0c/struct_point_z.html" title="The PointZ struct. " alt="" coords="380,5,449,128"/>
+<area shape="rect" id="node6" href="$d1/d27/struct_w_k_b_point_z.html" title="The WKBPointZ struct. " alt="" coords="360,355,469,459"/>
+<area shape="rect" id="node8" href="$d2/d2c/struct_linear_ring_z.html" title="The LinearRingZ struct. " alt="" coords="829,193,939,280"/>
+<area shape="rect" id="node5" href="$d5/d23/struct_w_k_b_multi_point_z.html" title="The WKBMultiPointZ struct. " alt="" coords="456,638,589,760"/>
+<area shape="rect" id="node7" href="$db/dad/struct_w_k_b_polygon_z.html" title="The WKBPolygonZ struct. " alt="" coords="829,346,939,468"/>
+<area shape="rect" id="node10" href="$d9/df0/struct_w_k_b_t_i_n_z.html" title="The WKBTINZ struct. " alt="" coords="741,638,867,760"/>
+<area shape="rect" id="node11" href="$de/dad/struct_w_k_b_multi_polygon_z.html" title="The WKBMultiPolygonZ struct. " alt="" coords="891,638,1040,760"/>
+<area shape="rect" id="node12" href="$d7/d2f/struct_w_k_b_polyhedral_surface_z.html" title="The WKBPolyhedralSurfaceZ struct. " alt="" coords="1064,638,1253,760"/>
+<area shape="rect" id="node13" href="$d4/d22/struct_w_k_b_triangle_z.html" title="The WKBTriangleZ struct. " alt="" coords="1228,492,1345,614"/>
+</map>

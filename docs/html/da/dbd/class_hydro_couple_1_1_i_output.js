@@ -7,5 +7,5 @@ var class_hydro_couple_1_1_i_output =
     [ "consumers", "da/dbd/class_hydro_couple_1_1_i_output.html#ab5262cecfd3452ef403a9c582f9e13b0", null ],
     [ "removeAdaptedOutput", "da/dbd/class_hydro_couple_1_1_i_output.html#a9822c0386ace5dc9325baa8ce69ab6ce", null ],
     [ "removeConsumer", "da/dbd/class_hydro_couple_1_1_i_output.html#a574a0cb521c0f506b2290b78fb8c43ec", null ],
-    [ "update", "da/dbd/class_hydro_couple_1_1_i_output.html#a229885937ec7802a9b6b503b0c170317", null ]
+    [ "updateValues", "da/dbd/class_hydro_couple_1_1_i_output.html#a71b66cc162b584f458cd458927f2c23b", null ]
 ];

@@ -40,122 +40,6 @@ namespace HydroCouple
     class IPolyhedralSurface;
 
     /*!
-     * \brief The type of IGeometry.
-     */
-    enum GeometryType
-    {
-      Geometry = 0,
-      Point = 1,
-      LineString = 2,
-      Polygon = 3,
-      Triangle = 17,
-      MultiPoint = 4,
-      MultiLineString = 5,
-      MultiPolygon = 6,
-      GeometryCollection = 7,
-      CircularString  = 8,
-      CompoundCurve = 9,
-      CurvePolygon = 10,
-      MultiCurve = 11,
-      MultiSurface = 12,
-      Curve = 13,
-      Surface = 14,
-      PolyhedralSurface = 15,
-      TIN =16,
-
-
-      GeometryZ = 1000,
-      PointZ = 1001,
-      LineStringZ = 1002,
-      PolygonZ = 1003,
-      TriangleZ = 1017,
-      MultiPointZ = 1004,
-      MultiLineStringZ = 1005,
-      MultiPolygonZ = 1006,
-      GeometryCollectionZ = 1007,
-      CircularStringZ = 1008,
-      CompoundCurveZ = 1009,
-      CurvePolygonZ = 1010,
-      MultiCurveZ = 1011,
-      MultiSurfaceZ = 1012,
-      CurveZ = 1013,
-      SurfaceZ = 1014,
-      PolyhedralSurfaceZ = 1015,
-      TINZ = 1016,
-
-
-      GeometryM = 2000,
-      PointM = 2001,
-      LineStringM = 2002,
-      PolygonM = 2003,
-      TriangleM = 2017,
-      MultiPointM = 2004,
-      MultiLineStringM = 2005,
-      MultiPolygonM = 2006,
-      GeometryCollectionM = 2007,
-      CircularStringM = 2008,
-      CompoundCurveM = 2009,
-      CurvePolygonM = 2010,
-      MultiCurveM = 2011,
-      MultiSurfaceM = 2012,
-      CurveM = 2013,
-      SurfaceM = 2014,
-      PolyhedralSurfaceM = 2015,
-      TINM = 2016,
-
-
-      GeometryZM = 3000,
-      PointZM = 3001,
-      LineStringZM = 3002,
-      PolygonZM = 3003,
-      TriangleZM = 3017,
-      MultiPointZM = 3004,
-      MultiLineStringZM = 3005,
-      MultiPolygonZM = 3006,
-      GeometryCollectionZM = 3007,
-      CircularStringZM = 3008,
-      CompoundCurveZM = 3009,
-      CurvePolygonZM = 3010,
-      MultiCurveZM = 3011,
-      MultiSurfaceZM = 3012,
-      CurveZM = 3013,
-      SurfaceZM = 3014,
-      PolyhedralSurfaceZM = 3015,
-      TINZM = 3016,
-    };
-
-    /*!
-     * \brief The data type associated with a raster.
-     */
-    enum RasterDataType
-    {
-      //!Unknown or unspecified type
-      Unknown,
-      //!Eight bit unsigned integer
-      Byte,
-      //!Sixteen bit unsigned integer
-      UInt16,
-      //!Sixteen bit signed integer
-      Int16,
-      //!Thirty two bit unsigned integer
-      UInt32,
-      //!Thirty two bit signed integer
-      Int32,
-      //!Thirty two bit floating point
-      Float32,
-      //!Sixty four bit floating point
-      Float64,
-      //!Complex Int16
-      CInt16,
-      //!Complex Int32
-      CInt32,
-      //!Complex Float32
-      CFloat32,
-      //!Complex Float64
-      CFloat64
-    };
-
-    /*!
      * \brief The PolyhedralSurfaceDataType enum describes the portion of the
      * geometry of the polyhedral surface data is associated with.
      */
@@ -225,6 +109,91 @@ namespace HydroCouple
     class IGeometry
     {
       public:
+
+        /*!
+         * \brief The type of IGeometry.
+         */
+        enum GeometryType
+        {
+          Geometry = 0,
+          Point = 1,
+          LineString = 2,
+          Polygon = 3,
+          Triangle = 17,
+          MultiPoint = 4,
+          MultiLineString = 5,
+          MultiPolygon = 6,
+          GeometryCollection = 7,
+          CircularString  = 8,
+          CompoundCurve = 9,
+          CurvePolygon = 10,
+          MultiCurve = 11,
+          MultiSurface = 12,
+          Curve = 13,
+          Surface = 14,
+          PolyhedralSurface = 15,
+          TIN =16,
+
+
+          GeometryZ = 1000,
+          PointZ = 1001,
+          LineStringZ = 1002,
+          PolygonZ = 1003,
+          TriangleZ = 1017,
+          MultiPointZ = 1004,
+          MultiLineStringZ = 1005,
+          MultiPolygonZ = 1006,
+          GeometryCollectionZ = 1007,
+          CircularStringZ = 1008,
+          CompoundCurveZ = 1009,
+          CurvePolygonZ = 1010,
+          MultiCurveZ = 1011,
+          MultiSurfaceZ = 1012,
+          CurveZ = 1013,
+          SurfaceZ = 1014,
+          PolyhedralSurfaceZ = 1015,
+          TINZ = 1016,
+
+
+          GeometryM = 2000,
+          PointM = 2001,
+          LineStringM = 2002,
+          PolygonM = 2003,
+          TriangleM = 2017,
+          MultiPointM = 2004,
+          MultiLineStringM = 2005,
+          MultiPolygonM = 2006,
+          GeometryCollectionM = 2007,
+          CircularStringM = 2008,
+          CompoundCurveM = 2009,
+          CurvePolygonM = 2010,
+          MultiCurveM = 2011,
+          MultiSurfaceM = 2012,
+          CurveM = 2013,
+          SurfaceM = 2014,
+          PolyhedralSurfaceM = 2015,
+          TINM = 2016,
+
+
+          GeometryZM = 3000,
+          PointZM = 3001,
+          LineStringZM = 3002,
+          PolygonZM = 3003,
+          TriangleZM = 3017,
+          MultiPointZM = 3004,
+          MultiLineStringZM = 3005,
+          MultiPolygonZM = 3006,
+          GeometryCollectionZM = 3007,
+          CircularStringZM = 3008,
+          CompoundCurveZM = 3009,
+          CurvePolygonZM = 3010,
+          MultiCurveZM = 3011,
+          MultiSurfaceZM = 3012,
+          CurveZM = 3013,
+          SurfaceZM = 3014,
+          PolyhedralSurfaceZM = 3015,
+          TINZM = 3016,
+        };
 
         virtual ~IGeometry(){}
 
@@ -1153,6 +1122,38 @@ namespace HydroCouple
     {
 
       public:
+
+        /*!
+         * \brief The data type associated with a raster.
+         */
+        enum RasterDataType
+        {
+          //!Unknown or unspecified type
+          Unknown,
+          //!Eight bit unsigned integer
+          Byte,
+          //!Sixteen bit unsigned integer
+          UInt16,
+          //!Sixteen bit signed integer
+          Int16,
+          //!Thirty two bit unsigned integer
+          UInt32,
+          //!Thirty two bit signed integer
+          Int32,
+          //!Thirty two bit floating point
+          Float32,
+          //!Sixty four bit floating point
+          Float64,
+          //!Complex Int16
+          CInt16,
+          //!Complex Int32
+          CInt32,
+          //!Complex Float32
+          CFloat32,
+          //!Complex Float64
+          CFloat64
+        };
+
         virtual ~IRaster(){}
 
         /*!
@@ -1216,7 +1217,7 @@ namespace HydroCouple
         virtual IRaster *raster() const = 0;
 
         //!Raster data type
-        virtual RasterDataType dataType() const = 0;
+        virtual IRaster::RasterDataType dataType() const = 0;
 
         /*!
         * \brief Reads data into the image block.
@@ -1391,7 +1392,7 @@ namespace HydroCouple
          * \brief geometryType
          * \return
          */
-        virtual GeometryType geometryType() const = 0;
+        virtual IGeometry::GeometryType geometryType() const = 0;
 
         /*!
          * \brief geometryCount
@@ -1506,7 +1507,7 @@ namespace HydroCouple
          * \param nodeDimensionIndex
          * \param data
          */
-        virtual void setValue(int cellDimensionIndex, int faceDimensionIndex, int nodeDimensionIndex,  const void *data) = 0;
+        virtual void setValue(int cellDimensionIndex, int faceDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
     };
 
     /*!
@@ -1519,9 +1520,9 @@ namespace HydroCouple
 
         virtual ~ITINComponentDataItem(){}
 
-        /*!
-      * \returns The ITIN associated with this ITINComponentDataItem.
-      */
+       /*!
+        * \returns The ITIN associated with this ITINComponentDataItem.
+        */
         virtual ITIN *TIN() const = 0;
     };
 
@@ -1748,6 +1749,9 @@ namespace HydroCouple
 
     };
 
+    /*!
+     * \brief The IVectorComponentDataItem class
+     */
     class IVectorComponentDataItem : public virtual IComponentDataItem
     {
         using IComponentDataItem::getValue;
@@ -1755,6 +1759,9 @@ namespace HydroCouple
 
       public:
 
+        /*!
+         * \brief ~IVectorComponentDataItem
+         */
         virtual ~IVectorComponentDataItem(){}
 
         /*!

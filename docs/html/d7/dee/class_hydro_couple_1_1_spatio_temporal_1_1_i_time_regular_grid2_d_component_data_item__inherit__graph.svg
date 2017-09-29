@@ -56,29 +56,27 @@ var sectionId = 'dynsection-0';
 <title>HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem</title>
 <!-- Node1 -->
 <g id="node1" class="node"><title>Node1</title>
-<polygon fill="#bfbfbf" stroke="black" points="0,-0.5 0,-224.524 238.036,-224.524 238.036,-0.5 0,-0.5"/>
-<text text-anchor="start" x="8" y="-212.524" font-family="Monaco" font-size="10.00">HydroCouple::SpatioTemporal</text>
-<text text-anchor="middle" x="119.018" y="-199.189" font-family="Monaco" font-size="10.00">::ITimeRegularGrid2DComponentDataItem</text>
-<polyline fill="none" stroke="black" points="0,-189.854 238.036,-189.854 "/>
-<text text-anchor="middle" x="119.018" y="-177.854" font-family="Monaco" font-size="10.00"> </text>
-<polyline fill="none" stroke="black" points="0,-168.52 238.036,-168.52 "/>
-<text text-anchor="start" x="8" y="-156.52" font-family="Monaco" font-size="10.00">+ ~ITimeRegularGrid2DComponent</text>
-<text text-anchor="start" x="8" y="-143.185" font-family="Monaco" font-size="10.00">DataItem()</text>
-<text text-anchor="start" x="8" y="-129.85" font-family="Monaco" font-size="10.00">+ grid()</text>
-<text text-anchor="start" x="8" y="-116.515" font-family="Monaco" font-size="10.00">+ meshDataType()</text>
-<text text-anchor="start" x="8" y="-103.18" font-family="Monaco" font-size="10.00">+ xCellDimension()</text>
-<text text-anchor="start" x="8" y="-89.8447" font-family="Monaco" font-size="10.00">+ yCellDimension()</text>
-<text text-anchor="start" x="8" y="-76.5098" font-family="Monaco" font-size="10.00">+ cellEdgeDimension()</text>
-<text text-anchor="start" x="8" y="-63.1748" font-family="Monaco" font-size="10.00">+ cellNodeDimension()</text>
-<text text-anchor="start" x="8" y="-49.8398" font-family="Monaco" font-size="10.00">+ getValue()</text>
-<text text-anchor="start" x="8" y="-36.5049" font-family="Monaco" font-size="10.00">+ getValues()</text>
-<text text-anchor="start" x="8" y="-23.1699" font-family="Monaco" font-size="10.00">+ setValue()</text>
-<text text-anchor="start" x="8" y="-9.83496" font-family="Monaco" font-size="10.00">+ setValues()</text>
+<polygon fill="#bfbfbf" stroke="black" points="0,-0.5 0,-197.854 238.036,-197.854 238.036,-0.5 0,-0.5"/>
+<text text-anchor="start" x="8" y="-185.854" font-family="Monaco" font-size="10.00">HydroCouple::SpatioTemporal</text>
+<text text-anchor="middle" x="119.018" y="-172.52" font-family="Monaco" font-size="10.00">::ITimeRegularGrid2DComponentDataItem</text>
+<polyline fill="none" stroke="black" points="0,-163.185 238.036,-163.185 "/>
+<text text-anchor="middle" x="119.018" y="-151.185" font-family="Monaco" font-size="10.00"> </text>
+<polyline fill="none" stroke="black" points="0,-141.85 238.036,-141.85 "/>
+<text text-anchor="start" x="8" y="-129.85" font-family="Monaco" font-size="10.00">+ ~ITimeRegularGrid2DComponent</text>
+<text text-anchor="start" x="8" y="-116.515" font-family="Monaco" font-size="10.00">DataItem()</text>
+<text text-anchor="start" x="8" y="-103.18" font-family="Monaco" font-size="10.00">+ grid()</text>
+<text text-anchor="start" x="8" y="-89.8447" font-family="Monaco" font-size="10.00">+ meshDataType()</text>
+<text text-anchor="start" x="8" y="-76.5098" font-family="Monaco" font-size="10.00">+ xCellDimension()</text>
+<text text-anchor="start" x="8" y="-63.1748" font-family="Monaco" font-size="10.00">+ yCellDimension()</text>
+<text text-anchor="start" x="8" y="-49.8398" font-family="Monaco" font-size="10.00">+ cellEdgeDimension()</text>
+<text text-anchor="start" x="8" y="-36.5049" font-family="Monaco" font-size="10.00">+ cellNodeDimension()</text>
+<text text-anchor="start" x="8" y="-23.1699" font-family="Monaco" font-size="10.00">+ getValue()</text>
+<text text-anchor="start" x="8" y="-9.83496" font-family="Monaco" font-size="10.00">+ setValue()</text>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
 <g id="a_node2"><a xlink:href="../../d9/d05/class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html" target="_top" xlink:title="ITimeComponentItem is an IComponentItem with a temporal attribute. This class cannot be directly inst...">
-<polygon fill="none" stroke="black" points="30.0049,-261.524 30.0049,-378.869 208.031,-378.869 208.031,-261.524 30.0049,-261.524"/>
+<polygon fill="none" stroke="black" points="30.0049,-234.854 30.0049,-378.869 208.031,-378.869 208.031,-234.854 30.0049,-234.854"/>
 <text text-anchor="start" x="38.0049" y="-366.869" font-family="Monaco" font-size="10.00">HydroCouple::Temporal</text>
 <text text-anchor="middle" x="119.018" y="-353.534" font-family="Monaco" font-size="10.00">::ITimeComponentDataItem</text>
 <polyline fill="none" stroke="black" points="30.0049,-344.199 208.031,-344.199 "/>
@@ -86,15 +84,17 @@ var sectionId = 'dynsection-0';
 <polyline fill="none" stroke="black" points="30.0049,-322.864 208.031,-322.864 "/>
 <text text-anchor="start" x="38.0049" y="-310.864" font-family="Monaco" font-size="10.00">+ ~ITimeComponentDataItem()</text>
 <text text-anchor="start" x="38.0049" y="-297.529" font-family="Monaco" font-size="10.00">+ times()</text>
-<text text-anchor="start" x="38.0049" y="-284.194" font-family="Monaco" font-size="10.00">+ timeSpan()</text>
-<text text-anchor="start" x="38.0049" y="-270.859" font-family="Monaco" font-size="10.00">+ timeDimension()</text>
+<text text-anchor="start" x="38.0049" y="-284.194" font-family="Monaco" font-size="10.00">+ time()</text>
+<text text-anchor="start" x="38.0049" y="-270.859" font-family="Monaco" font-size="10.00">+ timeCount()</text>
+<text text-anchor="start" x="38.0049" y="-257.524" font-family="Monaco" font-size="10.00">+ timeSpan()</text>
+<text text-anchor="start" x="38.0049" y="-244.189" font-family="Monaco" font-size="10.00">+ timeDimension()</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge"><title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M119.018,-251.143C119.018,-242.609 119.018,-233.712 119.018,-224.73"/>
-<polygon fill="none" stroke="midnightblue" points="115.518,-251.355 119.018,-261.355 122.518,-251.355 115.518,-251.355"/>
+<path fill="none" stroke="midnightblue" d="M119.018,-224.664C119.018,-215.939 119.018,-206.998 119.018,-198.105"/>
+<polygon fill="none" stroke="midnightblue" points="115.518,-224.789 119.018,-234.789 122.518,-224.789 115.518,-224.789"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
@@ -116,8 +116,8 @@ var sectionId = 'dynsection-0';
 </g>
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge2" class="edge"><title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M119.018,-405.524C119.018,-396.525 119.018,-387.503 119.018,-378.882"/>
-<polygon fill="none" stroke="midnightblue" points="115.518,-405.652 119.018,-415.652 122.518,-405.652 115.518,-405.652"/>
+<path fill="none" stroke="midnightblue" d="M119.018,-405.852C119.018,-396.921 119.018,-387.876 119.018,-379.077"/>
+<polygon fill="none" stroke="midnightblue" points="115.518,-405.868 119.018,-415.868 122.518,-405.868 115.518,-405.868"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>

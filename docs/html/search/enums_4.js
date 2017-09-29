@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['meshdatatype',['MeshDataType',['../d8/d20/namespace_hydro_couple_1_1_spatial.html#a1aad85957251af4a9e970c57a12b9a26',1,'HydroCouple::Spatial']]]
+  ['geometrytype',['GeometryType',['../d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a8d7644027b0f791c863b096463c2b5b3',1,'HydroCouple::Spatial::IGeometry']]]
 ];
