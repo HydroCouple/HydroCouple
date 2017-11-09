@@ -1,22 +1,20 @@
-/*!
- *  \file   hydrocouplespatial.h
+/*! \file   hydrocouplespatial.h
  *  \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
  *  \version   1.0.0.0
  *  \section   Description
- *  This header files contains interface definitions that have a spatial component for the
- *  HydroCouple component-cased modeling framework.
+ *  This header file contains the geospatial interface definitions for the
+ *  HydroCouple component-based modeling definitions.
  *  \section License
- *  hydrocouplespatial.h, associated files and libraries are free software;
- *  you can redistribute it and/or modify it under the terms of the
+ *  hydrocouplespatial.h, its associated files, and libraries are free software.
+ *  You can redistribute it and/or modify it under the terms of the
  *  Lesser GNU General Public License as published by the Free Software Foundation;
  *  either version 3 of the License, or (at your option) any later version.
- *  hydrocouplespatial.h its associated files is distributed in the hope that it will be useful,
+ *  hydrocouplespatial.h and its associated files is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- *  \date 2014-2016
+ *  \date 2014-2018
  *  \pre
  *  \bug
- *  \todo
  *  \warning
  */
 
@@ -40,8 +38,8 @@ namespace HydroCouple
     class IPolyhedralSurface;
 
     /*!
-     * \brief The PolyhedralSurfaceDataType enum describes the portion of the
-     * geometry of the polyhedral surface data is associated with.
+     * \brief The MeshDataType enum describes the part of the
+     * geometry of the mesh that data corresponds to.
      */
     enum MeshDataType
     {
@@ -1857,7 +1855,6 @@ Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRaster, "HydroCouple::Spatial::IRaste
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterBand, "HydroCouple::Spatial::IRasterBand/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2D, "HydroCouple::Spatial::IRegularGrid2D/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3D, "HydroCouple::Spatial::IRegularGrid3D/1.0")
-
 
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryComponentDataItem, "HydroCouple::Spatial::IGeometryComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINComponentDataItem, "HydroCouple::Spatial::ITINComponentDataItem/1.0")

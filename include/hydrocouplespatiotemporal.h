@@ -2,20 +2,18 @@
  *  \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
  *  \version   1.0.0.0
  *  \section   Description
- *  This header files contains interface definitions that have both spatial and temporal components for the
- *  HydroCouple component-cased modeling framework.
+ *  This header file contains the geotemporal interface definitions for the HydroCouple Component-based modeling interface definitions.
  *  \section License
- *  hydrocouplespatiotemporal.h, associated files and libraries are free software;
- *  you can redistribute it and/or modify it under the terms of the
+ *  hydrocouplespatiotemporal.h, its associated files, and libraries are free software.
+ *  You can redistribute it and/or modify it under the terms of the
  *  Lesser GNU General Public License as published by the Free Software Foundation;
  *  either version 3 of the License, or (at your option) any later version.
- *  hydrocouplespatiotemporal.h its associated files is distributed in the hope that it will be useful,
+ *  hydrocouplespatiotemporal.h and its associated files is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- *  \date 2014-2016
+ *  \date 2014-2018
  *  \pre
  *  \bug
- *  \todo Add definitions for accessing node and edge associated data for meshes and polyhedral surfaces.
  *  \warning
  */
 

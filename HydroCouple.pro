@@ -35,7 +35,21 @@ CONFIG(debug, debug|release){
 }
 
 CONFIG(release, debug|release){
-    DESTDIR = lib
+
+#MacOS
+macx{
+    DESTDIR = lib/macx
+}
+
+#Linux
+linux{
+    DESTDIR = lib/linux
+}
+
+#Windows
+win32{
+    DESTDIR = lib/win32
+}
     RELEASE_EXTRAS = ./build/release 
     OBJECTS_DIR = $$RELEASE_EXTRAS/.obj
     MOC_DIR = $$RELEASE_EXTRAS/.moc

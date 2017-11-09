@@ -2,17 +2,17 @@
  *  \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
  *  \version   1.0.0.0
  *  \section   Description
- *  This header files contains the core interface definitions for the
- *  HydroCouple Component-Based modeling framework.
+ *  This header file contains the core interface definitions for the
+ *  HydroCouple component-based modeling definitions.
  *  \section License
- *  hydrocouple.h, associated files and libraries are free software;
- *  you can redistribute it and/or modify it under the terms of the
+ *  hydrocouple.h, its associated files, and libraries are free software.
+ *  You can redistribute it and/or modify it under the terms of the
  *  Lesser GNU General Public License as published by the Free Software Foundation;
  *  either version 3 of the License, or (at your option) any later version.
- *  hydrocouple.h its associated files is distributed in the hope that it will be useful,
+ *  hydrocouple.h and its associated files is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- *  \date 2014-2016
+ *  \date 2014-2018
  *  \pre
  *  \bug
  *  \warning
@@ -43,20 +43,6 @@ enum ByteOrder
 };
 
 /*!
- * \brief The SerializedData struct
- */
-struct SerializableData
-{
-    ByteOrder byteOrder;
-    int64_t parentMPIProcessRank;
-    int64_t componentIndex;
-    int64_t numAllocatedMPIProcesses;
-    int64_t *allocatedMPIProcesses;
-    int64_t dataSize;
-    char *data;
-};
-
-/*!
  * \brief HydroCouple namespace contains the core interface specifications
  * for the HydroCouple component-based modeling framework interface specification.
  */
@@ -74,7 +60,7 @@ namespace HydroCouple
   class IAdaptedOutputFactoryComponent;
   class IUnit;
   class IComponentStatusChangeEventArgs;
-  class IDataExchangeWorkflowComponent;
+  class IWorkflowComponent;
 
   /*!
    * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
@@ -669,6 +655,18 @@ namespace HydroCouple
       virtual void finish() = 0;
 
       /*!
+       * \brief workflow
+       * \return
+       */
+      virtual const IWorkflowComponent *workflow() const = 0;
+
+      /*!
+       * \brief setWorkflow
+       * \param workflow
+       */
+      virtual void setWorkflow(const IWorkflowComponent *workflow) = 0;
+
+      /*!
        * \brief mpiProcess is the MPI process/rank of this component.
        * \return
        */
@@ -697,11 +695,6 @@ namespace HydroCouple
        * \brief mpiClearAllocatedProcesses
        */
       virtual void mpiClearAllocatedProcesses() = 0;
-
-      /*!
-       * \brief mpiProcessMessage message. This message can be received on
-       */
-      virtual void mpiProcessMessage(const SerializableData &data) = 0;
 
       /*!
        * \brief gpuPlatform
@@ -1080,6 +1073,28 @@ namespace HydroCouple
       * \param data is the pointer to the input data to be set.
       */
       virtual void setValue(const std::vector<int> &dimensionIndexes, const void *data) = 0;
+
+      /*!
+       * \brief hasEditor
+       * \return
+       */
+      //virtual bool hasEditor() const = 0;
+
+      /*!
+       * \brief showEditor
+       */
+      //virtual void showEditor() = 0;
+
+      /*!
+       * \brief hasViewer
+       * \return
+       */
+      //virtual bool hasViewer() const = 0;
+
+      /*!
+       * \brief showViewer
+       */
+      //virtual void showViewer() = 0;
 
   };
 
@@ -1598,23 +1613,23 @@ namespace HydroCouple
   /*!
    * \brief The IDataExchangeWorkflowComponentInfo class
    */
-  class IDataExchangeWorkflowComponentInfo:  public virtual IComponentInfo
+  class IWorkflowComponentInfo :  public virtual IComponentInfo
   {
 
     public:
-      virtual ~IDataExchangeWorkflowComponentInfo() {}
+      virtual ~IWorkflowComponentInfo() {}
 
       /*!
       * \brief Creates a new IModelComponent instance.
       * \returns A new instance of an IModelComponent.
       */
-      virtual IDataExchangeWorkflowComponent* createComponentInstance() = 0;
+      virtual IWorkflowComponent* createComponentInstance() = 0;
   };
 
   /*!
    * \brief The IDataExchangeWorkflowComponent class
    */
-  class IDataExchangeWorkflowComponent : public virtual IIdentity
+  class IWorkflowComponent : public virtual IIdentity
   {
     public:
 
@@ -1633,7 +1648,16 @@ namespace HydroCouple
         Failed
       };
 
-      virtual ~IDataExchangeWorkflowComponent() {}
+      /*!
+       * \brief ~IWorkflowComponent
+       */
+      virtual ~IWorkflowComponent() {}
+
+      /*!
+       * \brief componentInfo
+       * \return
+       */
+      virtual IWorkflowComponentInfo* componentInfo() const = 0;
 
       /*!
        * \brief initialize
@@ -1673,6 +1697,10 @@ namespace HydroCouple
        * \param component
        */
       virtual void removeModelComponent(IModelComponent *component) = 0;
+
+    signals:
+
+      virtual void componentStatusChanged(WorkflowStatus status, const QString& message);
   };
 
 }
@@ -1703,8 +1731,8 @@ Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponent, "HydroCouple::I
 Q_DECLARE_INTERFACE(HydroCouple::IInput, "HydroCouple::IInput/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IMultiInput, "HydroCouple::IMultiInput/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IIdBasedComponentDataItem, "HydroCouple::IIdBasedComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IDataExchangeWorkflowComponentInfo, "HydroCouple::IDataExchangeWorkflowComponentInfo/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IDataExchangeWorkflowComponent, "HydroCouple::IDataExchangeWorkflowComponent/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponentInfo, "HydroCouple::IWorkflowComponentInfo/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponent, "HydroCouple::IWorkflowComponent/1.0")
 
 //Metatype
 //!HydroCouple Interface Declarations
@@ -1751,8 +1779,8 @@ Q_DECLARE_METATYPE(HydroCouple::IMultiInput*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IMultiInput*>)
 Q_DECLARE_METATYPE(HydroCouple::IIdBasedComponentDataItem*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IIdBasedComponentDataItem*>)
-Q_DECLARE_METATYPE(HydroCouple::IDataExchangeWorkflowComponentInfo*)
-Q_DECLARE_METATYPE(HydroCouple::IDataExchangeWorkflowComponent*)
+Q_DECLARE_METATYPE(HydroCouple::IWorkflowComponentInfo*)
+Q_DECLARE_METATYPE(HydroCouple::IWorkflowComponent*)
 
 #endif // HYDROCOUPLE_H
 

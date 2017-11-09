@@ -6,6 +6,10 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
+*.pro.user 
+*.vcxproj*
+
 
 Qt
 *.qmake.stash
@@ -24,9 +28,12 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+lib/
+
 GeneratedFiles/
 ipch/
 x64/
+uml/
 ##Resources
 
 # Visual Studo 2015 cache/options directory
@@ -211,9 +218,6 @@ FakesAssemblies/
 *.a
 *.la
 *.lai
-*.so
-*.dll
-*.dylib
 
 # Qt-es
 
