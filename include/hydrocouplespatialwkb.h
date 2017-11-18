@@ -1,12 +1,24 @@
+/*! \file   hydrocouplespatialwkb.h
+ *  \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ *  \version   1.0.0.0
+ *  \section   Description
+ *  This header file contains the struct definitions for the OGC Well Known Binary specification.
+ *  \section License
+ *  hydrocouplespatialwkb.h, its associated files, and libraries are free software.
+ *  You can redistribute it and/or modify it under the terms of the
+ *  Lesser GNU General Public License as published by the Free Software Foundation;
+ *  either version 3 of the License, or (at your option) any later version.
+ *  hydrocouplespatialwkb.h and its associated files is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ *  \date 2014-2018
+ *  \pre
+ *  \bug
+ *  \warning
+ */
+
 #ifndef HYDROCOUPLESPATIALWKB_H
 #define HYDROCOUPLESPATIALWKB_H
-
-#include  <cstdint>
-// Basic Type definitions
-// WKBByteOrder : 1 WKBByteOrder
-// uint32_t : 32 bit unsigned integer (4 bytes)
-// double : double precision number (8 bytes)
-// Building Blocks : Coordinate, LinearRing
 
 /*!
  * \brief The Point struct
@@ -581,6 +593,9 @@ union WKBGeometryZ {
     WKBGeometryCollectionZ collectionz;
 };
 
+/*!
+ * \brief The WKBGeometryM union
+ */
 union WKBGeometryM
 {
     WKBPointM pointm;
@@ -595,6 +610,9 @@ union WKBGeometryM
     WKBGeometryCollectionM collectionm;
 };
 
+/*!
+ * \brief The WKBGeometryZM union
+ */
 union WKBGeometryZM
 {
     WKBPointZM pointzm;

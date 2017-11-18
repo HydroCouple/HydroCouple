@@ -318,6 +318,19 @@ namespace HydroCouple
       * \returns A new instance of an IModelComponent.
       */
       virtual IModelComponent* createComponentInstance() = 0;
+
+      /*!
+      * \brief Gets a list of IAdaptedOutputFactories, each allowing
+      * to create IAdaptedOutput item for making outputs fit to
+      * inputs in case they do not already do so.
+      *
+      * \details Factories can be added to and removed from the list so that
+      * third-party factories and IAdaptedOutput classes can be introduced.
+      *
+      * \returns A list of IAdaptedOutputFactories associated with this component.
+      */
+      virtual QList<IAdaptedOutputFactory*> adaptedOutputFactories() const = 0;
+
   };
 
   /*!
@@ -527,18 +540,6 @@ namespace HydroCouple
       * to make sure that such possible alterations do not subsequently corrupt the IModelComponents.
       */
       virtual QList<IOutput*> outputs() const = 0;
-
-      /*!
-      * \brief Gets a list of IAdaptedOutputFactories, each allowing
-      * to create IAdaptedOutput item for making outputs fit to
-      * inputs in case they do not already do so.
-      *
-      * \details Factories can be added to and removed from the list so that
-      * third-party factories and IAdaptedOutput classes can be introduced.
-      *
-      * \returns A list of IAdaptedOutputFactories associated with this component.
-      */
-      virtual QList<IAdaptedOutputFactory*> adaptedOutputFactories() const = 0;
 
       /*!
       * \brief Initializes the  current IModelComponent
@@ -1468,6 +1469,7 @@ namespace HydroCouple
   class IAdaptedOutputFactoryComponentInfo : public virtual IComponentInfo
   {
     public:
+
       virtual ~IAdaptedOutputFactoryComponentInfo() {}
 
       /*!
@@ -1617,6 +1619,7 @@ namespace HydroCouple
   {
 
     public:
+
       virtual ~IWorkflowComponentInfo() {}
 
       /*!
@@ -1643,6 +1646,7 @@ namespace HydroCouple
         Initialized,
         Updating,
         Updated,
+        Done,
         Finishing,
         Finished,
         Failed
@@ -1700,7 +1704,7 @@ namespace HydroCouple
 
     signals:
 
-      virtual void componentStatusChanged(WorkflowStatus status, const QString& message);
+      virtual void componentStatusChanged(WorkflowStatus status, const QString &message) = 0;
   };
 
 }
