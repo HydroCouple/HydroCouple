@@ -42,12 +42,6 @@ namespace HydroCouple
          * \brief Date and time as a modified julian day value. MJD = JD - 2400000.5
          */
         virtual double modifiedJulianDay() const = 0;
-
-//        /*!
-//         * \brief setDateTime
-//         * \param dateTime
-//         */
-        virtual void setModifiedJulianDay(double dateTime) = 0;
     };
 
     /*!
@@ -64,6 +58,28 @@ namespace HydroCouple
          * Duration of the timespan in days.
          */
         virtual double duration() const = 0;
+    };
+
+    /*!
+     * \brief The ITimeModelComponent class
+     */
+    class ITimeModelComponent : public virtual HydroCouple::IModelComponent
+    {
+      public:
+
+        virtual ~ITimeModelComponent(){}
+
+        /*!
+         * \brief currentDateTime
+         * \return
+         */
+        virtual IDateTime *currentDateTime() const = 0;
+
+        /*!
+         * \brief timeHorizon
+         * \return
+         */
+        virtual ITimeSpan *timeHorizon() const = 0;
     };
 
     /*!
@@ -225,6 +241,7 @@ namespace HydroCouple
 
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::IDateTime, "HydroCouple::Temporal::IDateTime/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeSpan, "HydroCouple::Temporal::ITimeSpan/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeModelComponent, "HydroCouple::Temporal::ITimeModelComponent/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeComponentDataItem, "HydroCouple::Temporal::ITimeComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeSeriesComponentDataItem, "HydroCouple::Temporal::ITimeSeriesComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Temporal::ITimeIdBasedComponentDataItem, "HydroCouple::Temporal::ITimeIdBasedComponentDataItem/1.0")
@@ -233,6 +250,7 @@ Q_DECLARE_METATYPE(HydroCouple::Temporal::IDateTime*)
 Q_DECLARE_METATYPE(QList<HydroCouple::Temporal::IDateTime*>)
 Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeSpan*)
 Q_DECLARE_METATYPE(QList<HydroCouple::Temporal::ITimeSpan*>)
+Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeModelComponent*)
 Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeSeriesComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::Temporal::ITimeIdBasedComponentDataItem*)

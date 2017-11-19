@@ -297,6 +297,13 @@ namespace HydroCouple
       * \returns true if license is valid otherwise false.
       */
       virtual bool validateLicense(const QString& licenseInfo, QString& validationMessage) = 0;
+
+      /*!
+       * \brief validateLicense
+       * \param validationMessage
+       * \return
+       */
+      virtual bool validateLicense(QString& validationMessage) = 0;
   };
 
   /*!
