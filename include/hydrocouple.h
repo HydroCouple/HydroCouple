@@ -119,7 +119,7 @@ namespace HydroCouple
 
       /*!
       * \brief IPropertyChanged::propertyChanged() is called to emit
-      * signal/event when property of child class changes.
+      * signal/event when property of child class changes
       * \param propertyName is a string representing the name of the property.
       */
     signals:
