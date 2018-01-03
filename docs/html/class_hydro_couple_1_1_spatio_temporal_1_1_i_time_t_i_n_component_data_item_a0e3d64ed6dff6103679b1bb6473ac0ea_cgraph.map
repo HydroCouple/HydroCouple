@@ -1,4 +1,0 @@
-<map id="HydroCouple::SpatioTemporal::ITimeTINComponentDataItem::~ITimeTINComponentDataItem" name="HydroCouple::SpatioTemporal::ITimeTINComponentDataItem::~ITimeTINComponentDataItem">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a9f91b596117ad3ba9242bad26dc2601d" title="Gets a multi&#45;dimensional array of values for given time dimension index and size for a hyperslab..." alt="" coords="299,5,576,71"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#ac4073749918519c1b8030ed11500ad08" title="Sets a multi&#45;dimensional array of values for given time dimension index and size for a hyperslab..." alt="" coords="299,95,576,160"/>
-</map>

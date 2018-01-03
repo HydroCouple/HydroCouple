@@ -1,4 +1,0 @@
-<map id="HydroCoupleSDK::Description" name="HydroCoupleSDK::Description">
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="107,140,328,298"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="91,5,344,92"/>
-</map>

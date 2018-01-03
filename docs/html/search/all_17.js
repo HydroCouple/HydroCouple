@@ -10,8 +10,6 @@ var searchData=
   ['_7eicomponentinfo',['~IComponentInfo',['../d3/dd7/class_hydro_couple_1_1_i_component_info.html#a56b848219da108ecfee6223ae7a34409',1,'HydroCouple::IComponentInfo']]],
   ['_7eicomponentstatuschangeeventargs',['~IComponentStatusChangeEventArgs',['../d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html#a1c0e1b3aebb08c9bc66f6d3e83982a61',1,'HydroCouple::IComponentStatusChangeEventArgs']]],
   ['_7eicurve',['~ICurve',['../df/d7f/class_hydro_couple_1_1_spatial_1_1_i_curve.html#a89b81ed7175658dead2689f3866c5710',1,'HydroCouple::Spatial::ICurve']]],
-  ['_7eidataexchangeworkflowcomponent',['~IDataExchangeWorkflowComponent',['../d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html#ad9de97a70b0d22069cdc216bdd7a8891',1,'HydroCouple::IDataExchangeWorkflowComponent']]],
-  ['_7eidataexchangeworkflowcomponentinfo',['~IDataExchangeWorkflowComponentInfo',['../d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info.html#ab170b82b483a0070041fe2c6205f3307',1,'HydroCouple::IDataExchangeWorkflowComponentInfo']]],
   ['_7eidatetime',['~IDateTime',['../d6/dd7/class_hydro_couple_1_1_temporal_1_1_i_date_time.html#a0cee254a09952a0b122394e3273dda15',1,'HydroCouple::Temporal::IDateTime']]],
   ['_7eidescription',['~IDescription',['../db/d64/class_hydro_couple_1_1_i_description.html#ac22c6687c71243d53d2a39dceff15903',1,'HydroCouple::IDescription']]],
   ['_7eidimension',['~IDimension',['../dd/dca/class_hydro_couple_1_1_i_dimension.html#a6b27156565d994f410ab962da8066c8c',1,'HydroCouple::IDimension']]],
@@ -57,6 +55,7 @@ var searchData=
   ['_7eitimecomponentdataitem',['~ITimeComponentDataItem',['../d9/d05/class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html#a695ebdd6e16065be403c64c74a7799ea',1,'HydroCouple::Temporal::ITimeComponentDataItem']]],
   ['_7eitimegeometrycomponentdataitem',['~ITimeGeometryComponentDataItem',['../db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a57c46ea91026f9f9bae578261bb89c38',1,'HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem']]],
   ['_7eitimeidbasedcomponentdataitem',['~ITimeIdBasedComponentDataItem',['../d0/dd4/class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html#a2385affdca01e2455aa6c8ac38250fa2',1,'HydroCouple::Temporal::ITimeIdBasedComponentDataItem']]],
+  ['_7eitimemodelcomponent',['~ITimeModelComponent',['../d3/d7d/class_hydro_couple_1_1_temporal_1_1_i_time_model_component.html#aec6902be68ae8593aa4fb4a00cf2c0f0',1,'HydroCouple::Temporal::ITimeModelComponent']]],
   ['_7eitimepolyhedralsurfacecomponentdataitem',['~ITimePolyhedralSurfaceComponentDataItem',['../d2/d80/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_polyhedral_surface_component_data_item.html#a7f4b0fdba01f40134aa118e3eda58ccd',1,'HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem']]],
   ['_7eitimerastercomponentdataitem',['~ITimeRasterComponentDataItem',['../d6/d72/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html#a40bb56e657f691f554827b973cb06dab',1,'HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem']]],
   ['_7eitimeregulargrid2dcomponentdataitem',['~ITimeRegularGrid2DComponentDataItem',['../d6/da3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid2_d_component_data_item.html#a2322197c9014c7b93f60db010a8a4174',1,'HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem']]],
@@ -64,6 +63,7 @@ var searchData=
   ['_7eitimeseriescomponentdataitem',['~ITimeSeriesComponentDataItem',['../de/d0b/class_hydro_couple_1_1_temporal_1_1_i_time_series_component_data_item.html#a6bcc4ce7ee23033ee81ee82ba6b4c902',1,'HydroCouple::Temporal::ITimeSeriesComponentDataItem']]],
   ['_7eitimespan',['~ITimeSpan',['../d6/d12/class_hydro_couple_1_1_temporal_1_1_i_time_span.html#aa47c7ff2072f9510a90cdd59dc5bd1c0',1,'HydroCouple::Temporal::ITimeSpan']]],
   ['_7eitimetincomponentdataitem',['~ITimeTINComponentDataItem',['../d6/db3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_component_data_item.html#a0e3d64ed6dff6103679b1bb6473ac0ea',1,'HydroCouple::SpatioTemporal::ITimeTINComponentDataItem']]],
+  ['_7eitimevectorcomponentdataitem',['~ITimeVectorComponentDataItem',['../df/d86/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_vector_component_data_item.html#aab50d4a6b6c796a585840ed4774b33d6',1,'HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem']]],
   ['_7eitin',['~ITIN',['../d9/d8c/class_hydro_couple_1_1_spatial_1_1_i_t_i_n.html#a0e5c7ce9a119dadac0eb83de9412e515',1,'HydroCouple::Spatial::ITIN']]],
   ['_7eitincomponentdataitem',['~ITINComponentDataItem',['../d3/d6c/class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item.html#ad5bc9d36ebd86c9da3d98f6b89db11da',1,'HydroCouple::Spatial::ITINComponentDataItem']]],
   ['_7eitriangle',['~ITriangle',['../d5/dd6/class_hydro_couple_1_1_spatial_1_1_i_triangle.html#a928e0356558373a90058a7c79a4c9131',1,'HydroCouple::Spatial::ITriangle']]],
@@ -71,5 +71,7 @@ var searchData=
   ['_7eiunitdimensions',['~IUnitDimensions',['../dc/df4/class_hydro_couple_1_1_i_unit_dimensions.html#ae0a76c5a5d3f32e5e8de62ad60c33632',1,'HydroCouple::IUnitDimensions']]],
   ['_7eivaluedefinition',['~IValueDefinition',['../d9/d22/class_hydro_couple_1_1_i_value_definition.html#a96cce05992617a4a4e1a2f7b7dae0f6f',1,'HydroCouple::IValueDefinition']]],
   ['_7eivectorcomponentdataitem',['~IVectorComponentDataItem',['../d9/d51/class_hydro_couple_1_1_spatial_1_1_i_vector_component_data_item.html#a02f1989aa64299dbe6802d4f74a6f9aa',1,'HydroCouple::Spatial::IVectorComponentDataItem']]],
-  ['_7eivertex',['~IVertex',['../d1/d5a/class_hydro_couple_1_1_spatial_1_1_i_vertex.html#a3cce604388c40b377d033381e60c2198',1,'HydroCouple::Spatial::IVertex']]]
+  ['_7eivertex',['~IVertex',['../d1/d5a/class_hydro_couple_1_1_spatial_1_1_i_vertex.html#a3cce604388c40b377d033381e60c2198',1,'HydroCouple::Spatial::IVertex']]],
+  ['_7eiworkflowcomponent',['~IWorkflowComponent',['../df/d74/class_hydro_couple_1_1_i_workflow_component.html#ae05384386865a665636fd8b456242b15',1,'HydroCouple::IWorkflowComponent']]],
+  ['_7eiworkflowcomponentinfo',['~IWorkflowComponentInfo',['../df/d58/class_hydro_couple_1_1_i_workflow_component_info.html#a2f4db7b83210fab7aec9752036cb593e',1,'HydroCouple::IWorkflowComponentInfo']]]
 ];

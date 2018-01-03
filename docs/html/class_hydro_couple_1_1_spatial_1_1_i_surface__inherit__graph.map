@@ -1,7 +1,0 @@
-<map id="HydroCouple::Spatial::ISurface" name="HydroCouple::Spatial::ISurface">
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_polygon.html" title="A IPolygon is a planar ISurface defined by 1 exterior boundary and 0 or more interior boundaries..." alt="" coords="5,1279,195,1473"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_spatial_1_1_i_polyhedral_surface.html" title="An IPolyhedralSurface is a contiguous collection of polygons, which share common boundary segments..." alt="" coords="219,1270,424,1481"/>
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="96,5,325,999"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatial_1_1_i_triangle.html" title="An ITriangle is a IPolygon with 3 distinct, non&#45;collinear vertices and no interior boundary..." alt="" coords="9,1529,191,1687"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_spatial_1_1_i_t_i_n.html" title="An ITIN is a triangulated irregular network IPolyhedralSurface consisting only of ITriangle patches..." alt="" coords="231,1547,412,1670"/>
-</map>

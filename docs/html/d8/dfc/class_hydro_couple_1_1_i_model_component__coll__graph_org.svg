@@ -16,16 +16,16 @@
 <text text-anchor="middle" x="95.0142" y="-164.52" font-family="Monaco" font-size="10.00"> </text>
 <polyline fill="none" stroke="black" points="3.00049,-155.185 187.028,-155.185 "/>
 <text text-anchor="start" x="11.0005" y="-143.185" font-family="Monaco" font-size="10.00">+ ~IModelComponent()</text>
-<text text-anchor="start" x="11.0005" y="-129.85" font-family="Monaco" font-size="10.00">+ componentInfo()</text>
-<text text-anchor="start" x="11.0005" y="-116.515" font-family="Monaco" font-size="10.00">+ arguments()</text>
-<text text-anchor="start" x="11.0005" y="-103.18" font-family="Monaco" font-size="10.00">+ status()</text>
-<text text-anchor="start" x="11.0005" y="-89.8447" font-family="Monaco" font-size="10.00">+ inputs()</text>
-<text text-anchor="start" x="11.0005" y="-76.5098" font-family="Monaco" font-size="10.00">+ outputs()</text>
-<text text-anchor="start" x="11.0005" y="-63.1748" font-family="Monaco" font-size="10.00">+ adaptedOutputFactories()</text>
-<text text-anchor="start" x="11.0005" y="-49.8398" font-family="Monaco" font-size="10.00">+ initialize()</text>
-<text text-anchor="start" x="11.0005" y="-36.5049" font-family="Monaco" font-size="10.00">+ validate()</text>
-<text text-anchor="start" x="11.0005" y="-23.1699" font-family="Monaco" font-size="10.00">+ prepare()</text>
-<text text-anchor="start" x="11.0005" y="-9.83496" font-family="Monaco" font-size="10.00">and 9 more...</text>
+<text text-anchor="start" x="11.0005" y="-129.85" font-family="Monaco" font-size="10.00">+ index()</text>
+<text text-anchor="start" x="11.0005" y="-116.515" font-family="Monaco" font-size="10.00">+ setIndex()</text>
+<text text-anchor="start" x="11.0005" y="-103.18" font-family="Monaco" font-size="10.00">+ componentInfo()</text>
+<text text-anchor="start" x="11.0005" y="-89.8447" font-family="Monaco" font-size="10.00">+ arguments()</text>
+<text text-anchor="start" x="11.0005" y="-76.5098" font-family="Monaco" font-size="10.00">+ status()</text>
+<text text-anchor="start" x="11.0005" y="-63.1748" font-family="Monaco" font-size="10.00">+ inputs()</text>
+<text text-anchor="start" x="11.0005" y="-49.8398" font-family="Monaco" font-size="10.00">+ outputs()</text>
+<text text-anchor="start" x="11.0005" y="-36.5049" font-family="Monaco" font-size="10.00">+ initialize()</text>
+<text text-anchor="start" x="11.0005" y="-23.1699" font-family="Monaco" font-size="10.00">+ validate()</text>
+<text text-anchor="start" x="11.0005" y="-9.83496" font-family="Monaco" font-size="10.00">and 18 more...</text>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>

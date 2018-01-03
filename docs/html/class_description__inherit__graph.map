@@ -1,8 +1,0 @@
-<map id="Description" name="Description">
-<area shape="rect" id="node5" href="$class_identity.html" title="The Identity class is an implementation of the HydroCouple::IIdentity of the HydroCouple interface de..." alt="" coords="181,640,307,798"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="220,140,441,298"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="204,5,457,92"/>
-<area shape="rect" id="node6" href="$class_abstract_model_component.html" title="AbstractModelComponent class. " alt="" coords="5,864,243,1342"/>
-<area shape="rect" id="node7" href="$class_component_info.html" title="Implementation of the IComponentInfo. This is the core interface specifying meta data about a compone..." alt="" coords="267,846,464,1360"/>
-<area shape="rect" id="node8" href="$class_model_component_info.html" title="The ModelComponentInfo class. " alt="" coords="283,1408,448,1494"/>
-</map>

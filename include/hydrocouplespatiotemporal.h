@@ -1,20 +1,23 @@
-/*! \file   hydrocouplespatiotemporal.h
- *  \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
- *  \version   1.0.0.0
- *  \section   Description
- *  This header file contains the geotemporal interface definitions for the HydroCouple Component-based modeling interface definitions.
- *  \section License
- *  hydrocouplespatiotemporal.h, its associated files, and libraries are free software.
- *  You can redistribute it and/or modify it under the terms of the
- *  Lesser GNU General Public License as published by the Free Software Foundation;
- *  either version 3 of the License, or (at your option) any later version.
- *  hydrocouplespatiotemporal.h and its associated files is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- *  \date 2014-2018
- *  \pre
- *  \bug
- *  \warning
+/*!
+ * \file hydrocouplespatiotemporal.h
+ * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \version 1.0.0
+ * \description
+ * This header file contains the spatio-temporal interface definitions for the
+ * HydroCouple component-based modeling definitions.
+ * \license
+ * This file and its associated files, and libraries are free software.
+ * You can redistribute it and/or modify it under the terms of the
+ * Lesser GNU General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This file and its associated files is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * \copyright Copyright 2014-2018, Caleb Buahin, All rights reserved.
+ * \date 2014-2018
+ * \pre
+ * \bug
+ * \warning
+ * \todo
  */
 
 #ifndef HYDROCOUPLESPATIOTEMPORAL_H
@@ -78,7 +81,7 @@ namespace HydroCouple
         /*!
          * \brief getValue
          * \param timeIndex
-         * \param geometryDimensionIndex
+         * \param geometryIndex
          * \param data
          */
         virtual void getValue(int timeIndex, int geometryIndex, void *data) const = 0;
@@ -86,7 +89,7 @@ namespace HydroCouple
         /*!
         * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
         * \param timeIndex is the time dimension index from where to obtain the requested data.
-        * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
+        * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
         * \param timeStride is the size for the time dimension for hyperslab from which to copy data.
         * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
         * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
@@ -96,7 +99,7 @@ namespace HydroCouple
         /*!
          * \brief setValues
          * \param timeIndex
-         * \param geometryDimensionIndex
+         * \param geometryIndex
          * \param data
          */
         virtual void setValue(int timeIndex, int geometryIndex, const void *data) = 0;
@@ -104,7 +107,7 @@ namespace HydroCouple
         /*!
          * \brief Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
          * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
+         * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
          * \param timeStride is the size for the time dimension for hyperslab from which to copy data.
          * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
          * \param data is the input multi dimensional array to be written.
@@ -409,7 +412,6 @@ namespace HydroCouple
          * \param yCellIndex
          * \param zCellIndex
          * \param cellFaceIndex
-         * \param cellEdgeIndex
          * \param cellNodeIndex
          * \param data
          */
@@ -451,7 +453,7 @@ namespace HydroCouple
 
         /*!
          * \brief location
-         * \param pointIndex
+         * \param locationIndex
          * \return
          */
         virtual HydroCouple::Spatial::IPoint *location(int locationIndex) const = 0;
@@ -471,14 +473,16 @@ namespace HydroCouple
 
         /*!
          * \brief getValue
+         * \param timeIndex
          * \param locationIndex
-         * \param spatialDimensionIndex
+         * \param spatialIndex
          * \param data
          */
-        virtual void getValue(int timeIndex, int locationIndex, int spatialDimensionIndex, void *data) const = 0;
+        virtual void getValue(int timeIndex, int locationIndex, int spatialIndex, void *data) const = 0;
 
         /*!
          * \brief getValues
+         * \param timeIndex
          * \param locationIndex
          * \param spatialDimensionIndex
          * \param locationStride
@@ -489,14 +493,16 @@ namespace HydroCouple
                                int locationStride, int spatialDimensionStride, void *data) const = 0;
         /*!
          * \brief setValue
+         * \param timeIndex
          * \param locationIndex
          * \param spatialDimensionIndex
-         * \param datass1
+         * \param data
          */
         virtual void setValue(int timeIndex, int locationIndex, int spatialDimensionIndex, const void *data) = 0;
 
         /*!
          * \brief setValues
+         * \param timeIndex
          * \param locationIndex
          * \param spatialDimensionIndex
          * \param locationStride

@@ -68,6 +68,7 @@ var hierarchy =
               [ "HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem", "d6/d72/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html", null ],
               [ "HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem", "d6/da3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid2_d_component_data_item.html", null ],
               [ "HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem", "db/d99/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html", null ],
+              [ "HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem", "df/d86/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_vector_component_data_item.html", null ],
               [ "HydroCouple::Temporal::ITimeIdBasedComponentDataItem", "d0/dd4/class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html", null ],
               [ "HydroCouple::Temporal::ITimeSeriesComponentDataItem", "de/d0b/class_hydro_couple_1_1_temporal_1_1_i_time_series_component_data_item.html", null ]
             ] ],
@@ -75,14 +76,15 @@ var hierarchy =
           ] ],
           [ "HydroCouple::IComponentInfo", "d3/dd7/class_hydro_couple_1_1_i_component_info.html", [
             [ "HydroCouple::IAdaptedOutputFactoryComponentInfo", "dc/d06/class_hydro_couple_1_1_i_adapted_output_factory_component_info.html", null ],
-            [ "HydroCouple::IDataExchangeWorkflowComponentInfo", "d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info.html", null ],
-            [ "HydroCouple::IModelComponentInfo", "dd/d4e/class_hydro_couple_1_1_i_model_component_info.html", null ]
+            [ "HydroCouple::IModelComponentInfo", "dd/d4e/class_hydro_couple_1_1_i_model_component_info.html", null ],
+            [ "HydroCouple::IWorkflowComponentInfo", "df/d58/class_hydro_couple_1_1_i_workflow_component_info.html", null ]
           ] ],
-          [ "HydroCouple::IDataExchangeWorkflowComponent", "d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html", null ],
           [ "HydroCouple::IDimension", "dd/dca/class_hydro_couple_1_1_i_dimension.html", null ],
           [ "HydroCouple::IModelComponent", "d3/dae/class_hydro_couple_1_1_i_model_component.html", [
-            [ "HydroCouple::ICloneableModelComponent", "dd/d89/class_hydro_couple_1_1_i_cloneable_model_component.html", null ]
+            [ "HydroCouple::ICloneableModelComponent", "dd/d89/class_hydro_couple_1_1_i_cloneable_model_component.html", null ],
+            [ "HydroCouple::Temporal::ITimeModelComponent", "d3/d7d/class_hydro_couple_1_1_temporal_1_1_i_time_model_component.html", null ]
           ] ],
+          [ "HydroCouple::IWorkflowComponent", "df/d74/class_hydro_couple_1_1_i_workflow_component.html", null ],
           [ "HydroCouple::Spatial::IRaster", "d8/d5b/class_hydro_couple_1_1_spatial_1_1_i_raster.html", null ],
           [ "HydroCouple::Spatial::IRasterBand", "d1/da8/class_hydro_couple_1_1_spatial_1_1_i_raster_band.html", null ],
           [ "HydroCouple::Spatial::IRegularGrid2D", "d0/d66/class_hydro_couple_1_1_spatial_1_1_i_regular_grid2_d.html", null ],
@@ -108,7 +110,6 @@ var hierarchy =
     [ "PointM", "de/d55/struct_point_m.html", null ],
     [ "PointZ", "d6/d0c/struct_point_z.html", null ],
     [ "PointZM", "d7/ded/struct_point_z_m.html", null ],
-    [ "SerializedData", "db/d66/struct_serialized_data.html", null ],
     [ "WKBGeometry", "da/d36/union_w_k_b_geometry.html", null ],
     [ "WKBGeometryCollection", "d4/d04/struct_w_k_b_geometry_collection.html", null ],
     [ "WKBGeometryCollectionM", "d8/da0/struct_w_k_b_geometry_collection_m.html", null ],

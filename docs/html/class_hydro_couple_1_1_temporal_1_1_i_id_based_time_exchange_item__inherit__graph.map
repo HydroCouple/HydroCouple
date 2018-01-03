@@ -1,9 +1,0 @@
-<map id="HydroCouple::Temporal::IIdBasedTimeExchangeItem" name="HydroCouple::Temporal::IIdBasedTimeExchangeItem">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_exchange_item.html" title="IExchangeItem the base data item the can be exchanged between components at runtime. " alt="" coords="5,1070,235,1174"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="95,498,364,745"/>
-<area shape="rect" id="node8" href="$class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html" title="ITimeComponentItem is an IComponentItem with a temporal attribute. " alt="" coords="253,793,491,951"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="131,346,328,450"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="119,140,340,298"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="103,5,356,92"/>
-<area shape="rect" id="node7" href="$class_hydro_couple_1_1_temporal_1_1_i_id_based_time_component_data_item.html" title="The IIdBasedTimeComponentDataItem class. " alt="" coords="259,999,552,1245"/>
-</map>

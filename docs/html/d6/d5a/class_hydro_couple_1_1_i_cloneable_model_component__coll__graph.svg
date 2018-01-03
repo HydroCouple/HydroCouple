@@ -76,16 +76,16 @@ var sectionId = 'dynsection-1';
 <text text-anchor="middle" x="95.0142" y="-318.864" font-family="Monaco" font-size="10.00"> </text>
 <polyline fill="none" stroke="black" points="3.00049,-309.529 187.028,-309.529 "/>
 <text text-anchor="start" x="11.0005" y="-297.529" font-family="Monaco" font-size="10.00">+ ~IModelComponent()</text>
-<text text-anchor="start" x="11.0005" y="-284.194" font-family="Monaco" font-size="10.00">+ componentInfo()</text>
-<text text-anchor="start" x="11.0005" y="-270.859" font-family="Monaco" font-size="10.00">+ arguments()</text>
-<text text-anchor="start" x="11.0005" y="-257.524" font-family="Monaco" font-size="10.00">+ status()</text>
-<text text-anchor="start" x="11.0005" y="-244.189" font-family="Monaco" font-size="10.00">+ inputs()</text>
-<text text-anchor="start" x="11.0005" y="-230.854" font-family="Monaco" font-size="10.00">+ outputs()</text>
-<text text-anchor="start" x="11.0005" y="-217.52" font-family="Monaco" font-size="10.00">+ adaptedOutputFactories()</text>
-<text text-anchor="start" x="11.0005" y="-204.185" font-family="Monaco" font-size="10.00">+ initialize()</text>
-<text text-anchor="start" x="11.0005" y="-190.85" font-family="Monaco" font-size="10.00">+ validate()</text>
-<text text-anchor="start" x="11.0005" y="-177.515" font-family="Monaco" font-size="10.00">+ prepare()</text>
-<text text-anchor="start" x="11.0005" y="-164.18" font-family="Monaco" font-size="10.00">and 9 more...</text>
+<text text-anchor="start" x="11.0005" y="-284.194" font-family="Monaco" font-size="10.00">+ index()</text>
+<text text-anchor="start" x="11.0005" y="-270.859" font-family="Monaco" font-size="10.00">+ setIndex()</text>
+<text text-anchor="start" x="11.0005" y="-257.524" font-family="Monaco" font-size="10.00">+ componentInfo()</text>
+<text text-anchor="start" x="11.0005" y="-244.189" font-family="Monaco" font-size="10.00">+ arguments()</text>
+<text text-anchor="start" x="11.0005" y="-230.854" font-family="Monaco" font-size="10.00">+ status()</text>
+<text text-anchor="start" x="11.0005" y="-217.52" font-family="Monaco" font-size="10.00">+ inputs()</text>
+<text text-anchor="start" x="11.0005" y="-204.185" font-family="Monaco" font-size="10.00">+ outputs()</text>
+<text text-anchor="start" x="11.0005" y="-190.85" font-family="Monaco" font-size="10.00">+ initialize()</text>
+<text text-anchor="start" x="11.0005" y="-177.515" font-family="Monaco" font-size="10.00">+ validate()</text>
+<text text-anchor="start" x="11.0005" y="-164.18" font-family="Monaco" font-size="10.00">and 18 more...</text>
 </a>
 </g>
 </g>

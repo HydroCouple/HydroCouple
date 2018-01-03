@@ -1,6 +1,0 @@
-<map id="HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem" name="HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="5,498,275,692"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="41,346,239,450"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="29,140,251,298"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="13,5,267,92"/>
-</map>

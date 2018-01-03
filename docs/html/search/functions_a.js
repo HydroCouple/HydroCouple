@@ -13,9 +13,12 @@ var searchData=
   ['minz',['minZ',['../d6/d84/class_hydro_couple_1_1_spatial_1_1_i_envelope.html#ada02109215ceeb6cbc995234f03fcbfc',1,'HydroCouple::Spatial::IEnvelope']]],
   ['missingvalue',['missingValue',['../d9/d22/class_hydro_couple_1_1_i_value_definition.html#afd5a29d245c9bd67a979ef963741adb7',1,'HydroCouple::IValueDefinition']]],
   ['modelcomponent',['modelComponent',['../d8/d52/class_hydro_couple_1_1_i_component_data_item.html#ae4230126266b62c4d5089971ded66cc0',1,'HydroCouple::IComponentDataItem']]],
-  ['modelcomponents',['modelComponents',['../d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html#a4a0c36c481ded4a84b36f19e47a3b3a1',1,'HydroCouple::IDataExchangeWorkflowComponent']]],
+  ['modelcomponents',['modelComponents',['../df/d74/class_hydro_couple_1_1_i_workflow_component.html#a7166a126db1dbf20d7387597f01d377b',1,'HydroCouple::IWorkflowComponent']]],
   ['modifiedjulianday',['modifiedJulianDay',['../d6/dd7/class_hydro_couple_1_1_temporal_1_1_i_date_time.html#a401f1fd3c8a3305dbeb025df3e1f484e',1,'HydroCouple::Temporal::IDateTime']]],
-  ['mpiallocatedprocessors',['mpiAllocatedProcessors',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#a961a25f2bf901f5b47ded06008841741',1,'HydroCouple::IModelComponent']]],
-  ['mpicommunicator',['mpiCommunicator',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#ae44eb7f8dfd1dcc566457f233c7bcd8d',1,'HydroCouple::IModelComponent']]],
-  ['mpiprocessor',['mpiProcessor',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#a641e6e84375eb77c9e6fec3dd7a2864c',1,'HydroCouple::IModelComponent']]]
+  ['mpiallocatedprocesses',['mpiAllocatedProcesses',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#aaa6f6496cd9a34640eada76edbab11c8',1,'HydroCouple::IModelComponent']]],
+  ['mpiallocateprocesses',['mpiAllocateProcesses',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#a5b30bc062e09de92f5a0c6c2a46548e1',1,'HydroCouple::IModelComponent']]],
+  ['mpiclearallocatedprocesses',['mpiClearAllocatedProcesses',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#a804fa9d234ff204f734441281ebc41ad',1,'HydroCouple::IModelComponent']]],
+  ['mpinumofprocesses',['mpiNumOfProcesses',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#a26cb2638eb56bb202be3897710d32eef',1,'HydroCouple::IModelComponent']]],
+  ['mpiprocessrank',['mpiProcessRank',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#a39d6d23d364737580a60c6b4741ad8cc',1,'HydroCouple::IModelComponent']]],
+  ['mpisetprocessrank',['mpiSetProcessRank',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac8c4630173c94ce0ac9b225ec6a7158d',1,'HydroCouple::IModelComponent']]]
 ];

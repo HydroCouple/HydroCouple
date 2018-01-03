@@ -12,6 +12,7 @@ var class_hydro_couple_1_1_i_component_info =
     [ "setLibraryFilePath", "d3/dd7/class_hydro_couple_1_1_i_component_info.html#aabdd158fd67c99350576cb4dd6f2d65c", null ],
     [ "url", "d3/dd7/class_hydro_couple_1_1_i_component_info.html#aea77d368551f6f2bb8cb3755016bd3f6", null ],
     [ "validateLicense", "d3/dd7/class_hydro_couple_1_1_i_component_info.html#a3fc3f6c9d4896603a4e8f3b459ddf476", null ],
+    [ "validateLicense", "d3/dd7/class_hydro_couple_1_1_i_component_info.html#a0fe3322dbbb86bea3252d29301cf9b25", null ],
     [ "vendor", "d3/dd7/class_hydro_couple_1_1_i_component_info.html#a40681c4287cbc91d9b12e3e7782f72bc", null ],
     [ "version", "d3/dd7/class_hydro_couple_1_1_i_component_info.html#a62f6057385292ad34538fc2b4d242674", null ]
 ];

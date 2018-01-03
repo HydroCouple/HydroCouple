@@ -1,9 +1,0 @@
-<map id="HydroCouple::Spatial::IGeometryCollection" name="HydroCouple::Spatial::IGeometryCollection">
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_curve.html" title="An IMultiCurve is a 1&#45;dimensional IGeometryCollection whose elements are ICurves. ..." alt="" coords="9,1244,191,1384"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_point.html" title="An IMultiPoint is a 0&#45;dimensional IGeometryCollection. " alt="" coords="215,1253,396,1375"/>
-<area shape="rect" id="node7" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_surface.html" title="A MultiSurface is a 2&#45;dimensional GeometryCollection whose elements are Surfaces, all using coordinat..." alt="" coords="420,1235,601,1393"/>
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="191,5,420,999"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_line_string.html" title="An IMultiLineString is an IMultiCurve whose elements are ILineStrings. " alt="" coords="5,1441,195,1563"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_spatial_1_1_i_network.html" title="The INetwork class. " alt="" coords="9,1611,191,1733"/>
-<area shape="rect" id="node8" href="$class_hydro_couple_1_1_spatial_1_1_i_multi_polygon.html" title="An IMultiPolygon is an IMultiSurface whose elements are IPolygons. " alt="" coords="420,1441,601,1563"/>
-</map>

@@ -126,12 +126,14 @@ $(document).ready(function(){initNavTree('d3/dae/class_hydro_couple_1_1_i_model_
 <div class="dynheader">
 Inheritance diagram for HydroCouple::IModelComponent:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d4/d18/class_hydro_couple_1_1_i_model_component__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d4/d18/class_hydro_couple_1_1_i_model_component__inherit__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 <div class="dynheader">
 Collaboration diagram for HydroCouple::IModelComponent:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d8/dfc/class_hydro_couple_1_1_i_model_component__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d8/dfc/class_hydro_couple_1_1_i_model_component__coll__graph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -182,7 +184,14 @@ Signals</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:afd991730576a343d5a8ba850e1c73b66"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#afd991730576a343d5a8ba850e1c73b66">~IModelComponent</a> ()</td></tr>
+<tr class="memdesc:afd991730576a343d5a8ba850e1c73b66"><td class="mdescLeft">&#160;</td><td class="mdescRight">~IModelComponent  <a href="#afd991730576a343d5a8ba850e1c73b66">More...</a><br /></td></tr>
 <tr class="separator:afd991730576a343d5a8ba850e1c73b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4615d11aaa53f0b2da75cfdd69208f7e"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a4615d11aaa53f0b2da75cfdd69208f7e">index</a> () const  =0</td></tr>
+<tr class="memdesc:a4615d11aaa53f0b2da75cfdd69208f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">index  <a href="#a4615d11aaa53f0b2da75cfdd69208f7e">More...</a><br /></td></tr>
+<tr class="separator:a4615d11aaa53f0b2da75cfdd69208f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecaf23f8086b0f75ac57a1cc02663d26"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aecaf23f8086b0f75ac57a1cc02663d26">setIndex</a> (int <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a4615d11aaa53f0b2da75cfdd69208f7e">index</a>)=0</td></tr>
+<tr class="memdesc:aecaf23f8086b0f75ac57a1cc02663d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">setIndex  <a href="#aecaf23f8086b0f75ac57a1cc02663d26">More...</a><br /></td></tr>
+<tr class="separator:aecaf23f8086b0f75ac57a1cc02663d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac80beb7bcf03f7408d99e5a15ef49b16"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../dd/d4e/class_hydro_couple_1_1_i_model_component_info.html">IModelComponentInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac80beb7bcf03f7408d99e5a15ef49b16">componentInfo</a> () const  =0</td></tr>
 <tr class="memdesc:ac80beb7bcf03f7408d99e5a15ef49b16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the metadata about this <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> instance.  <a href="#ac80beb7bcf03f7408d99e5a15ef49b16">More...</a><br /></td></tr>
 <tr class="separator:ac80beb7bcf03f7408d99e5a15ef49b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,9 +207,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f4b78a4d3d92b693ce54c8de6a1e3dc"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="../../da/dbd/class_hydro_couple_1_1_i_output.html">IOutput</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3f4b78a4d3d92b693ce54c8de6a1e3dc">outputs</a> () const  =0</td></tr>
 <tr class="memdesc:a3f4b78a4d3d92b693ce54c8de6a1e3dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of IOutputs for which a component can produce results.  <a href="#a3f4b78a4d3d92b693ce54c8de6a1e3dc">More...</a><br /></td></tr>
 <tr class="separator:a3f4b78a4d3d92b693ce54c8de6a1e3dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3bbc0f0936494b69bc274d8890f5634"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="../../da/d70/class_hydro_couple_1_1_i_adapted_output_factory.html">IAdaptedOutputFactory</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ad3bbc0f0936494b69bc274d8890f5634">adaptedOutputFactories</a> () const  =0</td></tr>
-<tr class="memdesc:ad3bbc0f0936494b69bc274d8890f5634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a list of IAdaptedOutputFactories, each allowing to create <a class="el" href="../../d6/d04/class_hydro_couple_1_1_i_adapted_output.html" title="An IAdaptedOutput adds one or more data operations on top of an IOutput. ">IAdaptedOutput</a> item for making outputs fit to inputs in case they do not already do so.  <a href="#ad3bbc0f0936494b69bc274d8890f5634">More...</a><br /></td></tr>
-<tr class="separator:ad3bbc0f0936494b69bc274d8890f5634"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3efefc4a48f5551641e682ef005f2b1f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a3efefc4a48f5551641e682ef005f2b1f">initialize</a> ()=0</td></tr>
 <tr class="memdesc:a3efefc4a48f5551641e682ef005f2b1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the current <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>.  <a href="#a3efefc4a48f5551641e682ef005f2b1f">More...</a><br /></td></tr>
 <tr class="separator:a3efefc4a48f5551641e682ef005f2b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,21 +222,45 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c4619110b5cc19f9a1590025f77fda1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1">finish</a> ()=0</td></tr>
 <tr class="memdesc:a2c4619110b5cc19f9a1590025f77fda1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a2c4619110b5cc19f9a1590025f77fda1" title="The finish() must be invoked as the last of any methods in the IModelComponent interface. ">finish()</a> must be invoked as the last of any methods in the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> interface.  <a href="#a2c4619110b5cc19f9a1590025f77fda1">More...</a><br /></td></tr>
 <tr class="separator:a2c4619110b5cc19f9a1590025f77fda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae44eb7f8dfd1dcc566457f233c7bcd8d"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ae44eb7f8dfd1dcc566457f233c7bcd8d">mpiCommunicator</a> () const  =0</td></tr>
-<tr class="memdesc:ae44eb7f8dfd1dcc566457f233c7bcd8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiCommunicator  <a href="#ae44eb7f8dfd1dcc566457f233c7bcd8d">More...</a><br /></td></tr>
-<tr class="separator:ae44eb7f8dfd1dcc566457f233c7bcd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a641e6e84375eb77c9e6fec3dd7a2864c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a641e6e84375eb77c9e6fec3dd7a2864c">mpiProcessor</a> () const  =0</td></tr>
-<tr class="memdesc:a641e6e84375eb77c9e6fec3dd7a2864c"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiProcessor of the current component;  <a href="#a641e6e84375eb77c9e6fec3dd7a2864c">More...</a><br /></td></tr>
-<tr class="separator:a641e6e84375eb77c9e6fec3dd7a2864c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a961a25f2bf901f5b47ded06008841741"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a961a25f2bf901f5b47ded06008841741">mpiAllocatedProcessors</a> () const  =0</td></tr>
-<tr class="memdesc:a961a25f2bf901f5b47ded06008841741"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocatedProcessors  <a href="#a961a25f2bf901f5b47ded06008841741">More...</a><br /></td></tr>
-<tr class="separator:a961a25f2bf901f5b47ded06008841741"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d9d602798083f49b36699cf311924a9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a0d9d602798083f49b36699cf311924a9">allocateMPIResources</a> (int communicator, int rank, const QList&lt; int &gt; &amp;allocatedProcessors)=0</td></tr>
-<tr class="memdesc:a0d9d602798083f49b36699cf311924a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">allocateMPIResources  <a href="#a0d9d602798083f49b36699cf311924a9">More...</a><br /></td></tr>
-<tr class="separator:a0d9d602798083f49b36699cf311924a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e4484c145a7e2e8dd663679f371b319"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a4e4484c145a7e2e8dd663679f371b319">processMPIMessage</a> (const <a class="el" href="../../db/d66/struct_serialized_data.html">SerializedData</a> &amp;data)=0</td></tr>
-<tr class="memdesc:a4e4484c145a7e2e8dd663679f371b319"><td class="mdescLeft">&#160;</td><td class="mdescRight">recieveMPIMessage message. This message can be received on  <a href="#a4e4484c145a7e2e8dd663679f371b319">More...</a><br /></td></tr>
-<tr class="separator:a4e4484c145a7e2e8dd663679f371b319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11e4af5ba938e1c1212d56bef9bc1968"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="../../df/d74/class_hydro_couple_1_1_i_workflow_component.html">IWorkflowComponent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a11e4af5ba938e1c1212d56bef9bc1968">workflow</a> () const  =0</td></tr>
+<tr class="memdesc:a11e4af5ba938e1c1212d56bef9bc1968"><td class="mdescLeft">&#160;</td><td class="mdescRight">workflow  <a href="#a11e4af5ba938e1c1212d56bef9bc1968">More...</a><br /></td></tr>
+<tr class="separator:a11e4af5ba938e1c1212d56bef9bc1968"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0009004dddfe05e0ea727d401b5ce6c4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a0009004dddfe05e0ea727d401b5ce6c4">setWorkflow</a> (const <a class="el" href="../../df/d74/class_hydro_couple_1_1_i_workflow_component.html">IWorkflowComponent</a> *<a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a11e4af5ba938e1c1212d56bef9bc1968">workflow</a>)=0</td></tr>
+<tr class="memdesc:a0009004dddfe05e0ea727d401b5ce6c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">setWorkflow  <a href="#a0009004dddfe05e0ea727d401b5ce6c4">More...</a><br /></td></tr>
+<tr class="separator:a0009004dddfe05e0ea727d401b5ce6c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26cb2638eb56bb202be3897710d32eef"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a26cb2638eb56bb202be3897710d32eef">mpiNumOfProcesses</a> () const  =0</td></tr>
+<tr class="memdesc:a26cb2638eb56bb202be3897710d32eef"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiNumProcesses  <a href="#a26cb2638eb56bb202be3897710d32eef">More...</a><br /></td></tr>
+<tr class="separator:a26cb2638eb56bb202be3897710d32eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39d6d23d364737580a60c6b4741ad8cc"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a39d6d23d364737580a60c6b4741ad8cc">mpiProcessRank</a> () const  =0</td></tr>
+<tr class="memdesc:a39d6d23d364737580a60c6b4741ad8cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiProcess is the MPI process/rank of this component.  <a href="#a39d6d23d364737580a60c6b4741ad8cc">More...</a><br /></td></tr>
+<tr class="separator:a39d6d23d364737580a60c6b4741ad8cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8c4630173c94ce0ac9b225ec6a7158d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac8c4630173c94ce0ac9b225ec6a7158d">mpiSetProcessRank</a> (int processRank)=0</td></tr>
+<tr class="memdesc:ac8c4630173c94ce0ac9b225ec6a7158d"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiSetProcess  <a href="#ac8c4630173c94ce0ac9b225ec6a7158d">More...</a><br /></td></tr>
+<tr class="separator:ac8c4630173c94ce0ac9b225ec6a7158d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa6f6496cd9a34640eada76edbab11c8"><td class="memItemLeft" align="right" valign="top">virtual QSet&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aaa6f6496cd9a34640eada76edbab11c8">mpiAllocatedProcesses</a> () const  =0</td></tr>
+<tr class="memdesc:aaa6f6496cd9a34640eada76edbab11c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiAllocatedProcesses are the list of MPI processes/ranks allocated to this component.  <a href="#aaa6f6496cd9a34640eada76edbab11c8">More...</a><br /></td></tr>
+<tr class="separator:aaa6f6496cd9a34640eada76edbab11c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b30bc062e09de92f5a0c6c2a46548e1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a5b30bc062e09de92f5a0c6c2a46548e1">mpiAllocateProcesses</a> (const QSet&lt; int &gt; &amp;mpiProcessesToAllocate)=0</td></tr>
+<tr class="memdesc:a5b30bc062e09de92f5a0c6c2a46548e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiAllocateResources  <a href="#a5b30bc062e09de92f5a0c6c2a46548e1">More...</a><br /></td></tr>
+<tr class="separator:a5b30bc062e09de92f5a0c6c2a46548e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a804fa9d234ff204f734441281ebc41ad"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a804fa9d234ff204f734441281ebc41ad">mpiClearAllocatedProcesses</a> ()=0</td></tr>
+<tr class="memdesc:a804fa9d234ff204f734441281ebc41ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">mpiClearAllocatedProcesses  <a href="#a804fa9d234ff204f734441281ebc41ad">More...</a><br /></td></tr>
+<tr class="separator:a804fa9d234ff204f734441281ebc41ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bbe86db4bd62f66b36576f696dd2c3a"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a1bbe86db4bd62f66b36576f696dd2c3a">gpuPlatform</a> (int mpiProcess) const  =0</td></tr>
+<tr class="memdesc:a1bbe86db4bd62f66b36576f696dd2c3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">gpuPlatform  <a href="#a1bbe86db4bd62f66b36576f696dd2c3a">More...</a><br /></td></tr>
+<tr class="separator:a1bbe86db4bd62f66b36576f696dd2c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0c679b533f53216d3ec54a98e20bf66"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac0c679b533f53216d3ec54a98e20bf66">gpuDevice</a> (int mpiProcess) const  =0</td></tr>
+<tr class="memdesc:ac0c679b533f53216d3ec54a98e20bf66"><td class="mdescLeft">&#160;</td><td class="mdescRight">gpuDevice  <a href="#ac0c679b533f53216d3ec54a98e20bf66">More...</a><br /></td></tr>
+<tr class="separator:ac0c679b533f53216d3ec54a98e20bf66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11895d9bfb629ae51b9a728684a9c95b"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a11895d9bfb629ae51b9a728684a9c95b">gpuMaxNumBlocksOrWorkGrps</a> (int mpiProcess) const  =0</td></tr>
+<tr class="memdesc:a11895d9bfb629ae51b9a728684a9c95b"><td class="mdescLeft">&#160;</td><td class="mdescRight">maxNumGPUBlocksOrWorkGrps specified the maximum number of CUDA blocks or OpenCL workgroups allocated for the specified MPI Process.  <a href="#a11895d9bfb629ae51b9a728684a9c95b">More...</a><br /></td></tr>
+<tr class="separator:a11895d9bfb629ae51b9a728684a9c95b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb8f312b3078ac20d6414a28fe952368"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aeb8f312b3078ac20d6414a28fe952368">gpuAllocatedResources</a> (int mpiProcess, int <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a1bbe86db4bd62f66b36576f696dd2c3a">gpuPlatform</a>, int <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ac0c679b533f53216d3ec54a98e20bf66">gpuDevice</a>, int maxNumGPUBlocksOrWorkGrps)=0</td></tr>
+<tr class="memdesc:aeb8f312b3078ac20d6414a28fe952368"><td class="mdescLeft">&#160;</td><td class="mdescRight">gpuAllocatedResources  <a href="#aeb8f312b3078ac20d6414a28fe952368">More...</a><br /></td></tr>
+<tr class="separator:aeb8f312b3078ac20d6414a28fe952368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11a06ae1b19e3f38e855a076b1e6fa04"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#a11a06ae1b19e3f38e855a076b1e6fa04">gpuClearAllocatedResources</a> ()=0</td></tr>
+<tr class="memdesc:a11a06ae1b19e3f38e855a076b1e6fa04"><td class="mdescLeft">&#160;</td><td class="mdescRight">gpuClearAllocatedResources  <a href="#a11a06ae1b19e3f38e855a076b1e6fa04">More...</a><br /></td></tr>
+<tr class="separator:a11a06ae1b19e3f38e855a076b1e6fa04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab327fdb3e7d70a8fc766b5ae2f4fa4ac"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#ab327fdb3e7d70a8fc766b5ae2f4fa4ac">referenceDirectory</a> () const  =0</td></tr>
 <tr class="memdesc:ab327fdb3e7d70a8fc766b5ae2f4fa4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">referenceDirectory  <a href="#ab327fdb3e7d70a8fc766b5ae2f4fa4ac">More...</a><br /></td></tr>
 <tr class="separator:ab327fdb3e7d70a8fc766b5ae2f4fa4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,9 +285,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae42bbb363fa93cfa5eccf86043545029 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d64/class_hydro_couple_1_1_i_description.html#ae42bbb363fa93cfa5eccf86043545029">description</a> () const  =0</td></tr>
 <tr class="memdesc:ae42bbb363fa93cfa5eccf86043545029 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets additional descriptive information for the entity.  <a href="#ae42bbb363fa93cfa5eccf86043545029">More...</a><br /></td></tr>
 <tr class="separator:ae42bbb363fa93cfa5eccf86043545029 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21a41c2f3dc342e33652b1e084694b6b inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d64/class_hydro_couple_1_1_i_description.html#a21a41c2f3dc342e33652b1e084694b6b">setDescription</a> (const QString &amp;decription)=0</td></tr>
-<tr class="memdesc:a21a41c2f3dc342e33652b1e084694b6b inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets additional descriptive information for the entity.  <a href="#a21a41c2f3dc342e33652b1e084694b6b">More...</a><br /></td></tr>
-<tr class="separator:a21a41c2f3dc342e33652b1e084694b6b inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d684a41dffa8220e4b6a449f118961 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d64/class_hydro_couple_1_1_i_description.html#a10d684a41dffa8220e4b6a449f118961">setDescription</a> (const QString &amp;<a class="el" href="../../db/d64/class_hydro_couple_1_1_i_description.html#ae42bbb363fa93cfa5eccf86043545029">description</a>)=0</td></tr>
+<tr class="memdesc:a10d684a41dffa8220e4b6a449f118961 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets additional descriptive information for the entity.  <a href="#a10d684a41dffa8220e4b6a449f118961">More...</a><br /></td></tr>
+<tr class="separator:a10d684a41dffa8220e4b6a449f118961 inherit pub_methods_class_hydro_couple_1_1_i_description"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_hydro_couple_1_1_i_property_changed"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_hydro_couple_1_1_i_property_changed')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dd/dbf/class_hydro_couple_1_1_i_property_changed.html">HydroCouple::IPropertyChanged</a></td></tr>
 <tr class="memitem:a810e76722859d2a63dfe0e541c84ab98 inherit pub_methods_class_hydro_couple_1_1_i_property_changed"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dbf/class_hydro_couple_1_1_i_property_changed.html#a810e76722859d2a63dfe0e541c84ab98">~IPropertyChanged</a> ()</td></tr>
 <tr class="separator:a810e76722859d2a63dfe0e541c84ab98 inherit pub_methods_class_hydro_couple_1_1_i_property_changed"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -345,86 +375,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>~IModelComponent </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="ad3bbc0f0936494b69bc274d8890f5634"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual QList&lt;<a class="el" href="../../da/d70/class_hydro_couple_1_1_i_adapted_output_factory.html">IAdaptedOutputFactory</a>*&gt; HydroCouple::IModelComponent::adaptedOutputFactories </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gets a list of IAdaptedOutputFactories, each allowing to create <a class="el" href="../../d6/d04/class_hydro_couple_1_1_i_adapted_output.html" title="An IAdaptedOutput adds one or more data operations on top of an IOutput. ">IAdaptedOutput</a> item for making outputs fit to inputs in case they do not already do so. </p>
-<p>Factories can be added to and removed from the list so that third-party factories and <a class="el" href="../../d6/d04/class_hydro_couple_1_1_i_adapted_output.html" title="An IAdaptedOutput adds one or more data operations on top of an IOutput. ">IAdaptedOutput</a> classes can be introduced.</p>
-<dl class="section return"><dt>Returns</dt><dd>A list of IAdaptedOutputFactories associated with this component. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a0d9d602798083f49b36699cf311924a9"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::IModelComponent::allocateMPIResources </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>communicator</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const QList&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"><em>allocatedProcessors</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>allocateMPIResources </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">communicator</td><td></td></tr>
-    <tr><td class="paramname">rank</td><td></td></tr>
-    <tr><td class="paramname">allocatedProcessors</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a class="anchor" id="a100d789f779e9eab7a058ffe546b46f0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -533,6 +488,213 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aeb8f312b3078ac20d6414a28fe952368"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::gpuAllocatedResources </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mpiProcess</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>gpuPlatform</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>gpuDevice</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxNumGPUBlocksOrWorkGrps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>gpuAllocatedResources </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mpiProcess</td><td></td></tr>
+    <tr><td class="paramname">gpuPlatform</td><td></td></tr>
+    <tr><td class="paramname">gpuDevice</td><td></td></tr>
+    <tr><td class="paramname">maxNumGPUBlocksOrWorkGrps</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a11a06ae1b19e3f38e855a076b1e6fa04"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::gpuClearAllocatedResources </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>gpuClearAllocatedResources </p>
+
+</div>
+</div>
+<a class="anchor" id="ac0c679b533f53216d3ec54a98e20bf66"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IModelComponent::gpuDevice </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mpiProcess</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>gpuDevice </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mpiProcess</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the integer identifier of the GPU Device </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a11895d9bfb629ae51b9a728684a9c95b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IModelComponent::gpuMaxNumBlocksOrWorkGrps </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mpiProcess</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>maxNumGPUBlocksOrWorkGrps specified the maximum number of CUDA blocks or OpenCL workgroups allocated for the specified MPI Process. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mpiProcess</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1bbe86db4bd62f66b36576f696dd2c3a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IModelComponent::gpuPlatform </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>mpiProcess</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>gpuPlatform </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mpiProcess</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4615d11aaa53f0b2da75cfdd69208f7e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IModelComponent::index </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>index </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a3efefc4a48f5551641e682ef005f2b1f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -590,7 +752,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a961a25f2bf901f5b47ded06008841741"></a>
+<a class="anchor" id="aaa6f6496cd9a34640eada76edbab11c8"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -598,7 +760,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual QList&lt;int&gt; HydroCouple::IModelComponent::mpiAllocatedProcessors </td>
+          <td class="memname">virtual QSet&lt;int&gt; HydroCouple::IModelComponent::mpiAllocatedProcesses </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -611,12 +773,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>allocatedProcessors </p>
+<p>mpiAllocatedProcesses are the list of MPI processes/ranks allocated to this component. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ae44eb7f8dfd1dcc566457f233c7bcd8d"></a>
+<a class="anchor" id="a5b30bc062e09de92f5a0c6c2a46548e1"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -624,7 +786,64 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int HydroCouple::IModelComponent::mpiCommunicator </td>
+          <td class="memname">virtual void HydroCouple::IModelComponent::mpiAllocateProcesses </td>
+          <td>(</td>
+          <td class="paramtype">const QSet&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>mpiProcessesToAllocate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>mpiAllocateResources </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mpiProcessesToAllocate</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a804fa9d234ff204f734441281ebc41ad"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::mpiClearAllocatedProcesses </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>mpiClearAllocatedProcesses </p>
+
+</div>
+</div>
+<a class="anchor" id="a26cb2638eb56bb202be3897710d32eef"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int HydroCouple::IModelComponent::mpiNumOfProcesses </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -637,12 +856,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>mpiCommunicator </p>
+<p>mpiNumProcesses </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a641e6e84375eb77c9e6fec3dd7a2864c"></a>
+<a class="anchor" id="a39d6d23d364737580a60c6b4741ad8cc"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -650,7 +869,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int HydroCouple::IModelComponent::mpiProcessor </td>
+          <td class="memname">virtual int HydroCouple::IModelComponent::mpiProcessRank </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -663,8 +882,40 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>mpiProcessor of the current component; </p>
+<p>mpiProcess is the MPI process/rank of this component. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac8c4630173c94ce0ac9b225ec6a7158d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::mpiSetProcessRank </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>processRank</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>mpiSetProcess </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">processRank</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -726,32 +977,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4e4484c145a7e2e8dd663679f371b319"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void HydroCouple::IModelComponent::processMPIMessage </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../db/d66/struct_serialized_data.html">SerializedData</a> &amp;&#160;</td>
-          <td class="paramname"><em>data</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>recieveMPIMessage message. This message can be received on </p>
-
-</div>
-</div>
 <a class="anchor" id="ab327fdb3e7d70a8fc766b5ae2f4fa4ac"></a>
 <div class="memitem">
 <div class="memproto">
@@ -775,6 +1000,38 @@ Public Member Functions</h2></td></tr>
 
 <p>referenceDirectory </p>
 <p>All relative file paths specified that are associated with this component instance are referenced from this directory. Typically, this will be the directory for the project file for the current composition. Values are typically set from the Composition GUI and can be referenced internally for saving files and writing arguments for the component. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aecaf23f8086b0f75ac57a1cc02663d26"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::setIndex </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>setIndex </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -804,6 +1061,38 @@ Public Member Functions</h2></td></tr>
 <p>sets the reference directory for this component instance. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">referenceDirectory</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a0009004dddfe05e0ea727d401b5ce6c4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void HydroCouple::IModelComponent::setWorkflow </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../df/d74/class_hydro_couple_1_1_i_workflow_component.html">IWorkflowComponent</a> *&#160;</td>
+          <td class="paramname"><em>workflow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>setWorkflow </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">workflow</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -898,6 +1187,32 @@ Public Member Functions</h2></td></tr>
 <p>Immediately after the method is invoked, it changes the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a>'s status to HydroCouple::Validating.</p>
 <p>When the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html#aea82e3bbc6b294f7634fb2fb7f197524" title="Validates the populated instance of the IModelComponent. ">validate()</a> method has finished, the status of the <a class="el" href="../../d3/dae/class_hydro_couple_1_1_i_model_component.html" title="IModelComponent interface is the core interface in the HydroCouple standard defining a model componen...">IModelComponent</a> has changed to either Valid or HydroCouple::Invalid.</p>
 <dl class="section return"><dt>Returns</dt><dd>Returns an array of strings of length 0 if there are no messages at all. If there are messages while the components status is HydroCouple::Valid, the messages are purely informative. If there are messages while the components status is HydroCouple::Componentstatus. HydroCouple::Invalid when at least one of the messages indicates a fatal error. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a11e4af5ba938e1c1212d56bef9bc1968"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const <a class="el" href="../../df/d74/class_hydro_couple_1_1_i_workflow_component.html">IWorkflowComponent</a>* HydroCouple::IModelComponent::workflow </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>workflow </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>

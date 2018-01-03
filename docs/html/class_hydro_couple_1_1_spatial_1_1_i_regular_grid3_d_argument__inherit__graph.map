@@ -1,8 +1,0 @@
-<map id="HydroCouple::Spatial::IRegularGrid3DArgument" name="HydroCouple::Spatial::IRegularGrid3DArgument">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_argument.html" title="IArgument interface class used to set the arguments for components. They can be complex or simple mul..." alt="" coords="5,846,227,1093"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_component_data_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="120,498,389,745"/>
-<area shape="rect" id="node7" href="$class_hydro_couple_1_1_spatial_1_1_i_regular_grid3_d_component_data_item.html" title="An IRegularGrid3DComponentItem represents an IRegularGrid3D IComponentItem. " alt="" coords="251,793,536,1146"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="156,346,353,450"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="144,140,365,298"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="128,5,381,92"/>
-</map>

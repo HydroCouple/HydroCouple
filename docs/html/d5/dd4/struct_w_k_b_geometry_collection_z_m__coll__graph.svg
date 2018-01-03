@@ -67,7 +67,7 @@ var sectionId = 'dynsection-0';
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="../../de/daa/union_w_k_b_geometry_z_m.html" target="_top" xlink:title="{WKBGeometryZM\n||}">
+<g id="a_node2"><a xlink:href="../../de/daa/union_w_k_b_geometry_z_m.html" target="_top" xlink:title="The WKBGeometryZM union. ">
 <polygon fill="none" stroke="black" points="567.005,-0.5 567.005,-64.5049 661.018,-64.5049 661.018,-0.5 567.005,-0.5"/>
 <text text-anchor="middle" x="614.011" y="-52.5049" font-family="Monaco" font-size="10.00">WKBGeometryZM</text>
 <polyline fill="none" stroke="black" points="567.005,-43.1699 661.018,-43.1699 "/>

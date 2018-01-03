@@ -1,8 +1,0 @@
-<map id="HydroCouple::IIdArgument" name="HydroCouple::IIdArgument">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_argument.html" title="IArgument interface class used to set the arguments for components. They can be complex or simple mul..." alt="" coords="5,722,203,986"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_component_item.html" title="IComponentItem is a fundamental unit of data for a component. " alt="" coords="120,534,357,674"/>
-<area shape="rect" id="node7" href="$class_hydro_couple_1_1_i_id_based_component_item.html" title="The IIdBasedComponentItem class is an idbased IComponentItem. " alt="" coords="227,793,520,915"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_identity.html" title="IIdentity interface class defines a method to get the Id of an HydroCouple entity. " alt="" coords="140,346,337,486"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="128,140,349,298"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="112,5,365,92"/>
-</map>

@@ -10,8 +10,6 @@ var searchData=
   ['icomponentinfo',['IComponentInfo',['../d3/dd7/class_hydro_couple_1_1_i_component_info.html',1,'HydroCouple']]],
   ['icomponentstatuschangeeventargs',['IComponentStatusChangeEventArgs',['../d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html',1,'HydroCouple']]],
   ['icurve',['ICurve',['../df/d7f/class_hydro_couple_1_1_spatial_1_1_i_curve.html',1,'HydroCouple::Spatial']]],
-  ['idataexchangeworkflowcomponent',['IDataExchangeWorkflowComponent',['../d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html',1,'HydroCouple']]],
-  ['idataexchangeworkflowcomponentinfo',['IDataExchangeWorkflowComponentInfo',['../d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info.html',1,'HydroCouple']]],
   ['idatetime',['IDateTime',['../d6/dd7/class_hydro_couple_1_1_temporal_1_1_i_date_time.html',1,'HydroCouple::Temporal']]],
   ['idescription',['IDescription',['../db/d64/class_hydro_couple_1_1_i_description.html',1,'HydroCouple']]],
   ['idimension',['IDimension',['../dd/dca/class_hydro_couple_1_1_i_dimension.html',1,'HydroCouple']]],
@@ -57,6 +55,7 @@ var searchData=
   ['itimecomponentdataitem',['ITimeComponentDataItem',['../d9/d05/class_hydro_couple_1_1_temporal_1_1_i_time_component_data_item.html',1,'HydroCouple::Temporal']]],
   ['itimegeometrycomponentdataitem',['ITimeGeometryComponentDataItem',['../db/dac/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html',1,'HydroCouple::SpatioTemporal']]],
   ['itimeidbasedcomponentdataitem',['ITimeIdBasedComponentDataItem',['../d0/dd4/class_hydro_couple_1_1_temporal_1_1_i_time_id_based_component_data_item.html',1,'HydroCouple::Temporal']]],
+  ['itimemodelcomponent',['ITimeModelComponent',['../d3/d7d/class_hydro_couple_1_1_temporal_1_1_i_time_model_component.html',1,'HydroCouple::Temporal']]],
   ['itimepolyhedralsurfacecomponentdataitem',['ITimePolyhedralSurfaceComponentDataItem',['../d2/d80/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_polyhedral_surface_component_data_item.html',1,'HydroCouple::SpatioTemporal']]],
   ['itimerastercomponentdataitem',['ITimeRasterComponentDataItem',['../d6/d72/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html',1,'HydroCouple::SpatioTemporal']]],
   ['itimeregulargrid2dcomponentdataitem',['ITimeRegularGrid2DComponentDataItem',['../d6/da3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid2_d_component_data_item.html',1,'HydroCouple::SpatioTemporal']]],
@@ -64,6 +63,7 @@ var searchData=
   ['itimeseriescomponentdataitem',['ITimeSeriesComponentDataItem',['../de/d0b/class_hydro_couple_1_1_temporal_1_1_i_time_series_component_data_item.html',1,'HydroCouple::Temporal']]],
   ['itimespan',['ITimeSpan',['../d6/d12/class_hydro_couple_1_1_temporal_1_1_i_time_span.html',1,'HydroCouple::Temporal']]],
   ['itimetincomponentdataitem',['ITimeTINComponentDataItem',['../d6/db3/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_component_data_item.html',1,'HydroCouple::SpatioTemporal']]],
+  ['itimevectorcomponentdataitem',['ITimeVectorComponentDataItem',['../df/d86/class_hydro_couple_1_1_spatio_temporal_1_1_i_time_vector_component_data_item.html',1,'HydroCouple::SpatioTemporal']]],
   ['itin',['ITIN',['../d9/d8c/class_hydro_couple_1_1_spatial_1_1_i_t_i_n.html',1,'HydroCouple::Spatial']]],
   ['itincomponentdataitem',['ITINComponentDataItem',['../d3/d6c/class_hydro_couple_1_1_spatial_1_1_i_t_i_n_component_data_item.html',1,'HydroCouple::Spatial']]],
   ['itriangle',['ITriangle',['../d5/dd6/class_hydro_couple_1_1_spatial_1_1_i_triangle.html',1,'HydroCouple::Spatial']]],
@@ -71,5 +71,7 @@ var searchData=
   ['iunitdimensions',['IUnitDimensions',['../dc/df4/class_hydro_couple_1_1_i_unit_dimensions.html',1,'HydroCouple']]],
   ['ivaluedefinition',['IValueDefinition',['../d9/d22/class_hydro_couple_1_1_i_value_definition.html',1,'HydroCouple']]],
   ['ivectorcomponentdataitem',['IVectorComponentDataItem',['../d9/d51/class_hydro_couple_1_1_spatial_1_1_i_vector_component_data_item.html',1,'HydroCouple::Spatial']]],
-  ['ivertex',['IVertex',['../d1/d5a/class_hydro_couple_1_1_spatial_1_1_i_vertex.html',1,'HydroCouple::Spatial']]]
+  ['ivertex',['IVertex',['../d1/d5a/class_hydro_couple_1_1_spatial_1_1_i_vertex.html',1,'HydroCouple::Spatial']]],
+  ['iworkflowcomponent',['IWorkflowComponent',['../df/d74/class_hydro_couple_1_1_i_workflow_component.html',1,'HydroCouple']]],
+  ['iworkflowcomponentinfo',['IWorkflowComponentInfo',['../df/d58/class_hydro_couple_1_1_i_workflow_component_info.html',1,'HydroCouple']]]
 ];

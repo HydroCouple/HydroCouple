@@ -12,8 +12,6 @@ var namespace_hydro_couple =
     [ "IComponentDataItem", "d8/d52/class_hydro_couple_1_1_i_component_data_item.html", "d8/d52/class_hydro_couple_1_1_i_component_data_item" ],
     [ "IComponentInfo", "d3/dd7/class_hydro_couple_1_1_i_component_info.html", "d3/dd7/class_hydro_couple_1_1_i_component_info" ],
     [ "IComponentStatusChangeEventArgs", "d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args.html", "d0/d4a/class_hydro_couple_1_1_i_component_status_change_event_args" ],
-    [ "IDataExchangeWorkflowComponent", "d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html", "d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component" ],
-    [ "IDataExchangeWorkflowComponentInfo", "d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info.html", "d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info" ],
     [ "IDescription", "db/d64/class_hydro_couple_1_1_i_description.html", "db/d64/class_hydro_couple_1_1_i_description" ],
     [ "IDimension", "dd/dca/class_hydro_couple_1_1_i_dimension.html", "dd/dca/class_hydro_couple_1_1_i_dimension" ],
     [ "IExchangeItem", "d1/dd3/class_hydro_couple_1_1_i_exchange_item.html", "d1/dd3/class_hydro_couple_1_1_i_exchange_item" ],
@@ -30,5 +28,7 @@ var namespace_hydro_couple =
     [ "IQuantity", "dc/d3b/class_hydro_couple_1_1_i_quantity.html", "dc/d3b/class_hydro_couple_1_1_i_quantity" ],
     [ "IUnit", "d9/dcc/class_hydro_couple_1_1_i_unit.html", "d9/dcc/class_hydro_couple_1_1_i_unit" ],
     [ "IUnitDimensions", "dc/df4/class_hydro_couple_1_1_i_unit_dimensions.html", "dc/df4/class_hydro_couple_1_1_i_unit_dimensions" ],
-    [ "IValueDefinition", "d9/d22/class_hydro_couple_1_1_i_value_definition.html", "d9/d22/class_hydro_couple_1_1_i_value_definition" ]
+    [ "IValueDefinition", "d9/d22/class_hydro_couple_1_1_i_value_definition.html", "d9/d22/class_hydro_couple_1_1_i_value_definition" ],
+    [ "IWorkflowComponent", "df/d74/class_hydro_couple_1_1_i_workflow_component.html", "df/d74/class_hydro_couple_1_1_i_workflow_component" ],
+    [ "IWorkflowComponentInfo", "df/d58/class_hydro_couple_1_1_i_workflow_component_info.html", "df/d58/class_hydro_couple_1_1_i_workflow_component_info" ]
 ];

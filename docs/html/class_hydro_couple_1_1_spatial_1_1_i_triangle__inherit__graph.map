@@ -1,5 +1,0 @@
-<map id="HydroCouple::Spatial::ITriangle" name="HydroCouple::Spatial::ITriangle">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatial_1_1_i_polygon.html" title="A IPolygon is a planar ISurface defined by 1 exterior boundary and 0 or more interior boundaries..." alt="" coords="25,1270,215,1464"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatial_1_1_i_surface.html" title="A ISurface is a 2&#45;dimensional IGeometry object. " alt="" coords="21,1047,219,1222"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatial_1_1_i_geometry.html" title="IGeometry is the root class of the geometry hierarchy. " alt="" coords="5,5,235,999"/>
-</map>

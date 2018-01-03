@@ -9,7 +9,6 @@ var annotated_dup =
     [ "PointM", "de/d55/struct_point_m.html", "de/d55/struct_point_m" ],
     [ "PointZ", "d6/d0c/struct_point_z.html", "d6/d0c/struct_point_z" ],
     [ "PointZM", "d7/ded/struct_point_z_m.html", "d7/ded/struct_point_z_m" ],
-    [ "SerializedData", "db/d66/struct_serialized_data.html", "db/d66/struct_serialized_data" ],
     [ "WKBGeometry", "da/d36/union_w_k_b_geometry.html", "da/d36/union_w_k_b_geometry" ],
     [ "WKBGeometryCollection", "d4/d04/struct_w_k_b_geometry_collection.html", "d4/d04/struct_w_k_b_geometry_collection" ],
     [ "WKBGeometryCollectionM", "d8/da0/struct_w_k_b_geometry_collection_m.html", "d8/da0/struct_w_k_b_geometry_collection_m" ],

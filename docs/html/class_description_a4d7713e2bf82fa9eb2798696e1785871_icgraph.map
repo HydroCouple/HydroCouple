@@ -1,5 +1,0 @@
-<map id="Description::propertyChanged" name="Description::propertyChanged">
-<area shape="rect" id="node2" href="$class_identity.html#aea6966e4e4e3734a196f611880dc3acb" title="~Identity " alt="" coords="331,5,504,35"/>
-<area shape="rect" id="node3" href="$class_description.html#abcc77bedf753d33355773b6e5c929d5f" title="Sets caption for the entity. " alt="" coords="315,59,520,88"/>
-<area shape="rect" id="node4" href="$class_description.html#a0d282d514cdcc821f21b7028ca2e5e1d" title="Gets additional descriptive information for the entity. " alt="" coords="299,112,536,142"/>
-</map>

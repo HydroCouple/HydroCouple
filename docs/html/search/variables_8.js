@@ -1,4 +1,11 @@
 var searchData=
 [
-  ['rings',['rings',['../df/df9/struct_w_k_b_polygon.html#a9c32868ab0974ef5a42fee9084d471ea',1,'WKBPolygon::rings()'],['../db/dad/struct_w_k_b_polygon_z.html#aedc8ec2335d91b17c6a0ae80d1b46506',1,'WKBPolygonZ::rings()'],['../d0/d5d/struct_w_k_b_polygon_m.html#a8ed7b5caca2164003f224a7cf4d1d527',1,'WKBPolygonM::rings()'],['../d0/dac/struct_w_k_b_polygon_z_m.html#a099818f1c527a50fa761db71088c571a',1,'WKBPolygonZM::rings()'],['../db/de1/struct_w_k_b_triangle.html#a2a80370d78804dad33181abddd8c5a43',1,'WKBTriangle::rings()'],['../d4/d22/struct_w_k_b_triangle_z.html#a524e9828ae2fd72e72d1e9072ce2a3e7',1,'WKBTriangleZ::rings()'],['../d5/df5/struct_w_k_b_triangle_m.html#aac17d4e2af2f5708c488074bb6cc3706',1,'WKBTriangleM::rings()'],['../d2/d4d/struct_w_k_b_triangle_z_m.html#a63613b1ae4920b5751a6d115e0517905',1,'WKBTriangleZM::rings()']]]
+  ['tin',['tin',['../da/d36/union_w_k_b_geometry.html#aecd479471373db6387956806f7ad9547',1,'WKBGeometry']]],
+  ['tinm',['tinm',['../da/d88/union_w_k_b_geometry_m.html#af8c898cb68519f51d2aed731d87d79b5',1,'WKBGeometryM']]],
+  ['tinz',['tinz',['../d5/d5f/union_w_k_b_geometry_z.html#aa8b3c5e6c01d0a03c0c0700e99ec2817',1,'WKBGeometryZ']]],
+  ['tinzm',['tinzm',['../de/daa/union_w_k_b_geometry_z_m.html#a425b0a42ea8d83d14a22351df1a7e923',1,'WKBGeometryZM']]],
+  ['triangle',['triangle',['../da/d36/union_w_k_b_geometry.html#aa0cf93eb0ebcc1c9221de364170bb2e0',1,'WKBGeometry']]],
+  ['trianglem',['trianglem',['../da/d88/union_w_k_b_geometry_m.html#a480d74726647db74eb8cd9852e2aa753',1,'WKBGeometryM']]],
+  ['trianglez',['trianglez',['../d5/d5f/union_w_k_b_geometry_z.html#a7750db34e548463312510dac82afbc24',1,'WKBGeometryZ']]],
+  ['trianglezm',['trianglezm',['../de/daa/union_w_k_b_geometry_z_m.html#a6ca03bf638faac3f807c95c122c0a91d',1,'WKBGeometryZM']]]
 ];

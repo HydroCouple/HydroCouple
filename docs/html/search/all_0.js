@@ -1,15 +1,14 @@
 var searchData=
 [
-  ['adaptedoutputfactories',['adaptedOutputFactories',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#ad3bbc0f0936494b69bc274d8890f5634',1,'HydroCouple::IModelComponent']]],
+  ['adaptedoutputfactories',['adaptedOutputFactories',['../dd/d4e/class_hydro_couple_1_1_i_model_component_info.html#a88987c75d1e8e73f46adeb219d4278fa',1,'HydroCouple::IModelComponentInfo']]],
   ['adaptedoutputfactory',['adaptedOutputFactory',['../d6/d04/class_hydro_couple_1_1_i_adapted_output.html#a7f256e34ebafa5e30737bbf1dabf69ea',1,'HydroCouple::IAdaptedOutput']]],
   ['adaptedoutputs',['adaptedOutputs',['../da/dbd/class_hydro_couple_1_1_i_output.html#a224f3327722717af7912e344f3225186',1,'HydroCouple::IOutput']]],
   ['adaptee',['adaptee',['../d6/d04/class_hydro_couple_1_1_i_adapted_output.html#a6500407e610bfbdcb266b9f9e31dd134',1,'HydroCouple::IAdaptedOutput']]],
   ['addadaptedoutput',['addAdaptedOutput',['../da/dbd/class_hydro_couple_1_1_i_output.html#ad67f63be635854aa4179ab2680e40141',1,'HydroCouple::IOutput']]],
   ['addconsumer',['addConsumer',['../da/dbd/class_hydro_couple_1_1_i_output.html#ab14f517d87293a1ec2cea3a1f4fb05e1',1,'HydroCouple::IOutput']]],
-  ['addmodelcomponent',['addModelComponent',['../d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html#a336d7a3dafa59763ebbad8d1308193e9',1,'HydroCouple::IDataExchangeWorkflowComponent']]],
+  ['addmodelcomponent',['addModelComponent',['../df/d74/class_hydro_couple_1_1_i_workflow_component.html#a80841db578fcaf849dcc68ffcefe4878',1,'HydroCouple::IWorkflowComponent']]],
   ['addprovider',['addProvider',['../d8/dfd/class_hydro_couple_1_1_i_multi_input.html#aaff57c388af9d08455821db11094280a',1,'HydroCouple::IMultiInput']]],
   ['addrasterband',['addRasterBand',['../d8/d5b/class_hydro_couple_1_1_spatial_1_1_i_raster.html#ad62fe6aa4649f4b58cb28ebc50cd53e9',1,'HydroCouple::Spatial::IRaster']]],
-  ['allocatempiresources',['allocateMPIResources',['../d3/dae/class_hydro_couple_1_1_i_model_component.html#a0d9d602798083f49b36699cf311924a9',1,'HydroCouple::IModelComponent']]],
   ['amountofsubstance',['AmountOfSubstance',['../d9/d01/namespace_hydro_couple.html#a3b0c4ea98032b00a2da319636be02d67a7d436cfef4afbf8aa34b838cc2fa8a60',1,'HydroCouple']]],
   ['area',['area',['../de/de8/class_hydro_couple_1_1_spatial_1_1_i_surface.html#a6e22750f5bb5c7f04f7d8ea8ab8b7543',1,'HydroCouple::Spatial::ISurface::area()'],['../d9/d96/class_hydro_couple_1_1_spatial_1_1_i_multi_surface.html#a6a9c7b8afcc50ffe73dbf3b056856345',1,'HydroCouple::Spatial::IMultiSurface::area()']]],
   ['argumentiotype',['ArgumentIOType',['../dd/d96/class_hydro_couple_1_1_i_argument.html#a5dd73114287112019131bd83fc88092b',1,'HydroCouple::IArgument']]],

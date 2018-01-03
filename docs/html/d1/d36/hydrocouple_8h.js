@@ -1,6 +1,5 @@
 var hydrocouple_8h =
 [
-    [ "SerializedData", "db/d66/struct_serialized_data.html", "db/d66/struct_serialized_data" ],
     [ "IPropertyChanged", "dd/dbf/class_hydro_couple_1_1_i_property_changed.html", "dd/dbf/class_hydro_couple_1_1_i_property_changed" ],
     [ "IDescription", "db/d64/class_hydro_couple_1_1_i_description.html", "db/d64/class_hydro_couple_1_1_i_description" ],
     [ "IIdentity", "d2/d2a/class_hydro_couple_1_1_i_identity.html", "d2/d2a/class_hydro_couple_1_1_i_identity" ],
@@ -27,8 +26,8 @@ var hydrocouple_8h =
     [ "IInput", "dd/dc3/class_hydro_couple_1_1_i_input.html", "dd/dc3/class_hydro_couple_1_1_i_input" ],
     [ "IMultiInput", "d8/dfd/class_hydro_couple_1_1_i_multi_input.html", "d8/dfd/class_hydro_couple_1_1_i_multi_input" ],
     [ "IIdBasedComponentDataItem", "dd/d21/class_hydro_couple_1_1_i_id_based_component_data_item.html", "dd/d21/class_hydro_couple_1_1_i_id_based_component_data_item" ],
-    [ "IDataExchangeWorkflowComponentInfo", "d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info.html", "d6/d1e/class_hydro_couple_1_1_i_data_exchange_workflow_component_info" ],
-    [ "IDataExchangeWorkflowComponent", "d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html", "d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component" ],
+    [ "IWorkflowComponentInfo", "df/d58/class_hydro_couple_1_1_i_workflow_component_info.html", "df/d58/class_hydro_couple_1_1_i_workflow_component_info" ],
+    [ "IWorkflowComponent", "df/d74/class_hydro_couple_1_1_i_workflow_component.html", "df/d74/class_hydro_couple_1_1_i_workflow_component" ],
     [ "HYDROCOUPLE_EXPORT", "d1/d36/hydrocouple_8h.html#ae1eff69fe0f5c0a03920fb8d14ba36f3", null ],
     [ "ByteOrder", "d1/d36/hydrocouple_8h.html#aaeb92d42f5a6e27b8ba19f18d69d142b", [
       [ "BigEndian", "d1/d36/hydrocouple_8h.html#aaeb92d42f5a6e27b8ba19f18d69d142bab90b00401d08d0ecc6b6c2c54db50d6b", null ],

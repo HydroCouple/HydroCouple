@@ -1,7 +1,0 @@
-<map id="HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem::getValues" name="HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem::getValues">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a57c46ea91026f9f9bae578261bb89c38" title="~ITimeGeometryComponentItem. " alt="" coords="367,5,652,71"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_component_data_item.html#a0e3d64ed6dff6103679b1bb6473ac0ea" title="~ITimeTINComponentItem. " alt="" coords="387,95,632,160"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html#a40bb56e657f691f554827b973cb06dab" title="HydroCouple::SpatioTemporal\l::ITimeRasterComponentDataItem\l::~ITimeRasterComponentDataItem" alt="" coords="375,184,644,249"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid2_d_component_data_item.html#a2322197c9014c7b93f60db010a8a4174" title="HydroCouple::SpatioTemporal\l::ITimeRegularGrid2DComponentData\lItem::~ITimeRegularGrid2DComponentDataItem" alt="" coords="331,273,688,339"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a51c986d2f99145968cb7a3e5e58b9996" title="HydroCouple::SpatioTemporal\l::ITimeRegularGrid3DComponentData\lItem::~ITimeRegularGrid3DComponentDataItem" alt="" coords="331,363,688,428"/>
-</map>

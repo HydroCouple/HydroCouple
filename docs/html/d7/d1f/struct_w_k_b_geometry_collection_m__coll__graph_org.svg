@@ -21,7 +21,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="../../da/d88/union_w_k_b_geometry_m.html" target="_top" xlink:title="{WKBGeometryM\n||}">
+<g id="a_node2"><a xlink:href="../../da/d88/union_w_k_b_geometry_m.html" target="_top" xlink:title="The WKBGeometryM union. ">
 <polygon fill="none" stroke="black" points="542.005,-0.5 542.005,-64.5049 630.017,-64.5049 630.017,-0.5 542.005,-0.5"/>
 <text text-anchor="middle" x="586.011" y="-52.5049" font-family="Monaco" font-size="10.00">WKBGeometryM</text>
 <polyline fill="none" stroke="black" points="542.005,-43.1699 630.017,-43.1699 "/>

@@ -1,6 +1,0 @@
-<map id="HydroCouple::IValueDefinition" name="HydroCouple::IValueDefinition">
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_i_quality.html" title="Qualitative data described items in terms of some quality or categorization that may be &#39;informal&#39; or..." alt="" coords="5,543,195,665"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_i_quantity.html" title="IQuantity specifies values as an amount of some unit, usually as a floating point number..." alt="" coords="219,534,416,674"/>
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_i_description.html" title="IDescription interface class provides descriptive information on a HydroCouple object. " alt="" coords="97,140,319,298"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_i_property_changed.html" title="IPropertyChanged interface is used to emit signal/event when a property of an object changes..." alt="" coords="81,5,335,92"/>
-</map>

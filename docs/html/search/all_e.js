@@ -13,7 +13,7 @@ var searchData=
   ['relate',['relate',['../d3/d92/class_hydro_couple_1_1_spatial_1_1_i_geometry.html#a54b7e428285c051baeb81e5a568238ac',1,'HydroCouple::Spatial::IGeometry']]],
   ['removeadaptedoutput',['removeAdaptedOutput',['../da/dbd/class_hydro_couple_1_1_i_output.html#a9822c0386ace5dc9325baa8ce69ab6ce',1,'HydroCouple::IOutput']]],
   ['removeconsumer',['removeConsumer',['../da/dbd/class_hydro_couple_1_1_i_output.html#a574a0cb521c0f506b2290b78fb8c43ec',1,'HydroCouple::IOutput']]],
-  ['removemodelcomponent',['removeModelComponent',['../d1/d5e/class_hydro_couple_1_1_i_data_exchange_workflow_component.html#acac15e5261f9a445ccaf182fcfbc8c15',1,'HydroCouple::IDataExchangeWorkflowComponent']]],
+  ['removemodelcomponent',['removeModelComponent',['../df/d74/class_hydro_couple_1_1_i_workflow_component.html#a26b56dc6913b9ad16c67bd196de5b355',1,'HydroCouple::IWorkflowComponent']]],
   ['removeprovider',['removeProvider',['../d8/dfd/class_hydro_couple_1_1_i_multi_input.html#a85385d2c5d98e98a7bb89eb2a6b6ee45',1,'HydroCouple::IMultiInput']]],
   ['right',['right',['../d9/d6c/class_hydro_couple_1_1_spatial_1_1_i_edge.html#a2d7c2e468fdb4f6c7afebea0c2868bcd',1,'HydroCouple::Spatial::IEdge']]],
   ['rightnext',['rightNext',['../d9/d6c/class_hydro_couple_1_1_spatial_1_1_i_edge.html#a8753c56a1d70bd921917877965dfaa80',1,'HydroCouple::Spatial::IEdge']]],

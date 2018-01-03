@@ -10,9 +10,9 @@
 <title>Graphical Class Hierarchy</title>
 <!-- Node1 -->
 <g id="node1" class="node"><title>Node1</title>
-<g id="a_node1"><a xlink:href="d0/d82/struct_w_k_b_multi_line_string_m.html" target="_top" xlink:title="The WKBMultiLineStringM struct. ">
+<g id="a_node1"><a xlink:href="d4/d74/struct_w_k_b_multi_line_string_z.html" target="_top" xlink:title="The WKBMultiLineStringZ struct. ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-21.835 130.019,-21.835 130.019,-0.5 0,-0.5"/>
-<text text-anchor="middle" x="65.0093" y="-9.83496" font-family="Monaco" font-size="10.00">WKBMultiLineStringM</text>
+<text text-anchor="middle" x="65.0093" y="-9.83496" font-family="Monaco" font-size="10.00">WKBMultiLineStringZ</text>
 </a>
 </g>
 </g>

@@ -1,8 +1,0 @@
-<map id="HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem::setValues" name="HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem::setValues">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a57c46ea91026f9f9bae578261bb89c38" title="~ITimeGeometryComponentItem. " alt="" coords="367,5,652,71"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_t_i_n_component_data_item.html#a0e3d64ed6dff6103679b1bb6473ac0ea" title="~ITimeTINComponentItem. " alt="" coords="387,95,632,160"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_polyhedral_surface_component_data_item.html#a7f4b0fdba01f40134aa118e3eda58ccd" title="~ITimePolyhedralSurfaceComponentItem. " alt="" coords="331,184,688,268"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_raster_component_data_item.html#a40bb56e657f691f554827b973cb06dab" title="HydroCouple::SpatioTemporal\l::ITimeRasterComponentDataItem\l::~ITimeRasterComponentDataItem" alt="" coords="375,292,644,357"/>
-<area shape="rect" id="node6" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid2_d_component_data_item.html#a2322197c9014c7b93f60db010a8a4174" title="HydroCouple::SpatioTemporal\l::ITimeRegularGrid2DComponentData\lItem::~ITimeRegularGrid2DComponentDataItem" alt="" coords="331,381,688,447"/>
-<area shape="rect" id="node7" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_regular_grid3_d_component_data_item.html#a51c986d2f99145968cb7a3e5e58b9996" title="HydroCouple::SpatioTemporal\l::ITimeRegularGrid3DComponentData\lItem::~ITimeRegularGrid3DComponentDataItem" alt="" coords="331,471,688,536"/>
-</map>

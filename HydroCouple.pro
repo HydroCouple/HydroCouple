@@ -1,8 +1,8 @@
 #Author Caleb Amoa Buahin
 #Email caleb.buahin@gmail.com
-#Date 2016
+#Date 2014-2018
 #License GNU General Public License (see <http://www.gnu.org/licenses/> for details).
-
+#Copyright 2014-2018, Caleb Buahin, All rights reserved.
 
 TEMPLATE = lib
 VERSION = 1.0.0
@@ -36,20 +36,21 @@ CONFIG(debug, debug|release){
 
 CONFIG(release, debug|release){
 
-#MacOS
-macx{
-    DESTDIR = lib/macx
-}
+    #MacOS
+    macx{
+     DESTDIR = lib/macx
+    }
 
-#Linux
-linux{
-    DESTDIR = lib/linux
-}
+    #Linux
+    linux{
+     DESTDIR = lib/linux
+    }
 
-#Windows
-win32{
-    DESTDIR = lib/win32
-}
+    #Windows
+    win32{
+     DESTDIR = lib/win32
+    }
+
     RELEASE_EXTRAS = ./build/release 
     OBJECTS_DIR = $$RELEASE_EXTRAS/.obj
     MOC_DIR = $$RELEASE_EXTRAS/.moc

@@ -1,25 +1,25 @@
-/*! \file   hydrocouple.h
- *  \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
- *  \version   1.0.0.0
- *  \section   Description
- *  This header file contains the core interface definitions for the
- *  HydroCouple component-based modeling definitions.
- *  \section License
- *  hydrocouple.h, its associated files, and libraries are free software.
- *  You can redistribute it and/or modify it under the terms of the
- *  Lesser GNU General Public License as published by the Free Software Foundation;
- *  either version 3 of the License, or (at your option) any later version.
- *  hydrocouple.h and its associated files is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- *  \date 2014-2018
- *  \pre
- *  \bug
- *  \warning
+/*!
+ * \file   hydrocouple.h
+ * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \version   1.0.0
+ * \description
+ * This header file contains the core interface definitions for the
+ * HydroCouple component-based modeling definitions.
+ * \license
+ * This file and its associated files, and libraries are free software.
+ * You can redistribute it and/or modify it under the terms of the
+ * Lesser GNU General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This file and its associated files is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * \copyright Copyright 2014-2018, Caleb Buahin, All rights reserved.
+ * \date 2014-2018
+ * \pre
+ * \bug
+ * \warning
+ * \todo
  */
 
-/*!
-*/
 #ifndef HYDROCOUPLE_H
 #define HYDROCOUPLE_H
 
@@ -121,7 +121,6 @@ namespace HydroCouple
       * \brief IPropertyChanged::propertyChanged() is called to emit
       * signal/event when property of child class changes.
       * \param propertyName is a string representing the name of the property.
-      * \param value is a QVariant representing the value of the property.
       */
     signals:
       virtual void propertyChanged(const QString& propertyName) = 0;
@@ -167,7 +166,7 @@ namespace HydroCouple
       * \brief Gets additional descriptive information for the entity.
       * \param description is a string for describing an entity.
       */
-      virtual void setDescription(const QString& decription) = 0;
+      virtual void setDescription(const QString& description) = 0;
 
   };
 
@@ -219,7 +218,7 @@ namespace HydroCouple
 
       /*!
       * \brief Sets file path to Component library.
-      * \param FilePath to the libary from which this component was created.
+      * \param filePath to the libary from which this component was created.
       */
       virtual void setLibraryFilePath(const QString& filePath) = 0;
 
@@ -292,7 +291,9 @@ namespace HydroCouple
       *
       * \details Developer is responsible for implementing this validation based on a license.
       *
-      * \param validationMessage associated with the license validation process.
+      * \param licenseInfo license information to use to register this component.
+      *
+      * \param validationMessage A validation message associated with the license validation process.
       *
       * \returns true if license is valid otherwise false.
       */
@@ -675,6 +676,12 @@ namespace HydroCouple
       virtual void setWorkflow(const IWorkflowComponent *workflow) = 0;
 
       /*!
+       * \brief mpiNumProcesses
+       * \return
+       */
+      virtual int mpiNumOfProcesses() const = 0;
+
+      /*!
        * \brief mpiProcess is the MPI process/rank of this component.
        * \return
        */
@@ -694,7 +701,6 @@ namespace HydroCouple
 
       /*!
        * \brief mpiAllocateResources
-       * \param componentMPIProcess
        * \param mpiProcessesToAllocate
        */
       virtual void mpiAllocateProcesses(const QSet<int> &mpiProcessesToAllocate) = 0;
@@ -706,15 +712,15 @@ namespace HydroCouple
 
       /*!
        * \brief gpuPlatform
-       * \param processor
+       * \param mpiProcess
        * \return
        */
       virtual int gpuPlatform(int mpiProcess) const = 0;
 
       /*!
        * \brief gpuDevice
-       * \param processor
-       * \return
+       * \param mpiProcess
+       * \return Returns the integer identifier of the GPU Device
        */
       virtual int gpuDevice(int mpiProcess) const = 0;
 
@@ -727,10 +733,11 @@ namespace HydroCouple
       virtual int gpuMaxNumBlocksOrWorkGrps(int mpiProcess) const = 0;
 
       /*!
-       * \brief allocatedGPUResources
-       * \param processor
-       * \param platform
-       * \param device
+       * \brief gpuAllocatedResources
+       * \param mpiProcess
+       * \param gpuPlatform
+       * \param gpuDevice
+       * \param maxNumGPUBlocksOrWorkGrps
        */
       virtual void gpuAllocatedResources(int mpiProcess, int gpuPlatform, int gpuDevice, int maxNumGPUBlocksOrWorkGrps) = 0;
 
@@ -1071,7 +1078,7 @@ namespace HydroCouple
       * \brief Gets a multi-dimensional array of value for given dimension indexes.
       * IndexArray = x + y * InSizeX + z * InSizeX * InSizeY etc;
       * \param dimensionIndexes are the indexes for the data to be obtained.
-      * \param Pointer to pre-allocated location where data is to be saved.
+      * \param data Pointer to pre-allocated location where data is to be saved.
       */
       virtual void getValue(const std::vector<int> &dimensionIndexes, void *data) const = 0;
 
@@ -1186,6 +1193,7 @@ namespace HydroCouple
       /*!
       * \brief Reads values from a QString or a QString representing an input file.
       * \param value is QString representing values or file containing values.
+      * \param message message returned from file read operation.
       * \param isFile is a boolean indicating whether the values are in the QString or the file pointed by the QString.
       * \return boolean indicating whether file/string reading was successful
       */
@@ -1194,8 +1202,8 @@ namespace HydroCouple
       /*!
       * \brief Reads values from an equivalent IComponentDataItem. IComponentDataItem has been used instead of IArgument
       * so that outputs from one model can be used as initialization arguments for another.
-      * \param argument is the IArgument from which to copy values from.
-      * \param isFile is a boolean indicating whether the values are in the QString or the file pointed by the QString.
+      * \param componentDataItem is the IArgument from which to copy values from.
+      * \param message message returned from file read operation.
       * \return boolean indicating whether file reading was successful.
       */
       virtual bool readValues(const IComponentDataItem* componentDataItem, QString &message) = 0;
@@ -1337,9 +1345,8 @@ namespace HydroCouple
       virtual bool removeAdaptedOutput(IAdaptedOutput *adaptedOutput) = 0;
 
       /*!
-      *
       * \brief Provides the values matching the value definition specified by the
-      * <param name="querySpecifier">. Extensions can overwrite this base version to include
+      * <param name="querySpecifier"></param>. Extensions can overwrite this base version to include
       * more details in the query, e.g. time and space.
       *
       * \details One might expect to be the querySpecifier to be of the type IInput, because every input item that calls
@@ -1349,6 +1356,7 @@ namespace HydroCouple
       * to have the flexibility to loosen the "always register as consumer" approach, it is chosen to provide
       * an IExchangeItem as an argument.
       *
+      * \param querySpecifier
       */
       virtual void updateValues(IInput *querySpecifier) = 0;
   };
@@ -1445,7 +1453,7 @@ namespace HydroCouple
         * \details If the consumer is NULL, the identifiers of all IAdaptedOutputs
         * that can adapt the producer are returned.
         *
-        * \param provide is the IOutput to adapt.
+        * \param provider is the IOutput to adapt.
         * \param consumer is the IInput to adapt the producer to, can be NULL.
         * \returns A list of identifiers for the available IAdaptedOutputs.
         */
@@ -1454,11 +1462,11 @@ namespace HydroCouple
       /*!
         * \brief Creates a IAdaptedOutput that adapts the producer so that it fits the consumer.
         *
-        * \details The adaptedProducerId used must be one of the IHIdentifier instances
+        * \details The adaptedProviderId used must be one of the IHIdentifier instances
         * returned by the createAdaptedProducerItem method. The returned IAdaptedOutputs
         * will already be registered with the producer.
-        * \param adaptedProducerId is an identifier of the IAdaptedOutput to create.
-        * \param producer IOutput to adapt.
+        * \param adaptedProviderId is an identifier of the IAdaptedOutput to create.
+        * \param provider IOutput to adapt.
         * \param consumer IInput to adapt the adaptee to, can be NULL.
         * \returns An IAdaptedOutput.
         */
@@ -1527,6 +1535,7 @@ namespace HydroCouple
       * \brief Returns true if this IInput can consume this producer.
       *
       * \param provider is the IOutput that can supply the data to this IInput.
+      * \param message The error message from the canConsume function.
       */
       virtual bool canConsume(IOutput* provider, QString& message) const = 0;
   };
@@ -1716,7 +1725,6 @@ namespace HydroCouple
 
 }
 
-//!HydroCouple Interface Declarations
 Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IDescription, "HydroCouple::IDescription/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IIdentity, "HydroCouple::IIdentity/1.0")

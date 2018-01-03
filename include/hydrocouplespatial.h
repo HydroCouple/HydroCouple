@@ -1,25 +1,25 @@
-/*! \file   hydrocouplespatial.h
- *  \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
- *  \version   1.0.0.0
- *  \section   Description
- *  This header file contains the geospatial interface definitions for the
- *  HydroCouple component-based modeling definitions.
- *  \section License
- *  hydrocouplespatial.h, its associated files, and libraries are free software.
- *  You can redistribute it and/or modify it under the terms of the
- *  Lesser GNU General Public License as published by the Free Software Foundation;
- *  either version 3 of the License, or (at your option) any later version.
- *  hydrocouplespatial.h and its associated files is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- *  \date 2014-2018
- *  \pre
- *  \bug
- *  \warning
+/*!
+ * \file hydrocouplespatial.h
+ * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \version 1.0.0
+ * \description
+ * This header file contains the geospatial interface definitions for the
+ * HydroCouple component-based modeling definitions.
+ * \license
+ * This file and its associated files, and libraries are free software.
+ * You can redistribute it and/or modify it under the terms of the
+ * Lesser GNU General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This file and its associated files is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * \copyright Copyright 2014-2018, Caleb Buahin, All rights reserved.
+ * \date 2014-2018
+ * \pre
+ * \bug
+ * \warning
+ * \todo
  */
 
-/*!
-*/
 #ifndef HYDROCOUPLESPATIAL_H
 #define HYDROCOUPLESPATIAL_H
 
@@ -1322,15 +1322,15 @@ namespace HydroCouple
         virtual RegularGridType gridType() const  = 0;
 
         /*!
-      * \brief numXNodes represents the number of nodes in the x direction.
-      * \return number of nodes in the x direction.
-      */
+         * \brief numXNodes represents the number of nodes in the x direction.
+         * \return number of nodes in the x direction.
+         */
         virtual int numXNodes() const = 0;
 
         /*!
-      * \brief numYNodes represents the number of nodes in the y direction.
-      * \return number of nodes in the y direction.
-      */
+         * \brief numYNodes represents the number of nodes in the y direction.
+         * \return number of nodes in the y direction.
+         */
         virtual int numYNodes() const = 0;
 
         /*!
@@ -1340,11 +1340,11 @@ namespace HydroCouple
         virtual int numZNodes() const = 0;
 
         /*!
-      * \brief xNodeLocation provides the x location coordinate for the x-node and y-node indexes.
-      * \param xNodeIndex the x-node index.
-      * \param yNodeIndex the y-node index
-      * \return returns x location coordinate for the x-node and y-node provided
-      */
+         * \brief xNodeLocation provides the x location coordinate for the x-node and y-node indexes.
+         * \param xNodeIndex the x-node index.
+         * \param yNodeIndex the y-node index
+         * \return returns x location coordinate for the x-node and y-node provided
+         */
         virtual double xNodeLocation(int xNodeIndex , int yNodeIndex) const = 0;
 
         /*!
@@ -1362,7 +1362,7 @@ namespace HydroCouple
       * \param zNodeIndex the z-node index
       * \return returns z location coordinate for the x-node, y-node, and z-node indexes.
       */
-        virtual double zNodeLocation(int xNode , int yNode , int zNode) const = 0;
+        virtual double zNodeLocation(int xNodeIndex , int yNodeIndex , int zNodeIndex) const = 0;
 
         /*!
       * \brief isActive is a bool indicating whether a cell is active.
@@ -1518,7 +1518,7 @@ namespace HydroCouple
 
         virtual ~ITINComponentDataItem(){}
 
-       /*!
+        /*!
         * \returns The ITIN associated with this ITINComponentDataItem.
         */
         virtual ITIN *TIN() const = 0;
@@ -1725,7 +1725,6 @@ namespace HydroCouple
          * \param yCellIndex
          * \param zCellIndex
          * \param cellFaceIndex
-         * \param cellEdgeIndex
          * \param cellNodeIndex
          * \param data
          */
@@ -1738,7 +1737,6 @@ namespace HydroCouple
          * \param yCellIndex
          * \param zCellIndex
          * \param cellFaceIndex
-         * \param cellEdgeIndex
          * \param cellNodeIndex
          * \param data
          */
@@ -1770,7 +1768,7 @@ namespace HydroCouple
 
         /*!
          * \brief location
-         * \param pointIndex
+         * \param locationIndex
          * \return
          */
         virtual IPoint *location(int locationIndex) const = 0;

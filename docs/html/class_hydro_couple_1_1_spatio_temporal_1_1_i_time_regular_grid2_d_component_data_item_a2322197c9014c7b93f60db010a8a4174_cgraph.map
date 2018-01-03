@@ -1,6 +1,0 @@
-<map id="HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem::~ITimeRegularGrid2DComponentDataItem" name="HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem::~ITimeRegularGrid2DComponentDataItem">
-<area shape="rect" id="node2" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a32a3ca50c9e2a3b25155d6b828d8f91a" title="getValue " alt="" coords="411,5,688,71"/>
-<area shape="rect" id="node3" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#a9f91b596117ad3ba9242bad26dc2601d" title="Gets a multi&#45;dimensional array of values for given time dimension index and size for a hyperslab..." alt="" coords="411,95,688,160"/>
-<area shape="rect" id="node4" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#abe73873c9f6e8a691ebb00e59f8d32f5" title="setValues " alt="" coords="411,184,688,249"/>
-<area shape="rect" id="node5" href="$class_hydro_couple_1_1_spatio_temporal_1_1_i_time_geometry_component_data_item.html#ac4073749918519c1b8030ed11500ad08" title="Sets a multi&#45;dimensional array of values for given time dimension index and size for a hyperslab..." alt="" coords="411,273,688,339"/>
-</map>
