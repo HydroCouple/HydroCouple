@@ -1004,19 +1004,40 @@ namespace HydroCouple
     /*!
      * \brief The INetwork class.
      */
-    class INetwork : public virtual IMultiLineString
+    class INetwork : public virtual IIdentity
     {
       public:
+
         /*!
       * \brief ~Network
       */
         virtual ~INetwork(){}
 
         /*!
-         * \brief All the vertices associated with this network.
-         * All edges can be traversed from these vertices.
+         * \brief edgeCount
+         * \return
          */
-        virtual QList<IVertex*> vertices() const ;
+        virtual int edgeCount() const = 0;
+
+        /*!
+         * \brief edge
+         * \param index
+         * \return
+         */
+        virtual IEdge *edge(int index) const = 0;
+
+        /*!
+         * \brief vertexCount
+         * \return
+         */
+        virtual int vertexCount() const = 0;
+
+        /*!
+         * \brief vertex
+         * \param index
+         * \return
+         */
+        virtual IVertex *vertex(int index) const = 0;
 
     };
 
@@ -1450,6 +1471,56 @@ namespace HydroCouple
     };
 
     /*!
+     * \brief The INetworkComponentDataItem class
+     */
+    class INetworkComponentDataItem: public virtual IComponentDataItem
+    {
+        using IComponentDataItem::getValue;
+        using IComponentDataItem::setValue;
+
+      public:
+
+        virtual ~INetworkComponentDataItem(){}
+
+        virtual INetwork *network() const = 0;
+
+        /*!
+         * \brief
+         * \return
+         */
+        virtual MeshDataType meshDataType() const = 0;
+
+        /*!
+         * \brief edgeDimension
+         * \return
+         */
+        virtual IDimension *edgeDimension() const = 0;
+
+        /*!
+         * \brief nodeDimension
+         * \return
+         */
+        virtual IDimension *nodeDimension() const = 0;
+
+        /*!
+         * \brief getValue
+         * \param edgeDimensionIndex
+         * \param nodeDimensionIndex
+         * \param data
+         */
+        virtual void getValue(int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
+
+        /*!
+         * \brief setValue
+         * \param edgeDimensionIndex
+         * \param nodeDimensionIndex
+         * \param data
+         */
+        virtual void setValue(int edgeDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
+
+    };
+
+    /*!
      * \brief IPolyhedralSurfaceComponentItem represents IPolyhedralSurface IComponentItem.
      */
     class IPolyhedralSurfaceComponentDataItem : public virtual IComponentDataItem
@@ -1462,7 +1533,7 @@ namespace HydroCouple
         virtual ~IPolyhedralSurfaceComponentDataItem(){}
 
         /*!
-         * \brief polyhedralSurfaceDataType
+         * \brief meshDataType
          * \return
          */
         virtual MeshDataType meshDataType() const = 0;
@@ -1496,7 +1567,7 @@ namespace HydroCouple
          * \param nodeDimensionIndex
          * \param data
          */
-        virtual void getValue(int cellDimensionIndex, int faceDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
+        virtual void getValue(int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
 
         /*!
          * \brief setValues
@@ -1505,7 +1576,7 @@ namespace HydroCouple
          * \param nodeDimensionIndex
          * \param data
          */
-        virtual void setValue(int cellDimensionIndex, int faceDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
+        virtual void setValue(int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
     };
 
     /*!
@@ -1855,6 +1926,7 @@ Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2D, "HydroCouple::Spatial:
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3D, "HydroCouple::Spatial::IRegularGrid3D/1.0")
 
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryComponentDataItem, "HydroCouple::Spatial::IGeometryComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::Spatial::INetworkComponentDataItem, "HydroCouple::Spatial::INetworkComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINComponentDataItem, "HydroCouple::Spatial::ITINComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem, "HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DComponentDataItem, "HydroCouple::Spatial::IRegularGrid2DComponentDataItem/1.0")
@@ -1887,6 +1959,7 @@ Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid2D*)
 Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid3D*)
 
 Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometryComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::Spatial::INetworkComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::Spatial::ITINComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid2DComponentDataItem*)

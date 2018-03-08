@@ -1,7 +1,7 @@
 /*!
- * \file   hydrocouple.h
+ * \file hydrocouple.h
  * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
- * \version   1.0.0
+ * \version 1.0.0
  * \description
  * This header file contains the core interface definitions for the
  * HydroCouple component-based modeling definitions.

@@ -8,10 +8,10 @@ The HydroCouple interface definition header files.
 
 Use of the HydroCouple header files requires the following frameworks and libraries:
 
-* Qt 5.7.0
+* Qt 5.x.x
 
 ## References
 -------------------------------------
-Buahin, C. and J. Horsburgh, 2016. From OpenMI to HydroCouple: Advancing OpenMI to Support Experimental Simulations and Standard Geospatial Datasets. International Congress on Environmental Modelling and Software. Toulouse, France, p. . http://scholarsarchive.byu.edu/iemssconference/2016/Stream-A/11.
+* Buahin, C. and J. Horsburgh, 2016. From OpenMI to HydroCouple: Advancing OpenMI to Support Experimental Simulations and Standard Geospatial Datasets. International Congress on Environmental Modelling and Software. Toulouse, France, p. . http://scholarsarchive.byu.edu/iemssconference/2016/Stream-A/11.
 
 

@@ -116,6 +116,62 @@ namespace HydroCouple
 
     };
 
+
+    /*!
+     * \brief The ITimeNetworkComponentDataItem class
+     */
+    class ITimeNetworkComponentDataItem : public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    {
+        using IComponentDataItem::getValue;
+        using IComponentDataItem::setValue;
+
+      public:
+
+        virtual ~ITimeNetworkComponentDataItem(){}
+
+        /*!
+         * \brief network
+         * \return
+         */
+        virtual HydroCouple::Spatial::INetwork *network() const = 0;
+
+        /*!
+         * \brief
+         * \return
+         */
+        virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
+
+        /*!
+         * \brief edgeDimension
+         * \return
+         */
+        virtual IDimension *edgeDimension() const = 0;
+
+        /*!
+         * \brief nodeDimension
+         * \return
+         */
+        virtual IDimension *nodeDimension() const = 0;
+
+        /*!
+         * \brief getValue
+         * \param timeIndex
+         * \param edgeDimensionIndex
+         * \param nodeDimensionIndex
+         * \param data
+         */
+        virtual void getValue(int timeIndex,  int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
+
+        /*!
+         * \brief setValue
+         * \param timeIndex
+         * \param edgeDimensionIndex
+         * \param nodeDimensionIndex
+         * \param data
+         */
+        virtual void setValue(int timeIndex, int edgeDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
+    };
+
     /*!
      * \brief The ITimePolyhedralSurfaceComponentItem class.
      */
@@ -516,6 +572,7 @@ namespace HydroCouple
 }
 
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem, "HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeNetworkComponentDataItem, "HydroCouple::SpatioTemporal::ITimeNetworkComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem, "HydroCouple::SpatioTemporal::ITimeTINComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem/1.0")
@@ -524,6 +581,7 @@ Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentData
 Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem, "HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem/1.0")
 
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem*)
+Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeNetworkComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem*)
 Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem*)
