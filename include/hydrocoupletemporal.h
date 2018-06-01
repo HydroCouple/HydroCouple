@@ -20,7 +20,6 @@
  * \todo
  */
 
-
 #ifndef HYDROCOUPLETEMPORAL_H
 #define HYDROCOUPLETEMPORAL_H
 
@@ -32,8 +31,7 @@ namespace HydroCouple
   namespace Temporal
   {
     /*!
-     * \brief IDateTime interface based on a Modified Julian Date5
-     * (number and fraction of days since 00:00 November 17, 1858).
+     * \brief IDateTime interface based on a Julian day
      */
     class IDateTime : public virtual HydroCouple::IPropertyChanged
     {
@@ -42,9 +40,9 @@ namespace HydroCouple
         virtual ~IDateTime(){}
 
         /*!
-         * \brief Date and time as a modified julian day value. MJD = JD - 2400000.5
+         * \brief Date and time as a julian day value.
          */
-        virtual double modifiedJulianDay() const = 0;
+        virtual double julianDay() const = 0;
     };
 
     /*!
