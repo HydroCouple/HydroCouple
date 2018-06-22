@@ -122,7 +122,7 @@ namespace HydroCouple
       * signal/event when property of child class changes
       * \param propertyName is a string representing the name of the property.
       */
-    signals:
+//    signals:
       virtual void propertyChanged(const QString& propertyName) = 0;
 
   };
@@ -763,8 +763,6 @@ namespace HydroCouple
        */
       virtual void setReferenceDirectory(const QString &referenceDirectory) = 0;
 
-    signals:
-
       /*!
       * \brief The componentStatusChanged() function must be implemented
       * as a signal and emitted when Status of the component changes.
@@ -839,7 +837,8 @@ namespace HydroCouple
       /*!
       * \brief Deep clones itself including cloning its Data::IArgument.
       * \returns A deep clone of the current component. Configuration files and output files
-      * must be written to a different location than those of the parent.
+      * must be written to a different location than those of the parent. Cloning can only occur after the parent component has been
+      * initialized successfully. Cloned components must also be initialized.
       */
       virtual ICloneableModelComponent* clone() = 0;
 
@@ -1245,7 +1244,6 @@ namespace HydroCouple
     public:
       virtual ~IExchangeItem() {}
 
-    signals:
       /*!
       * \brief The componentItemChanged event is fired when
       * the content of an IComponentItem has changed.
@@ -1462,12 +1460,12 @@ namespace HydroCouple
       /*!
         * \brief Creates a IAdaptedOutput that adapts the producer so that it fits the consumer.
         *
-        * \details The adaptedProviderId used must be one of the IHIdentifier instances
+        * \details The adaptedProviderId used must be one of the IIdentifier instances
         * returned by the createAdaptedProducerItem method. The returned IAdaptedOutputs
         * will already be registered with the producer.
         * \param adaptedProviderId is an identifier of the IAdaptedOutput to create.
         * \param provider IOutput to adapt.
-        * \param consumer IInput to adapt the adaptee to, can be NULL.
+        * \param consumer IInput to adapt the adaptee to.
         * \returns An IAdaptedOutput.
         */
       virtual IAdaptedOutput* createAdaptedOutput(IIdentity* adaptedProviderId, IOutput* provider, IInput* consumer = nullptr) = 0;
@@ -1732,6 +1730,7 @@ Q_DECLARE_INTERFACE(HydroCouple::IComponentInfo, "HydroCouple::IComponentInfo/1.
 Q_DECLARE_INTERFACE(HydroCouple::IModelComponentInfo, "HydroCouple::IModelComponentInfo/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IComponentStatusChangeEventArgs, "HydroCouple::IComponentStatusChangeEventArgs/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IModelComponent, "HydroCouple::IModelComponent/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::ICloneableModelComponent, "HydroCouple::ICloneableModelComponent/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IDimension, "HydroCouple::IDimension/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IValueDefinition, "HydroCouple::IValueDefinition/1.0")
 Q_DECLARE_INTERFACE(HydroCouple::IQuality, "HydroCouple::IQuality/1.0")
@@ -1767,6 +1766,8 @@ Q_DECLARE_METATYPE(HydroCouple::IComponentStatusChangeEventArgs*)
 Q_DECLARE_METATYPE(QSharedPointer<HydroCouple::IComponentStatusChangeEventArgs>)
 Q_DECLARE_METATYPE(HydroCouple::IModelComponent*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IModelComponent*>)
+Q_DECLARE_METATYPE(HydroCouple::ICloneableModelComponent*)
+Q_DECLARE_METATYPE(QList<HydroCouple::ICloneableModelComponent*>)
 Q_DECLARE_METATYPE(HydroCouple::IDimension*)
 Q_DECLARE_METATYPE(QList<HydroCouple::IDimension*>)
 Q_DECLARE_METATYPE(HydroCouple::IValueDefinition*)

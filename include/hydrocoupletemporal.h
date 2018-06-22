@@ -71,15 +71,15 @@ namespace HydroCouple
         virtual ~ITimeModelComponent(){}
 
         /*!
-         * \brief currentDateTime
-         * \return
-         */
+             * \brief currentDateTime
+             * \return
+             */
         virtual IDateTime *currentDateTime() const = 0;
 
         /*!
-         * \brief timeHorizon
-         * \return
-         */
+             * \brief timeHorizon
+             * \return
+             */
         virtual ITimeSpan *timeHorizon() const = 0;
     };
 

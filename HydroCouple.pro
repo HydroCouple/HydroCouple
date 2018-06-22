@@ -25,7 +25,6 @@ PRECOMPILED_HEADER += ./include/stdafx.h
 
 SOURCES += ./src/stdafx.cpp
 
-
 CONFIG(debug, debug|release){
    DESTDIR = ./build/debug
    OBJECTS_DIR = $$DESTDIR/.obj
