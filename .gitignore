@@ -250,3 +250,4 @@ CMakeLists.txt.user
 # Visual Studio Code
 .vs/
 install.sh
+.DS_Store

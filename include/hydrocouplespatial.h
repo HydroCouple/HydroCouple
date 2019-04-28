@@ -12,8 +12,8 @@
  * either version 3 of the License, or (at your option) any later version.
  * This file and its associated files is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2014-2018, Caleb Buahin, All rights reserved.
- * \date 2014-2018
+ * \copyright Copyright 2014-2020, Caleb Buahin, All rights reserved.
+ * \date 2014-2020
  * \pre
  * \bug
  * \warning
@@ -56,7 +56,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ISpatialReferenceSystem(){}
+        virtual ~ISpatialReferenceSystem() = 0;
 
         /*!
       * \brief Returns the Spatial Reference System ID for a geometric object.
@@ -82,7 +82,7 @@ namespace HydroCouple
     class IEnvelope
     {
       public:
-        virtual ~IEnvelope(){}
+        virtual ~IEnvelope() = 0;
 
         /*!
          * \brief minX
@@ -193,7 +193,7 @@ namespace HydroCouple
           TINZM = 3016,
         };
 
-        virtual ~IGeometry(){}
+        virtual ~IGeometry() = 0;
 
         /*!
          * \brief id
@@ -432,7 +432,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~IGeometryCollection(){}
+        virtual ~IGeometryCollection() = 0;
 
         /*!
       * \brief The number of geometries in this IGeometryCollection
@@ -463,7 +463,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IPoint(){}
+        virtual ~IPoint() = 0;
 
         /*!
       * \brief The x-coordinate value for this IPoint.
@@ -504,7 +504,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~IMultiPoint(){}
+        virtual ~IMultiPoint() = 0;
 
         /*!
       * \returns the index sup(th) IPoint in this IGeometryCollection.
@@ -520,7 +520,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IVertex(){}
+        virtual ~IVertex() = 0;
 
         /*!
       * \brief An arbitrary outgoing IEdge from this vertex.
@@ -559,7 +559,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ICurve(){}
+        virtual ~ICurve() = 0;
 
         /*!
       * \brief The length of this ICurve in its associated ISpatialReferenceSystem.
@@ -613,7 +613,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IMultiCurve(){}
+        virtual ~IMultiCurve() = 0;
 
         /*!
       * \returns 1 (TRUE) if this MultiCurve is
@@ -636,7 +636,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~ILineString(){}
+        virtual ~ILineString() = 0;
 
         /*!
       * \brief The number of IPoints in this ILineString.
@@ -657,7 +657,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IMultiLineString(){}
+        virtual ~IMultiLineString() = 0;
 
         //!Returns the ILineString at index
         virtual ILineString *lineString(int index) const = 0;
@@ -670,7 +670,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~ILine(){}
+        virtual ~ILine() = 0;
     };
 
     /*!
@@ -680,7 +680,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~ILinearRing(){}
+        virtual ~ILinearRing() = 0;
     };
 
     /*!
@@ -693,7 +693,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IEdge(){}
+        virtual ~IEdge() = 0;
 
         /*!
          * \brief unique index identifier
@@ -838,7 +838,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~ISurface(){}
+        virtual ~ISurface() = 0;
 
         /*!
       * \brief The area of this ISurface, as measured in
@@ -874,7 +874,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~IMultiSurface(){}
+        virtual ~IMultiSurface() = 0;
 
         /*!
       * \brief The area of this ISurface, as measured in
@@ -937,7 +937,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IPolygon(){}
+        virtual ~IPolygon() = 0;
 
         /*!
       * \returns the exterior ring of this IPolygon.
@@ -976,7 +976,7 @@ namespace HydroCouple
     {
 
       public:
-        virtual ~IMultiPolygon(){}
+        virtual ~IMultiPolygon() = 0;
 
         /*!
       * \returns the index sup(th) polygon in this IMultiPolygon/IGeometryCollection.
@@ -991,7 +991,7 @@ namespace HydroCouple
     class ITriangle : public virtual IPolygon
     {
       public:
-        virtual ~ITriangle(){}
+        virtual ~ITriangle() = 0;
 
         virtual IVertex *p1() const = 0;
 
@@ -1011,7 +1011,7 @@ namespace HydroCouple
         /*!
       * \brief ~Network
       */
-        virtual ~INetwork(){}
+        virtual ~INetwork() = 0;
 
         /*!
          * \brief edgeCount
@@ -1079,7 +1079,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IPolyhedralSurface(){}
+        virtual ~IPolyhedralSurface() = 0;
 
         /*!
       * \returns The number of including polygons.
@@ -1126,7 +1126,7 @@ namespace HydroCouple
     class ITIN : public virtual IPolyhedralSurface
     {
       public:
-        virtual ~ITIN(){}
+        virtual ~ITIN() = 0;
 
         /*!
         * \returns an ITriangle in this surface, the order is arbitrary.
@@ -1173,7 +1173,7 @@ namespace HydroCouple
           CFloat64
         };
 
-        virtual ~IRaster(){}
+        virtual ~IRaster() = 0;
 
         /*!
       * \brief Number of pixels in the x direction.
@@ -1224,7 +1224,7 @@ namespace HydroCouple
     {
 
       public:
-        virtual ~IRasterBand(){}
+        virtual ~IRasterBand() = 0;
 
         //!Number of pixels in the x direction
         virtual int xSize() const = 0;
@@ -1283,7 +1283,7 @@ namespace HydroCouple
     class IRegularGrid2D : public virtual IIdentity
     {
       public:
-        virtual ~IRegularGrid2D(){}
+        virtual ~IRegularGrid2D() = 0;
 
         /*!
       * \brief gridType
@@ -1334,7 +1334,7 @@ namespace HydroCouple
     class IRegularGrid3D : public virtual IIdentity
     {
       public:
-        virtual ~IRegularGrid3D(){}
+        virtual ~IRegularGrid3D() = 0;
 
         /*!
       * \brief gridType
@@ -1405,7 +1405,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~IGeometryComponentDataItem(){}
+        virtual ~IGeometryComponentDataItem() = 0;
 
         /*!
          * \brief geometryType
@@ -1480,7 +1480,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~INetworkComponentDataItem(){}
+        virtual ~INetworkComponentDataItem() = 0;
 
         virtual INetwork *network() const = 0;
 
@@ -1530,7 +1530,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~IPolyhedralSurfaceComponentDataItem(){}
+        virtual ~IPolyhedralSurfaceComponentDataItem() = 0;
 
         /*!
          * \brief meshDataType
@@ -1587,7 +1587,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~ITINComponentDataItem(){}
+        virtual ~ITINComponentDataItem() = 0;
 
         /*!
         * \returns The ITIN associated with this ITINComponentDataItem.
@@ -1604,7 +1604,7 @@ namespace HydroCouple
         using HydroCouple::IComponentDataItem::setValue;
 
       public:
-        virtual ~IRasterComponentDataItem(){}
+        virtual ~IRasterComponentDataItem() = 0;
 
         /*!
       * \brief IRaster associated with this IRasterComponentDataItem.
@@ -1682,7 +1682,7 @@ namespace HydroCouple
         /*!
       * \brief ~IRegularGrid2DComponentItem.
       */
-        virtual ~IRegularGrid2DComponentDataItem(){}
+        virtual ~IRegularGrid2DComponentDataItem() = 0;
 
         /*!
       * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
@@ -1750,7 +1750,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~IRegularGrid3DComponentDataItem(){}
+        virtual ~IRegularGrid3DComponentDataItem() = 0;
 
         /*!
       * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
@@ -1829,7 +1829,7 @@ namespace HydroCouple
         /*!
          * \brief ~IVectorComponentDataItem
          */
-        virtual ~IVectorComponentDataItem(){}
+        virtual ~IVectorComponentDataItem() = 0;
 
         /*!
          * \brief locationCount

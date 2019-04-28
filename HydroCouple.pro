@@ -1,11 +1,11 @@
 #Author Caleb Amoa Buahin
 #Email caleb.buahin@gmail.com
-#Date 2014-2018
+#Date 2014-2019
 #License GNU General Public License (see <http://www.gnu.org/licenses/> for details).
-#Copyright 2014-2018, Caleb Buahin, All rights reserved.
+#Copyright 2014-2020, Caleb Buahin, All rights reserved.
 
 TEMPLATE = lib
-VERSION = 1.0.0
+VERSION = 1.0.2
 TARGET = HydroCouple
 
 CONFIG += c++11

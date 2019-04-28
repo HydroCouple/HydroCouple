@@ -12,8 +12,8 @@
  * either version 3 of the License, or (at your option) any later version.
  * This file and its associated files is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2014-2018, Caleb Buahin, All rights reserved.
- * \date 2014-2018
+ * \copyright Copyright 2014-2020, Caleb Buahin, All rights reserved.
+ * \date 2014-2020
  * \pre
  * \bug
  * \warning
@@ -45,7 +45,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeGeometryComponentItem.
          */
-        virtual ~ITimeGeometryComponentDataItem(){}
+        virtual ~ITimeGeometryComponentDataItem() = 0;
 
         /*!
          * \brief geometryType
@@ -116,7 +116,6 @@ namespace HydroCouple
 
     };
 
-
     /*!
      * \brief The ITimeNetworkComponentDataItem class
      */
@@ -127,7 +126,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeNetworkComponentDataItem(){}
+        virtual ~ITimeNetworkComponentDataItem() = 0;
 
         /*!
          * \brief network
@@ -186,7 +185,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimePolyhedralSurfaceComponentItem.
          */
-        virtual ~ITimePolyhedralSurfaceComponentDataItem(){}
+        virtual ~ITimePolyhedralSurfaceComponentDataItem() = 0;
 
         /*!
          * \brief polyhedralSurfaceDataType
@@ -247,7 +246,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeTINComponentItem.
          */
-        virtual ~ITimeTINComponentDataItem(){}
+        virtual ~ITimeTINComponentDataItem() = 0;
 
         /*!
            * \returns The ITIN associated with this ITINComponentDataItem.
@@ -266,7 +265,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeRasterComponentDataItem(){}
+        virtual ~ITimeRasterComponentDataItem() = 0;
 
         /*!
          * \brief IRaster associated with this IRasterComponentDataItem.
@@ -352,7 +351,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeRegularGrid2DComponentDataItem(){}
+        virtual ~ITimeRegularGrid2DComponentDataItem() = 0;
 
         /*!
          * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
@@ -421,7 +420,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeRegularGrid3DComponentDataItem(){}
+        virtual ~ITimeRegularGrid3DComponentDataItem() = 0;
 
         /*!
          * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
@@ -499,7 +498,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeVectorComponentDataItem(){}
+        virtual ~ITimeVectorComponentDataItem() = 0;
 
         /*!
          * \brief locationCount
