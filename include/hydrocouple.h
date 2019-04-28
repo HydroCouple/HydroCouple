@@ -888,7 +888,7 @@ namespace HydroCouple
     /*!
       * \brief ~IValueDefinition
       */
-      virtual ~IValueDefinition() {}
+      virtual ~IValueDefinition() = 0;
 
     /*!
       * \brief The object types of value that will be available
