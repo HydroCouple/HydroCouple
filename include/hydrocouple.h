@@ -115,7 +115,7 @@ namespace HydroCouple
   {
 
   public:
-      virtual ~IPropertyChanged(){}
+      virtual ~IPropertyChanged() = 0;
 
     /*!
       * \brief IPropertyChanged::propertyChanged() is called to emit
@@ -138,7 +138,7 @@ namespace HydroCouple
   {
 
   public:
-    virtual ~IDescription() {}
+    virtual ~IDescription() = 0;
 
     /*!
       * \brief Gets caption for the entity.
@@ -180,7 +180,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IIdentity() {}
+    virtual ~IIdentity() = 0;
 
     /*!
       * \brief Gets a unique identifier for the entity.
@@ -208,7 +208,7 @@ namespace HydroCouple
   {
 
   public:
-    virtual ~IComponentInfo() {}
+    virtual ~IComponentInfo() = 0;
 
     /*!
       * \brief File path to Component library.
@@ -319,7 +319,7 @@ namespace HydroCouple
   {
 
   public:
-    virtual ~IModelComponentInfo() {}
+    virtual ~IModelComponentInfo() = 0;
 
     /*!
       * \brief Creates a new IModelComponent instance.
@@ -466,7 +466,7 @@ namespace HydroCouple
     /*!
        * \brief ~IModelComponent
        */
-    virtual ~IModelComponent() {}
+    virtual ~IModelComponent() = 0;
 
     /*!
        * \brief index
@@ -782,7 +782,7 @@ namespace HydroCouple
     /*!
      * \brief ~IProxyModelComponent
      */
-    virtual ~IProxyModelComponent() {}
+    virtual ~IProxyModelComponent() = 0;
 
     /*!
      * \brief parentMpiProcessRank
@@ -806,7 +806,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IComponentStatusChangeEventArgs() {}
+    virtual ~IComponentStatusChangeEventArgs() = 0;
 
     /*!
       * \brief Gets the IModelComponent that fired the event.
@@ -851,7 +851,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~ICloneableModelComponent() {}
+    virtual ~ICloneableModelComponent() = 0;
 
     /*!
       * \brief Parent ICloneableModelComponent object from which current component was cloned from.
@@ -888,7 +888,7 @@ namespace HydroCouple
     /*!
       * \brief ~IValueDefinition
       */
-      virtual ~IValueDefinition() {}
+      virtual ~IValueDefinition() = 0;
 
     /*!
       * \brief The object types of value that will be available
@@ -912,7 +912,7 @@ namespace HydroCouple
   class IDimension : public virtual IIdentity
   {
   public:
-    virtual ~IDimension() {}
+    virtual ~IDimension() = 0;
 
   };
 
@@ -947,7 +947,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IQuality() {}
+    virtual ~IQuality() = 0;
 
     /*!
       * \returns A list of the possible ICategory allowed for this IQuality
@@ -968,7 +968,7 @@ namespace HydroCouple
   class IUnitDimensions : public virtual IDescription
   {
   public:
-    virtual ~IUnitDimensions() {}
+    virtual ~IUnitDimensions() = 0;
 
     /*!
       * \brief Returns the power for the requested dimension.
@@ -1006,7 +1006,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IUnit() {}
+    virtual ~IUnit() = 0;
 
     /*!
       * \brief Fundamental dimensions of the unit.
@@ -1031,7 +1031,7 @@ namespace HydroCouple
   class IQuantity : public virtual IValueDefinition
   {
   public:
-    virtual ~IQuantity() {}
+    virtual ~IQuantity() = 0;
 
     /*!
       * \brief Unit of quantity.
@@ -1061,7 +1061,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IComponentDataItem() {}
+    virtual ~IComponentDataItem() = 0;
 
     /*!
       * \brief Gets the owner IModelComponent of this IComponentItem.For an IOutput component item this is the component
@@ -1161,7 +1161,7 @@ namespace HydroCouple
       File
     };
 
-    virtual ~IArgument() {}
+    virtual ~IArgument() = 0;
 
     /*!
       * \brief Specifies whether the argument is optional or not.
@@ -1244,7 +1244,7 @@ namespace HydroCouple
   class IExchangeItemChangeEventArgs
   {
   public:
-    virtual ~IExchangeItemChangeEventArgs() {}
+    virtual ~IExchangeItemChangeEventArgs() = 0;
 
     /*!
       * \brief IExchangeItem which fired the signal.
@@ -1267,7 +1267,7 @@ namespace HydroCouple
   {
 
   public:
-    virtual ~IExchangeItem() {}
+    virtual ~IExchangeItem() = 0;
 
     /*!
       * \brief The componentItemChanged event is fired when
@@ -1290,7 +1290,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IOutput() {}
+    virtual ~IOutput() = 0;
 
     /*!
       * \brief  Input items that will consume the values, by calling the GetValues() method
@@ -1400,7 +1400,7 @@ namespace HydroCouple
   class IAdaptedOutput : public virtual IOutput
   {
   public:
-    virtual ~IAdaptedOutput() {}
+    virtual ~IAdaptedOutput() = 0;
 
     /*!
       *
@@ -1467,7 +1467,7 @@ namespace HydroCouple
   class IAdaptedOutputFactory : public virtual IIdentity
   {
   public:
-    virtual ~IAdaptedOutputFactory() {}
+    virtual ~IAdaptedOutputFactory() = 0;
 
     /*!
         * \brief Get a list of IIdentity objects representing the list
@@ -1508,7 +1508,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IAdaptedOutputFactoryComponentInfo() {}
+    virtual ~IAdaptedOutputFactoryComponentInfo() = 0;
 
     /*!
       * \brief New IAdaptedOutputFactoryComponent instance.
@@ -1524,7 +1524,7 @@ namespace HydroCouple
   class IAdaptedOutputFactoryComponent : public virtual IAdaptedOutputFactory
   {
   public:
-    virtual ~IAdaptedOutputFactoryComponent() {}
+    virtual ~IAdaptedOutputFactoryComponent() = 0;
 
     /*!
       * \brief Contains the metadata about the IModelComponent.
@@ -1540,7 +1540,7 @@ namespace HydroCouple
   class IInput : public virtual IExchangeItem
   {
   public:
-    virtual ~IInput() {}
+    virtual ~IInput() = 0;
 
     /*!
       * \brief Gets the producer this consumer should get its values from.
@@ -1570,7 +1570,7 @@ namespace HydroCouple
   {
   public:
 
-    virtual ~IMultiInput() {}
+    virtual ~IMultiInput() = 0;
 
     /*!
       * \brief providers
@@ -1605,7 +1605,7 @@ namespace HydroCouple
     /*!
       * \brief ~IIdBasedComponentItem.
       */
-    virtual ~IIdBasedComponentDataItem() {}
+    virtual ~IIdBasedComponentDataItem() = 0;
 
     /*!
       * \brief identifiers
@@ -1661,7 +1661,7 @@ namespace HydroCouple
 
   public:
 
-    virtual ~IWorkflowComponentInfo() {}
+    virtual ~IWorkflowComponentInfo() = 0;
 
     /*!
       * \brief Creates a new IModelComponent instance.
@@ -1696,7 +1696,7 @@ namespace HydroCouple
     /*!
        * \brief ~IWorkflowComponent
        */
-    virtual ~IWorkflowComponent() {}
+    virtual ~IWorkflowComponent() = 0;
 
     /*!
        * \brief componentInfo
