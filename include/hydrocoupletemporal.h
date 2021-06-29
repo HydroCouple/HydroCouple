@@ -37,7 +37,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~IDateTime() = 0;
+        virtual ~IDateTime(){}
 
         /*!
          * \brief Date and time as a julian day value.
@@ -53,7 +53,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeSpan() = 0;
+        virtual ~ITimeSpan() {}
 
         /*!
          * Duration of the timespan in days.
@@ -68,7 +68,7 @@ namespace HydroCouple
     {
       public:
 
-        virtual ~ITimeModelComponent() = 0;
+        virtual ~ITimeModelComponent() {}
 
         /*!
              * \brief currentDateTime
@@ -97,7 +97,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeComponentItem.
          */
-        virtual ~ITimeComponentDataItem() = 0;
+        virtual ~ITimeComponentDataItem() {}
 
         /*!
          * \brief ITimes associated with this dimension.
@@ -141,7 +141,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeSeriesComponentDataItem() = 0;
+        virtual ~ITimeSeriesComponentDataItem() {}
 
         /*!
          * \brief Gets a single value for given time dimension index.
@@ -187,7 +187,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeIdBasedComponentDataItem() = 0;
+        virtual ~ITimeIdBasedComponentDataItem() {}
 
         /*!
          * \brief identifiers

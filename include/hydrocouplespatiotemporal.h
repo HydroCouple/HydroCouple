@@ -45,7 +45,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeGeometryComponentItem.
          */
-        virtual ~ITimeGeometryComponentDataItem() = 0;
+        virtual ~ITimeGeometryComponentDataItem() {}
 
         /*!
          * \brief geometryType
@@ -126,7 +126,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeNetworkComponentDataItem() = 0;
+        virtual ~ITimeNetworkComponentDataItem() {}
 
         /*!
          * \brief network
@@ -185,7 +185,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimePolyhedralSurfaceComponentItem.
          */
-        virtual ~ITimePolyhedralSurfaceComponentDataItem() = 0;
+        virtual ~ITimePolyhedralSurfaceComponentDataItem() {}
 
         /*!
          * \brief polyhedralSurfaceDataType
@@ -246,7 +246,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeTINComponentItem.
          */
-        virtual ~ITimeTINComponentDataItem() = 0;
+        virtual ~ITimeTINComponentDataItem() {}
 
         /*!
            * \returns The ITIN associated with this ITINComponentDataItem.
@@ -265,7 +265,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeRasterComponentDataItem() = 0;
+        virtual ~ITimeRasterComponentDataItem() {}
 
         /*!
          * \brief IRaster associated with this IRasterComponentDataItem.
@@ -351,7 +351,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeRegularGrid2DComponentDataItem() = 0;
+        virtual ~ITimeRegularGrid2DComponentDataItem() {}
 
         /*!
          * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
@@ -420,7 +420,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeRegularGrid3DComponentDataItem() = 0;
+        virtual ~ITimeRegularGrid3DComponentDataItem() {}
 
         /*!
          * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
@@ -498,7 +498,7 @@ namespace HydroCouple
 
       public:
 
-        virtual ~ITimeVectorComponentDataItem() = 0;
+        virtual ~ITimeVectorComponentDataItem() {}
 
         /*!
          * \brief locationCount
