@@ -3,46 +3,45 @@
 #
 # Author: Caleb Buahin
 #
+# This file is part of HydroCouple.
+# 
+# HydroCouple is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# HydroCouple is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+# for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with HydroCouple. If not, see <http://www.gnu.org/licenses/>.
+# 
+# Copyright: 
 
-
-cmake_minimum_required (VERSION 3.13)
+cmake_minimum_required (VERSION 3.14)
 
 project(HydroCouple 
-VERSION 1.0.2 
+VERSION 2.0.0 
 LANGUAGES C CXX
-DESCRIPTION  ""
+DESCRIPTION  "HydroCouple Interface Definitions for C++ and Python"
 )
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 COMPONENTS Core REQUIRED)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Append local dir to module search path
-# list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+find_package(QT NAMES Qt5 Qt6 COMPONENTS Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 
-# Sets the position independent code property for all targets
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+qt_standard_project_setup()
 
-# Sets default install prefix when cmakecache is initialized for first time
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "..." FORCE)
-endif()
-
-
-# Define install locations (will be prepended by install prefix)
-set(TOOL_DIST "bin")
-set(INCLUDE_DIST "include")
-set(LIBRARY_DIST "lib")
-set(CONFIG_DIST  "cmake")
-
-
-option(BUILD_TESTS "Build component tests (requires Boost)" OFF)
-option(BUILD_DOCS "Build toolkit docs (requires Doxygen)" OFF)
+# option(BUILD_TESTS "Build component tests (requires Boost)" OFF)
+# option(BUILD_DOCS "Build toolkit docs (requires Doxygen)" OFF)
 
 
 # Create install rules for vcruntime.dll, msvcp.dll, vcomp.dll etc.
@@ -52,15 +51,21 @@ include(InstallRequiredSystemLibraries)
 
 # Create install target for License and Authors files
 install(
+    BUNDLE DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     FILES
         "License.md"
     DESTINATION
         "."
 )
 
-file(GLOB_RECURSE HEADERS "src/*.h")
+file(GLOB_RECURSE HEADERS "include/*.h")
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library
+    ${PROJECT_NAME} 
+    INTERFACE
+    ${HEADERS}
+)
 
 target_include_directories(HydroCouple INTERFACE ./include)
 
