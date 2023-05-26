@@ -13,7 +13,7 @@ Use of the HydroCouple header files requires the following frameworks and librar
 
 ## Documentation
 -------------------------------------
-* HydroCouple [Documentation](hhttps://www.hydrocouple.org/hydrocoupledocs/html/index.html)
+* HydroCouple [Documentation](https://www.hydrocouple.org/hydrocoupledocs/html/index.html)
 
 ## References
 -------------------------------------
