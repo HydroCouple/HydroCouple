@@ -1,7 +1,7 @@
 /*!
  * \file hydrocouple.h
  * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
- * \version 1.0.0
+ * \version 2.0.0
  * \description
  * This header file contains the core interface definitions for the
  * HydroCouple component-based modeling definitions.
@@ -12,8 +12,8 @@
  * either version 3 of the License, or (at your option) any later version.
  * This file and its associated files is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2014-2020, Caleb Buahin, All rights reserved.
- * \date 2014-2020
+ * \copyright Copyright 2014-2023, Caleb Buahin, All rights reserved.
+ * \date 2014-2023
  * \pre
  * \bug
  * \warning
@@ -26,8 +26,9 @@
 #include <QtCore/qglobal.h>
 #include <QVariant>
 #include <QSharedPointer>
+#include <QURL>
 
-#ifdef HYDROCOUPLE_LIB
+#ifdef HYDROCOUPLE_LIBRARY
 # define HYDROCOUPLE_EXPORT Q_DECL_EXPORT
 #else
 # define HYDROCOUPLE_EXPORT Q_DECL_IMPORT
@@ -337,7 +338,7 @@ namespace HydroCouple
       *
       * \returns A list of IAdaptedOutputFactories associated with this component.
       */
-    virtual QList<IAdaptedOutputFactory*> adaptedOutputFactories() const = 0;
+    virtual QVector<IAdaptedOutputFactory*> adaptedOutputFactories() const = 0;
 
   };
 
@@ -500,7 +501,7 @@ namespace HydroCouple
       *
       * \returns A list of IArguments for instantiating this component.
       */
-    virtual QList<IArgument*> arguments() const = 0;
+    virtual QVector<IArgument*> arguments() const = 0;
 
     /*!
       * \brief Defines current status of the IModelComponent.
@@ -526,7 +527,7 @@ namespace HydroCouple
       * after it has been returned. It is the responsibility of the IModelComponent
       * to make sure that such possible alterations do not subsequently corrupt the IModelComponent.
       */
-    virtual QList<IInput*> inputs() const = 0;
+    virtual QVector<IInput*> inputs() const = 0;
 
     /*!
       * \brief The list of IOutputs for which a component can produce results.
@@ -547,7 +548,7 @@ namespace HydroCouple
       * after it has been returned. It is the responsibility of the IModelComponents
       * to make sure that such possible alterations do not subsequently corrupt the IModelComponents.
       */
-    virtual QList<IOutput*> outputs() const = 0;
+    virtual QVector<IOutput*> outputs() const = 0;
 
     /*!
       * \brief Initializes the  current IModelComponent
@@ -598,7 +599,7 @@ namespace HydroCouple
       * If there are messages while the components status is HydroCouple::Componentstatus.
       * HydroCouple::Invalid when at least one of the messages indicates a fatal error.
       */
-    virtual QList<QString> validate() = 0;
+    virtual QVector<QString> validate() = 0;
 
     /*!
       * \brief Prepares the IModelComponent for calls to the Update method.
@@ -647,7 +648,7 @@ namespace HydroCouple
       * will at least update its producer items that have consumers, or all its output items,
       * depending on the component's implementation.
       */
-    virtual void update(const QList<IOutput*>& requiredOutputs = QList<IOutput*>()) = 0;
+    virtual void update(const QVector<IOutput*>& requiredOutputs = QVector<IOutput*>()) = 0;
 
     /*!
       * \brief The finish() must be invoked as the last of any methods in the IModelComponent interface.
@@ -713,6 +714,7 @@ namespace HydroCouple
     /*!
        * \brief gpuPlatform
        * \param mpiProcess
+       * \details Returns the integer identifier of the GPU Platform
        * \return
        */
     virtual int gpuPlatform(int mpiProcess) const = 0;
@@ -907,7 +909,7 @@ namespace HydroCouple
   };
 
   /*!
-   * \brief IDimension provides the properties of the dimensions of a vairable.
+   * \brief IDimension provides the properties of the dimensions of a variable.
    */
   class IDimension : public virtual IIdentity
   {
@@ -1148,7 +1150,7 @@ namespace HydroCouple
 
   public:
 
-    enum ArgumentIOType
+    enum ArgumentInputType
     {
       /*!
         * \brief Enumeration indicating that the argument was read from QString.
@@ -1158,7 +1160,20 @@ namespace HydroCouple
       /*!
         * \brief Enumeration indicating that the argument was read from a file.
         */
-      File
+      File,
+
+      /*
+       * \brief Enumeration indicating that the argument was read from a URL.
+      */
+      JSON,
+
+
+      XML,
+
+      /*!
+        * \brief Enumeration indicating that the argument was read from a URL.
+        */
+       URL
     };
 
     virtual ~IArgument() = 0;
@@ -1183,12 +1198,20 @@ namespace HydroCouple
     /*!
       * \brief String/XML representation for this IArgument
       */
-    virtual QString toString() const = 0;
+    virtual QString string() const = 0;
+
+    /*! 
+      * \brief Sets the value of this IArgument from a string.
+      * \param value is the string to be parsed.
+      * \return true if the value was successfully parsed, false otherwise.
+      */
+    virtual URL url() const = 0;
+
 
     /*!
-       * \brief Writes data to files associated with this argument if they exist.
-       * \return
-       */
+     * \brief Writes data to files associated with this argument if they exist.
+     * \return
+     */
     virtual void saveData() = 0;
 
     /*!
@@ -1209,10 +1232,10 @@ namespace HydroCouple
     virtual bool canReadFromString() const = 0;
 
     /*!
-        * \brief argumentIOType
-        * \return
-        */
-    virtual ArgumentIOType currentArgumentIOType() const = 0;
+      * \brief argumentIOType
+      * \return
+      */
+    virtual ArgumentInputType currentArgumentInputType() const = 0;
 
     /*!
       * \brief Reads values from a QString or a QString representing an input file.
@@ -1221,7 +1244,15 @@ namespace HydroCouple
       * \param isFile is a boolean indicating whether the values are in the QString or the file pointed by the QString.
       * \return boolean indicating whether file/string reading was successful
       */
-    virtual bool readValues(const QString& value, QString &message, bool isFile = false) = 0;
+    virtual bool initializeFromString(const QString& value, QString &message) = 0;
+
+    /*!
+      * \brief Reads values from a JSON string.
+      * \param value is a QString representing values in JSON format.
+      * \param message message returned from file read operation.
+      * \return boolean indicating whether file/string reading was successful
+    */
+    virtual bool initializeFromJSON(const QString& value, QString &message) = 0;
 
     /*!
       * \brief Reads values from an equivalent IComponentDataItem. IComponentDataItem has been used instead of IArgument
@@ -1230,7 +1261,7 @@ namespace HydroCouple
       * \param message message returned from file read operation.
       * \return boolean indicating whether file reading was successful.
       */
-    virtual bool readValues(const IComponentDataItem* componentDataItem, QString &message) = 0;
+    virtual bool initialize(const IComponentDataItem* componentDataItem, QString &message) = 0;
   };
 
   /*!
@@ -1303,7 +1334,7 @@ namespace HydroCouple
       * may be called anyway, even if there are no values available.
       *
       */
-    virtual QList<IInput*> consumers() const = 0;
+    virtual QVector<IInput*> consumers() const = 0;
 
     /*!
       * \brief Add a consumer to this output item. Every input item that wants to call
@@ -1340,7 +1371,7 @@ namespace HydroCouple
       * \details The list is readonly. Add and remov from the list by using addAdaptedOutput() and removeAdaptedOutput().
       *
       */
-    virtual QList<IAdaptedOutput*> adaptedOutputs() const = 0;
+    virtual QVector<IAdaptedOutput*> adaptedOutputs() const = 0;
 
     /*!
       * \brief Add a IAdaptedOutput to this output item.
@@ -1576,7 +1607,7 @@ namespace HydroCouple
       * \brief providers
       * \return
       */
-    virtual QList<IOutput*> providers() const = 0;
+    virtual QVector<IOutput*> providers() const = 0;
 
     /*!
       * \brief addProvider
