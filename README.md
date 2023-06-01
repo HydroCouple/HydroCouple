@@ -2,7 +2,8 @@
 
 The HydroCouple interface definition header files.
 
-[![AUR](https://img.shields.io/badge/license-GPLv3-blue.svg?style=for-the-badge)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md)
+[![AUR](https://img.shields.io/badge/license-GPLv3-blue.svg?style=for-the-badge)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md) [![AUR](https://img.shields.io/badge/docs-passing-green.svg?style=for-the-badge)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md) ![Build](https://github.com/HydroCouple/HydroCouple/workflows/build_and_package.yml/badge.svg?style=for-the-badge) ![Docs](https://github.com/HydroCouple/HydroCouple/workflows/build_docs.yml/badge.svg?style=for-the-badge)
+
 
 ## Dependencies
 

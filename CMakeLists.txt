@@ -40,7 +40,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-#qt_standard_project_setup()
+qt_standard_project_setup()
 
 add_library(
     ${PROJECT_NAME}
@@ -68,8 +68,6 @@ target_link_libraries(HydroCouple PUBLIC INTERFACE Qt${QT_VERSION_MAJOR}::Core)
 target_compile_definitions(HydroCouple PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
 
 
-# Create install rules for vcruntime.dll, msvcp.dll, vcomp.dll etc.
-#set(CMAKE_INSTALL_OPENMP_LIBRARIES TRUE)
 include(InstallRequiredSystemLibraries)
 
 
