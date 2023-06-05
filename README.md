@@ -8,7 +8,7 @@ The HydroCouple interface definition header files.
 Use of the HydroCouple header files requires the following frameworks and libraries:
 
 * Qt 5.x.x or Qt 6.x.x
-* Boost 1.70 or later
+* Boost 1.70
 
 ## Documentation
 
