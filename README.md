@@ -2,8 +2,7 @@
 
 The HydroCouple interface definition header files.
 
-[![AUR](https://img.shields.io/badge/license-GPLv3-blue.svg?style=for-the-badge)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md) [![AUR](https://img.shields.io/badge/docs-passing-green.svg?style=for-the-badge)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md) ![Build](https://github.com/HydroCouple/HydroCouple/workflows/build_and_package.yml/badge.svg?style=for-the-badge) ![Docs](https://github.com/HydroCouple/HydroCouple/workflows/build_docs.yml/badge.svg?style=for-the-badge)
-
+[![AUR](https://img.shields.io/badge/license-GPLv3-blue.svg?style=for-the-badge)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md) [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FHydroCouple%2FHydroCouple%2Fbadge&style=for-the-badge)](https://actions-badge.atrox.dev/HydroCouple/HydroCouple/goto)
 
 ## Dependencies
 
@@ -13,17 +12,17 @@ Use of the HydroCouple header files requires the following frameworks and librar
 * Boost
 
 ## Documentation
--------------------------------------
+
 * HydroCouple [Documentation](https://www.hydrocouple.org/hydrocoupledocs/html/index.html)
 
 ## References
--------------------------------------
-1) Buahin, C.A., Horsburgh, J.S., 2018. Advancing the Open Modeling Interface (OpenMI) for integrated water resources modeling. Environmental Modelling & Software 108, 133–153. https://doi.org/10.1016/j.envsoft.2018.07.015
 
-2) Buahin, C. and J. Horsburgh, 2016. From OpenMI to HydroCouple: Advancing OpenMI to Support Experimental Simulations and Standard Geospatial Datasets. International Congress on Environmental Modelling and Software. Toulouse, France. http://scholarsarchive.byu.edu/iemssconference/2016/Stream-A/11.
+* Buahin, C.A., Horsburgh, J.S., 2018. Advancing the Open Modeling Interface (OpenMI) for integrated water resources modeling. Environmental Modelling & Software 108, 133–153. https://doi.org/10.1016/j.envsoft.2018.07.015
+
+* Buahin, C. and J. Horsburgh, 2016. From OpenMI to HydroCouple: Advancing OpenMI to Support Experimental Simulations and Standard Geospatial Datasets. International Congress on Environmental Modelling and Software. Toulouse, France. http://scholarsarchive.byu.edu/iemssconference/2016/Stream-A/11.
 
 ## Applications
--------------------------------------
+
 1) Buahin, C.A., Horsburgh, J.S., Neilson, B.T., 2019. Parallel multi-objective calibration of a component-based river temperature model. Environmental Modelling & Software 116, 57–71. https://doi.org/10.1016/j.envsoft.2019.02.012
 
 2) Mihalevich, B.A., Neilson, B.T., Buahin, C.A., Yackulic, C.B., Schmidt, J.C., 2020. Water Temperature Controls for Regulated Canyon-Bound Rivers. Water Resources Research 56, e2020WR027566. https://doi.org/10.1029/2020WR027566
