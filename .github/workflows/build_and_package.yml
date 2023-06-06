@@ -43,11 +43,11 @@ jobs:
           aqtversion: master
           version: "${{ env.QT_VERSION }}"
           modules: qtcore qtdeclarative qttools qtsvg
-          tools:
-            - name: qtcreator
-              version: "${{ env.QT_CREATOR_VERSION }}"
-            - name: qtcreatordev
-              version: "${{ env.QT_CREATOR_VERSION }}"
+          # tools:
+          #   - name: qtcreator
+          #     version: "${{ env.QT_CREATOR_VERSION }}"
+          #   - name: qtcreatordev
+          #     version: "${{ env.QT_CREATOR_VERSION }}"
 
  
       - name: Configure CMake
