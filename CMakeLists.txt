@@ -27,7 +27,7 @@ project(
     HydroCouple 
     VERSION 2.0.0 
     LANGUAGES C CXX
-    HOMEPAGE_URL "https://hydrocouple.com"
+    HOMEPAGE_URL "https://hydrocouple.org"
     DESCRIPTION  "HydroCouple Interface Definitions for C++ and Python"
 )
 
@@ -54,27 +54,56 @@ add_library(
     src/stdafx.cpp
 )
 
-# option(BUILD_TESTS "Build component tests (requires Boost)" OFF)
-# option(BUILD_DOCS "Build toolkit docs (requires Doxygen)" OFF)
 
 target_include_directories(HydroCouple
   PUBLIC INTERFACE
-    ./include
-    Qt${QT_VERSION_MAJOR}_INCLUDE_DIRS
+  $<BUILD_INTERFACE:${HYDROCOUPLE_BINARY_DIR}/include>
+  $<INSTALL_INTERFACE:/include>
 )
 
 target_link_libraries(HydroCouple PUBLIC INTERFACE Qt${QT_VERSION_MAJOR}::Core)
 
 target_compile_definitions(HydroCouple PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
 
+install(
+    TARGETS HydroCouple
+    EXPORT HydroCoupleTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+ )
 
-include(InstallRequiredSystemLibraries)
+install(
+    EXPORT HydroCoupleTargets
+    FILE HydroCoupleTargets.cmake
+    NAMESPACE HydroCouple::
+    DESTINATION lib/cmake/HydroCouple
+ )
 
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file(
+    HydroCoupleConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(
+    FILES 
+    HydroCoupleConfig.cmake
+    HydroCoupleConfigVersion.cmake
+    License.md
+    DESTINATION lib/cmake/HydroCouple
+)
+
+include(CMakeFindDependencyMacro)
+find_dependency(Qt${QT_VERSION_MAJOR})
 
 # Configure CPack driven installer package
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_GENERATOR "ZIP;TGZ")
 set(CPACK_PACKAGE_VENDOR "HydroCouple")
-set(CPACK_ARCHIVE_FILE_NAME "hydrocouple")
+set(CPACK_ARCHIVE_FILE_NAME "HydroCouple")
 
 include(CPack)

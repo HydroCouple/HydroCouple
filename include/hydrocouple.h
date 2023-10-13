@@ -63,6 +63,7 @@ namespace HydroCouple
   class IComponentStatusChangeEventArgs;
   class IWorkflowComponent;
 
+
   /*!
    * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
    */
@@ -1146,14 +1147,7 @@ namespace HydroCouple
     /*!
      * \brief String/XML representation for this IArgument
      */
-    virtual QString string() const = 0;
-
-    /*!
-     * \brief Sets the value of this IArgument from a string.
-     * \param value is the string to be parsed.
-     * \return true if the value was successfully parsed, false otherwise.
-     */
-    virtual URL url() const = 0;
+    virtual QString toString() const = 0;
 
     /*!
      * \brief Writes data to files associated with this argument if they exist.
@@ -1169,14 +1163,9 @@ namespace HydroCouple
     virtual QStringList fileFilters() const = 0;
 
     /*!
-     * \brief Boolean indicating whether this IArgument can read its values from a file.
-     */
-    virtual bool canReadFromFile() const = 0;
-
-    /*!
      * \brief Boolean indicating whether this IArgument copy its values from a QString.
      */
-    virtual bool canReadFromString() const = 0;
+    virtual bool isValidArgType(ArgumentInputType argType) const = 0;
 
     /*!
      * \brief argumentIOType
@@ -1185,21 +1174,13 @@ namespace HydroCouple
     virtual ArgumentInputType currentArgumentInputType() const = 0;
 
     /*!
-     * \brief Reads values from a QString or a QString representing an input file.
-     * \param value is QString representing values or file containing values.
-     * \param message message returned from file read operation.
-     * \param isFile is a boolean indicating whether the values are in the QString or the file pointed by the QString.
-     * \return boolean indicating whether file/string reading was successful
-     */
-    virtual bool initializeFromString(const QString &value, QString &message) = 0;
-
-    /*!
      * \brief Reads values from a JSON string.
      * \param value is a QString representing values in JSON format.
+     * \param argType is the type of input to be read.
      * \param message message returned from file read operation.
      * \return boolean indicating whether file/string reading was successful
      */
-    virtual bool initializeFromJSON(const QString &value, QString &message) = 0;
+    virtual bool initialize(const QString &value, ArgumentInputType argType, QString &message) = 0;
 
     /*!
      * \brief Reads values from an equivalent IComponentDataItem. IComponentDataItem has been used instead of IArgument
@@ -1416,12 +1397,12 @@ namespace HydroCouple
     /*!
      * \brief  IArgument represents input parameters needed for this IAdaptedOutput.
      *
-     * \details An unmodifiable list of the (modifiable) IArguments should be returned that can be used to
+     * \details An unmodifiable vector of the (modifiable) IArguments should be returned that can be used to
      * get information on an IArgument and to modify its values. Validation of changes is done when they occur (e.g. using notifications).
      *
      * \returns Unmodifiable list of IArgument for the adapted output.
      */
-    virtual QList<IArgument *> arguments() const = 0;
+    virtual QVector<IArgument *> arguments() const = 0;
 
     /*!
      * \brief Lets this IAdaptedOutput initialize() itself, based on the current values specified by the arguments.
@@ -1480,9 +1461,9 @@ namespace HydroCouple
      *
      * \param provider is the IOutput to adapt.
      * \param consumer is the IInput to adapt the producer to, can be NULL.
-     * \returns A list of identifiers for the available IAdaptedOutputs.
+     * \returns A vector of identifiers for the available IAdaptedOutputs.
      */
-    virtual QList<IIdentity *> getAvailableAdaptedOutputIds(const IOutput *provider, const IInput *consumer = nullptr) = 0;
+    virtual QVector<IIdentity *> getAvailableAdaptedOutputIds(const IOutput *provider, const IInput *consumer = nullptr) = 0;
 
     /*!
      * \brief Creates a IAdaptedOutput that adapts the producer so that it fits the consumer.
@@ -1746,35 +1727,35 @@ namespace HydroCouple
 
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IDescription, "HydroCouple::IDescription/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IIdentity, "HydroCouple::IIdentity/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IComponentInfo, "HydroCouple::IComponentInfo/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IModelComponentInfo, "HydroCouple::IModelComponentInfo/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IComponentStatusChangeEventArgs, "HydroCouple::IComponentStatusChangeEventArgs/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IModelComponent, "HydroCouple::IModelComponent/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IProxyModelComponent, "HydroCouple::IProxyModelComponent/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::ICloneableModelComponent, "HydroCouple::ICloneableModelComponent/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IDimension, "HydroCouple::IDimension/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IValueDefinition, "HydroCouple::IValueDefinition/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IQuality, "HydroCouple::IQuality/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IUnitDimensions, "HydroCouple::IUnitDimensions/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IUnit, "HydroCouple::IUnit/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IQuantity, "HydroCouple::IQuality/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IComponentDataItem, "HydroCouple::IComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IArgument, "HydroCouple::IArgument/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IExchangeItemChangeEventArgs, "HydroCouple::IExchangeItemChangeEventArgs/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IExchangeItem, "HydroCouple::IExchangeItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IOutput, "HydroCouple::IOutput/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutput, "HydroCouple::IAdaptedOutput/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactory, "HydroCouple::IAdaptedOutputFactory/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponentInfo, "HydroCouple::IAdaptedOutputFactoryComponentInfo/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponent, "HydroCouple::IAdaptedOutputFactoryComponent/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IInput, "HydroCouple::IInput/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IMultiInput, "HydroCouple::IMultiInput/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IIdBasedComponentDataItem, "HydroCouple::IIdBasedComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponentInfo, "HydroCouple::IWorkflowComponentInfo/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponent, "HydroCouple::IWorkflowComponent/1.0")
+Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IDescription, "HydroCouple::IDescription/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IIdentity, "HydroCouple::IIdentity/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IComponentInfo, "HydroCouple::IComponentInfo/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IModelComponentInfo, "HydroCouple::IModelComponentInfo/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IComponentStatusChangeEventArgs, "HydroCouple::IComponentStatusChangeEventArgs/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IModelComponent, "HydroCouple::IModelComponent/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IProxyModelComponent, "HydroCouple::IProxyModelComponent/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::ICloneableModelComponent, "HydroCouple::ICloneableModelComponent/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IDimension, "HydroCouple::IDimension/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IValueDefinition, "HydroCouple::IValueDefinition/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IQuality, "HydroCouple::IQuality/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IUnitDimensions, "HydroCouple::IUnitDimensions/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IUnit, "HydroCouple::IUnit/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IQuantity, "HydroCouple::IQuality/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IComponentDataItem, "HydroCouple::IComponentDataItem/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IArgument, "HydroCouple::IArgument/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IExchangeItemChangeEventArgs, "HydroCouple::IExchangeItemChangeEventArgs/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IExchangeItem, "HydroCouple::IExchangeItem/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IOutput, "HydroCouple::IOutput/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutput, "HydroCouple::IAdaptedOutput/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactory, "HydroCouple::IAdaptedOutputFactory/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponentInfo, "HydroCouple::IAdaptedOutputFactoryComponentInfo/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponent, "HydroCouple::IAdaptedOutputFactoryComponent/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IInput, "HydroCouple::IInput/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IMultiInput, "HydroCouple::IMultiInput/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IIdBasedComponentDataItem, "HydroCouple::IIdBasedComponentDataItem/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponentInfo, "HydroCouple::IWorkflowComponentInfo/2.0")
+Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponent, "HydroCouple::IWorkflowComponent/2.0")
 
 // Metatype
 //! HydroCouple Interface Declarations

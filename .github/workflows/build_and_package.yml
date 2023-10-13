@@ -2,14 +2,14 @@ name: Build and Package
 
 on:
   push:
-    branches: [ "master", "develop"]
+    branches: [ "master", "dev"]
   pull_request:
-    branches: [ "master", "develop"]
+    branches: [ "master", "dev"]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  QT_VERSION: 6.6.0
+  QT_VERSION: 6.4.*
 
 jobs:
   build:
