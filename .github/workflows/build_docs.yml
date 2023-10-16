@@ -34,8 +34,6 @@ jobs:
 
     - name: Push Docs to HydroCouple Website Repo
       run: |
-        echo $PWD
-        cd ../../
         cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
         cd hydrocouple.github.io
         git config --local user.name "github-actions[bot]"
