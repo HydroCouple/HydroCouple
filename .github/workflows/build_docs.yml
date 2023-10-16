@@ -22,6 +22,18 @@ jobs:
       run : |
         cd docs
         doxygen Doxyfile
+
+    
+    - name: Push generated docs to website
+      uses: nkoppel/push-files-to-another-repository@1.1.0
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source-files: 'docs/html'
+        destination-username: 'cbuahin'
+        destination-repository: 'HydroCouple/hydrocouple.github.io'
+        destination-directory: 'hydrocoupledocs/html'
+        commit-email: 'calebgh@gmail.com'
     
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
