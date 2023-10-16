@@ -12,6 +12,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      with:
+        path: HydroCouple
+
+    - name: Checkout HydroCouple
+      uses: actions/checkout@v3
+      with:
+        repository: HydroCouple/hydrocouple.github.io
+        ref: dev
+        path: hydrocouple.github.io
         
     - name: Install Graphviz and Doxygen
       run: |
@@ -20,21 +29,24 @@ jobs:
 
     - name: Build Docs
       run : |
-        cd docs
+        cd HydroCouple/docs
         doxygen Doxyfile
 
-    
-    - name: Push generated docs to website
-      uses: nkoppel/push-files-to-another-repository@1.1.1
+    - name: Push Docs to HydroCouple Website Repo
+      run: |
+        cd ../../
+        cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
+        cd hydrocouple.github.io
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add -A
+        git commit -m "Documentation update"
+        git push https://$USERNAME:$REPO_KEY@github.com/HydroCouple/hydrocouple.github.io 
       env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-      with:
-        source-files: 'docs/html'
-        destination-username: 'cbuahin'
-        destination-repository: 'HydroCouple/hydrocouple.github.io'
-        destination-directory: 'hydrocoupledocs/html'
-        commit-email: 'calebgh@gmail.com'
-    
+        REPO_KEY: ${{secrets.API_TOKEN_GITHUB}}
+        USERNAME: github-actions[bot]
+
+      
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
