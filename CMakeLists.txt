@@ -19,7 +19,7 @@
 # along with HydroCouple. If not, see <http://www.gnu.org/licenses/>.
 # 
 # Copyright: 2004-2023
-# 
+#
 
 cmake_minimum_required (VERSION 3.14)
 
@@ -40,7 +40,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-qt_standard_project_setup()
 
 add_library(
     ${PROJECT_NAME}
@@ -56,7 +55,7 @@ add_library(
 
 
 target_include_directories(HydroCouple
-  PUBLIC INTERFACE
+  INTERFACE
   $<BUILD_INTERFACE:${HYDROCOUPLE_BINARY_DIR}/include>
   $<INSTALL_INTERFACE:/include>
 )
@@ -90,12 +89,24 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
 )
 
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/HydroCoupleLibraryConfig.cmake
+    INSTALL_DESTINATION lib/cmake/HydroCoupleLibrary
+)
+
 install(
     FILES 
-    HydroCoupleConfig.cmake
-    HydroCoupleConfigVersion.cmake
+    {CMAKE_CURRENT_BINARY_DIR}/HydroCoupleConfig.cmake
+    {CMAKE_CURRENT_BINARY_DIR}/HydroCoupleConfigVersion.cmake
     License.md
     DESTINATION lib/cmake/HydroCouple
+)
+
+add_custom_target(my_package
+    COMMAND ${CMAKE_MAKE_PROGRAM} package
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    DEPENDS HydroCouple
 )
 
 include(CMakeFindDependencyMacro)

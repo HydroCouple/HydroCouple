@@ -2,13 +2,16 @@
 
 The HydroCouple interface definition header files.
 
-[![AUR](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md) [![Build Docs](../../actions/workflows/build_docs.yml/badge.svg)](../../actions/workflows/build_docs.yml)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://github.com/HydroCouple/HydroCouple/blob/master/License.md) |
+[![Build and Package](../../actions/workflows/build_and_package.yml/badge.svg)](../../actions/workflows/build_and_package.yml) |
+[![Build Docs](../../actions/workflows/build_docs.yml/badge.svg)](../../actions/workflows/build_docs.yml)
+
 ## Dependencies
 
 Use of the HydroCouple header files requires the following frameworks and libraries:
 
 * Qt 5.x.x or Qt 6.x.x
-* Boost 1.70
+* CMake 3.10 or higher
 
 ## Documentation
 
