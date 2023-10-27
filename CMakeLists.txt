@@ -55,7 +55,7 @@ add_library(
 
 
 target_include_directories(HydroCouple
-  INTERFACE
+  PUBLIC INTERFACE
   $<BUILD_INTERFACE:${HYDROCOUPLE_BINARY_DIR}/include>
   $<INSTALL_INTERFACE:/include>
 )
@@ -84,23 +84,29 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
-    HydroCoupleConfigVersion.cmake
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/HydroCoupleLibraryConfig.cmake
-    INSTALL_DESTINATION lib/cmake/HydroCoupleLibrary
+    ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}Library
 )
 
 install(
     FILES 
-    {CMAKE_CURRENT_BINARY_DIR}/HydroCoupleConfig.cmake
-    {CMAKE_CURRENT_BINARY_DIR}/HydroCoupleConfigVersion.cmake
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     License.md
-    DESTINATION lib/cmake/HydroCouple
+    DESTINATION lib/cmake/${PROJECT_NAME}
+)
+
+install(
+    DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
+    DESTINATION "include"
+    FILES_MATCHING PATTERN "*.h"
 )
 
 add_custom_target(my_package
