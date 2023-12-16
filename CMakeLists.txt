@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with HydroCouple. If not, see <http://www.gnu.org/licenses/>.
 # 
-# Copyright: 2004-2023
+# Copyright: 2004-2025
 #
 
 cmake_minimum_required (VERSION 3.14)
@@ -31,14 +31,8 @@ project(
     DESCRIPTION  "HydroCouple Interface Definitions for C++ and Python"
 )
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 
 add_library(
@@ -59,8 +53,6 @@ target_include_directories(HydroCouple
   $<BUILD_INTERFACE:${HYDROCOUPLE_BINARY_DIR}/include>
   $<INSTALL_INTERFACE:/include>
 )
-
-target_link_libraries(HydroCouple PUBLIC INTERFACE Qt${QT_VERSION_MAJOR}::Core)
 
 target_compile_definitions(HydroCouple PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
 
@@ -115,8 +107,19 @@ add_custom_target(my_package
     DEPENDS HydroCouple
 )
 
-include(CMakeFindDependencyMacro)
-find_dependency(Qt${QT_VERSION_MAJOR})
+include(GenerateExportHeader)
+generate_export_header(epanetmsx 
+    BASE_NAME HydroCouple
+    EXPORT_MACRO_NAME HYDROCOUPLE_EXPORT
+    EXPORT_FILE_NAME hydrocouple_export.h
+    STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
+)
+
+file(COPY ${CMAKE_CURRENT_BINARY_DIR}/epanetmsx_export.h
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+
 
 # Configure CPack driven installer package
 set(CPACK_GENERATOR "ZIP;TGZ")

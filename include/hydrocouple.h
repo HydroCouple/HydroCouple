@@ -11,9 +11,10 @@
  * Lesser GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
  * This file and its associated files is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2014-2023, Caleb Buahin, All rights reserved.
- * \date 2014-2023
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+ * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * \copyright Copyright 2014-2024, Caleb Buahin, All rights reserved.
+ * \date 2014-2024
  * \pre
  * \bug
  * \warning
@@ -23,16 +24,12 @@
 #ifndef HYDROCOUPLE_H
 #define HYDROCOUPLE_H
 
-#include <QtCore/qglobal.h>
-#include <QVariant>
-#include <QSharedPointer>
-#include <QURL>
 
-#ifdef HYDROCOUPLE_LIBRARY
-#define HYDROCOUPLE_EXPORT Q_DECL_EXPORT
-#else
-#define HYDROCOUPLE_EXPORT Q_DECL_IMPORT
-#endif
+#include <any>
+#include <functional>
+
+
+using namespace std;
 
 /*!
  * \brief The ByteOrder enum of serialized data
@@ -63,6 +60,25 @@ namespace HydroCouple
   class IComponentStatusChangeEventArgs;
   class IWorkflowComponent;
 
+
+  /*!
+  * \brief hydrocouple_variant is a variant type that can be used to store values of different types.
+  */
+  typedef  variant<
+      bool,
+      char,
+      short,
+      int,
+      long,
+      unsigned char,
+      unsigned short,
+      unsigned int,
+      unsigned long,
+      float,
+      double,
+      long double,
+      string
+      > hydrocouple_variant;
 
   /*!
    * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
@@ -111,7 +127,8 @@ namespace HydroCouple
   };
 
   /*!
-   * \brief IPropertyChanged interface is used to emit signal/event when a property of an object changes.
+   * \brief IPropertyChanged interface is used to emit signal/event when a
+   * property of an object changes.
    */
   class IPropertyChanged
   {
@@ -124,12 +141,21 @@ namespace HydroCouple
     virtual ~IPropertyChanged() = 0;
 
     /*!
-     * \brief IPropertyChanged::propertyChanged() is called to emit
-     * signal/event when property of child class changes
-     * \param propertyName is a string representing the name of the property.
-     * \sa IPropertyChanged::propertyChanged()
+     * \brief IPropertyChanged::registerPropertyChangedListener() registers a listener to be called
+     * when a property of an object changes.
+     * \param propertyChangedListener is a function that is called when a property of an object changes.
+     * he function takes two parameters, the first is the object whose property changed and the second
+     * is the name of the property that changed.
      */
-    virtual void propertyChanged(const QString &propertyName) = 0;
+    virtual void registerPropertyChangedListener(const function<void(const any&, const string&)>& propertyChangedListener) = 0;
+
+    /*!
+     * \brief IPropertyChanged::deRegisterPropertyChangedListener() deregisters a listener that is
+     * called when a property of an object changes.
+     * \param propertyChangedListener is a function that is called when a property of an object changes.
+     */
+    virtual void deRegisterPropertyChangedListener(const function<void(const any&, const string& propertyName)>& propertyChangedListener) = 0;
+
   };
 
   /*!
@@ -151,31 +177,31 @@ namespace HydroCouple
 
     /*!
      * \brief Gets caption for the entity.
-     * \returns QString representing caption for entity.
+     * \returns string representing caption for entity.
      * \sa setCaption()
      */
-    virtual QString caption() const = 0;
+    virtual string caption() const = 0;
 
     /*!
      * \brief Sets caption for the entity.
-     * \param caption is a QString representing the caption for the entity.
+     * \param caption is a string representing the caption for the entity.
      * \sa caption()
      */
-    virtual void setCaption(const QString &caption) = 0;
+    virtual void setCaption(const string &caption) = 0;
 
     /*!
      * \brief Gets additional descriptive information for the entity.
-     * \returns QString description of entity.
+     * \returns string description of entity.
      * \sa setDescription()
      */
-    virtual QString description() const = 0;
+    virtual string description() const = 0;
 
     /*!
      * \brief Gets additional descriptive information for the entity.
      * \param description is a string for describing an entity.
      * \sa description()
      */
-    virtual void setDescription(const QString &description) = 0;
+    virtual void setDescription(const string &description) = 0;
   };
 
   /*!
@@ -198,14 +224,14 @@ namespace HydroCouple
      * item must be unique in the list of inputs of a IModelComponent, but a
      * similar Id might be used by an exchange item of another IModelComponent.
      *
-     * \returns An id as a String.
-     *
+     * \returns An id as a string. The id must be unique within its context. It must not be empty. 
      */
-    virtual QString id() const = 0;
+    virtual string id() const = 0;
   };
 
   /*!
-   * \brief IComponentInfo interface class provides detailed metadata about a component.
+   * \brief IComponentInfo interface class is a factory that provides detailed metadata 
+   * about a component and creates new instances of a component.
    *
    * \details It must not be implemented directly. It must be either be implemented as
    *  an IModelComponent or an Data::IAdaptedOutputFactoryComponent.
@@ -225,14 +251,14 @@ namespace HydroCouple
      * \returns Path to the library location from which this component was created.
      * \sa setLibraryFilePath()
      */
-    virtual QString libraryFilePath() const = 0;
+    virtual string libraryFilePath() const = 0;
 
     /*!
      * \brief Sets file path to Component library.
      * \param filePath to the libary from which this component was created.
      * \sa libraryFilePath()
      */
-    virtual void setLibraryFilePath(const QString &filePath) = 0;
+    virtual void setLibraryFilePath(const string &filePath) = 0;
 
     /*!
      * \brief File path to Component icon.
@@ -240,72 +266,72 @@ namespace HydroCouple
      *
      * \returns filePath to icon for component.
      */
-    virtual QString iconFilePath() const = 0;
+    virtual string iconFilePath() const = 0;
 
     /*!
      * \brief Component developer information.
      * \returns Name of vendor the developed this component.
      */
-    virtual QString vendor() const = 0;
+    virtual string vendor() const = 0;
 
     /*!
      * \brief Documentation associated with this component.
      * \returns Citations of publication related to this component.
      */
-    virtual QStringList documentation() const = 0;
+    virtual list<string> documentation() const = 0;
 
     /*!
      * \brief Component license info.
-     * \returns QString representing the license information. HTML tags can be added to it.
+     * \returns string representing the license information. HTML tags can be added to it.
      */
-    virtual QString license() const = 0;
+    virtual string license() const = 0;
 
     /*!
      * \brief Component copyright info.
-     * \returns QString representing the copyright information associated with this component.
+     * \returns string representing the copyright information associated with this component.
      */
-    virtual QString copyright() const = 0;
+    virtual string copyright() const = 0;
 
     /*!
      * \brief Component developer url.
-     * \returns QString representing the url for the developer.
+     * \returns string representing the url for the developer.
      */
-    virtual QString url() const = 0;
+    virtual string url() const = 0;
 
     /*!
      * \brief Component developer email.
-     * \returns email as QString.
+     * \returns email as string.
      */
-    virtual QString email() const = 0;
+    virtual string email() const = 0;
 
     /*!
      * \brief Component version info.
-     * \returns QString representing the version of this component.
+     * \returns string representing the version of this component.
      */
-    virtual QString version() const = 0;
+    virtual string version() const = 0;
 
     /*!
      * \brief tags used to classify this component.
      * \returns the categorical tags that can be used to classify components.
      * e.g., Hydrology, Groundwater, Finite Volume, Finite difference.
     */
-    virtual QSet<QString> tags() const = 0;
+    virtual set<string> tags() const = 0;
 
     /*!
-     * \brief Checks if license is valid and persists lincese information.
+     * \brief Checks if license is valid and persists license information.
      * \details Developer is responsible for implementing this validation based on a license.
      * \param licenseInfo license information to use to register this component.
      * \param validationMessage A validation message associated with the license validation process.
      * \returns true if license is valid otherwise false.
      */
-    virtual bool validateLicense(const QString &licenseInfo, QString &validationMessage) = 0;
+    virtual bool validateLicense(const string &licenseInfo, string &validationMessage) = 0;
 
     /*!
      * \brief validateLicense Checks if component is licensed and returns.
      * \param validationMessage A validation message associated with the license validation process.
      * \return true if component is licensed otherwise false.
      */
-    virtual bool validateLicense(QString &validationMessage) = 0;
+    virtual bool validateLicense(string &validationMessage) = 0;
   };
 
   /*!
@@ -340,7 +366,7 @@ namespace HydroCouple
      *
      * \returns A list of IAdaptedOutputFactories associated with this component.
      */
-    virtual QVector<IAdaptedOutputFactory *> adaptedOutputFactories() const = 0;
+    virtual vector<IAdaptedOutputFactory *> adaptedOutputFactories() const = 0;
   };
 
   /*!
@@ -369,7 +395,7 @@ namespace HydroCouple
       Initializing,
 
       /*!
-       * \brief The IModelComponent has succesfully initialized itself by calliing
+       * \brief The IModelComponent has successfully initialized itself by calling
        * IModelComponent::initialize(). The connections between its inputs/outputs and those of
        * other components can be established.
        *
@@ -429,7 +455,7 @@ namespace HydroCouple
       Updating,
 
       /*!
-       * \brief The IModelComponent has succesfully updated itself.
+       * \brief The IModelComponent has successfully updated itself.
        */
       Updated,
 
@@ -441,7 +467,7 @@ namespace HydroCouple
 
       /*!
        * \brief The IModelComponent was requested to perform the actions to be performed before it will either be
-       * disposed or re-intialized again.Typical actions would be writing
+       * disposed or re-initialized again.Typical actions would be writing
        * the final result files, close all open files, free memory, etc.
        * When all required actions have been performed, the status switches to HydroCouple::Created when re-initialization is possible.
        * The status switches to HydroCouple::Finished when the IModelComponent is to be disposed
@@ -465,21 +491,9 @@ namespace HydroCouple
     };
 
     /*!
-     * \brief ~IModelComponent
+     * \brief IModelComponent::~IModelComponent destructor
      */
     virtual ~IModelComponent() = 0;
-
-    /*!
-     * \brief index of the IModelComponent instance in the IModelComponents list of the IModel instance.
-     * \return
-     */
-    virtual int index() const = 0;
-
-    /*!
-     * \brief setIndex
-     * \param index
-     */
-    virtual void setIndex(int index) = 0;
 
     /*!
      * \brief Contains the metadata about this IModelComponent instance.
@@ -501,7 +515,7 @@ namespace HydroCouple
      *
      * \returns A list of IArguments for instantiating this component.
      */
-    virtual QVector<IArgument *> arguments() const = 0;
+    virtual vector<IArgument *> arguments() const = 0;
 
     /*!
      * \brief Defines current status of the IModelComponent.
@@ -527,7 +541,7 @@ namespace HydroCouple
      * after it has been returned. It is the responsibility of the IModelComponent
      * to make sure that such possible alterations do not subsequently corrupt the IModelComponent.
      */
-    virtual QVector<IInput *> inputs() const = 0;
+    virtual vector<IInput *> inputs() const = 0;
 
     /*!
      * \brief The list of IOutputs for which a component can produce results.
@@ -548,7 +562,7 @@ namespace HydroCouple
      * after it has been returned. It is the responsibility of the IModelComponents
      * to make sure that such possible alterations do not subsequently corrupt the IModelComponents.
      */
-    virtual QVector<IOutput *> outputs() const = 0;
+    virtual vector<IOutput *> outputs() const = 0;
 
     /*!
      * \brief Initializes the  current IModelComponent
@@ -599,7 +613,7 @@ namespace HydroCouple
      * If there are messages while the components status is HydroCouple::Componentstatus.
      * HydroCouple::Invalid when at least one of the messages indicates a fatal error.
      */
-    virtual QVector<QString> validate() = 0;
+    virtual vector<string> validate() = 0;
 
     /*!
      * \brief Prepares the IModelComponent for calls to the Update method.
@@ -614,7 +628,7 @@ namespace HydroCouple
      * finish() method has been invoked and the IModelComponent cannot handle
      * this an exception must be thrown.
      *
-     * \details Immediatly after the method is invoked, it changes the IModelComponent's status to HydroCouple::Preparing.
+     * \details Immediately after the method is invoked, it changes the IModelComponent's status to HydroCouple::Preparing.
      *
      * \details When the method has finished, the status of the IModelComponent has changed to either HydroCouple::Updated or HydroCouple::Failed.
      *
@@ -631,12 +645,12 @@ namespace HydroCouple
      *
      * \details The type of actions a component takes during the Update method depends
      * on the type of component. A numerical model that progresses in time will typically
-     * compute a time step. A database whould typically look at the consumers of its output items,
+     * compute a time step. A database would typically look at the consumers of its output items,
      * and perform one or more queries to be able to provide the values that the consumers require.
      * A GIS system would typically re-evaluate the values in a grid coverage, so that its output
      * output items can provide up-to-date values.
      *
-     * \details If the Update method is performed succesfully, the component sets its state to
+     * \details If the Update method is performed successfully, the component sets its state to
      * HydroCouple::Updated, unless after this update() action the
      * component is at the end of its computation, in which case it will be set its State
      * to HydroCouple::Done.
@@ -648,7 +662,7 @@ namespace HydroCouple
      * will at least update its producer items that have consumers, or all its output items,
      * depending on the component's implementation.
      */
-    virtual void update(const QVector<IOutput *> &requiredOutputs = QVector<IOutput *>()) = 0;
+    virtual void update(const vector<IOutput *> &requiredOutputs = vector<IOutput *>()) = 0;
 
     /*!
      * \brief The finish() must be invoked as the last of any methods in the IModelComponent interface.
@@ -695,10 +709,10 @@ namespace HydroCouple
     virtual void mpiSetProcessRank(int processRank) = 0;
 
     /*!
-     * \brief mpiAllocatedProcesses are the list of MPI processes/ranks allocated to this component.
+     * \brief mpiAllocatedProcesses are the set of MPI processes/ranks allocated to this component.
      * \return
      */
-    virtual QSet<int> mpiAllocatedProcesses() const = 0;
+    virtual set<int> mpiAllocatedProcesses() const = 0;
 
     /*!
      * \brief mpiAllocateResources allocates the specified MPI processes/ranks to this component.
@@ -708,14 +722,13 @@ namespace HydroCouple
      * 
      * This method must preferably be called on a processor with rank 0.
      */
-    virtual void mpiAllocateProcesses(const QSet<int> &mpiProcessesToAllocate) = 0;
+    virtual void mpiAllocateProcesses(const set<int> &mpiProcessesToAllocate) = 0;
 
     /*!
      * \brief mpiClearAllocatedProcesses
      */
     virtual void mpiClearAllocatedProcesses() = 0;
 
-   
     /*!
      * \brief referenceDirectory
      * \details All relative file paths specified that are associated with this component instance are referenced
@@ -724,22 +737,30 @@ namespace HydroCouple
      * arguments for the component.
      * \return
      */
-    virtual QString referenceDirectory() const = 0;
+    virtual string referenceDirectory() const = 0;
 
     /*!
      * \brief setReferenceDirectory
      * \details sets the reference directory for this component instance.
      * \param referenceDirectory
      */
-    virtual void setReferenceDirectory(const QString &referenceDirectory) = 0;
+    virtual void setReferenceDirectory(const string &referenceDirectory) = 0;
 
     /*!
-     * \brief The componentStatusChanged() function must be implemented
-     * as a signal and emitted when Status of the component changes.
+     * \brief The registerComponentStatusChangedListener() method registers a listener to be called
+     * when the status of the component changes.
      *
      * \details See HydroCouple::ComponentStatus for the possible states.
      */
-    virtual void componentStatusChanged(const QSharedPointer<IComponentStatusChangeEventArgs> &statusChangedEvent) = 0;
+    virtual void registerComponentStatusChangedListener(const function<void(const shared_ptr<IComponentStatusChangeEventArgs>&)>& statusChangedEventListener) = 0;
+
+    /*!
+     * \brief The deRegisterComponentStatusChangedListener() method deregisters a listener that is
+     * called when the status of the component changes.
+     *
+     * \details See HydroCouple::ComponentStatus for the possible states.
+     */
+    virtual void deRegisterComponentStatusChangedListener(const function<void(const shared_ptr<IComponentStatusChangeEventArgs>&)>& statusChangedEventListener) = 0;
   };
 
   /*!
@@ -764,7 +785,7 @@ namespace HydroCouple
      * \brief parentId
      * \return A string representing the unique identifier of its parent model
      */
-    virtual QString parentId() const = 0;
+    virtual string parentId() const = 0;
   };
 
   /*!
@@ -801,7 +822,7 @@ namespace HydroCouple
     /*!
      * \brief Gets additional information about the status change.
      */
-    virtual QString message() const = 0;
+    virtual string message() const = 0;
 
     /*!
      * \brief A bool indicating whether this event has a progresss monitor.
@@ -845,7 +866,7 @@ namespace HydroCouple
      * \brief A list ICloneableModelComponent instances cloned from this IModelComponent instance.
      * \returns A list of child components created from the current component.
      */
-    virtual QList<ICloneableModelComponent *> clones() const = 0;
+    virtual list<ICloneableModelComponent *> clones() const = 0;
   };
 
   /*!
@@ -869,13 +890,13 @@ namespace HydroCouple
      *
      * \returns the value type associated with this IValueDefinition
      */
-    virtual QVariant::Type type() const = 0;
+    virtual  type_info type() const = 0;
 
     //! The value representing that data is missing.
-    virtual QVariant missingValue() const = 0;
+    virtual hydrocouple_variant missingValue() const = 0;
 
     //! Gets the default value of the argument.
-    virtual QVariant defaultValue() const = 0;
+    virtual hydrocouple_variant defaultValue() const = 0;
   };
 
   /*!
@@ -910,7 +931,7 @@ namespace HydroCouple
    *   - Land use:
    *      - nature
    *      - recreation
-   *      - industry
+   *      - industry3
    *      - infrastructure
    *   - Rating:
    *      - worse
@@ -920,6 +941,9 @@ namespace HydroCouple
   class IQuality : public virtual IValueDefinition
   {
   public:
+    /*!
+     * \brief IQuality::~IQuality is a virtual destructor.
+     */
     virtual ~IQuality() = 0;
 
     /*!
@@ -927,7 +951,7 @@ namespace HydroCouple
      * If the quality is not ordered the list contains the ICategory's in an unspecified order.
      * When it is ordered the list contains the ICategory's in the same sequence.
      */
-    virtual QList<QVariant> categories() const = 0;
+    virtual vector<hydrocouple_variant> categories() const = 0;
 
     /*!
      * \brief Checks if the IQuality is defined by an ordered set of ICategory or not.
@@ -941,6 +965,10 @@ namespace HydroCouple
   class IUnitDimensions : public virtual IDescription
   {
   public:
+
+    /*!
+     * \brief IUnitDimensions::~IUnitDimensions is a virtual destructor.
+     */
     virtual ~IUnitDimensions() = 0;
 
     /*!
@@ -978,6 +1006,10 @@ namespace HydroCouple
   class IUnit : public virtual IDescription
   {
   public:
+
+    /*!
+     * \brief IUnit::~IUnit is a virtual destructor.
+     */
     virtual ~IUnit() = 0;
 
     /*!
@@ -1014,13 +1046,13 @@ namespace HydroCouple
      * \brief minValue
      * \return
      */
-    virtual QVariant minValue() const = 0;
+    virtual hydrocouple_variant minValue() const = 0;
 
     /*!
      * \brief maxValue
      * \return
      */
-    virtual QVariant maxValue() const = 0;
+    virtual hydrocouple_variant maxValue() const = 0;
   };
 
   /*!
@@ -1032,6 +1064,10 @@ namespace HydroCouple
   class IComponentDataItem : public virtual IIdentity
   {
   public:
+
+    /*!
+     * \brief IComponentDataItem::~IComponentDataItem is a virtual destructor.
+     */
     virtual ~IComponentDataItem() = 0;
 
     /*!
@@ -1051,7 +1087,7 @@ namespace HydroCouple
      * \return A list of IDimension objects.
      *
      */
-    virtual QList<IDimension *> dimensions() const = 0;
+    virtual vector<IDimension *> dimensions() const = 0;
 
     /*!
      * \brief dimensionLength  returns the length of the dimension specified by the
@@ -1062,7 +1098,7 @@ namespace HydroCouple
      * less than the number of dimensions.
      * \return length of the last dimension corresponding to the dimensionIndexes provided.
      */
-    virtual int dimensionLength(const std::vector<int> &dimensionIndexes) const = 0;
+    virtual int dimensionLength(const vector<int> &dimensionIndexes) const = 0;
 
     /*!
      * \brief IValueDefinition for this IValueSet defines the variable type associated with this object.
@@ -1076,14 +1112,37 @@ namespace HydroCouple
      * \param dimensionIndexes are the indexes for the data to be obtained.
      * \param data Pointer to pre-allocated location where data is to be saved.
      */
-    virtual void getValue(const std::vector<int> &dimensionIndexes, void *data) const = 0;
+    virtual void getValue(const vector<int> &dimensionIndexes, void *data) const = 0;
 
     /*!
      * \brief Sets a multi-dimensional array of values for given dimension indexes.
      * \param dimensionIndexes are the indexes for where data is to be written.
      * \param data is the pointer to the input data to be set.
      */
-    virtual void setValue(const std::vector<int> &dimensionIndexes, const void *data) = 0;
+    virtual void setValue(const vector<int> &dimensionIndexes, const void *data) = 0;
+
+
+    /*!
+     * \brief hasEditor indicates whether this IComponentItem has a UI editor.
+     * \return A boolean indicating whether this IComponentItem has an editor.
+     */
+    virtual bool hasEditor() const = 0;
+
+    /*!
+     * \brief showEditor shows the editor for this IComponentItem.
+     */
+    virtual void showEditor() = 0;
+
+    /*!
+     * \brief hasViewer indicates whether this IComponentItem has a UI viewer.
+     * \return  A boolean indicating whether this IComponentItem has a viewer.
+     */
+    virtual bool hasViewer() const = 0;
+
+    /*!
+     * \brief showViewer
+     */
+    virtual void showViewer() = 0;
 
   };
 
@@ -1097,10 +1156,13 @@ namespace HydroCouple
   {
 
   public:
+    /*!
+    * \brief Enumeration indicating the type of input for the argument.
+    */
     enum ArgumentInputType
     {
       /*!
-       * \brief Enumeration indicating that the argument was read from QString.
+       * \brief Enumeration indicating that the argument was read from string.
        */
       String,
 
@@ -1125,6 +1187,9 @@ namespace HydroCouple
       URL
     };
 
+    /*!
+     * \brief IArgument::~IArgument is a virtual destructor.
+     */
     virtual ~IArgument() = 0;
 
     /*!
@@ -1147,7 +1212,7 @@ namespace HydroCouple
     /*!
      * \brief String/XML representation for this IArgument
      */
-    virtual QString toString() const = 0;
+    virtual string toString() const = 0;
 
     /*!
      * \brief Writes data to files associated with this argument if they exist.
@@ -1160,10 +1225,10 @@ namespace HydroCouple
      * \details  File extensions must be specified using the Qt format e.g. "Images (*.png *.xpm *.jpg) "
      * \returns a list of strings for compatible file extensions.
      */
-    virtual QStringList fileFilters() const = 0;
+    virtual list<string> fileFilters() const = 0;
 
     /*!
-     * \brief Boolean indicating whether this IArgument copy its values from a QString.
+     * \brief Boolean indicating whether this IArgument copy its values from a string.
      */
     virtual bool isValidArgType(ArgumentInputType argType) const = 0;
 
@@ -1175,12 +1240,12 @@ namespace HydroCouple
 
     /*!
      * \brief Reads values from a JSON string.
-     * \param value is a QString representing values in JSON format.
+     * \param value is a string representing values in JSON format.
      * \param argType is the type of input to be read.
      * \param message message returned from file read operation.
      * \return boolean indicating whether file/string reading was successful
      */
-    virtual bool initialize(const QString &value, ArgumentInputType argType, QString &message) = 0;
+    virtual bool initialize(const string &value, ArgumentInputType argType, string &message) = 0;
 
     /*!
      * \brief Reads values from an equivalent IComponentDataItem. IComponentDataItem has been used instead of IArgument
@@ -1189,29 +1254,7 @@ namespace HydroCouple
      * \param message message returned from file read operation.
      * \return boolean indicating whether file reading was successful.
      */
-    virtual bool initialize(const IComponentDataItem *componentDataItem, QString &message) = 0;
-
-    /*!
-     * \brief hasEditor
-     * \return
-     */
-    virtual bool hasEditor() const = 0;
-
-    /*!
-     * \brief showEditor
-     */
-    virtual void showEditor() = 0;
-
-    /*!
-     * \brief hasViewer
-     * \return
-     */
-    virtual bool hasViewer() const = 0;
-
-    /*!
-     * \brief showViewer
-     */
-    virtual void showViewer() = 0;
+    virtual bool initialize(const IComponentDataItem *componentDataItem, string &message) = 0;
 
   };
 
@@ -1239,7 +1282,7 @@ namespace HydroCouple
     /*!
      * \brief Gets message associated with the event.
      */
-    virtual QString message() const = 0;
+    virtual string message() const = 0;
   };
 
   /*!
@@ -1251,6 +1294,9 @@ namespace HydroCouple
   {
 
   public:
+    /*!
+     * \brief IExchangeItem::~IExchangeItem is a virtual destructor.
+     */
     virtual ~IExchangeItem() = 0;
 
     /*!
@@ -1259,7 +1305,15 @@ namespace HydroCouple
      *
      * \param statusChangedEvent provides information about the status change
      */
-    virtual void itemChanged(const QSharedPointer<IExchangeItemChangeEventArgs> &statusChangedEvent) = 0;
+    virtual void registerExchangeItemStatusChangedListener(const function<void(const shared_ptr<IExchangeItemChangeEventArgs>&)>& exchangeItemChangedEventListener) = 0;
+
+    /*!
+     * \brief The deRegisterExchangeItemStatusChangedListener() method deregisters a listener that is
+     * called when the status of the component changes.
+     *
+     * \details See HydroCouple::ComponentStatus for the possible states.
+     */
+    virtual void deRegisterExchangeItemStatusChangedListener(const function<void(const shared_ptr<IExchangeItemChangeEventArgs>&)>& exchangeItemChangedEventListener) = 0;
   };
 
   /*!
@@ -1273,6 +1327,10 @@ namespace HydroCouple
   class IOutput : public virtual IExchangeItem
   {
   public:
+
+    /*!
+     * \brief IOutput::~IOutput is a virtual destructor.
+     */
     virtual ~IOutput() = 0;
 
     /*!
@@ -1383,6 +1441,10 @@ namespace HydroCouple
   class IAdaptedOutput : public virtual IOutput
   {
   public:
+
+    /*!
+     * \brief IAdaptedOutput::~IAdaptedOutput is a virtual destructor.
+     */
     virtual ~IAdaptedOutput() = 0;
 
     /*!
@@ -1450,6 +1512,10 @@ namespace HydroCouple
   class IAdaptedOutputFactory : public virtual IIdentity
   {
   public:
+
+    /*!
+     * \brief IAdaptedOutputFactory::~IAdaptedOutputFactory is a virtual destructor.
+     */
     virtual ~IAdaptedOutputFactory() = 0;
 
     /*!
@@ -1490,6 +1556,10 @@ namespace HydroCouple
   class IAdaptedOutputFactoryComponentInfo : public virtual IComponentInfo
   {
   public:
+
+    /*!
+     * \brief IAdaptedOutputFactoryComponentInfo::~IAdaptedOutputFactoryComponentInfo is a virtual destructor.
+     */
     virtual ~IAdaptedOutputFactoryComponentInfo() = 0;
 
     /*!
@@ -1506,6 +1576,10 @@ namespace HydroCouple
   class IAdaptedOutputFactoryComponent : public virtual IAdaptedOutputFactory
   {
   public:
+
+    /*!
+     * \brief IAdaptedOutputFactoryComponent::~IAdaptedOutputFactoryComponent is a virtual destructor.
+     */
     virtual ~IAdaptedOutputFactoryComponent() = 0;
 
     /*!
@@ -1522,6 +1596,10 @@ namespace HydroCouple
   class IInput : public virtual IExchangeItem
   {
   public:
+
+    /*!
+     * \brief IInput::~IInput is a virtual destructor.
+     */
     virtual ~IInput() = 0;
 
     /*!
@@ -1542,7 +1620,7 @@ namespace HydroCouple
      * \param provider is the IOutput that can supply the data to this IInput.
      * \param message The error message from the canConsume function.
      */
-    virtual bool canConsume(IOutput *provider, QString &message) const = 0;
+    virtual bool canConsume(IOutput *provider, string &message) const = 0;
   };
 
   /*!
@@ -1551,6 +1629,10 @@ namespace HydroCouple
   class IMultiInput : public virtual IInput
   {
   public:
+
+    /*!
+     * \brief IMultiInput::~IMultiInput is a virtual destructor.
+     */
     virtual ~IMultiInput() = 0;
 
     /*!
@@ -1582,7 +1664,7 @@ namespace HydroCouple
 
   public:
     /*!
-     * \brief ~IIdBasedComponentItem.
+     * \brief IIdBasedComponentItem::~IIdBasedComponentItem is a virtual destructor.
      */
     virtual ~IIdBasedComponentDataItem() = 0;
 
@@ -1590,7 +1672,7 @@ namespace HydroCouple
      * \brief identifiers
      * \return
      */
-    virtual QStringList identifiers() const = 0;
+    virtual list<string> identifiers() const = 0;
 
     /*!
      * \brief idDimensions
@@ -1639,6 +1721,10 @@ namespace HydroCouple
   {
 
   public:
+
+    /*!
+     * \brief ~IWorkflowComponentInfo
+     */
     virtual ~IWorkflowComponentInfo() = 0;
 
     /*!
@@ -1653,6 +1739,7 @@ namespace HydroCouple
    */
   class IWorkflowComponent : public virtual IIdentity
   {
+
   public:
     /*!
      * \brief The WorkflowStatus enum
@@ -1671,7 +1758,7 @@ namespace HydroCouple
     };
 
     /*!
-     * \brief ~IWorkflowComponent
+     * \brief ~IWorkflowComponent destructor for IWorkflowComponent class. 
      */
     virtual ~IWorkflowComponent() = 0;
 
@@ -1722,91 +1809,14 @@ namespace HydroCouple
 
   signals:
 
-    virtual void componentStatusChanged(WorkflowStatus status, const QString &message) = 0;
+    /*!
+     * \brief componentStatusChanged
+     * \param status
+     * \param message
+     */
+    virtual void componentStatusChanged(WorkflowStatus status, const string &message) = 0;
   };
 
 }
-
-Q_DECLARE_INTERFACE(HydroCouple::IPropertyChanged, "HydroCouple::IPropertyChanged/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IDescription, "HydroCouple::IDescription/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IIdentity, "HydroCouple::IIdentity/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IComponentInfo, "HydroCouple::IComponentInfo/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IModelComponentInfo, "HydroCouple::IModelComponentInfo/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IComponentStatusChangeEventArgs, "HydroCouple::IComponentStatusChangeEventArgs/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IModelComponent, "HydroCouple::IModelComponent/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IProxyModelComponent, "HydroCouple::IProxyModelComponent/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::ICloneableModelComponent, "HydroCouple::ICloneableModelComponent/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IDimension, "HydroCouple::IDimension/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IValueDefinition, "HydroCouple::IValueDefinition/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IQuality, "HydroCouple::IQuality/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IUnitDimensions, "HydroCouple::IUnitDimensions/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IUnit, "HydroCouple::IUnit/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IQuantity, "HydroCouple::IQuality/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IComponentDataItem, "HydroCouple::IComponentDataItem/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IArgument, "HydroCouple::IArgument/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IExchangeItemChangeEventArgs, "HydroCouple::IExchangeItemChangeEventArgs/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IExchangeItem, "HydroCouple::IExchangeItem/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IOutput, "HydroCouple::IOutput/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutput, "HydroCouple::IAdaptedOutput/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactory, "HydroCouple::IAdaptedOutputFactory/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponentInfo, "HydroCouple::IAdaptedOutputFactoryComponentInfo/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IAdaptedOutputFactoryComponent, "HydroCouple::IAdaptedOutputFactoryComponent/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IInput, "HydroCouple::IInput/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IMultiInput, "HydroCouple::IMultiInput/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IIdBasedComponentDataItem, "HydroCouple::IIdBasedComponentDataItem/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponentInfo, "HydroCouple::IWorkflowComponentInfo/2.0")
-Q_DECLARE_INTERFACE(HydroCouple::IWorkflowComponent, "HydroCouple::IWorkflowComponent/2.0")
-
-// Metatype
-//! HydroCouple Interface Declarations
-Q_DECLARE_METATYPE(HydroCouple::IPropertyChanged *)
-Q_DECLARE_METATYPE(HydroCouple::IDescription *)
-Q_DECLARE_METATYPE(HydroCouple::IIdentity *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IIdentity *>)
-Q_DECLARE_METATYPE(HydroCouple::IComponentInfo *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IComponentInfo *>)
-Q_DECLARE_METATYPE(HydroCouple::IModelComponentInfo *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IModelComponentInfo *>)
-Q_DECLARE_METATYPE(HydroCouple::IComponentStatusChangeEventArgs *)
-Q_DECLARE_METATYPE(QSharedPointer<HydroCouple::IComponentStatusChangeEventArgs>)
-Q_DECLARE_METATYPE(HydroCouple::IModelComponent *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IModelComponent *>)
-Q_DECLARE_METATYPE(HydroCouple::IProxyModelComponent *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IProxyModelComponent *>)
-Q_DECLARE_METATYPE(HydroCouple::ICloneableModelComponent *)
-Q_DECLARE_METATYPE(QList<HydroCouple::ICloneableModelComponent *>)
-Q_DECLARE_METATYPE(HydroCouple::IDimension *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IDimension *>)
-Q_DECLARE_METATYPE(HydroCouple::IValueDefinition *)
-Q_DECLARE_METATYPE(HydroCouple::IQuality *)
-Q_DECLARE_METATYPE(HydroCouple::IUnitDimensions *)
-Q_DECLARE_METATYPE(HydroCouple::IUnit *)
-Q_DECLARE_METATYPE(HydroCouple::IQuantity *)
-Q_DECLARE_METATYPE(HydroCouple::IComponentDataItem *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IComponentDataItem *>)
-Q_DECLARE_METATYPE(HydroCouple::IArgument *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IArgument *>)
-Q_DECLARE_METATYPE(HydroCouple::IExchangeItemChangeEventArgs *)
-Q_DECLARE_METATYPE(QSharedPointer<HydroCouple::IExchangeItemChangeEventArgs>)
-Q_DECLARE_METATYPE(HydroCouple::IExchangeItem *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IExchangeItem *>)
-Q_DECLARE_METATYPE(HydroCouple::IOutput *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IOutput *>)
-Q_DECLARE_METATYPE(HydroCouple::IAdaptedOutput *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IAdaptedOutput *>)
-Q_DECLARE_METATYPE(HydroCouple::IAdaptedOutputFactory *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IAdaptedOutputFactory *>)
-Q_DECLARE_METATYPE(HydroCouple::IAdaptedOutputFactoryComponentInfo *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IAdaptedOutputFactoryComponentInfo *>)
-Q_DECLARE_METATYPE(HydroCouple::IAdaptedOutputFactoryComponent *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IAdaptedOutputFactoryComponent *>)
-Q_DECLARE_METATYPE(HydroCouple::IInput *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IInput *>)
-Q_DECLARE_METATYPE(HydroCouple::IMultiInput *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IMultiInput *>)
-Q_DECLARE_METATYPE(HydroCouple::IIdBasedComponentDataItem *)
-Q_DECLARE_METATYPE(QList<HydroCouple::IIdBasedComponentDataItem *>)
-Q_DECLARE_METATYPE(HydroCouple::IWorkflowComponentInfo *)
-Q_DECLARE_METATYPE(HydroCouple::IWorkflowComponent *)
 
 #endif // HYDROCOUPLE_H
