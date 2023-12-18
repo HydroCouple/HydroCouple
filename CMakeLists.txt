@@ -38,13 +38,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(
     ${PROJECT_NAME}
     INTERFACE
-    include/stdafx.h
     include/hydrocouple.h
     include/hydrocouplespatial.h
     include/hydrocouplespatialwkb.h
     include/hydrocouplespatiotemporal.h
     include/hydrocoupletemporal.h
-    src/stdafx.cpp
 )
 
 
@@ -65,6 +63,14 @@ install(
     INCLUDES DESTINATION include
  )
 
+option(BUILD_TESTS "Build tests (requires Boost)" ON)
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
+ 
 install(
     EXPORT HydroCoupleTargets
     FILE HydroCoupleTargets.cmake
@@ -75,20 +81,20 @@ install(
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
+configure_package_config_file(
+   ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+   INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}Library
+)
+
 write_basic_package_version_file(
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
-configure_package_config_file(
-    ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}Library
-)
-
 install(
-    FILES 
+    FILES
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     License.md
@@ -107,22 +113,8 @@ add_custom_target(my_package
     DEPENDS HydroCouple
 )
 
-include(GenerateExportHeader)
-generate_export_header(epanetmsx 
-    BASE_NAME HydroCouple
-    EXPORT_MACRO_NAME HYDROCOUPLE_EXPORT
-    EXPORT_FILE_NAME hydrocouple_export.h
-    STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
-)
-
-file(COPY ${CMAKE_CURRENT_BINARY_DIR}/epanetmsx_export.h
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include
-)
-
-
-
 # Configure CPack driven installer package
-set(CPACK_GENERATOR "ZIP;TGZ")
+set(CPACK_GENERATOR "TGZ")
 set(CPACK_PACKAGE_VENDOR "HydroCouple")
 set(CPACK_ARCHIVE_FILE_NAME "HydroCouple")
 

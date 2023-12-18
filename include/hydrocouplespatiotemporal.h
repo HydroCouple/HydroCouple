@@ -1,6 +1,6 @@
 /*!
  * \file hydrocouplespatiotemporal.h
- * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version 2.0.0
  * \description
  * This header file contains the spatio-temporal interface definitions for the

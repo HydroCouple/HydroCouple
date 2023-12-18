@@ -1,6 +1,6 @@
 /*!
  * \file hydrocouple.h
- * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version 2.0.0
  * \description
  * This header file contains the core interface definitions for the
@@ -27,6 +27,8 @@
 
 #include <any>
 #include <functional>
+#include <list>
+#include <set>
 
 
 using namespace std;
@@ -80,51 +82,6 @@ namespace HydroCouple
       string
       > hydrocouple_variant;
 
-  /*!
-   * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
-   */
-  enum FundamentalUnitDimension
-  {
-    /*!
-     * \brief Fundamental dimension for length.
-     */
-    Length,
-
-    /*!
-     * \brief Fundamental dimension for mass.
-     */
-    Mass,
-
-    /*!
-     * \brief Fundamental dimension for time.
-     */
-    Time,
-
-    /*!
-     * \brief Fundamental dimension for electric current.
-     */
-    ElectricCurrent,
-
-    /*!
-     * \brief Fundamental dimension for temperature.
-     */
-    Temperature,
-
-    /*!
-     * \brief Fundamental dimension for amount of substance.
-     */
-    AmountOfSubstance,
-
-    /*!
-     * \brief Fundamental dimension for luminous intensity.
-     */
-    LuminousIntensity,
-
-    /*!
-     * \brief Fundamental dimension for currency.
-     */
-    Currency
-  };
 
   /*!
    * \brief IPropertyChanged interface is used to emit signal/event when a
@@ -967,6 +924,53 @@ namespace HydroCouple
   public:
 
     /*!
+   * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
+   */
+    enum FundamentalUnitDimension
+    {
+        /*!
+     * \brief Fundamental dimension for length.
+     */
+        Length,
+
+        /*!
+     * \brief Fundamental dimension for mass.
+     */
+        Mass,
+
+        /*!
+     * \brief Fundamental dimension for time.
+     */
+        Time,
+
+        /*!
+     * \brief Fundamental dimension for electric current.
+     */
+        ElectricCurrent,
+
+        /*!
+     * \brief Fundamental dimension for temperature.
+     */
+        Temperature,
+
+        /*!
+     * \brief Fundamental dimension for amount of substance.
+     */
+        AmountOfSubstance,
+
+        /*!
+     * \brief Fundamental dimension for luminous intensity.
+     */
+        LuminousIntensity,
+
+        /*!
+     * \brief Fundamental dimension for currency.
+     */
+        Currency
+    };
+
+
+    /*!
      * \brief IUnitDimensions::~IUnitDimensions is a virtual destructor.
      */
     virtual ~IUnitDimensions() = 0;
@@ -997,7 +1001,7 @@ namespace HydroCouple
      * \returns -1
      *
      */
-    virtual double getPower(HydroCouple::FundamentalUnitDimension dimension) = 0;
+    virtual double getPower(HydroCouple::IUnitDimensions::FundamentalUnitDimension dimension) = 0;
   };
 
   /*!
@@ -1344,7 +1348,7 @@ namespace HydroCouple
      * may be called anyway, even if there are no values available.
      *
      */
-    virtual QVector<IInput *> consumers() const = 0;
+    virtual vector<IInput *> consumers() const = 0;
 
     /*!
      * \brief Add a consumer to this output item. Every input item that wants to call
@@ -1378,10 +1382,10 @@ namespace HydroCouple
      * \details As soon as the output item's values have been updated, for each adaptedOutput its
      * IAdaptedOutput.refresh() method must be called.
      *
-     * \details The list is readonly. Add and remov from the list by using addAdaptedOutput() and removeAdaptedOutput().
+     * \details The list is readonly. Add and remove from the list by using addAdaptedOutput() and removeAdaptedOutput().
      *
      */
-    virtual QVector<IAdaptedOutput *> adaptedOutputs() const = 0;
+    virtual vector<IAdaptedOutput *> adaptedOutputs() const = 0;
 
     /*!
      * \brief Add a IAdaptedOutput to this output item.
@@ -1464,7 +1468,7 @@ namespace HydroCouple
      *
      * \returns Unmodifiable list of IArgument for the adapted output.
      */
-    virtual QVector<IArgument *> arguments() const = 0;
+    virtual vector<IArgument *> arguments() const = 0;
 
     /*!
      * \brief Lets this IAdaptedOutput initialize() itself, based on the current values specified by the arguments.
@@ -1529,7 +1533,7 @@ namespace HydroCouple
      * \param consumer is the IInput to adapt the producer to, can be NULL.
      * \returns A vector of identifiers for the available IAdaptedOutputs.
      */
-    virtual QVector<IIdentity *> getAvailableAdaptedOutputIds(const IOutput *provider, const IInput *consumer = nullptr) = 0;
+    virtual vector<IIdentity *> getAvailableAdaptedOutputIds(const IOutput *provider, const IInput *consumer = nullptr) = 0;
 
     /*!
      * \brief Creates a IAdaptedOutput that adapts the producer so that it fits the consumer.
@@ -1639,7 +1643,7 @@ namespace HydroCouple
      * \brief providers
      * \return
      */
-    virtual QVector<IOutput *> providers() const = 0;
+    virtual vector<IOutput *> providers() const = 0;
 
     /*!
      * \brief addProvider
@@ -1793,7 +1797,7 @@ namespace HydroCouple
      * \brief modelComponents
      * \return
      */
-    virtual QList<IModelComponent *> modelComponents() const = 0;
+    virtual list<IModelComponent *> modelComponents() const = 0;
 
     /*!
      * \brief addModelComponent
@@ -1807,14 +1811,21 @@ namespace HydroCouple
      */
     virtual void removeModelComponent(IModelComponent *component) = 0;
 
-  signals:
+    /*!
+     * \brief registerComponentStatusChanged registers a listener that is called when the status of the component changes.
+     * \param status status of the component. See HydroCouple::ComponentStatus for the possible states.
+     * \param message message returned from file read operation.
+     */
+    virtual void registerComponentStatusChangedListener(const function<void(const IWorkflowComponent*, WorkflowStatus, const string&)>& workflowComponentStatusChangedListener) = 0;
 
     /*!
-     * \brief componentStatusChanged
-     * \param status
-     * \param message
+     * \brief deRegisterComponentStatusChangedListener() method deregisters a listener that is
+     * called when the status of the component changes.
+     *
+     * \details See HydroCouple::ComponentStatus for the possible states.
      */
-    virtual void componentStatusChanged(WorkflowStatus status, const string &message) = 0;
+    virtual void deRegisterComponentStatusChangedListener(const function<void(const IWorkflowComponent*, WorkflowStatus, const string&)>& workflowComponentStatusChangedListener) = 0;
+
   };
 
 }

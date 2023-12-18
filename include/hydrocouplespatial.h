@@ -1,6 +1,6 @@
 /*!
  * \file hydrocouplespatial.h
- * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version 2.0.0
  * \description
  * This header file contains the geospatial interface definitions for the
@@ -76,7 +76,7 @@ namespace HydroCouple
       virtual ~ISpatialReferenceSystem() = 0;
 
       /*!
-       * \brief Returns the Spatial Reference System ID for a geometric object.
+       * \brief Returns the Spatial Reference System ID (SRID) for a geometric object.
        * This will normally be a foreign key to an index of reference systems
        * stored in either the same or some other datastore.
        */
@@ -2009,71 +2009,5 @@ namespace HydroCouple
   }
 }
 
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ISpatialReferenceSystem, "HydroCouple::Spatial::ISpatialReferenceSystem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IEnvelope, "HydroCouple::Spatial::IEnvelope/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometry, "HydroCouple::Spatial::IGeometry/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryCollection, "HydroCouple::Spatial::IGeometryCollection/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IMultiPoint, "HydroCouple::Spatial::IMultiPoint/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPoint, "HydroCouple::Spatial::IPoint/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IVertex, "HydroCouple::Spatial::IVertex/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ICurve, "HydroCouple::Spatial::ICurve/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IMultiCurve, "HydroCouple::Spatial::IMultiCurve/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IMultiLineString, "HydroCouple::Spatial::IMultiLineString/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ILineString, "HydroCouple::Spatial::ILineString/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ILine, "HydroCouple::Spatial::ILine/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ILinearRing, "HydroCouple::Spatial::ILinearRing/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IEdge, "HydroCouple::Spatial::IEdge/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ISurface, "HydroCouple::Spatial::ISurface/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IMultiSurface, "HydroCouple::Spatial::IMultiSurface/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolygon, "HydroCouple::Spatial::IPolygon/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IMultiPolygon, "HydroCouple::Spatial::IMultiPolygon/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITriangle, "HydroCouple::Spatial::ITriangle/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::INetwork, "HydroCouple::Spatial::INetwork/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurface, "HydroCouple::Spatial::IPolyhedralSurface/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITIN, "HydroCouple::Spatial::ITIN/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRaster, "HydroCouple::Spatial::IRaster/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRasterBand, "HydroCouple::Spatial::IRasterBand/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2D, "HydroCouple::Spatial::IRegularGrid2D/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3D, "HydroCouple::Spatial::IRegularGrid3D/1.0")
-
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IGeometryComponentDataItem, "HydroCouple::Spatial::IGeometryComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::INetworkComponentDataItem, "HydroCouple::Spatial::INetworkComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::ITINComponentDataItem, "HydroCouple::Spatial::ITINComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem, "HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid2DComponentDataItem, "HydroCouple::Spatial::IRegularGrid2DComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IRegularGrid3DComponentDataItem, "HydroCouple::Spatial::IRegularGrid3DComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::Spatial::IVectorComponentDataItem, "HydroCouple::Spatial::IVectorComponentDataItem/1.0")
-
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ISpatialReferenceSystem *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometry *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometryCollection *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiPoint *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IPoint *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IVertex *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ICurve *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiCurve *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiLineString *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ILineString *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ILinearRing *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IEdge *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ISurface *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiSurface *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolygon *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IMultiPolygon *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ITriangle *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::INetwork *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolyhedralSurface *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ITIN *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IRaster *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IRasterBand *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid2D *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid3D *)
-
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IGeometryComponentDataItem *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::INetworkComponentDataItem *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::ITINComponentDataItem *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid2DComponentDataItem *)
-Q_DECLARE_METATYPE(HydroCouple::Spatial::IRegularGrid3DComponentDataItem *)
 
 #endif // HYDROCOUPLESPATIAL_H
