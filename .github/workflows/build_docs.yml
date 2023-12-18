@@ -21,6 +21,7 @@ jobs:
         repository: HydroCouple/hydrocouple.github.io
         ref: dev
         path: hydrocouple.github.io
+        token: ${{ secrets.API_TOKEN_GITHUB }}
         
     - name: Install Graphviz and Doxygen
       run: |
@@ -34,7 +35,6 @@ jobs:
 
     - name: Push Docs to HydroCouple Website Repo
       env:
-        REPO_KEY: ${{ secrets.API_TOKEN_GITHUB }}
         USERNAME: github-actions[bot]
         MESSAGE: Documentation update
       run: |
