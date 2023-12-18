@@ -33,17 +33,18 @@ jobs:
         doxygen Doxyfile
 
     - name: Push Docs to HydroCouple Website Repo
-      run: |
-        cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
-        cd hydrocouple.github.io
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add -A
-        git commit -m "Documentation update"
-        git push
       env:
         REPO_KEY: ${{ secrets.API_TOKEN_GITHUB }}
         USERNAME: github-actions[bot]
+        MESSAGE: Documentation update
+      run: |
+        cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
+        cd hydrocouple.github.io
+        git config --local user.name "${{ env.USERNAME }}}"
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add -A
+        git commit -m "${{ env.MESSAGE }}"
+        git push
 
       
     - name: Upload Artifacts

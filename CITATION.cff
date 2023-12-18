@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Buahin"
+  given-names: "Caleb"
+  orcid: "https://orcid.org/0000-0002-9859-2264"
+title: "Advancing the Open Modeling Interface (OpenMI) for integrated water resources modeling"
+version: 2.0.0
+doi: https://doi.org/10.1016/j.envsoft.2018.07.015
+date-released: 2021-01-12
+url: "https://github.com/hydrocouple/hydrocouple"
