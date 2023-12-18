@@ -40,7 +40,7 @@ jobs:
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add -A
         git commit -m "Documentation update"
-        git push https://$REPO_KEY@github.com/HydroCouple/hydrocouple.github.io 
+        git push
       env:
         REPO_KEY: ${{ secrets.API_TOKEN_GITHUB }}
         USERNAME: github-actions[bot]

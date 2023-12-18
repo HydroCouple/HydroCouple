@@ -63,13 +63,6 @@ install(
     INCLUDES DESTINATION include
  )
 
-option(BUILD_TESTS "Build tests (requires Boost)" ON)
-
-if(BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
-endif()
-
  
 install(
     EXPORT HydroCoupleTargets
