@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ACCESS_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
     steps:
     - name: Checkout HydroCouple Repo
       uses: actions/checkout@v4
