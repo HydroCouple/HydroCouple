@@ -8,9 +8,8 @@ The HydroCouple interface definition header files.
 
 ## Dependencies
 
-Use of the HydroCouple header files requires the following frameworks and libraries:
+Use of the HydroCouple header files requires the following frameworks and libraries to be installed:
 
-* Qt 5.x.x or Qt 6.x.x
 * CMake 3.10 or higher
 
 ## Documentation
