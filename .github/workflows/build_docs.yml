@@ -20,7 +20,6 @@ jobs:
         repository: HydroCouple/hydrocouple.github.io
         ref: dev
         path: hydrocouple.github.io
-        token: ${{ secrets.API_TOKEN_GITHUB }}
     - name: Install Graphviz and Doxygen
       run: |
         sudo apt-get update
