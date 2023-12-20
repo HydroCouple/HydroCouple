@@ -10,7 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      
     - name: Checkout HydroCouple Repo
       uses: actions/checkout@v4
       with:
@@ -27,11 +26,19 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y graphviz doxygen
-
     - name: Build Docs
       run : |
         cd HydroCouple/docs
         doxygen Doxyfile
+    - name: Push Docs to HydroCouple Website Repo
+      env:
+        REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
+        cd hydrocouple.github.io
+        git add -A
+        git commit -m "CI: Updated HydroCouple Docs"
+        git push
       
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
