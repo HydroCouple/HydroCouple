@@ -2,29 +2,46 @@ name: Build Docs
 
 on:
   push:
-    branches: [ "master", "develop"]
+    branches: [ "master", "dev"]
   pull_request:
-    branches: [ "master", "develop"]
+    branches: [ "master", "dev"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-        
+    - name: Checkout HydroCouple Repo
+      uses: actions/checkout@v4
+      with:
+        path: HydroCouple
+    - name: Checkout HydroCouple Docs Repo
+      uses: actions/checkout@v4
+      with:
+        repository: HydroCouple/hydrocouple.github.io
+        ref: dev
+        path: hydrocouple.github.io
+        persist-credentials: true
     - name: Install Graphviz and Doxygen
       run: |
         sudo apt-get update
         sudo apt-get install -y graphviz doxygen
-
     - name: Build Docs
       run : |
-        cd docs
+        cd HydroCouple/docs
         doxygen Doxyfile
-    
+        tar -czvf hydrocouple_docs.tar.gz html
+    # - name: Push Docs to HydroCouple Website Repo
+    #   env:
+    #     REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
+    #   run: |
+    #     cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
+    #     cd hydrocouple.github.io
+    #     git add -A
+    #     git commit -m "CI: Updated HydroCouple Docs"
+    #     git push
+      
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
-        name: docs
-        path: docs/html
+        name: hydrocouple-docs
+        path: HydroCouple/docs/*.tar.gz

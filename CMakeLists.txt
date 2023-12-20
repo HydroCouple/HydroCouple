@@ -18,8 +18,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with HydroCouple. If not, see <http://www.gnu.org/licenses/>.
 # 
-# Copyright: 2004-2023
-# 
+# Copyright: 2004-2025
+#
 
 cmake_minimum_required (VERSION 3.14)
 
@@ -31,27 +31,18 @@ project(
     DESCRIPTION  "HydroCouple Interface Definitions for C++ and Python"
 )
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
-
-qt_standard_project_setup()
 
 add_library(
     ${PROJECT_NAME}
     INTERFACE
-    include/stdafx.h
     include/hydrocouple.h
     include/hydrocouplespatial.h
     include/hydrocouplespatialwkb.h
     include/hydrocouplespatiotemporal.h
     include/hydrocoupletemporal.h
-    src/stdafx.cpp
 )
 
 
@@ -60,8 +51,6 @@ target_include_directories(HydroCouple
   $<BUILD_INTERFACE:${HYDROCOUPLE_BINARY_DIR}/include>
   $<INSTALL_INTERFACE:/include>
 )
-
-target_link_libraries(HydroCouple PUBLIC INTERFACE Qt${QT_VERSION_MAJOR}::Core)
 
 target_compile_definitions(HydroCouple PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
 
@@ -74,6 +63,7 @@ install(
     INCLUDES DESTINATION include
  )
 
+ 
 install(
     EXPORT HydroCoupleTargets
     FILE HydroCoupleTargets.cmake
@@ -84,25 +74,40 @@ install(
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
+configure_package_config_file(
+   ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+   INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}Library
+)
+
 write_basic_package_version_file(
-    HydroCoupleConfigVersion.cmake
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 install(
-    FILES 
-    HydroCoupleConfig.cmake
-    HydroCoupleConfigVersion.cmake
+    FILES
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     License.md
-    DESTINATION lib/cmake/HydroCouple
+    DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
-include(CMakeFindDependencyMacro)
-find_dependency(Qt${QT_VERSION_MAJOR})
+install(
+    DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
+    DESTINATION "include"
+    FILES_MATCHING PATTERN "*.h"
+)
+
+add_custom_target(my_package
+    COMMAND ${CMAKE_MAKE_PROGRAM} package
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    DEPENDS HydroCouple
+)
 
 # Configure CPack driven installer package
-set(CPACK_GENERATOR "ZIP;TGZ")
+set(CPACK_GENERATOR "TGZ")
 set(CPACK_PACKAGE_VENDOR "HydroCouple")
 set(CPACK_ARCHIVE_FILE_NAME "HydroCouple")
 

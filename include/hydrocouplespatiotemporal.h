@@ -1,6 +1,6 @@
 /*!
  * \file hydrocouplespatiotemporal.h
- * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version 2.0.0
  * \description
  * This header file contains the spatio-temporal interface definitions for the
@@ -11,9 +11,10 @@
  * Lesser GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
  * This file and its associated files is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2014-2020, Caleb Buahin, All rights reserved.
- * \date 2014-2023
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+ * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * \copyright Copyright 2014-2024, Caleb Buahin, All rights reserved.
+ * \date 2014-2024
  * \pre
  * \bug
  * \warning
@@ -54,35 +55,36 @@ namespace HydroCouple
         virtual HydroCouple::Spatial::IGeometry::GeometryType geometryType() const = 0;
 
         /*!
-         * \brief geometryCount
-         * \return
+         * \brief geometryCount The number of geometries in the data item.
+         * \return The number of geometries in the data item.
          */
         virtual int geometryCount() const = 0;
 
         /*!
-         * \brief geometry
-         * \param geometryIndex
-         * \return
+         * \brief geometry The geometry at the specified index.
+         * \param geometryIndex The index of the geometry to return.
+         * \return The geometry at the specified index.
          */
         virtual HydroCouple::Spatial::IGeometry *geometry(int geometryIndex) const = 0;
 
         /*!
-         * \returns The dimesion attributes for the data with the geometry. This can be the field name for an attribute for a shapefile.
-         *  Must be the first dimension in the dimensions() list
+         * \returns The dimension attributes for the data with the geometry. 
+         * This can be the field name for an attribute for a shapefile.
+         * Must be the first dimension in the dimensions() list
          */
         virtual HydroCouple::IDimension *geometryDimension() const = 0;
 
         /*!
-         * \brief envelope
-         * \return
+         * \brief envelope The envelope of the data item.
+         * \return The envelope of the data item.
          */
         virtual HydroCouple::Spatial::IEnvelope *envelope() const = 0;
 
         /*!
-         * \brief getValue
-         * \param timeIndex
-         * \param geometryIndex
-         * \param data
+         * \brief getValue Gets the value for given time dimension index and geometry dimension index.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
+         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValue(int timeIndex, int geometryIndex, void *data) const = 0;
 
@@ -97,10 +99,10 @@ namespace HydroCouple
         virtual void getValues(int timeIndex, int geometryIndex, int timeStride, int geomStride, void *data) const = 0;
 
         /*!
-         * \brief setValues
-         * \param timeIndex
-         * \param geometryIndex
-         * \param data
+         * \brief setValues Sets the value for given time dimension index and geometry dimension index.
+         * \param timeIndex is the time dimension index where data is to be written.
+         * \param geometryIndex is the geometry dimension index where data is to be written.
+         * \param data is the input array to be written.
          */
         virtual void setValue(int timeIndex, int geometryIndex, const void *data) = 0;
 
@@ -126,47 +128,50 @@ namespace HydroCouple
 
       public:
 
+        /*!
+         * \brief ~ITimeNetworkComponentItem.
+         */
         virtual ~ITimeNetworkComponentDataItem() = 0;
 
         /*!
-         * \brief network
-         * \return
+         * \brief network associated with this ITimeNetworkComponentItem.
+         * \return The network associated with this ITimeNetworkComponentItem.
          */
         virtual HydroCouple::Spatial::INetwork *network() const = 0;
 
         /*!
-         * \brief
-         * \return
+         * \brief meshDataType The mesh data type for the network.
+         * \return The mesh data type for the network.
          */
         virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
 
         /*!
-         * \brief edgeDimension
-         * \return
+         * \brief edgeDimension The dimension for the edges of the network.
+         * \return The dimension for the edges of the network.
          */
         virtual IDimension *edgeDimension() const = 0;
 
         /*!
-         * \brief nodeDimension
-         * \return
+         * \brief nodeDimension The dimension for the nodes of the network.
+         * \return The dimension for the nodes of the network.
          */
         virtual IDimension *nodeDimension() const = 0;
 
         /*!
-         * \brief getValue
-         * \param timeIndex
-         * \param edgeDimensionIndex
-         * \param nodeDimensionIndex
-         * \param data
+         * \brief getValue Gets the value for given time dimension index, edge dimension index and node dimension index.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
+         * \param nodeDimensionIndex is the node dimension index from where to obtain the requested data.
+         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValue(int timeIndex,  int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
 
         /*!
-         * \brief setValue
-         * \param timeIndex
-         * \param edgeDimensionIndex
-         * \param nodeDimensionIndex
-         * \param data
+         * \brief setValue Sets the value for given time dimension index, edge dimension index and node dimension index.
+         * \param timeIndex is the time dimension index where data is to be written.
+         * \param edgeDimensionIndex is the edge dimension index where data is to be written.
+         * \param nodeDimensionIndex is the node dimension index where data is to be written.
+         * \param data is the input array to be written.
          */
         virtual void setValue(int timeIndex, int edgeDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
     };
@@ -188,8 +193,8 @@ namespace HydroCouple
         virtual ~ITimePolyhedralSurfaceComponentDataItem() = 0;
 
         /*!
-         * \brief polyhedralSurfaceDataType
-         * \return
+         * \brief polyhedralSurfaceDataType The mesh data type for the polyhedral surface.
+         * \return The mesh data type for the polyhedral surface.
          */
         virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
 
@@ -199,39 +204,40 @@ namespace HydroCouple
         virtual HydroCouple::Spatial::IPolyhedralSurface *polyhedralSurface() const = 0;
 
         /*!
-         * \returns TcellDimension.
+          * \brief cellDimension The dimension for the cells of the polyhedral surface.
+         * \returns The dimension for the cells of the polyhedral surface.
          */
         virtual IDimension *cellDimension() const = 0;
 
         /*!
-         * \brief edgeDimension
-         * \return
+         * \brief edgeDimension The dimension for the edges of the polyhedral surface.
+         * \return The dimension for the edges of the polyhedral surface.
          */
         virtual IDimension *edgeDimension() const = 0;
 
         /*!
-         * \brief nodeDimension
-         * \return
+         * \brief nodeDimension The dimension for the nodes of the polyhedral surface.
+         * \return The dimension for the nodes of the polyhedral surface.
          */
         virtual IDimension *nodeDimension() const = 0;
 
         /*!
-         * \brief getValue
-         * \param timeIndex
-         * \param cellDimensionIndex
-         * \param edgeDimensionIndex
-         * \param nodeDimensionIndex
-         * \param data
+         * \brief getValue Gets the value for given time dimension index, cell dimension index, edge dimension index and node dimension index.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param cellDimensionIndex is the cell dimension index from where to obtain the requested data.
+         * \param edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
+         * \param nodeDimensionIndex is the node dimension index from where to obtain the requested data.
+         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValue(int timeIndex, int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
 
         /*!
-         * \brief setValues
-         * \param timeIndex
-         * \param cellDimensionIndex
-         * \param edgeDimensionIndex
-         * \param nodeDimensionIndex
-         * \param data
+         * \brief setValues Sets the value for given time dimension index, cell dimension index, edge dimension index and node dimension index.
+         * \param timeIndex is the time dimension index where data is to be written.
+         * \param cellDimensionIndex is the cell dimension index where data is to be written.
+         * \param edgeDimensionIndex is the edge dimension index where data is to be written.
+         * \param nodeDimensionIndex is the node dimension index where data is to be written.
+         * \param data is the input array to be written.
          */
         virtual void setValue(int timeIndex, int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,  const void *data) = 0;
     };
@@ -265,6 +271,9 @@ namespace HydroCouple
 
       public:
 
+        /*!
+         * \brief ~ITimeRasterComponentItem.
+         */
         virtual ~ITimeRasterComponentDataItem() = 0;
 
         /*!
@@ -288,12 +297,12 @@ namespace HydroCouple
         virtual IDimension* bandDimension() const = 0;
 
         /*!
-         * \brief getValue
-         * \param timeIndex
-         * \param xIndex
-         * \param yIndex
-         * \param band
-         * \param data
+         * \brief getValue Gets the value for given time dimension index, x dimension index, y dimension index and band dimension index.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param xIndex is the x dimension index from where to obtain the requested data.
+         * \param yIndex is the y dimension index from where to obtain the requested data.
+         * \param band is the band dimension index from where to obtain the requested data.
+         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValue(int timeIndex, int xIndex, int yIndex, int band, void *data) const = 0;
 
@@ -314,12 +323,12 @@ namespace HydroCouple
                                int ystride, int bandStride, void *data) const = 0;
 
         /*!
-         * \brief setValue
-         * \param timeIndex
-         * \param xIndex
-         * \param yIndex
-         * \param band
-         * \param data
+         * \brief setValue Sets the value for given time dimension index, x dimension index, y dimension index and band dimension index.
+         * \param timeIndex is the time dimension index where data is to be written.
+         * \param xIndex is the x dimension index where data is to be written.
+         * \param yIndex is the y dimension index where data is to be written.
+         * \param band is the band dimension index where data is to be written.
+         * \param data is the input array to be written.
          */
         virtual void setValue(int timeIndex, int xIndex, int yIndex, int band, const void *data) = 0;
 
@@ -351,6 +360,9 @@ namespace HydroCouple
 
       public:
 
+        /*!
+         * \brief ~ITimeRegularGrid2DComponentItem. Destructor.
+         */
         virtual ~ITimeRegularGrid2DComponentDataItem() = 0;
 
         /*!
@@ -359,8 +371,8 @@ namespace HydroCouple
         virtual HydroCouple::Spatial::IRegularGrid2D *grid() const = 0;
 
         /*!
-         * \brief meshDataType
-         * \return
+         * \brief meshDataType The mesh data type for the regular grid.
+         * \return The mesh data type for the regular grid.
          */
         virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
 
@@ -387,25 +399,25 @@ namespace HydroCouple
         virtual IDimension *cellNodeDimension() const = 0;
 
         /*!
-         * \brief getValue
-         * \param timeIndex
-         * \param xCellIndex
-         * \param yCellIndex
-         * \param cellEdgeIndex
-         * \param cellNodeIndex
-         * \param data
+         * \brief getValue Gets the value for given time dimension index, x cell dimension index, y cell dimension index, cell edge dimension index and cell node dimension index.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param xCellIndex is the x cell dimension index from where to obtain the requested data.
+         * \param yCellIndex is the y cell dimension index from where to obtain the requested data.
+         * \param cellEdgeIndex is the cell edge dimension index from where to obtain the requested data.
+         * \param cellNodeIndex is the cell node dimension index from where to obtain the requested data.
+         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValue(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, void *data) const = 0;
 
 
         /*!
-         * \brief setValue
-         * \param timeIndex
-         * \param xCellIndex
-         * \param yCellIndex
-         * \param cellEdgeIndex
-         * \param cellNodeIndex
-         * \param data
+         * \brief setValue Sets the value for given time dimension index, x cell dimension index, y cell dimension index, cell edge dimension index and cell node dimension index.
+         * \param timeIndex is the time dimension index where data is to be written.
+         * \param xCellIndex is the x cell dimension index where data is to be written.
+         * \param yCellIndex  is the y cell dimension index where data is to be written.
+         * \param cellEdgeIndex is the cell edge dimension index where data is to be written.
+         * \param cellNodeIndex is the cell node dimension index where data is to be written.
+         * \param data is the input array to be written.
          */
         virtual void setValue(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, const void *data) = 0;
     };
@@ -420,6 +432,9 @@ namespace HydroCouple
 
       public:
 
+        /*!
+         * \brief ~ITimeRegularGrid3DComponentItem. Destructor.
+         */
         virtual ~ITimeRegularGrid3DComponentDataItem() = 0;
 
         /*!
@@ -428,8 +443,8 @@ namespace HydroCouple
         virtual HydroCouple::Spatial::IRegularGrid3D *grid() const = 0;
 
         /*!
-         * \brief meshDataType
-         * \return
+         * \brief meshDataType The mesh data type for the regular grid.
+         * \return The mesh data type for the regular grid.
          */
         virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
 
@@ -461,27 +476,27 @@ namespace HydroCouple
         virtual IDimension *cellNodeDimension() const = 0;
 
         /*!
-         * \brief getValue
-         * \param timeIndex
-         * \param xCellIndex
-         * \param yCellIndex
-         * \param zCellIndex
-         * \param cellFaceIndex
-         * \param cellNodeIndex
-         * \param data
+         * \brief getValue  Gets the value for given time dimension index, x cell dimension index, y cell dimension index, z cell dimension index, cell face dimension index and cell node dimension index.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param xCellIndex is the x cell dimension index from where to obtain the requested data.
+         * \param yCellIndex is the y cell dimension index from where to obtain the requested data.
+         * \param zCellIndex is the z cell dimension index from where to obtain the requested data.
+         * \param cellFaceIndex is the cell face dimension index from where to obtain the requested data.
+         * \param cellNodeIndex is the cell node dimension index from where to obtain the requested data.
+         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValue(int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellNodeIndex, void *data) const = 0;
 
         /*!
-         * \brief setValue
-         * \param timeIndex
-         * \param xCellIndex
-         * \param yCellIndex
-         * \param zCellIndex
-         * \param cellFaceIndex
-         * \param cellNodeIndex
-         * \param data
+         * \brief setValue Sets the value for given time dimension index, x cell dimension index, y cell dimension index, z cell dimension index, cell face dimension index and cell node dimension index.
+         * \param timeIndex is the time dimension index where data is to be written.
+         * \param xCellIndex is the x cell dimension index where data is to be written.
+         * \param yCellIndex is the y cell dimension index where data is to be written.
+         * \param zCellIndex is the z cell dimension index where data is to be written.
+         * \param cellFaceIndex is the cell face dimension index where data is to be written.
+         * \param cellNodeIndex is the cell node dimension index where data is to be written.
+         * \param data is the input array to be written.
          */
         virtual void setValue(int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex,
                               int cellFaceIndex, int cellNodeIndex, const void *data) = 0;
@@ -498,6 +513,9 @@ namespace HydroCouple
 
       public:
 
+        /*!
+         * \brief ~ITimeVectorComponentItem.
+         */
         virtual ~ITimeVectorComponentDataItem() = 0;
 
         /*!
@@ -507,15 +525,15 @@ namespace HydroCouple
         virtual int locationsCount() const = 0;
 
         /*!
-         * \brief location
-         * \param locationIndex
-         * \return
+         * \brief location The location at the specified index.
+         * \param locationIndex The index of the location to return.
+         * \return The location at the specified index.
          */
         virtual HydroCouple::Spatial::IPoint *location(int locationIndex) const = 0;
 
         /*!
-         * \brief locationsDimension
-         * \return
+         * \brief locationsDimension The dimension for the locations of the vector.
+         * \return The dimension for the locations of the vector.
          */
         virtual IDimension *locationsDimension() const = 0;
 
@@ -527,66 +545,47 @@ namespace HydroCouple
         virtual IDimension *spatialDimension() const = 0;
 
         /*!
-         * \brief getValue
-         * \param timeIndex
-         * \param locationIndex
-         * \param spatialIndex
-         * \param data
+         * \brief getValue Gets the value for given time dimension index, location dimension index and spatial dimension index.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param locationIndex is the location dimension index from where to obtain the requested data.
+         * \param spatialIndex is the spatial dimension index from where to obtain the requested data.
+         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
          */
         virtual void getValue(int timeIndex, int locationIndex, int spatialIndex, void *data) const = 0;
 
         /*!
-         * \brief getValues
-         * \param timeIndex
-         * \param locationIndex
-         * \param spatialDimensionIndex
-         * \param locationStride
-         * \param spatialDimensionStride
-         * \param data
+         * \brief getValues Gets a multi-dimensional array of values for given dimension for a hyperslab.
+         * \param timeIndex is the time dimension index from where to obtain the requested data.
+         * \param locationIndex is the location dimension index from where to obtain the requested data.
+         * \param spatialDimensionIndex is the spatial dimension index from where to obtain the requested data.
+         * \param locationStride is the size for the location dimension for hyperslab from which to copy data.
+         * \param spatialDimensionStride is the size for the spatial dimension for hyperslab from which to copy data.
+         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
          */
         virtual void getValues(int timeIndex, int locationIndex, int spatialDimensionIndex,
                                int locationStride, int spatialDimensionStride, void *data) const = 0;
         /*!
-         * \brief setValue
-         * \param timeIndex
-         * \param locationIndex
-         * \param spatialDimensionIndex
-         * \param data
-         */
+         * \brief setValue Sets the value for given time dimension index, location dimension index and spatial dimension index.
+         * \param timeIndex is the time dimension index where data is to be written.
+         * \param locationIndex is the location dimension index where data is to be written.
+         * \param spatialDimensionIndex is the spatial dimension index where data is to be written.
+         * \param data is the input array to be written.
+         */ 
         virtual void setValue(int timeIndex, int locationIndex, int spatialDimensionIndex, const void *data) = 0;
 
         /*!
-         * \brief setValues
-         * \param timeIndex
-         * \param locationIndex
-         * \param spatialDimensionIndex
-         * \param locationStride
-         * \param spatialDimensionStride
-         * \param data
+         * \brief setValues Sets a multi-dimensional array of values for given dimension for a hyperslab.
+         * \param timeIndex is the  time dimension index where data is to be written.
+         * \param locationIndex is the location dimension index where data is to be written.
+         * \param spatialDimensionIndex is the spatial dimension index where data is to be written.
+         * \param locationStride is the size for the location dimension for hyperslab from which to copy data.
+         * \param spatialDimensionStride is the size for the spatial dimension for hyperslab from which to copy data.
+         * \param data is the input multi dimensional array to be written.
          */
         virtual void setValues(int timeIndex, int locationIndex, int spatialDimensionIndex,
                                int locationStride, int spatialDimensionStride, const void *data) = 0;
     };
   }
-}
-
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem, "HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeNetworkComponentDataItem, "HydroCouple::SpatioTemporal::ITimeNetworkComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem, "HydroCouple::SpatioTemporal::ITimeTINComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem, "HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem, "HydroCouple::SpatioTemporal::ITimeRegularGrid2DExchangeItem/1.0")
-Q_DECLARE_INTERFACE(HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem, "HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem/1.0")
-
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeNetworkComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeTINComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimePolyhedralSurfaceComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRasterComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem*)
-Q_DECLARE_METATYPE(HydroCouple::SpatioTemporal::ITimeVectorComponentDataItem*)
-
+} 
 #endif // HYDROCOUPLESPATIOTEMPORAL_H
 

@@ -1,6 +1,6 @@
 /*!
  * \file hydrocouplespatialwkb.h
- * \author Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version 2.0.0
  * \description
  * This header file contains the structures for the OGC wkb SFA specifications.
@@ -10,9 +10,10 @@
  * Lesser GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
  * This file and its associated files is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2014-2020, Caleb Buahin, All rights reserved.
- * \date 2014-2023
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+ * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * \copyright Copyright 2014-2025, Caleb Buahin, All rights reserved.
+ * \date 2014-2025
  * \pre
  * \bug
  * \warning
