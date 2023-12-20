@@ -9,8 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       
     - name: Checkout HydroCouple Repo
@@ -23,6 +21,8 @@ jobs:
         repository: HydroCouple/hydrocouple.github.io
         ref: dev
         path: hydrocouple.github.io
+        token: ${{ secrets.GITHUB_TOKEN }}
+        persist-credentials: true
     - name: Install Graphviz and Doxygen
       run: |
         sudo apt-get update
