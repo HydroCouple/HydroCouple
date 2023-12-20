@@ -4,7 +4,7 @@
 # Author: Caleb Buahin
 #
 # This file is part of HydroCouple.
-# 
+#
 # HydroCouple is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
 # Software Foundation, either version 3 of the License, or (at your option) any
@@ -17,15 +17,15 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with HydroCouple. If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 # Copyright: 2004-2023
 #
 
 cmake_minimum_required (VERSION 3.14)
 
 project(
-    HydroCouple 
-    VERSION 2.0.0 
+    HydroCouple
+    VERSION 2.0.0
     LANGUAGES C CXX
     HOMEPAGE_URL "https://hydrocouple.org"
     DESCRIPTION  "HydroCouple Interface Definitions for C++ and Python"
@@ -40,7 +40,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-
 add_library(
     ${PROJECT_NAME}
     INTERFACE
@@ -53,20 +52,19 @@ add_library(
     src/stdafx.cpp
 )
 
-
-target_include_directories(HydroCouple
-  PUBLIC INTERFACE
-  $<BUILD_INTERFACE:${HYDROCOUPLE_BINARY_DIR}/include>
-  $<INSTALL_INTERFACE:/include>
+target_include_directories(${PROJECT_NAME}
+    PUBLIC INTERFACE
+    $<BUILD_INTERFACE:${HYDROCOUPLE_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:/include>
 )
 
-target_link_libraries(HydroCouple PUBLIC INTERFACE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(${PROJECT_NAME} PUBLIC INTERFACE Qt${QT_VERSION_MAJOR}::Core)
 
-target_compile_definitions(HydroCouple PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
+target_compile_definitions(${PROJECT_NAME} PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
 
 install(
-    TARGETS HydroCouple
-    EXPORT HydroCoupleTargets
+    TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Targets
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
@@ -74,10 +72,10 @@ install(
  )
 
 install(
-    EXPORT HydroCoupleTargets
-    FILE HydroCoupleTargets.cmake
-    NAMESPACE HydroCouple::
-    DESTINATION lib/cmake/HydroCouple
+    EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION lib/cmake/${PROJECT_NAME}
  )
 
 include(GNUInstallDirs)
@@ -85,18 +83,18 @@ include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
+    VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
-    ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
+    ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}Library
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 install(
-    FILES 
+    FILES
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     License.md
@@ -112,7 +110,7 @@ install(
 add_custom_target(my_package
     COMMAND ${CMAKE_MAKE_PROGRAM} package
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    DEPENDS HydroCouple
+    DEPENDS ${PROJECT_NAME}
 )
 
 include(CMakeFindDependencyMacro)
