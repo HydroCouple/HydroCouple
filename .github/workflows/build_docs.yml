@@ -20,7 +20,6 @@ jobs:
         repository: HydroCouple/hydrocouple.github.io
         ref: dev
         path: hydrocouple.github.io
-        token: ${{ secrets.GITHUB_TOKEN }}
         persist-credentials: true
     - name: Install Graphviz and Doxygen
       run: |
@@ -30,18 +29,18 @@ jobs:
       run : |
         cd HydroCouple/docs
         doxygen Doxyfile
-    - name: Push Docs to HydroCouple Website Repo
-      env:
-        REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
-        cd hydrocouple.github.io
-        git add -A
-        git commit -m "CI: Updated HydroCouple Docs"
-        git push
+    # - name: Push Docs to HydroCouple Website Repo
+    #   env:
+    #     REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
+    #   run: |
+    #     cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
+    #     cd hydrocouple.github.io
+    #     git add -A
+    #     git commit -m "CI: Updated HydroCouple Docs"
+    #     git push
       
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: docs
-        path: docs/html
+        path: docs/html11
