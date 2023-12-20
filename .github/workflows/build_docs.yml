@@ -29,6 +29,7 @@ jobs:
       run : |
         cd HydroCouple/docs
         doxygen Doxyfile
+        tar -czvf hydrocouple_docs.tar.gz html
     # - name: Push Docs to HydroCouple Website Repo
     #   env:
     #     REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +41,7 @@ jobs:
     #     git push
       
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: hydrocouple-docs
-        path: HydroCouple/docs/html
+        path: HydroCouple/docs/*.tar.gz
