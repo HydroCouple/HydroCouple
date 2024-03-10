@@ -104,14 +104,14 @@ namespace HydroCouple
      * he function takes two parameters, the first is the object whose property changed and the second
      * is the name of the property that changed.
      */
-    virtual void registerPropertyChangedListener(const function<void(const any&, const string&)>& propertyChangedListener) = 0;
+    virtual void registerPropertyChangedListener(const function<void(const string&)>& propertyChangedListener) = 0;
 
     /*!
      * \brief IPropertyChanged::deRegisterPropertyChangedListener() deregisters a listener that is
      * called when a property of an object changes.
      * \param propertyChangedListener is a function that is called when a property of an object changes.
      */
-    virtual void deRegisterPropertyChangedListener(const function<void(const any&, const string& propertyName)>& propertyChangedListener) = 0;
+    virtual void deRegisterPropertyChangedListener(const function<void(const string&)>& propertyChangedListener) = 0;
 
   };
 
