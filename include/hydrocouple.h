@@ -11,7 +11,7 @@
  * Lesser GNU Lesser General Public License as published by the Free Software Foundation;
  * either version 3 of the License, or (at your option) any later version.
  * This file and its associated files is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
  * \copyright Copyright 2014-2024, Caleb Buahin, All rights reserved.
  * \date 2014-2024
@@ -24,12 +24,13 @@
 #ifndef HYDROCOUPLE_H
 #define HYDROCOUPLE_H
 
-
+#include <variant>
+#include <string>
 #include <any>
 #include <functional>
 #include <list>
 #include <set>
-
+#include <memory>
 
 using namespace std;
 
@@ -49,6 +50,9 @@ enum ByteOrder
 namespace HydroCouple
 {
   //! Forward declarations
+  template <typename... Args>
+  class ISignal;
+
   class IModelComponent;
   class IAdaptedOutputFactory;
   class IArgument;
@@ -61,12 +65,12 @@ namespace HydroCouple
   class IUnit;
   class IComponentStatusChangeEventArgs;
   class IWorkflowComponent;
-
+  class IWorkflowComponentStatusChangeEventArgs;
 
   /*!
-  * \brief hydrocouple_variant is a variant type that can be used to store values of different types.
-  */
-  typedef  variant<
+   * \brief hydrocouple_variant is a variant type that can be used to store values of different types.
+   */
+  typedef variant<
       bool,
       char,
       short,
@@ -79,40 +83,79 @@ namespace HydroCouple
       float,
       double,
       long double,
-      string
-      > hydrocouple_variant;
+      string>
+      hydrocouple_variant;
 
+  /*!
+   * \brief ISlot interface class must be implemented by classes that want to listen to signals.
+   * \details ISlot is a template class that can be used to listen to signals with any number of arguments.
+   * \tparam Args are the arguments that will be passed by the signal.
+   * \sa ISignal
+   */
+  template <typename... Args>
+  class ISlot
+  {
+  public:
+    /*!
+     * \brief ISlot::~ISlot is a virtual destructor.
+     */
+    virtual ~ISlot() = default;
+
+    /*!
+     * \brief operator() is the function call operator that is called when a signal is emitted.
+     * \param sender is the object that emitted the signal.
+     * \param args are the arguments passed by the signal.
+     */
+    virtual void operator()(const ISignal<Args...> &sender, Args... args) = 0;
+  };
+
+  /*!
+   * \brief ISignal interface class is used to emit signals/events to listeners.
+   * \tparam Args are the arguments that will be passed by the signal.
+   * \sa ISlot
+   * \sa IPropertyChanged
+   */
+  template <typename... Args>
+  class ISignal
+  {
+  public:
+    /*!
+     * \brief ISignal::~ISignal is a virtual destructor.
+     */
+    virtual ~ISignal() = default;
+
+    /*!
+     * \brief connect is used to connect a slot to the signal.
+     * \param slot is the slot that will listen to the signal.
+     */
+    virtual void connect(const shared_ptr<ISlot<Args...>> &slot) = 0;
+
+    /*!
+     * \brief disconnect is used to disconnect a slot from the signal.
+     * \param slot is the slot that will be disconnected from the signal.
+     */
+    virtual void disconnect(const shared_ptr<ISlot<Args...>> &slot) = 0;
+
+  protected:
+    /*!
+     * \brief emit is used to emit the signal.
+     * \param args are the arguments that will be passed by the signal.
+     */
+    virtual void emit(Args... args) = 0;
+  };
 
   /*!
    * \brief IPropertyChanged interface is used to emit signal/event when a
    * property of an object changes.
    */
-  class IPropertyChanged
+  class IPropertyChanged : public virtual ISignal<std::string>
   {
 
   public:
-    
     /*!
      * \brief IPropertyChanged::~IPropertyChanged is a virtual destructor.
      */
-    virtual ~IPropertyChanged() = 0;
-
-    /*!
-     * \brief IPropertyChanged::registerPropertyChangedListener() registers a listener to be called
-     * when a property of an object changes.
-     * \param propertyChangedListener is a function that is called when a property of an object changes.
-     * he function takes two parameters, the first is the object whose property changed and the second
-     * is the name of the property that changed.
-     */
-    virtual void registerPropertyChangedListener(const function<void(const string&)>& propertyChangedListener) = 0;
-
-    /*!
-     * \brief IPropertyChanged::deRegisterPropertyChangedListener() deregisters a listener that is
-     * called when a property of an object changes.
-     * \param propertyChangedListener is a function that is called when a property of an object changes.
-     */
-    virtual void deRegisterPropertyChangedListener(const function<void(const string&)>& propertyChangedListener) = 0;
-
+    virtual ~IPropertyChanged() = default;
   };
 
   /*!
@@ -120,17 +163,16 @@ namespace HydroCouple
    *
    * \details An entity that is describable has a caption (title or heading)
    *  and a description. These are not to be used for identification (see IIdentity).
-   * 
+   *
    */
   class IDescription : public virtual IPropertyChanged
   {
 
   public:
-
     /*!
      * \brief IDescription::~IDescription is a virtual destructor.
      */
-    virtual ~IDescription() = 0;
+    virtual ~IDescription() = default;
 
     /*!
      * \brief Gets caption for the entity.
@@ -171,7 +213,7 @@ namespace HydroCouple
     /*!
      * \brief IIdentity::~IIdentity is a virtual destructor.
      */
-    virtual ~IIdentity() = 0;
+    virtual ~IIdentity() = default;
 
     /*!
      * \brief Gets a unique identifier for the entity.
@@ -181,13 +223,13 @@ namespace HydroCouple
      * item must be unique in the list of inputs of a IModelComponent, but a
      * similar Id might be used by an exchange item of another IModelComponent.
      *
-     * \returns An id as a string. The id must be unique within its context. It must not be empty. 
+     * \returns An id as a string. The id must be unique within its context. It must not be empty.
      */
     virtual string id() const = 0;
   };
 
   /*!
-   * \brief IComponentInfo interface class is a factory that provides detailed metadata 
+   * \brief IComponentInfo interface class is a factory that provides detailed metadata
    * about a component and creates new instances of a component.
    *
    * \details It must not be implemented directly. It must be either be implemented as
@@ -201,7 +243,7 @@ namespace HydroCouple
     /*!
      * \brief IComponentInfo::~IComponentInfo is a virtual destructor.
      */
-    virtual ~IComponentInfo() = 0;
+    virtual ~IComponentInfo() = default;
 
     /*!
      * \brief File path to Component library.
@@ -271,7 +313,7 @@ namespace HydroCouple
      * \brief tags used to classify this component.
      * \returns the categorical tags that can be used to classify components.
      * e.g., Hydrology, Groundwater, Finite Volume, Finite difference.
-    */
+     */
     virtual set<string> tags() const = 0;
 
     /*!
@@ -305,7 +347,7 @@ namespace HydroCouple
     /*!
      * \brief IModelComponentInfo::~IModelComponentInfo is a virtual destructor.
      */
-    virtual ~IModelComponentInfo() = 0;
+    virtual ~IModelComponentInfo() = default;
 
     /*!
      * \brief Creates a new IModelComponent instance.
@@ -329,7 +371,7 @@ namespace HydroCouple
   /*!
    * \brief IModelComponent interface is the core interface in the HydroCouple standard defining a model component.
    */
-  class IModelComponent : public virtual IIdentity
+  class IModelComponent : public virtual IIdentity, public virtual ISignal<const shared_ptr<IComponentStatusChangeEventArgs> &>
   {
 
   public:
@@ -450,7 +492,7 @@ namespace HydroCouple
     /*!
      * \brief IModelComponent::~IModelComponent destructor
      */
-    virtual ~IModelComponent() = 0;
+    virtual ~IModelComponent() = default;
 
     /*!
      * \brief Contains the metadata about this IModelComponent instance.
@@ -676,7 +718,7 @@ namespace HydroCouple
      * \param mpiProcessesToAllocate are the list of MPI processes/ranks to allocate to this component.
      * \details This method must be accessible after the initialize() method has been invoked.
      * If this method is invoked before the initialize() method has been invoked an exception must be thrown.
-     * 
+     *
      * This method must preferably be called on a processor with rank 0.
      */
     virtual void mpiAllocateProcesses(const set<int> &mpiProcessesToAllocate) = 0;
@@ -702,22 +744,6 @@ namespace HydroCouple
      * \param referenceDirectory
      */
     virtual void setReferenceDirectory(const string &referenceDirectory) = 0;
-
-    /*!
-     * \brief The registerComponentStatusChangedListener() method registers a listener to be called
-     * when the status of the component changes.
-     *
-     * \details See HydroCouple::ComponentStatus for the possible states.
-     */
-    virtual void registerComponentStatusChangedListener(const function<void(const shared_ptr<IComponentStatusChangeEventArgs>&)>& statusChangedEventListener) = 0;
-
-    /*!
-     * \brief The deRegisterComponentStatusChangedListener() method deregisters a listener that is
-     * called when the status of the component changes.
-     *
-     * \details See HydroCouple::ComponentStatus for the possible states.
-     */
-    virtual void deRegisterComponentStatusChangedListener(const function<void(const shared_ptr<IComponentStatusChangeEventArgs>&)>& statusChangedEventListener) = 0;
   };
 
   /*!
@@ -730,13 +756,19 @@ namespace HydroCouple
     /*!
      * \brief ~IProxyModelComponent
      */
-    virtual ~IProxyModelComponent() = 0;
+    virtual ~IProxyModelComponent() = default;
 
     /*!
      * \brief parentMpiProcessRank
      * \return An integer representing the MPI process rank of its parent model
      */
     virtual int parentMpiProcessRank() const = 0;
+
+    /*!
+     * \brief parentProcessAddress
+     * \return A string representing the address of its parent model
+     */
+    virtual string parentProcessAddress() const = 0;
 
     /*!
      * \brief parentId
@@ -747,7 +779,7 @@ namespace HydroCouple
 
   /*!
    * \brief The IComponentStatusChangeEventArgs contains the information that will
-   * be passed when the IModelComponent fires the IModelComponent::statusChanged signal.
+   * be passed when the IModelComponent fires a signal.
    * \details Sending exchange item events is optional, so it should not be used as a mechanism to build critical functionality upon.
    */
   class IComponentStatusChangeEventArgs
@@ -756,7 +788,7 @@ namespace HydroCouple
     /*!
      * \brief ~IComponentStatusChangeEventArgs destructor
      */
-    virtual ~IComponentStatusChangeEventArgs() = 0;
+    virtual ~IComponentStatusChangeEventArgs() = default;
 
     /*!
      * \brief Gets the IModelComponent that fired the event.
@@ -768,13 +800,13 @@ namespace HydroCouple
      * \brief Gets the IModelComponent's status before the status change.
      * \returns The previous ComponentStatus of the component that threw the event.
      */
-    virtual HydroCouple::IModelComponent::ComponentStatus previousStatus() const = 0;
+    virtual IModelComponent::ComponentStatus previousStatus() const = 0;
 
     /*!
      * \brief Gets the IModelComponent's status after the status change.
      * \returns The new ComponentStatus of the component that threw the event.
      */
-    virtual HydroCouple::IModelComponent::ComponentStatus status() const = 0;
+    virtual IModelComponent::ComponentStatus status() const = 0;
 
     /*!
      * \brief Gets additional information about the status change.
@@ -803,7 +835,7 @@ namespace HydroCouple
     /*!
      * \brief ~ICloneableModelComponent destructor
      */
-    virtual ~ICloneableModelComponent() = 0;
+    virtual ~ICloneableModelComponent() = default;
 
     /*!
      * \brief Parent ICloneableModelComponent object from which current component was cloned from.
@@ -813,17 +845,19 @@ namespace HydroCouple
 
     /*!
      * \brief Deep clones itself including cloning its Data::IArgument.
+     * \param clone_optional_arguments are optional arguments that can be passed to the clone method. These arguments are used to
+     * pass additional information to the clone method. The arguments are specific to the component being cloned.
      * \returns A deep clone of the current component. Configuration files and output files
      * must be written to a different location than those of the parent. Cloning can only occur after the parent component has been
      * initialized successfully. Cloned components must also be initialized.
      */
-    virtual ICloneableModelComponent *clone() = 0;
+    virtual ICloneableModelComponent *clone(const unordered_map<string, hydrocouple_variant> &clone_optional_arguments = unordered_map<string, hydrocouple_variant>()) = 0;
 
     /*!
-     * \brief A list ICloneableModelComponent instances cloned from this IModelComponent instance.
-     * \returns A list of child components created from the current component.
+     * \brief A vector ICloneableModelComponent instances cloned from this IModelComponent instance.
+     * \returns A vector of child components created from the current component.
      */
-    virtual list<ICloneableModelComponent *> clones() const = 0;
+    virtual vector<ICloneableModelComponent *> clones() const = 0;
   };
 
   /*!
@@ -839,7 +873,7 @@ namespace HydroCouple
     /*!
      * \brief ~IValueDefinition destructor
      */
-    virtual ~IValueDefinition() = 0;
+    virtual ~IValueDefinition() = default;
 
     /*!
      * \brief The object types of value that will be available
@@ -847,7 +881,7 @@ namespace HydroCouple
      *
      * \returns the value type associated with this IValueDefinition
      */
-    virtual  type_info type() const = 0;
+    virtual type_info type() const = 0;
 
     //! The value representing that data is missing.
     virtual hydrocouple_variant missingValue() const = 0;
@@ -865,7 +899,7 @@ namespace HydroCouple
     /*!
      * \brief ~IDimension destructor
      */
-    virtual ~IDimension() = 0;
+    virtual ~IDimension() = default;
   };
 
   /*!
@@ -901,14 +935,14 @@ namespace HydroCouple
     /*!
      * \brief IQuality::~IQuality is a virtual destructor.
      */
-    virtual ~IQuality() = 0;
+    virtual ~IQuality() = default;
 
     /*!
      * \returns A list of the possible ICategory allowed for this IQuality
      * If the quality is not ordered the list contains the ICategory's in an unspecified order.
      * When it is ordered the list contains the ICategory's in the same sequence.
      */
-    virtual vector<hydrocouple_variant> categories() const = 0;
+    virtual set<hydrocouple_variant> categories() const = 0;
 
     /*!
      * \brief Checks if the IQuality is defined by an ordered set of ICategory or not.
@@ -922,58 +956,61 @@ namespace HydroCouple
   class IUnitDimensions : public virtual IDescription
   {
   public:
-
     /*!
-   * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
-   */
+     * \brief HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.
+     */
     enum FundamentalUnitDimension
     {
-        /*!
-     * \brief Fundamental dimension for length.
-     */
-        Length,
+      /*!
+       * \brief Fundamental dimension for length.
+       */
+      Length,
 
-        /*!
-     * \brief Fundamental dimension for mass.
-     */
-        Mass,
+      /*!
+       * \brief Fundamental dimension for mass.
+       */
+      Mass,
 
-        /*!
-     * \brief Fundamental dimension for time.
-     */
-        Time,
+      /*!
+       * \brief Fundamental dimension for time.
+       */
+      Time,
 
-        /*!
-     * \brief Fundamental dimension for electric current.
-     */
-        ElectricCurrent,
+      /*!
+       * \brief Fundamental dimension for electric current.
+       */
+      ElectricCurrent,
 
-        /*!
-     * \brief Fundamental dimension for temperature.
-     */
-        Temperature,
+      /*!
+       * \brief Fundamental dimension for temperature.
+       */
+      Temperature,
 
-        /*!
-     * \brief Fundamental dimension for amount of substance.
-     */
-        AmountOfSubstance,
+      /*!
+       * \brief Fundamental dimension for amount of substance.
+       */
+      AmountOfSubstance,
 
-        /*!
-     * \brief Fundamental dimension for luminous intensity.
-     */
-        LuminousIntensity,
+      /*!
+       * \brief Fundamental dimension for luminous intensity.
+       */
+      LuminousIntensity,
 
-        /*!
-     * \brief Fundamental dimension for currency.
-     */
-        Currency
+      /*!
+       * \brief Fundamental dimension for currency.
+       */
+      Currency,
+
+      /*!
+       * \brief Fundamental dimension for unitless quantities.
+       */
+      Unitless,
     };
-
 
     /*!
      * \brief IUnitDimensions::~IUnitDimensions is a virtual destructor.
      */
-    virtual ~IUnitDimensions() = 0;
+    virtual ~IUnitDimensions() = default;
 
     /*!
      * \brief Returns the power for the requested dimension.
@@ -1010,11 +1047,58 @@ namespace HydroCouple
   class IUnit : public virtual IDescription
   {
   public:
+    /*!
+     * \brief HydroCouple::DistanceUnitType are the types of units that can be used to measure distance.
+     */
+    enum class DistanceUnitType
+    {
+      Standard,
+      Geographic,
+      Unknown
+    };
+
+    /*!
+     * \brief HydroCouple::DistanceUnits are the types of units that can be used to measure distance.
+     */
+    enum class DistanceUnits
+    {
+      Meters,
+      Kilometers,
+      Feet,
+      NauticalMiles,
+      Yards,
+      Miles,
+      Degrees,
+      Centimeters,
+      Millimeters,
+      Inches,
+      Unknown
+    };
+
+    /*!
+     * \brief HydroCouple::AreaUnits are the types of units that can be used to measure area.
+     */
+    enum AreaUnits
+    {
+      SquareMeters,
+      SquareKilometers,
+      SquareFeet,
+      SquareYards,
+      SquareMiles,
+      Hectares,
+      Acres,
+      SquareNauticalMiles,
+      SquareDegrees,
+      SquareCentimeters,
+      SquareMillimeters,
+      SquareInches,
+      Unknown
+    };
 
     /*!
      * \brief IUnit::~IUnit is a virtual destructor.
      */
-    virtual ~IUnit() = 0;
+    virtual ~IUnit() = default;
 
     /*!
      * \brief Fundamental dimensions of the unit.
@@ -1039,7 +1123,7 @@ namespace HydroCouple
   class IQuantity : public virtual IValueDefinition
   {
   public:
-    virtual ~IQuantity() = 0;
+    virtual ~IQuantity() = default;
 
     /*!
      * \brief Unit of quantity.
@@ -1068,14 +1152,13 @@ namespace HydroCouple
   class IComponentDataItem : public virtual IIdentity
   {
   public:
-
     /*!
      * \brief IComponentDataItem::~IComponentDataItem is a virtual destructor.
      */
-    virtual ~IComponentDataItem() = 0;
+    virtual ~IComponentDataItem() = default;
 
     /*!
-     * \brief Gets the owner IModelComponent of this IComponentItem. 
+     * \brief Gets the owner IModelComponent of this IComponentItem.
      * For an IOutput component item this is the component
      * responsible for providing the content of the IOutput.
      *
@@ -1125,7 +1208,6 @@ namespace HydroCouple
      */
     virtual void setValue(const vector<int> &dimensionIndexes, const void *data) = 0;
 
-
     /*!
      * \brief hasEditor indicates whether this IComponentItem has a UI editor.
      * \return A boolean indicating whether this IComponentItem has an editor.
@@ -1134,8 +1216,9 @@ namespace HydroCouple
 
     /*!
      * \brief showEditor shows the editor for this IComponentItem.
+     * \param opaqueUIPointer Is an opaque pointer to the UI object that is used to show the editor.
      */
-    virtual void showEditor() = 0;
+    virtual void showEditor(void* opaqueUIPointer = nullptr) = 0;
 
     /*!
      * \brief hasViewer indicates whether this IComponentItem has a UI viewer.
@@ -1144,10 +1227,10 @@ namespace HydroCouple
     virtual bool hasViewer() const = 0;
 
     /*!
-     * \brief showViewer
+     * \brief showViewer shows the viewer for this IComponentItem.
+      * \param opaqueUIPointer Is an opaque pointer to the UI object that is used to show the viewer.
      */
-    virtual void showViewer() = 0;
-
+    virtual void showViewer(void* opaqueUIPointer = nullptr) = 0;
   };
 
   /*!
@@ -1161,8 +1244,8 @@ namespace HydroCouple
 
   public:
     /*!
-    * \brief Enumeration indicating the type of input for the argument.
-    */
+     * \brief Enumeration indicating the type of input for the argument.
+     */
     enum ArgumentInputType
     {
       /*!
@@ -1179,22 +1262,27 @@ namespace HydroCouple
        * \brief Enumeration indicating that the argument was read from a URL.
        */
       JSON,
-      
+
       /*!
-      * \brief Enumeration indicating that the argument was read from a file.
-      */
+       * \brief Enumeration indicating that the argument was read from a file.
+       */
       XML,
 
       /*!
        * \brief Enumeration indicating that the argument was read from a URL.
        */
-      URL
+      URL,
+
+      /*!
+       * \brief Enumeration indicating that the argument was read from a memory object.
+       */
+      MEMORY_OBJECT
     };
 
     /*!
      * \brief IArgument::~IArgument is a virtual destructor.
      */
-    virtual ~IArgument() = 0;
+    virtual ~IArgument() = default;
 
     /*!
      * \brief Specifies whether the argument is optional or not.
@@ -1232,6 +1320,11 @@ namespace HydroCouple
     virtual list<string> fileFilters() const = 0;
 
     /*!
+     * \brief Valid IComponentDataItem instance types that can be read by this argument.
+    */
+    virtual list<type_info> validComponentDataItemTypes() const = 0;
+
+    /*!
      * \brief Boolean indicating whether this IArgument copy its values from a string.
      */
     virtual bool isValidArgType(ArgumentInputType argType) const = 0;
@@ -1259,7 +1352,6 @@ namespace HydroCouple
      * \return boolean indicating whether file reading was successful.
      */
     virtual bool initialize(const IComponentDataItem *componentDataItem, string &message) = 0;
-
   };
 
   /*!
@@ -1276,7 +1368,7 @@ namespace HydroCouple
     /*!
      * \brief Standard destructor.
      */
-    virtual ~IExchangeItemChangeEventArgs() = 0;
+    virtual ~IExchangeItemChangeEventArgs() = default;
 
     /*!
      * \brief IExchangeItem which fired the signal.
@@ -1301,7 +1393,7 @@ namespace HydroCouple
     /*!
      * \brief IExchangeItem::~IExchangeItem is a virtual destructor.
      */
-    virtual ~IExchangeItem() = 0;
+    virtual ~IExchangeItem() = default;
 
     /*!
      * \brief The componentItemChanged event is fired when
@@ -1309,7 +1401,7 @@ namespace HydroCouple
      *
      * \param statusChangedEvent provides information about the status change
      */
-    virtual void registerExchangeItemStatusChangedListener(const function<void(const shared_ptr<IExchangeItemChangeEventArgs>&)>& exchangeItemChangedEventListener) = 0;
+    virtual void registerExchangeItemStatusChangedListener(const function<void(const shared_ptr<IExchangeItemChangeEventArgs> &)> &exchangeItemChangedEventListener) = 0;
 
     /*!
      * \brief The deRegisterExchangeItemStatusChangedListener() method deregisters a listener that is
@@ -1317,7 +1409,7 @@ namespace HydroCouple
      *
      * \details See HydroCouple::ComponentStatus for the possible states.
      */
-    virtual void deRegisterExchangeItemStatusChangedListener(const function<void(const shared_ptr<IExchangeItemChangeEventArgs>&)>& exchangeItemChangedEventListener) = 0;
+    virtual void deRegisterExchangeItemStatusChangedListener(const function<void(const shared_ptr<IExchangeItemChangeEventArgs> &)> &exchangeItemChangedEventListener) = 0;
   };
 
   /*!
@@ -1331,11 +1423,10 @@ namespace HydroCouple
   class IOutput : public virtual IExchangeItem
   {
   public:
-
     /*!
      * \brief IOutput::~IOutput is a virtual destructor.
      */
-    virtual ~IOutput() = 0;
+    virtual ~IOutput() = default;
 
     /*!
      * \brief  Input items that will consume the values, by calling the GetValues() method
@@ -1445,11 +1536,10 @@ namespace HydroCouple
   class IAdaptedOutput : public virtual IOutput
   {
   public:
-
     /*!
      * \brief IAdaptedOutput::~IAdaptedOutput is a virtual destructor.
      */
-    virtual ~IAdaptedOutput() = 0;
+    virtual ~IAdaptedOutput() = default;
 
     /*!
      *
@@ -1516,11 +1606,10 @@ namespace HydroCouple
   class IAdaptedOutputFactory : public virtual IIdentity
   {
   public:
-
     /*!
      * \brief IAdaptedOutputFactory::~IAdaptedOutputFactory is a virtual destructor.
      */
-    virtual ~IAdaptedOutputFactory() = 0;
+    virtual ~IAdaptedOutputFactory() = default;
 
     /*!
      * \brief Get a list of IIdentity objects representing the list
@@ -1560,11 +1649,10 @@ namespace HydroCouple
   class IAdaptedOutputFactoryComponentInfo : public virtual IComponentInfo
   {
   public:
-
     /*!
      * \brief IAdaptedOutputFactoryComponentInfo::~IAdaptedOutputFactoryComponentInfo is a virtual destructor.
      */
-    virtual ~IAdaptedOutputFactoryComponentInfo() = 0;
+    virtual ~IAdaptedOutputFactoryComponentInfo() = default;
 
     /*!
      * \brief New IAdaptedOutputFactoryComponent instance.
@@ -1580,11 +1668,10 @@ namespace HydroCouple
   class IAdaptedOutputFactoryComponent : public virtual IAdaptedOutputFactory
   {
   public:
-
     /*!
      * \brief IAdaptedOutputFactoryComponent::~IAdaptedOutputFactoryComponent is a virtual destructor.
      */
-    virtual ~IAdaptedOutputFactoryComponent() = 0;
+    virtual ~IAdaptedOutputFactoryComponent() = default;
 
     /*!
      * \brief Contains the metadata about the IModelComponent.
@@ -1600,11 +1687,10 @@ namespace HydroCouple
   class IInput : public virtual IExchangeItem
   {
   public:
-
     /*!
      * \brief IInput::~IInput is a virtual destructor.
      */
-    virtual ~IInput() = 0;
+    virtual ~IInput() = default;
 
     /*!
      * \brief Gets the producer this consumer should get its values from.
@@ -1633,11 +1719,22 @@ namespace HydroCouple
   class IMultiInput : public virtual IInput
   {
   public:
-
     /*!
      * \brief IMultiInput::~IMultiInput is a virtual destructor.
      */
-    virtual ~IMultiInput() = 0;
+    virtual ~IMultiInput() = default;
+
+    /*!
+    * \return vector of identifiers for the provides that a required by this consumer if any.
+    */
+    virtual vector<IIdentity*> providerLabels() const = 0;
+
+    /*!
+     * \brief isRequiredProvider checks if the provider is required by the consumer.
+     * \param providerLabel is the IIdentity label specifying where to add the provider.
+     * \return boolean indicating whether the provider is required by the consumer.
+     */
+    virtual bool isRequiredProvider(const IIdentity* providerLabel) const = 0;
 
     /*!
      * \brief providers
@@ -1646,10 +1743,20 @@ namespace HydroCouple
     virtual vector<IOutput *> providers() const = 0;
 
     /*!
-     * \brief addProvider
-     * \param provider
+     * \brief canConsume checks if the provider can supply data to this consumer.
+     * \param provider is the IOutput that can supply the data to this IInput.
+     * \param message is the error message from the canConsume function.
+     * \param providerRoleIdentifier is the IIdentity label specifying where to add the provider.
+     * \return boolean indicating whether the provider can supply data to this consumer.
      */
-    virtual bool addProvider(IOutput *provider) = 0;
+    virtual void canConsume(IOutput *provider, string &message, const IIdentity* providerRoleIdentifier = nullptr) const = 0;
+
+    /*!
+     * \brief addProvider adds a provider to the list of providers.
+     * \param provider is the IOutput to add to the list of providers.
+     * \param id is the IIdentity label specifying where to add the provider.
+     */
+    virtual bool addProvider(IOutput *provider, const IIdentity* providerRoleIdentifier = nullptr) = 0;
 
     /*!
      * \brief removeProvider
@@ -1670,7 +1777,7 @@ namespace HydroCouple
     /*!
      * \brief IIdBasedComponentItem::~IIdBasedComponentItem is a virtual destructor.
      */
-    virtual ~IIdBasedComponentDataItem() = 0;
+    virtual ~IIdBasedComponentDataItem() = default;
 
     /*!
      * \brief identifiers
@@ -1725,11 +1832,10 @@ namespace HydroCouple
   {
 
   public:
-
     /*!
      * \brief ~IWorkflowComponentInfo
      */
-    virtual ~IWorkflowComponentInfo() = 0;
+    virtual ~IWorkflowComponentInfo() = default;
 
     /*!
      * \brief Creates a new IModelComponent instance.
@@ -1738,10 +1844,11 @@ namespace HydroCouple
     virtual IWorkflowComponent *createComponentInstance() = 0;
   };
 
+
   /*!
    * \brief The IDataExchangeWorkflowComponent class
    */
-  class IWorkflowComponent : public virtual IIdentity
+  class IWorkflowComponent : public virtual IIdentity, public virtual ISignal<const shared_ptr<IWorkflowComponentStatusChangeEventArgs> &>
   {
 
   public:
@@ -1762,15 +1869,28 @@ namespace HydroCouple
     };
 
     /*!
-     * \brief ~IWorkflowComponent destructor for IWorkflowComponent class. 
+     * \brief ~IWorkflowComponent destructor for IWorkflowComponent class.
      */
-    virtual ~IWorkflowComponent() = 0;
+    virtual ~IWorkflowComponent() = default;
 
     /*!
      * \brief componentInfo
      * \return
      */
     virtual IWorkflowComponentInfo *componentInfo() const = 0;
+
+    /*!
+     * \brief requiredModelComponentIdentifiers returns the list of IModelComponent identifiers that are required by this component.
+     * \return A list of IModelComponent identifiers that are required by this component.
+     */
+    virtual vector<IIdentity *> modelComponentLabels() const = 0;
+
+    /*!
+     * \brief isRequiredModelComponent checks if the model component is required by this component.
+     * \param modelComponentLabel is the IIdentity label specifying the model component.
+     * \return boolean indicating whether the model component is required by this component.
+     */
+    virtual isRequiredModelComponent(const IIdentity* modelComponentLabel) const = 0;
 
     /*!
      * \brief initialize
@@ -1797,36 +1917,74 @@ namespace HydroCouple
      * \brief modelComponents
      * \return
      */
-    virtual list<IModelComponent *> modelComponents() const = 0;
+    virtual vector<IModelComponent *> modelComponents() const = 0;
 
     /*!
-     * \brief addModelComponent
-     * \param component
+     * \brief addModelComponent Adds model component instance to workflow
+     * \param component is the IModelComponent to add to the workflow.
+     * \param modelRoleIdentifier is the IIdentity of the role of the model component. If null, the component is added as a standalone component.
+     * in which case the workflow likely does not require ordered or specific components for its operation.
+     * \return True if the component was added successfully, otherwise false.
      */
-    virtual void addModelComponent(IModelComponent *component) = 0;
+    virtual bool addModelComponent(IModelComponent *component, const IIdentity* modelRoleIdentifier = nullptr) = 0;
 
     /*!
-     * \brief removeModelComponent
-     * \param component
+     * \brief removeModelComponent Removes model component instance from workflow 
+     * \param component is the IModelComponent to remove from the workflow.
+     * \return True if the component was removed successfully, otherwise false.
      */
-    virtual void removeModelComponent(IModelComponent *component) = 0;
-
-    /*!
-     * \brief registerComponentStatusChanged registers a listener that is called when the status of the component changes.
-     * \param status status of the component. See HydroCouple::ComponentStatus for the possible states.
-     * \param message message returned from file read operation.
-     */
-    virtual void registerComponentStatusChangedListener(const function<void(const IWorkflowComponent*, WorkflowStatus, const string&)>& workflowComponentStatusChangedListener) = 0;
-
-    /*!
-     * \brief deRegisterComponentStatusChangedListener() method deregisters a listener that is
-     * called when the status of the component changes.
-     *
-     * \details See HydroCouple::ComponentStatus for the possible states.
-     */
-    virtual void deRegisterComponentStatusChangedListener(const function<void(const IWorkflowComponent*, WorkflowStatus, const string&)>& workflowComponentStatusChangedListener) = 0;
+    virtual bool removeModelComponent(IModelComponent *component) = 0;
 
   };
+
+  /*!
+   * \brief The IWorkflowComponentStatusChangeEventArgs contains the information that will
+   * be passed when the IWorkflowComponent fires a signal.
+   */
+  class IWorkflowComponentStatusChangeEventArgs
+  {
+  public:
+    /*!
+     * \brief ~IComponentStatusChangeEventArgs destructor
+     */
+    virtual ~IWorkflowComponentStatusChangeEventArgs() = default;
+
+    /*!
+     * \brief Gets the IModelComponent that fired the event.
+     * \returns The IModelComponent that threw the event.
+     */
+    virtual IWorkflowComponent *workflowComponent() const = 0;
+
+    /*!
+     * \brief Gets the IWorkflowComponent's status before the status change.
+     * \returns The previous ComponentStatus of the component that threw the event.
+     */
+    virtual IWorkflowComponent::WorkflowStatus previousStatus() const = 0;
+
+    /*!
+     * \brief Gets the IWorkflowComponent's status after the status change.
+     * \returns The new ComponentStatus of the component that threw the event.
+     */
+    virtual IWorkflowComponent::WorkflowStatus status() const = 0;
+
+    /*!
+     * \brief Gets additional information about the status change.
+     */
+    virtual string message() const = 0;
+
+    /*!
+     * \brief A bool indicating whether this event has a progresss monitor.
+     * \returns True if status has a percent progress otherwise false and the progress bar shows busy.
+     */
+    virtual bool hasProgressMonitor() const = 0;
+
+    /*!
+     * \brief Number between 0 and 100 indicating the progress made by a component in its simulation.
+     * \returns A number between 0 and 100 indicating the progress made by a component.
+     */
+    virtual float percentProgress() const = 0;
+  };
+
 
 }
 

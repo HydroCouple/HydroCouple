@@ -73,7 +73,7 @@ namespace HydroCouple
       /*!
        * \brief The Well-known Text Representation of the Spatial Reference System.
        */
-      virtual ~ISpatialReferenceSystem() = 0;
+      virtual ~ISpatialReferenceSystem() = default;
 
       /*!
        * \brief Returns the Spatial Reference System ID (SRID) for a geometric object.
@@ -103,7 +103,7 @@ namespace HydroCouple
       /*!
        * \brief The minimum x-coordinate value for this IEnvelope.
        */
-      virtual ~IEnvelope() = 0;
+      virtual ~IEnvelope() = default;
 
       /*!
        * \brief minX The minimum x-coordinate value for this IEnvelope.
@@ -233,7 +233,7 @@ namespace HydroCouple
       /*!
       * \brief The type of IGeometry.
       */
-      virtual ~IGeometry() = 0;
+      virtual ~IGeometry() = default;
 
       /*!
        * \brief id of the geometry.
@@ -475,7 +475,7 @@ namespace HydroCouple
       /*!
         * \brief IGeometryCollection destructor.
        */
-      virtual ~IGeometryCollection() = 0;
+      virtual ~IGeometryCollection() = default;
 
       /*!
        * \brief The number of geometries in this IGeometryCollection
@@ -508,7 +508,7 @@ namespace HydroCouple
       /*!
        * \brief IPoint destructor.
        */ 
-      virtual ~IPoint() = 0;
+      virtual ~IPoint() = default;
 
       /*!
        * \brief The x-coordinate value for this IPoint.
@@ -552,7 +552,7 @@ namespace HydroCouple
       /*!
        * \brief IMultiPoint destructor.
        */
-      virtual ~IMultiPoint() = 0;
+      virtual ~IMultiPoint() = default;
 
       /*!
        * \returns the index sup(th) IPoint in this IGeometryCollection.
@@ -570,7 +570,7 @@ namespace HydroCouple
       /*!
        * \brief IVertex destructor.
        */
-      virtual ~IVertex() = 0;
+      virtual ~IVertex() = default;
 
       /*!
        * \brief An arbitrary outgoing IEdge from this vertex.
@@ -611,7 +611,7 @@ namespace HydroCouple
       /*!
        * \brief ICurve destructor.
        */
-      virtual ~ICurve() = 0;
+      virtual ~ICurve() = default;
 
       /*!
        * \brief The length of this ICurve in its associated ISpatialReferenceSystem.
@@ -664,7 +664,7 @@ namespace HydroCouple
     class IMultiCurve : public virtual IGeometryCollection
     {
     public:
-      virtual ~IMultiCurve() = 0;
+      virtual ~IMultiCurve() = default;
 
       /*!
        * \returns 1 (TRUE) if this MultiCurve is
@@ -690,7 +690,7 @@ namespace HydroCouple
       /*!
        * \brief ILineString destructor.
        */
-      virtual ~ILineString() = 0;
+      virtual ~ILineString() = default;
 
       /*!
        * \brief The number of IPoints in this ILineString.
@@ -713,7 +713,7 @@ namespace HydroCouple
       /*!
        * \brief IMultiLineString destructor.
        */
-      virtual ~IMultiLineString() = 0;
+      virtual ~IMultiLineString() = default;
 
       //! Returns the ILineString at index
       virtual ILineString *lineString(int index) const = 0;
@@ -729,7 +729,7 @@ namespace HydroCouple
       /*!
        * \brief ILine destructor.
        */
-      virtual ~ILine() = 0;
+      virtual ~ILine() = default;
     };
 
     /*!
@@ -742,7 +742,7 @@ namespace HydroCouple
       /*!
        * \brief ILinearRing destructor.
        */
-      virtual ~ILinearRing() = 0;
+      virtual ~ILinearRing() = default;
     };
 
     /*!
@@ -758,7 +758,7 @@ namespace HydroCouple
       /*!
        * \brief IEdge destructor.
        */
-      virtual ~IEdge() = 0;
+      virtual ~IEdge() = default;
 
       /*!
        * \brief unique index identifier
@@ -905,7 +905,7 @@ namespace HydroCouple
       /*!
        * \brief ISurface destructor.
        */
-      virtual ~ISurface() = 0;
+      virtual ~ISurface() = default;
 
       /*!
        * \brief The area of this ISurface, as measured in
@@ -943,7 +943,7 @@ namespace HydroCouple
       /*!
        * \brief IMultiSurface destructor.
        */
-      virtual ~IMultiSurface() = 0;
+      virtual ~IMultiSurface() = default;
 
       /*!
        * \brief The area of this ISurface, as measured in
@@ -1008,7 +1008,7 @@ namespace HydroCouple
       /*!
        * \brief IPolygon destructor.
        */
-      virtual ~IPolygon() = 0;
+      virtual ~IPolygon() = default;
 
       /*!
        * \returns the exterior ring of this IPolygon.
@@ -1046,7 +1046,7 @@ namespace HydroCouple
     {
 
     public:
-      virtual ~IMultiPolygon() = 0;
+      virtual ~IMultiPolygon() = default;
 
       /*!
        * \returns the index sup(th) polygon in this IMultiPolygon/IGeometryCollection.
@@ -1065,22 +1065,28 @@ namespace HydroCouple
       /*!
        * \brief ITriangle destructor.
        */
-      virtual ~ITriangle() = 0;
+      virtual ~ITriangle() = default;
 
       /*!
        * \brief The first vertex of this ITriangle.
        */
-      virtual IVertex *p1() const = 0;
+      virtual IVertex *vertex1() const = 0;
 
       /*!
        * \brief The second vertex of this ITriangle.
        */
-      virtual IVertex *p2() const = 0;
+      virtual IVertex *vertex2() const = 0;
 
       /*!
        * \brief The third vertex of this ITriangle.
        */ 
-      virtual IVertex *p3() const = 0;
+      virtual IVertex *vertex3() const = 0;
+
+      /*!
+        * \brief The vertex of this ITriangle at the specified index.
+       */
+      virtual IVertex *vertex(int index) const = 0;
+
     };
 
     /*!
@@ -1092,7 +1098,7 @@ namespace HydroCouple
       /*!
        * \brief ~Network destructor.
        */
-      virtual ~INetwork() = 0;
+      virtual ~INetwork() = default;
 
       /*! 
        * \brief edgeCount represents the number of all the edges in the network.
@@ -1162,7 +1168,7 @@ namespace HydroCouple
       /*!
        * \brief IPolyhedralSurface destructor.
        */
-      virtual ~IPolyhedralSurface() = 0;
+      virtual ~IPolyhedralSurface() = default;
 
       /*!
        * \brief The number of polygons in this surface.
@@ -1213,7 +1219,7 @@ namespace HydroCouple
       /*!
        * \brief ITIN destructor.
        */
-      virtual ~ITIN() = 0;
+      virtual ~ITIN() = default;
 
       /*!
        * \returns an ITriangle in this surface, the order is arbitrary.
@@ -1256,7 +1262,11 @@ namespace HydroCouple
         //! Complex Float32
         CFloat32,
         //! Complex Float64
-        CFloat64
+        CFloat64,
+        //! Color, alpha, red, green, blue, 4 bytes the same as QImage::Format_ARGB32
+        ARGB32,
+        //! Color, alpha, red, green, blue, 4 bytes  the same as QImage::Format_ARGB32_Premultiplied
+        ARGB32_Premultiplied,
       };
 
       /*!
@@ -1315,7 +1325,7 @@ namespace HydroCouple
       /*!
        * \brief IRasterBand destructor.
        */
-      virtual ~IRasterBand() = 0;
+      virtual ~IRasterBand() = default;
 
       //! Number of pixels in the x direction
       virtual int xSize() const = 0;
@@ -1378,7 +1388,7 @@ namespace HydroCouple
       /*!
        * \brief IRegularGrid2D destructor.
        */
-      virtual ~IRegularGrid2D() = 0;
+      virtual ~IRegularGrid2D() = default;
 
       /*!
        * \brief gridType
@@ -1433,7 +1443,7 @@ namespace HydroCouple
       /*!
        * \brief IRegularGrid3D destructor.
        */
-      virtual ~IRegularGrid3D() = 0;
+      virtual ~IRegularGrid3D() = default;
 
       /*!
        * \brief gridType
@@ -1507,7 +1517,7 @@ namespace HydroCouple
       /*!
        * \brief IGeometryComponentItem destructor.
        */
-      virtual ~IGeometryComponentDataItem() = 0;
+      virtual ~IGeometryComponentDataItem() = default;
 
       /*!
        * \brief geometryType
@@ -1580,7 +1590,7 @@ namespace HydroCouple
       using IComponentDataItem::setValue;
 
     public:
-      virtual ~INetworkComponentDataItem() = 0;
+      virtual ~INetworkComponentDataItem() = default;
 
       /*!
        * \brief network associated with this INetworkComponentDataItem.
@@ -1636,7 +1646,7 @@ namespace HydroCouple
       /*!
        * \brief IPolyhedralSurfaceComponentItem destructor.
        */ 
-      virtual ~IPolyhedralSurfaceComponentDataItem() = 0;
+      virtual ~IPolyhedralSurfaceComponentDataItem() = default;
 
       /*!
        * \brief meshDataType represents the type of mesh data.
@@ -1697,7 +1707,7 @@ namespace HydroCouple
       /*!
        * \brief ITINComponentDataItem destructor.
        */
-      virtual ~ITINComponentDataItem() = 0;
+      virtual ~ITINComponentDataItem() = default;
 
       /*!
        * \returns The ITIN associated with this ITINComponentDataItem.
@@ -1718,7 +1728,7 @@ namespace HydroCouple
       /*!
        * \brief IRasterComponentItem destructor.
        */
-      virtual ~IRasterComponentDataItem() = 0;
+      virtual ~IRasterComponentDataItem() = default;
 
       /*!
        * \brief IRaster associated with this IRasterComponentDataItem.
@@ -1794,7 +1804,7 @@ namespace HydroCouple
       /*!
        * \brief ~IRegularGrid2DComponentItem.
        */
-      virtual ~IRegularGrid2DComponentDataItem() = 0;
+      virtual ~IRegularGrid2DComponentDataItem() = default;
 
       /*!
        * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
@@ -1864,7 +1874,7 @@ namespace HydroCouple
       /*!
        * \brief ~IRegularGrid3DComponentItem.
        */
-      virtual ~IRegularGrid3DComponentDataItem() = 0;
+      virtual ~IRegularGrid3DComponentDataItem() = default;
 
       /*!
        * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
@@ -1941,7 +1951,7 @@ namespace HydroCouple
       /*!
        * \brief ~IVectorComponentDataItem
        */
-      virtual ~IVectorComponentDataItem() = 0;
+      virtual ~IVectorComponentDataItem() = default;
 
       /*!
        * \brief locationCount represents the number of locations.
