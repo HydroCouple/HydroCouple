@@ -495,11 +495,6 @@ namespace HydroCouple
     virtual ~IModelComponent() = default;
 
     /*!
-     * \brief delete IModelComponent copy constructor.
-     */
-    virtual IModelComponent(const IModelComponent&) = delete;
-
-    /*!
      * \brief delete IModelComponent copy assignment operator.
      */
     virtual IModelComponent &operator=(const IModelComponent&) = delete;
