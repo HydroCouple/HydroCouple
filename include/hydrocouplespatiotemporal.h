@@ -46,7 +46,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeGeometryComponentItem.
          */
-        virtual ~ITimeGeometryComponentDataItem() = 0;
+        virtual ~ITimeGeometryComponentDataItem() = default;
 
         /*!
          * \brief geometryType
@@ -131,7 +131,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeNetworkComponentItem.
          */
-        virtual ~ITimeNetworkComponentDataItem() = 0;
+        virtual ~ITimeNetworkComponentDataItem() = default;
 
         /*!
          * \brief network associated with this ITimeNetworkComponentItem.
@@ -190,7 +190,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimePolyhedralSurfaceComponentItem.
          */
-        virtual ~ITimePolyhedralSurfaceComponentDataItem() = 0;
+        virtual ~ITimePolyhedralSurfaceComponentDataItem() = default;
 
         /*!
          * \brief polyhedralSurfaceDataType The mesh data type for the polyhedral surface.
@@ -252,7 +252,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeTINComponentItem.
          */
-        virtual ~ITimeTINComponentDataItem() = 0;
+        virtual ~ITimeTINComponentDataItem() = default;
 
         /*!
            * \returns The ITIN associated with this ITINComponentDataItem.
@@ -274,7 +274,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeRasterComponentItem.
          */
-        virtual ~ITimeRasterComponentDataItem() = 0;
+        virtual ~ITimeRasterComponentDataItem() = default;
 
         /*!
          * \brief IRaster associated with this IRasterComponentDataItem.
@@ -363,7 +363,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeRegularGrid2DComponentItem. Destructor.
          */
-        virtual ~ITimeRegularGrid2DComponentDataItem() = 0;
+        virtual ~ITimeRegularGrid2DComponentDataItem() = default;
 
         /*!
          * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
@@ -435,7 +435,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeRegularGrid3DComponentItem. Destructor.
          */
-        virtual ~ITimeRegularGrid3DComponentDataItem() = 0;
+        virtual ~ITimeRegularGrid3DComponentDataItem() = default;
 
         /*!
          * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
@@ -516,7 +516,7 @@ namespace HydroCouple
         /*!
          * \brief ~ITimeVectorComponentItem.
          */
-        virtual ~ITimeVectorComponentDataItem() = 0;
+        virtual ~ITimeVectorComponentDataItem() = default;
 
         /*!
          * \brief locationCount

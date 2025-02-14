@@ -42,12 +42,22 @@ namespace HydroCouple
       /*
        * \brief ~IDateTime destructor.
        */
-      virtual ~IDateTime() = 0;
+      virtual ~IDateTime() = default;
 
       /*!
        * \brief Date and time as a julian day value.
        */
       virtual double julianDay() const = 0;
+
+      /*!
+       * \brief Modified Julian day value.
+       */
+      virtual double modifiedJulianDay() const = 0;
+
+      /*!
+       * \brief Serial date number.
+       */
+      virtual double serialDate() const = 0;
     };
 
     /*!
@@ -60,7 +70,7 @@ namespace HydroCouple
       /*!
        * \brief ~ITimeSpan destructor.
        */
-      virtual ~ITimeSpan() = 0;
+      virtual ~ITimeSpan() = default;
 
       /*!
        * Duration of the timespan in days.
@@ -77,7 +87,7 @@ namespace HydroCouple
       /*!
        * \brief ~ITimeModelComponent
        */
-      virtual ~ITimeModelComponent() = 0;
+      virtual ~ITimeModelComponent() = default;
 
       /*!
        * \brief currentDateTime
@@ -105,20 +115,14 @@ namespace HydroCouple
       /*!
        * \brief ~ITimeComponentItem destructor.
        */
-      virtual ~ITimeComponentDataItem() = 0;
-
-      /*!
-       * \brief ITimes associated with this dimension.
-       * \returns QList<IDateTime*>
-       */
-      virtual list<IDateTime *> times() const = 0;
+      virtual ~ITimeComponentDataItem() = default;
 
       /*!
        * \brief time
        * \param timeIndex
        * \return
        */
-      virtual IDateTime *time(int timeIndex) const = 0;
+      virtual const IDateTime *time(int timeIndex) const = 0;
 
       /*!
        * \brief timeCount
@@ -148,7 +152,7 @@ namespace HydroCouple
       using IComponentDataItem::setValue;
 
     public:
-      virtual ~ITimeSeriesComponentDataItem() = 0;
+      virtual ~ITimeSeriesComponentDataItem() = default;
 
       /*!
        * \brief Gets a single value for given time dimension index.
@@ -197,13 +201,13 @@ namespace HydroCouple
       /*!
        * \brief ~ITimeIdBasedComponentDataItem destructor.
        */
-      virtual ~ITimeIdBasedComponentDataItem() = 0;
+      virtual ~ITimeIdBasedComponentDataItem() = default;
 
       /*!
        * \brief identifiers associated with this dimension.
-       * \return list<string> of identifiers
+       * \return vector<string> of identifiers
        */
-      virtual list<string> identifiers() const = 0;
+      virtual vector<string> identifiers() const = 0;
 
       /*!
        * \brief idDimensions associated with this dimension.

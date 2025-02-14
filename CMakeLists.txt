@@ -1,7 +1,7 @@
 #
 # CMakeLists.txt - CMake configuration for hydrocouple header files
 #
-# Author: Caleb Buahin
+# Author: Caleb Buahin (caleb.buahin@gmail.com)
 #
 # This file is part of HydroCouple.
 #
@@ -28,7 +28,7 @@ project(
     VERSION 2.0.0
     LANGUAGES C CXX
     HOMEPAGE_URL "https://hydrocouple.org"
-    DESCRIPTION  "HydroCouple Interface Definitions for C++ and Python"
+    DESCRIPTION  "HydroCouple Interface Definitions for C++"
 )
 
 set(CMAKE_CXX_STANDARD 17)
@@ -38,6 +38,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(
     ${PROJECT_NAME}
     INTERFACE
+    include/version.h
     include/hydrocouple.h
     include/hydrocouplespatial.h
     include/hydrocouplespatialwkb.h
@@ -52,6 +53,21 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_compile_definitions(HydroCouple PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
+
+string(TIMESTAMP BUILD_TIMESTAMP "%Y-%m-%d %H:%M:%S UTC")
+set(BUILD_DATE "${BUILD_TIMESTAMP}")
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h.in 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h
+)
+
+install(
+    FILES 
+        License.md
+        README.md
+    DESTINATION .
+)
 
 install(
     TARGETS ${PROJECT_NAME}
@@ -74,36 +90,42 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
-   ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
-   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-   INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}Library
+   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 write_basic_package_version_file(
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 install(
     FILES
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-    ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     License.md
-    DESTINATION lib/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
 
 install(
     DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
     DESTINATION "include"
-    FILES_MATCHING PATTERN "*.h"
+    # include citations markdown file
+    FILES_MATCHING 
+    PATTERN "*.md"
+    PATTERN "*.cff"
+    PATTERN "*.bib"
+    PATTERN "*.txt"
+    PATTERN "*.h"
 )
 
-add_custom_target(my_package
-    COMMAND ${CMAKE_MAKE_PROGRAM} package
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    DEPENDS ${PROJECT_NAME}
-)
+# add_custom_target(${PROJECT_NAME}
+#     COMMAND ${CMAKE_MAKE_PROGRAM} package
+#     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#     DEPENDS ${PROJECT_NAME}
+# )
 
 # Configure CPack driven installer package
 set(CPACK_GENERATOR "TGZ")

@@ -495,6 +495,16 @@ namespace HydroCouple
     virtual ~IModelComponent() = default;
 
     /*!
+     * \brief delete IModelComponent copy constructor.
+     */
+    virtual IModelComponent(const IModelComponent&) = delete;
+
+    /*!
+     * \brief delete IModelComponent copy assignment operator.
+     */
+    virtual IModelComponent &operator=(const IModelComponent&) = delete;
+
+    /*!
      * \brief Contains the metadata about this IModelComponent instance.
      * \returns An IModelComponentInfo that provides metadata about a component.
      */
@@ -1612,7 +1622,7 @@ namespace HydroCouple
     virtual ~IAdaptedOutputFactory() = default;
 
     /*!
-     * \brief Get a list of IIdentity objects representing the list
+     * \brief Get a vector of IIdentity objects representing the vector of IAdaptedOutput instances that can be created by this factory.
      * of the available IAdaptedOutput that can make the producer match the consumer.
      *
      * \details If the consumer is NULL, the identifiers of all IAdaptedOutputs
@@ -1783,7 +1793,7 @@ namespace HydroCouple
      * \brief identifiers
      * \return
      */
-    virtual list<string> identifiers() const = 0;
+    virtual vector<string> identifiers() const = 0;
 
     /*!
      * \brief idDimensions
@@ -1844,7 +1854,6 @@ namespace HydroCouple
     virtual IWorkflowComponent *createComponentInstance() = 0;
   };
 
-
   /*!
    * \brief The IDataExchangeWorkflowComponent class
    */
@@ -1880,8 +1889,8 @@ namespace HydroCouple
     virtual IWorkflowComponentInfo *componentInfo() const = 0;
 
     /*!
-     * \brief requiredModelComponentIdentifiers returns the list of IModelComponent identifiers that are required by this component.
-     * \return A list of IModelComponent identifiers that are required by this component.
+     * \brief requiredModelComponentIdentifiers returns the vector of IModelComponent identifiers that are required by this component.
+     * \return A vector of IModelComponent identifiers that are required by this component.
      */
     virtual vector<IIdentity *> modelComponentLabels() const = 0;
 
@@ -1890,7 +1899,7 @@ namespace HydroCouple
      * \param modelComponentLabel is the IIdentity label specifying the model component.
      * \return boolean indicating whether the model component is required by this component.
      */
-    virtual isRequiredModelComponent(const IIdentity* modelComponentLabel) const = 0;
+    virtual bool isRequiredModelComponent(const IIdentity* modelComponentLabel) const = 0;
 
     /*!
      * \brief initialize
@@ -1984,7 +1993,6 @@ namespace HydroCouple
      */
     virtual float percentProgress() const = 0;
   };
-
 
 }
 

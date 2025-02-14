@@ -52,14 +52,14 @@ namespace HydroCouple
       Node,
 
       /*!
-      * \brief The data corresponds to the edges of the mesh.
+      * \brief The data corresponds to mesh cell.
       */
-      Face,
-      
+      Centroid,
+
       /*!
       * \brief The data corresponds to the edges of the mesh.
       */
-      Centroid,
+      Face,
     };
 
     /*!
@@ -91,6 +91,11 @@ namespace HydroCouple
        * Well-known Text description of the Spatial Reference System.
        */
       virtual string srText() const = 0;
+
+      /*!
+       * \brief The measurement units for the Spatial Reference System.
+       */
+      virtual HydroCouple::IUnit::DistanceUnits mapUnits() const = 0;
     };
 
     /*!
