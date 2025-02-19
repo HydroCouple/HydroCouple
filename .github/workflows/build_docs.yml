@@ -22,6 +22,7 @@ jobs:
         repository: HydroCouple/hydrocouple.github.io
         ref: dev
         path: hydrocouple.github.io
+        token: ${{ secrets.API_TOKEN_GITHUB }}
         persist-credentials: true
     
     - name: Install Graphviz and Doxygen
@@ -36,8 +37,6 @@ jobs:
         tar -czvf hydrocouple_docs.tar.gz html
 
     - name: Push Docs to HydroCouple Website Repo
-      env:
-        REPO_KEY: ${{ secrets.API_TOKEN_GITHUB }}
       run: |
         rm -rf hydrocouple.github.io/hydrocoupledocs/html
         cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
