@@ -15,6 +15,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         path: HydroCouple
+        persist-credentials: false
     
     - name: Install Graphviz and Doxygen
       run: |
@@ -35,11 +36,10 @@ jobs:
         ref: dev
         path: hydrocouple.github.io
         token: ${{ secrets.API_TOKEN_GITHUB }}
-        persist-credentials: true
+        persist-credentials: false
 
     - name: Push Docs to HydroCouple Website Repo
       run: |
-        ls  -l
         rm -rf hydrocouple.github.io/hydrocoupledocs/html
         cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
         cd hydrocouple.github.io
