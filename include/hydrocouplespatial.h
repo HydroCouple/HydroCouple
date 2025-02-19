@@ -1569,8 +1569,8 @@ namespace HydroCouple
       /*!
        * \brief Gets value for given geometry dimension index.
        * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
-       * \param dimensionIndexes are the indexes for the data to be obtained.
-       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned, 
+       * \param dimensionIndexes are the indexes for additional dimension for the data to be obtained. Empty vector if no additional dimensions.
+       * \param dimensionLengths are the lengths of the additional dimensions for the data to be obtained. Empty vector if no additional dimensions.
        * otherwise the length of the vector must be equal to the number of dimensions.
        * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
        */
@@ -1582,14 +1582,16 @@ namespace HydroCouple
 
       /*!
        * \brief Gets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
-       * \param geometryDimensionIndexes is the geometry dimension indexes from where to obtain the requested data.
+       * \param geometryDimensionIndex is the start geometry dimension index from where to obtain the requested data.
+       * \param geometryDimensionLength is the length of the geometry dimension for the data to be obtained.
        * \param dimensionIndexes are the indexes for the data to be obtained.
        * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned, 
        * otherwise the length of the vector must be equal to the number of dimensions.
        * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
        */
       virtual void getValues(
-        const std::vectpr<int>& geometryDimensionIndexes, 
+        int geometryDimensionIndex, 
+        int geometryDimensionLength,
         const vector<int>& dimensionIndexes, 
         const vector<int>& dimensionLengths, 
         hydrocouple_variant *data
@@ -1837,6 +1839,7 @@ namespace HydroCouple
         const vector<int>& dimensionIndexes,
         const vector<int>& dimensionLengths,
         const hydrocouple_variant *data
+      ) = 0;
 
     };
 
@@ -1859,81 +1862,81 @@ namespace HydroCouple
       virtual ITIN *TIN() const = 0;
     };
 
-    // /*!
-    //  * \brief An IRasterComponentDataItem represents an IRaster IComponentItem.
-    //  */
-    // class IRasterComponentDataItem : public virtual IComponentDataItem
-    // {
-    //   using HydroCouple::IComponentDataItem::getValue;
-    //   using HydroCouple::IComponentDataItem::setValue;
+    /*!
+     * \brief An IRasterComponentDataItem represents an IRaster IComponentItem.
+     */
+    class IRasterComponentDataItem : public virtual IComponentDataItem
+    {
+      using HydroCouple::IComponentDataItem::getValue;
+      using HydroCouple::IComponentDataItem::setValue;
 
-    // public:
+    public:
 
-    //   /*!
-    //    * \brief IRasterComponentItem destructor.
-    //    */
-    //   virtual ~IRasterComponentDataItem() = default;
+      /*!
+       * \brief IRasterComponentItem destructor.
+       */
+      virtual ~IRasterComponentDataItem() = default;
 
-    //   /*!
-    //    * \brief IRaster associated with this IRasterComponentDataItem.
-    //    */
-    //   virtual IRaster *raster() const = 0;
+      /*!
+       * \brief IRaster associated with this IRasterComponentDataItem.
+       */
+      virtual IRaster *raster() const = 0;
 
-    //   /*!
-    //    * \brief IDimension for xDirection.
-    //    */
-    //   virtual IDimension *xDimension() const = 0;
+      /*!
+       * \brief IDimension for xDirection.
+       */
+      virtual IDimension *xDimension() const = 0;
 
-    //   /*!
-    //    * \brief IDimension for yDirection.
-    //    */
-    //   virtual IDimension *yDimension() const = 0;
+      /*!
+       * \brief IDimension for yDirection.
+       */
+      virtual IDimension *yDimension() const = 0;
 
-    //   /*!
-    //    * \brief IDimension for IRasterBands.
-    //    */
-    //   virtual IDimension *bandDimension() const = 0;
+      /*!
+       * \brief IDimension for IRasterBands.
+       */
+      virtual IDimension *bandDimension() const = 0;
 
-    //   /*!
-    //    * \brief getValue for given x dimension index, y dimension index, and band dimension index.
-    //    * \param xIndex is the x dimension index from where to obtain the requested data.
-    //    * \param yIndex is the y dimension index from where to obtain the requested data.
-    //    * \param band is the band dimension index from where to obtain the requested data.
-    //    * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-    //    */
-    //   virtual void getValue(int xIndex, int yIndex, int band, void *data) const = 0;
+      /*!
+       * \brief getValue for given x dimension index, y dimension index, and band dimension index.
+       * \param xIndex is the x dimension index from where to obtain the requested data.
+       * \param yIndex is the y dimension index from where to obtain the requested data.
+       * \param band is the band dimension index from where to obtain the requested data.
+       * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       */
+      virtual void getValue(int xIndex, int yIndex, int band, void *data) const = 0;
 
-    //   /*!
-    //    * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-    //    * \param xIndex is the x dimension index from where to obtain the requested data.
-    //    * \param yIndex is the y dimension index from where to obtain the requested data.
-    //    * \param band is the band dimension index from where to obtain the requested data.
-    //    * \param xStride is the x size for hyperslab from which to copy data.
-    //    * \param yStride is the x size for hyperslab from which to copy data.
-    //    * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-    //    */
-    //   virtual void getValues(int xIndex, int yIndex, int band, int xStride, int yStride, void *data) const = 0;
+      /*!
+       * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+       * \param xIndex is the x dimension index from where to obtain the requested data.
+       * \param yIndex is the y dimension index from where to obtain the requested data.
+       * \param band is the band dimension index from where to obtain the requested data.
+       * \param xStride is the x size for hyperslab from which to copy data.
+       * \param yStride is the x size for hyperslab from which to copy data.
+       * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+       */
+      virtual void getValues(int xIndex, int yIndex, int band, int xStride, int yStride, void *data) const = 0;
 
-    //   /*!
-    //    * \brief setValue for given x dimension index, y dimension index, and band dimension index.
-    //    * \param xIndex is the x dimension index from where to write data.
-    //    * \param yIndex is the y dimension index from where to write data.
-    //    * \param band  is the band dimension index from where to write data.
-    //    * \param data  is a pointer data thata to is to be copied
-    //    */
-    //   virtual void setValue(int xIndex, int yIndex, int band, const void *data) = 0;
+      /*!
+       * \brief setValue for given x dimension index, y dimension index, and band dimension index.
+       * \param xIndex is the x dimension index from where to write data.
+       * \param yIndex is the y dimension index from where to write data.
+       * \param band  is the band dimension index from where to write data.
+       * \param data  is a pointer data thata to is to be copied
+       */
+      virtual void setValue(int xIndex, int yIndex, int band, const void *data) = 0;
 
-    //   /*!
-    //    * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
-    //    * \param xIndex is the x dimension index where to set data.
-    //    * \param yIndex is the y dimension index where to set data.
-    //    * \param band is the band dimension index where to set data.
-    //    * \param xStride is the x size for hyperslab where data is to be written.
-    //    * \param yStride is the y size for hyperslab where data is to be written.
-    //    * \param data is the input array to be written.
-    //    */
-    //   virtual void setValues(int xIndex, int yIndex, int band, int xStride, int yStride, const void *data) = 0;
-    // };
+      /*!
+       * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
+       * \param xIndex is the x dimension index where to set data.
+       * \param yIndex is the y dimension index where to set data.
+       * \param band is the band dimension index where to set data.
+       * \param xStride is the x size for hyperslab where data is to be written.
+       * \param yStride is the y size for hyperslab where data is to be written.
+       * \param data is the input array to be written.
+       */
+      virtual void setValues(int xIndex, int yIndex, int band, int xStride, int yStride, const void *data) = 0;
+    };
 
     // /*!
     //  * \brief An IRegularGrid2DComponentDataItem represents an IRegularGrid2D IComponentItem
