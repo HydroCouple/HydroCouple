@@ -96,6 +96,7 @@ namespace HydroCouple
   class ISlot
   {
   public:
+
     /*!
      * \brief ISlot::~ISlot is a virtual destructor.
      */
@@ -135,6 +136,16 @@ namespace HydroCouple
      * \param slot is the slot that will be disconnected from the signal.
      */
     virtual void disconnect(const shared_ptr<ISlot<Args...>> &slot) = 0;
+
+    /*!
+     * \brief blockSignals is used to block signals from being emitted.
+     */
+    virtual blockSignals() = 0;
+
+    /*!
+     * \brief unblockSignals is used to unblock signals from being emitted.
+     */
+    virtual unblockSignals() = 0;
 
   protected:
     /*!
@@ -375,6 +386,7 @@ namespace HydroCouple
   {
 
   public:
+
     /*!
      * \brief HydroCouple::ComponentStatus is an enumerator that describes the status of
      * a component over the course of its lifetime.
@@ -901,10 +913,32 @@ namespace HydroCouple
   class IDimension : public virtual IIdentity
   {
   public:
+
+    /*!
+    * \brief IDimension::LengthType dimension length type
+    */
+    enum LengthType{
+      /*!
+      * \brief Static length type
+      */
+      Static = 0,
+
+      /*!
+      * \brief Dynamic length type
+      */
+      Dynamic = 1
+    };
+
     /*!
      * \brief ~IDimension destructor
      */
     virtual ~IDimension() = default;
+
+    /*!
+     * \brief Gets the length type of the dimension.
+     */
+    virtual LengthType lengthType() const = 0;
+
   };
 
   /*!
@@ -1067,16 +1101,60 @@ namespace HydroCouple
      */
     enum class DistanceUnits
     {
+
+      /*!
+       * \brief Meters
+       */
       Meters,
+
+      /*!
+       * \brief Kilometers
+       */
       Kilometers,
+
+      /*!
+       * \brief Feet
+      */
       Feet,
+
+      /*!
+       * \brief NauticalMiles
+       */
       NauticalMiles,
+
+      /*!
+       * \brief Yards
+       */
       Yards,
+
+      /*!
+       * \brief Miles
+       */
       Miles,
+
+      /*!
+       * \brief Degrees
+       */
       Degrees,
+
+      /*!
+       * \brief Centimeters
+       */
       Centimeters,
+
+      /*!
+       * \brief Millimeters
+       */
       Millimeters,
+
+      /*!
+       * \brief Inches
+       */
       Inches,
+
+      /*!
+       * \brief Unknown
+       */
       Unknown
     };
 
@@ -1085,18 +1163,70 @@ namespace HydroCouple
      */
     enum AreaUnits
     {
+
+      /*!
+       * \brief SquareMeters
+       */
       SquareMeters,
+
+      /*!
+       * \brief SquareKilometers
+       */
       SquareKilometers,
+
+      /*!
+       * \brief Square Feet
+       */
       SquareFeet,
+
+      /*!
+       * \brief Square Yards
+       */
       SquareYards,
+
+      /*!
+       * \brief Square Miles
+       */
       SquareMiles,
+
+      /*!
+       * \brief Hectares
+       */
       Hectares,
+
+      /*!
+       * \brief Acres
+       */
       Acres,
+
+      /*!
+       * \brief Square Nautical Miles
+       */
       SquareNauticalMiles,
+
+      /*!
+       * \brief Square Degrees
+       */
       SquareDegrees,
+
+      /*!
+       * \brief Square Centimeters
+       */
       SquareCentimeters,
+
+      /*!
+       * \brief Square Millimeters
+       */
       SquareMillimeters,
+
+      /*!
+       * \brief Square Inches
+       */
       SquareInches,
+
+      /*!
+       * \brief Unknown
+       */
       Unknown
     };
 
@@ -1147,14 +1277,14 @@ namespace HydroCouple
      */
     virtual hydrocouple_variant maxValue() const = 0;
   };
-
+  
   /*!
    * \brief IComponentItem is a fundamental unit of data for a component.
    *
    * \details This interface is not to be implemented directly. Input and output data must be 1D arrays indexed
    * using dim1 + dim2*size1 + dim3*size1*size2 + dim4*size1*size2*size3 + ...
    */
-  class IComponentDataItem : public virtual IIdentity
+  class IComponentDataItem : public virtual IIdentity, public virtual ISignal<const shared_ptr<IComponentDataItemValueChanged> &>
   {
   public:
     /*!
@@ -1199,19 +1329,37 @@ namespace HydroCouple
     virtual IValueDefinition *valueDefinition() const = 0;
 
     /*!
-     * \brief Gets a multi-dimensional array of value for given dimension indexes.
+     * \brief Gets a multi-dimensional array of values for given dimension indexes and strides along each dimension.
      * IndexArray = x + y * InSizeX + z * InSizeX * InSizeY etc;
      * \param dimensionIndexes are the indexes for the data to be obtained.
      * \param data Pointer to pre-allocated location where data is to be saved.
      */
-    virtual void getValue(const vector<int> &dimensionIndexes, void *data) const = 0;
+    virtual void getValue(const vector<int>& dimensionIndexes, hydrocouple_variant& data) const = 0;
 
     /*!
      * \brief Sets a multi-dimensional array of values for given dimension indexes.
      * \param dimensionIndexes are the indexes for where data is to be written.
      * \param data is the pointer to the input data to be set.
      */
-    virtual void setValue(const vector<int> &dimensionIndexes, const void *data) = 0;
+    virtual void setValue(const vector<int> &dimensionIndexes, const hydrocouple_variant& data) = 0;
+
+    /*!
+     * \brief Gets a multi-dimensional array of values for given dimension indexes and strides along each dimension.
+     * \param dimensionIndexes are the indexes for the data to be obtained.
+     * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned, 
+     * otherwise the length of the vector must be equal to the number of dimensions.
+     * \param data Pointer to pre-allocated location where data is to be saved.
+     */
+    virtual void getValues(const vector<int>& dimensionIndexes, const vector<int>& dimensionLengths, hydrocouple_variant *data) const = 0;
+
+    /*!
+     * \brief Sets a multi-dimensional array of values for given dimension indexes and strides along each dimension.
+     * \param dimensionIndexes are the indexes for where data is to be written.
+     * \param dimensionLengths are the lengths of the dimensions for the data to be set. If empty a single value is set, 
+     * otherwise the length of the vector must be equal to the number of dimensions.
+     * \param data is the pointer to the input data to be set.
+     */
+    virtual void setValues(const vector<int> &dimensionIndexes, const vector<int> &dimensionLengths, const hydrocouple_variant *data) = 0;
 
     /*!
      * \brief hasEditor indicates whether this IComponentItem has a UI editor.
@@ -1236,6 +1384,37 @@ namespace HydroCouple
       * \param opaqueUIPointer Is an opaque pointer to the UI object that is used to show the viewer.
      */
     virtual void showViewer(void* opaqueUIPointer = nullptr) = 0;
+  };
+
+  /*!
+   * \brief IComponentDataItemValueChanged interface class used to notify when the values of a IComponentDataItem change.
+   */
+  class IComponentDataItemValueChanged
+  {
+    public:
+
+      /*!
+       * \brief IComponentDataItemValueChanged::~IComponentDataItemValueChanged is a virtual destructor.
+       */
+      virtual ~IComponentDataItemValueChanged() = default;
+
+      /*!
+       * \brief Gets the IComponentDataItem that fired the event.
+       * \returns The IComponentDataItem that threw the event.
+       */
+      virtual IComponentDataItem *componentDataItem() const = 0;
+
+      /*!
+       * \brief Gets the dimension indexes of the data that changed.
+       * \returns The dimension indexes of the data that changed.
+       */
+      virtual vector<int> dimensionIndexes() const = 0;
+
+      /*!
+       * \brief Gets the strides of the data that changed.
+       * \returns The strides of the data that changed.
+       */
+      virtual vector<int> strides() const = 0;
   };
 
   /*!
@@ -1791,8 +1970,9 @@ namespace HydroCouple
     virtual vector<string> identifiers() const = 0;
 
     /*!
-     * \brief idDimensions
-     * \return
+     * \brief idDimensions returns the dimensions of the id based component item.
+     * \details If additional dimensions are available, the id dimensions must be the first dimensions.
+     * \return The id dimension of the id based component item.
      */
     virtual IDimension *identifierDimension() const = 0;
 
@@ -1800,34 +1980,40 @@ namespace HydroCouple
      * \brief Gets a multi-dimensional array of values for given
      *  id dimension index and size for a hyperslab.
      * \param idIndex is the id dimension index from where to obtain the requested data.
+     * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist otherwise an empty vector.
      * \param data is pre-allocated memory where the data will be written.
      */
-    virtual void getValue(int idIndex, void *data) const = 0;
+    virtual void getValue(int idIndex, const vector<int>& dimensionIndexes, hydrocouple_variant& data) const = 0;
 
     /*!
-     * \brief Gets a multi-dimensional array of values for given id dimension index and size for a hyperslab.
-     * \param idIndex is the id dimension index from where to obtain the requested data.
-     * \param stride is the size for hyperslab from which to copy data.
-     * \param data is a 1d array where data is to be written. Must be allocated beforehand with the correct data type.
+     * \brief Gets a multi-dimensional array of values for given id dimension index and size for a hyperslab
+      * \param idIndexes is the id dimension indexes from where to obtain the requested data.
+      * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist. Otherwise an empty vector.
+      * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned, 
+      * otherwise the length of the vector must be equal to the number of dimensions.
+      * \param data is pre-allocated memory where the data will be written.
      */
-    virtual void getValues(int idIndex, int stride, void *data) const = 0;
+    virtual void getValues(const std:vector<int>& idIndexes, const vector<int>& dimensionIndexes, const vector<int>& dimensionLengths, hydrocouple_variant *data) const = 0;
 
     /*!
      * \brief Sets a multi-dimensional array of values for given time
      *  dimension index and size for a hyperslab.
      * \param idIndex is the id dimension index where data is to be written.
+     * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist. Otherwise an empty vector.
      * \param data is the pre-allocated location where data is to be set.
      */
-    virtual void setValue(int idIndex, const void *data) = 0;
+    virtual void setValue(int idIndex, const vector<int> &dimensionIndexes, const hydrocouple_variant& data) = 0;
 
     /*!
      * \brief Sets a multi-dimensional array of values for given
      * id dimension index and size for a hyperslab.
-     * \param idIndex is the id dimension index where data is to be written.
-     * \param stride is the size for hyperslab where data is to be written.
-     * \param data is the input 1d array to be written.
+     * \param idIndexes is the id dimension indexes from where to obtain the requested data.
+     * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist. Otherwise an empty vector.
+     * \param dimensionLengths are the lengths of the dimensions for the data to be set. If empty a single value is set,
+     * otherwise the length of the vector must be equal to the number of dimensions.
+     * \param data is the pre-allocated location where data is to be set.
      */
-    virtual void setValues(int idIndex, int stride, const void *data) = 0;
+    virtual void setValues(const std:vector<int>& idIndexes, const vector<int>& dimensionIndexes, const vector<int>& dimensionLengths, const hydrocouple_variant *data) = 0;
   };
 
   /*!

@@ -57,6 +57,33 @@ target_compile_definitions(HydroCouple PUBLIC INTERFACE HYDROCOUPLE_LIBRARY)
 string(TIMESTAMP BUILD_TIMESTAMP "%Y-%m-%d %H:%M:%S UTC")
 set(BUILD_DATE "${BUILD_TIMESTAMP}")
 
+# Get the commit hash
+execute_process(
+    COMMAND git rev-parse HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Get the branch name
+execute_process(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_BRANCH_NAME
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+string(
+    UUID BUILD_ID 
+    NAMESPACE "00000000-0000-0000-0000-000000000000" 
+    NAME "https:www.hydrcouple.org" 
+    TYPE MD5
+)
+
+set(BUILD_ID "${BUILD_ID}")
+set(BUILD_BRANCH "${GIT_BRANCH_NAME}")
+set(BUILD_COMMIT "${GIT_COMMIT_HASH}")
+
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h.in 
     ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h

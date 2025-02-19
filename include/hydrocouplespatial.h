@@ -62,6 +62,30 @@ namespace HydroCouple
       Face,
     };
 
+     /*!
+     * \brief The types of regular grids.
+     */
+    enum RegularGridType
+    {
+      //! Cartesian grid.
+      Cartesian,
+      //! Rectilinear grid.
+      Rectilinear,
+      //! Curvilinear grid.
+      Curvilinear
+    };
+
+    /*!
+     * \brief The types of data available in a network.
+     */
+    enum NetworkDataType
+    {
+      //! The data corresponds to the nodes of the network.
+      Node,
+      //! The data corresponds to the edges of the network.
+      Edge,
+    };
+
     /*!
      * \brief Spatial Reference System
      */
@@ -93,9 +117,9 @@ namespace HydroCouple
       virtual string srText() const = 0;
 
       /*!
-       * \brief The measurement units for the Spatial Reference System.
+       * \brief The measurement distance units for the Spatial Reference System.
        */
-      virtual HydroCouple::IUnit::DistanceUnits mapUnits() const = 0;
+      virtual HydroCouple::IUnit::DistanceUnits distanceUnits() const = 0;
     };
 
     /*!
@@ -1371,19 +1395,6 @@ namespace HydroCouple
     };
 
     /*!
-     * \brief The types of regular grids.
-     */
-    enum RegularGridType
-    {
-      //! Cartesian grid.
-      Cartesian,
-      //! Rectilinear grid.
-      Rectilinear,
-      //! Curvilinear grid.
-      Curvilinear
-    };
-
-    /*!
      * \brief The IRegularGrid2D class
      */
     class IRegularGrid2D : public virtual IIdentity
@@ -1558,32 +1569,58 @@ namespace HydroCouple
       /*!
        * \brief Gets value for given geometry dimension index.
        * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
+       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned, 
+       * otherwise the length of the vector must be equal to the number of dimensions.
        * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
        */
-      virtual void getValue(int geometryDimensionIndex, void *data) const = 0;
+      virtual void getValue(
+        int geometryDimensionIndex, 
+        const vector<int>& dimensionIndexes, 
+        hydrocouple_variant &data
+      ) const = 0;
 
       /*!
        * \brief Gets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
-       * \param geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
-       * \param stride is the size for hyperslab from which to copy data.
+       * \param geometryDimensionIndexes is the geometry dimension indexes from where to obtain the requested data.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
+       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned, 
+       * otherwise the length of the vector must be equal to the number of dimensions.
        * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
        */
-      virtual void getValues(int geometryDimensionIndex, int stride, void *data) const = 0;
+      virtual void getValues(
+        const std::vectpr<int>& geometryDimensionIndexes, 
+        const vector<int>& dimensionIndexes, 
+        const vector<int>& dimensionLengths, 
+        hydrocouple_variant *data
+      ) const = 0;
 
       /*!
        * \brief Sets value for given geometry dimension index.
        * \param geometryDimensionIndex is the geometry dimension index from where to write data.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
        * \param data is a pointer data thata to is to be copied
        */
-      virtual void setValue(int geometryDimensionIndex, const void *data) = 0;
+      virtual void setValue(
+        int geometryDimensionIndex, 
+        const vector<int>& dimensionIndexes, 
+        const hydrocouple_variant *data
+      ) = 0;
 
       /*!
        * \brief Sets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
-       * \param geometryDimensionIndex is the geometry dimension index where data is to be written.
-       * \param stride is the size for hyperslab where data is to be written.
+       * \param geometryDimensionIndexes is the geometry dimension indexes from where to obtain the requested data.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
+       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned, 
+       * otherwise the length of the vector must be equal to the number of dimensions.
        * \param data is the input multi dimensional array to be written.
        */
-      virtual void setValues(int geometryDimensionIndex, int stride, const void *data) = 0;
+      virtual void setValues(
+        const std::vectpr<int>& geometryDimensionIndexes, 
+        const vector<int>& dimensionIndexes, 
+        const vector<int>& dimensionLengths, 
+        const hydrocouple_variant *data
+      ) = 0;
     };
 
     /*!
@@ -1604,12 +1641,12 @@ namespace HydroCouple
       virtual INetwork *network() const = 0;
 
       /*!
-       * \brief meshDataType represents the type of mesh data.
-       * \return The type of mesh data.
+       * \brief NetworkDataType represents the type of network data. 
+        * \return The type of network data.
        */
-      virtual MeshDataType meshDataType() const = 0;
+      virtual NetworkDataType networkDataType() const = 0;
 
-      /*!
+        /*!
        * \brief edgeDimension represents the dimension for the edges.
        * \return The dimension for the edges.
        */
@@ -1625,17 +1662,64 @@ namespace HydroCouple
        * \brief getValue for given edge dimension index and node dimension index.
        * \param edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
        * \param nodeDimensionIndex is the node dimension index from where to obtain the requested data.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
        * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
        */
-      virtual void getValue(int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
+      virtual void getValue(
+        int edgeDimensionIndex, 
+        int nodeDimensionIndex, 
+        const vector<int>& dimensionIndexes, 
+        hydrocouple_variant& data
+      ) const = 0;
 
       /*!
-       * \brief setValue for given edge dimension index and node dimension index.
+      * \brief getValues for given edge dimension index and node dimension index and size for a hyperslab.
+      * \param edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
+      * \param nodeDimensionIndex is the node dimension index from where to obtain the requested data.
+      * \param dimensionIndexes are the indexes for the data to be obtained. 
+      * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+      * otherwise the length of the vector must be equal to the number of dimensions.
+      * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+      */
+      virtual void getValues(
+        int edgeDimensionIndex, 
+        int nodeDimensionIndex, 
+        const vector<int>& dimensionIndexes, 
+        const vector<int>& dimensionLengths, 
+        hydrocouple_variant *data
+      ) const = 0;
+
+      /*!
+       * \brief setValue for given edge dimension index and node dimension index and data.
        * \param edgeDimensionIndex is the edge dimension index from where to write data.
        * \param nodeDimensionIndex is the node dimension index from where to write data.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
        * \param data is a pointer data thata to is to be copied
        */
-      virtual void setValue(int edgeDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
+      virtual void setValue(
+        int edgeDimensionIndex, 
+        int nodeDimensionIndex, 
+        const vector<int>& dimensionIndexes, 
+        const hydrocouple_variant& data
+      ) = 0;
+
+      /*!
+      * \brief setValues for given edge dimension index and node dimension index and size for a hyperslab.
+      * \param edgeDimensionIndex is the edge dimension index from where to write data.
+      * \param nodeDimensionIndex is the node dimension index from where to write data.
+      * \param dimensionIndexes are the indexes for the data to be obtained. If empty a single value is returned,
+      * otherwise the length of the vector must be equal to the number of dimensions.
+      * \param dimensionLengths are the lengths of the dimensions for the data to be obtained.
+      * \param data is a pointer data thata to is to be copied
+      */
+      virtual void setValues(
+        int edgeDimensionIndex, 
+        int nodeDimensionIndex, 
+        const vector<int>& dimensionIndexes, 
+        const vector<int>& dimensionLengths, 
+        const hydrocouple_variant *data
+      )
+
     };
 
     /*!
@@ -1687,25 +1771,80 @@ namespace HydroCouple
        * \param cellDimensionIndex is the cell dimension index from where to obtain the requested data.
        * \param faceDimensionIndex is the face dimension index from where to obtain the requested data.
        * \param nodeDimensionIndex is the node dimension index from where to obtain the requested data.
+       * \param dimensionIndexes are the indexes for the data to be obtained. 
        * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
        */
-      virtual void getValue(int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
+      virtual void getValue(
+        int cellDimensionIndex, 
+        int edgeDimensionIndex, 
+        int nodeDimensionIndex,
+        const vector<int>& dimensionIndexes,
+        hydrocouple_variant& data
+      ) const = 0;
+
+      /*!
+       * \brief getValues for given cell dimension index, edge dimension index and node dimension index and size for a hyperslab.
+       * \param cellDimensionIndexes are the cell dimension indexes from where to obtain the requested data.
+       * \param edgeDimensionIndexes are the edge dimension indexes from where to obtain the requested data. If user wants to 
+       * only obtain cell data for MeshDataType::Cell, this vector should be empty.
+       * \param nodeDimensionIndexes are the node dimension indexes from where to obtain the requested data. If user wants to
+       * only obtain cell or edge data for MeshDataType::Cell or MeshDataType::Edge, this vector should be empty.
+       * \param dimensionIndexes are the indexes for the data to be obtained. 
+       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       */
+      virtual void getValues(
+        const std::vector<int>& cellDimensionIndexes, 
+        const std::vector<int>& edgeDimensionIndexes, 
+        const std::vector<int>& nodeDimensionIndexes,
+        const vector<int>& dimensionIndexes,
+        const vector<int>& dimensionLengths,
+        hydrocouple_variant *data
+      ) const = 0;
 
       /*!
        * \brief setValues for given cell dimension index, edge dimension index, and node dimension index.
        * \param cellDimensionIndex is the cell dimension index from where to write data.
        * \param faceDimensionIndex is the face dimension index from where to write data.
        * \param nodeDimensionIndex  is the node dimension index from where to write data.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
        * \param data
        */
-      virtual void setValue(int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
+      virtual void setValue(
+        int cellDimensionIndex, 
+        int edgeDimensionIndex, 
+        int nodeDimensionIndex,
+        const vector<int>& dimensionIndexes,
+        const hydrocouple_variant& data
+      ) = 0;
+
+
+      /*!
+       * \brief setValues for given cell dimension index, edge dimension index, and node dimension index and size for a hyperslab.
+       * \param cellDimensionIndexes are the cell dimension indexes from where to write data.
+       * \param faceDimensionIndexes are the face dimension indexes from where to write data.
+       * \param nodeDimensionIndexes  are the node dimension indexes from where to write data.
+       * \param dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       * \param dimensionLengths are the lengths of the other dimensions for the data to be obtained.
+       * \param data
+       */
+      virtual void setValues(
+        const std::vector<int>& cellDimensionIndexes, 
+        const std::vector<int>& edgeDimensionIndexes, 
+        const std::vector<int>& nodeDimensionIndexes,
+        const vector<int>& dimensionIndexes,
+        const vector<int>& dimensionLengths,
+        const hydrocouple_variant *data
+
     };
 
     /*!
      * \brief ITINComponentDataItem represents ITIN IComponentDataItem.
      */
-    class ITINComponentDataItem : public virtual IComponentDataItem,
-                                  public virtual IPolyhedralSurfaceComponentDataItem
+    class ITINComponentDataItem: public virtual IComponentDataItem,
+                                 public virtual IPolyhedralSurfaceComponentDataItem
     {
     public:
 
@@ -1720,307 +1859,307 @@ namespace HydroCouple
       virtual ITIN *TIN() const = 0;
     };
 
-    /*!
-     * \brief An IRasterComponentDataItem represents an IRaster IComponentItem.
-     */
-    class IRasterComponentDataItem : public virtual IComponentDataItem
-    {
-      using HydroCouple::IComponentDataItem::getValue;
-      using HydroCouple::IComponentDataItem::setValue;
+    // /*!
+    //  * \brief An IRasterComponentDataItem represents an IRaster IComponentItem.
+    //  */
+    // class IRasterComponentDataItem : public virtual IComponentDataItem
+    // {
+    //   using HydroCouple::IComponentDataItem::getValue;
+    //   using HydroCouple::IComponentDataItem::setValue;
 
-    public:
+    // public:
 
-      /*!
-       * \brief IRasterComponentItem destructor.
-       */
-      virtual ~IRasterComponentDataItem() = default;
+    //   /*!
+    //    * \brief IRasterComponentItem destructor.
+    //    */
+    //   virtual ~IRasterComponentDataItem() = default;
 
-      /*!
-       * \brief IRaster associated with this IRasterComponentDataItem.
-       */
-      virtual IRaster *raster() const = 0;
+    //   /*!
+    //    * \brief IRaster associated with this IRasterComponentDataItem.
+    //    */
+    //   virtual IRaster *raster() const = 0;
 
-      /*!
-       * \brief IDimension for xDirection.
-       */
-      virtual IDimension *xDimension() const = 0;
+    //   /*!
+    //    * \brief IDimension for xDirection.
+    //    */
+    //   virtual IDimension *xDimension() const = 0;
 
-      /*!
-       * \brief IDimension for yDirection.
-       */
-      virtual IDimension *yDimension() const = 0;
+    //   /*!
+    //    * \brief IDimension for yDirection.
+    //    */
+    //   virtual IDimension *yDimension() const = 0;
 
-      /*!
-       * \brief IDimension for IRasterBands.
-       */
-      virtual IDimension *bandDimension() const = 0;
+    //   /*!
+    //    * \brief IDimension for IRasterBands.
+    //    */
+    //   virtual IDimension *bandDimension() const = 0;
 
-      /*!
-       * \brief getValue for given x dimension index, y dimension index, and band dimension index.
-       * \param xIndex is the x dimension index from where to obtain the requested data.
-       * \param yIndex is the y dimension index from where to obtain the requested data.
-       * \param band is the band dimension index from where to obtain the requested data.
-       * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       */
-      virtual void getValue(int xIndex, int yIndex, int band, void *data) const = 0;
+    //   /*!
+    //    * \brief getValue for given x dimension index, y dimension index, and band dimension index.
+    //    * \param xIndex is the x dimension index from where to obtain the requested data.
+    //    * \param yIndex is the y dimension index from where to obtain the requested data.
+    //    * \param band is the band dimension index from where to obtain the requested data.
+    //    * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+    //    */
+    //   virtual void getValue(int xIndex, int yIndex, int band, void *data) const = 0;
 
-      /*!
-       * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-       * \param xIndex is the x dimension index from where to obtain the requested data.
-       * \param yIndex is the y dimension index from where to obtain the requested data.
-       * \param band is the band dimension index from where to obtain the requested data.
-       * \param xStride is the x size for hyperslab from which to copy data.
-       * \param yStride is the x size for hyperslab from which to copy data.
-       * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-       */
-      virtual void getValues(int xIndex, int yIndex, int band, int xStride, int yStride, void *data) const = 0;
+    //   /*!
+    //    * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+    //    * \param xIndex is the x dimension index from where to obtain the requested data.
+    //    * \param yIndex is the y dimension index from where to obtain the requested data.
+    //    * \param band is the band dimension index from where to obtain the requested data.
+    //    * \param xStride is the x size for hyperslab from which to copy data.
+    //    * \param yStride is the x size for hyperslab from which to copy data.
+    //    * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
+    //    */
+    //   virtual void getValues(int xIndex, int yIndex, int band, int xStride, int yStride, void *data) const = 0;
 
-      /*!
-       * \brief setValue for given x dimension index, y dimension index, and band dimension index.
-       * \param xIndex is the x dimension index from where to write data.
-       * \param yIndex is the y dimension index from where to write data.
-       * \param band  is the band dimension index from where to write data.
-       * \param data  is a pointer data thata to is to be copied
-       */
-      virtual void setValue(int xIndex, int yIndex, int band, const void *data) = 0;
+    //   /*!
+    //    * \brief setValue for given x dimension index, y dimension index, and band dimension index.
+    //    * \param xIndex is the x dimension index from where to write data.
+    //    * \param yIndex is the y dimension index from where to write data.
+    //    * \param band  is the band dimension index from where to write data.
+    //    * \param data  is a pointer data thata to is to be copied
+    //    */
+    //   virtual void setValue(int xIndex, int yIndex, int band, const void *data) = 0;
 
-      /*!
-       * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
-       * \param xIndex is the x dimension index where to set data.
-       * \param yIndex is the y dimension index where to set data.
-       * \param band is the band dimension index where to set data.
-       * \param xStride is the x size for hyperslab where data is to be written.
-       * \param yStride is the y size for hyperslab where data is to be written.
-       * \param data is the input array to be written.
-       */
-      virtual void setValues(int xIndex, int yIndex, int band, int xStride, int yStride, const void *data) = 0;
-    };
+    //   /*!
+    //    * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
+    //    * \param xIndex is the x dimension index where to set data.
+    //    * \param yIndex is the y dimension index where to set data.
+    //    * \param band is the band dimension index where to set data.
+    //    * \param xStride is the x size for hyperslab where data is to be written.
+    //    * \param yStride is the y size for hyperslab where data is to be written.
+    //    * \param data is the input array to be written.
+    //    */
+    //   virtual void setValues(int xIndex, int yIndex, int band, int xStride, int yStride, const void *data) = 0;
+    // };
 
-    /*!
-     * \brief An IRegularGrid2DComponentDataItem represents an IRegularGrid2D IComponentItem
-     */
-    class IRegularGrid2DComponentDataItem : public virtual IComponentDataItem
-    {
+    // /*!
+    //  * \brief An IRegularGrid2DComponentDataItem represents an IRegularGrid2D IComponentItem
+    //  */
+    // class IRegularGrid2DComponentDataItem : public virtual IComponentDataItem
+    // {
 
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::setValue;
+    //   using IComponentDataItem::getValue;
+    //   using IComponentDataItem::setValue;
 
-    public:
-      /*!
-       * \brief ~IRegularGrid2DComponentItem.
-       */
-      virtual ~IRegularGrid2DComponentDataItem() = default;
+    // public:
+    //   /*!
+    //    * \brief ~IRegularGrid2DComponentItem.
+    //    */
+    //   virtual ~IRegularGrid2DComponentDataItem() = default;
 
-      /*!
-       * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
-       */
-      virtual IRegularGrid2D *grid() const = 0;
+    //   /*!
+    //    * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
+    //    */
+    //   virtual IRegularGrid2D *grid() const = 0;
 
-      /*!
-       * \brief meshDataType
-       * \return
-       */
-      virtual MeshDataType meshDataType() const = 0;
+    //   /*!
+    //    * \brief meshDataType
+    //    * \return
+    //    */
+    //   virtual MeshDataType meshDataType() const = 0;
 
-      /*!
-       * \brief Number of X cells IDimension.
-       */
-      virtual IDimension *xCellDimension() const = 0;
+    //   /*!
+    //    * \brief Number of X cells IDimension.
+    //    */
+    //   virtual IDimension *xCellDimension() const = 0;
 
-      /*!
-       * \brief Number of Y cells IDimension.
-       */
-      virtual IDimension *yCellDimension() const = 0;
+    //   /*!
+    //    * \brief Number of Y cells IDimension.
+    //    */
+    //   virtual IDimension *yCellDimension() const = 0;
 
-      /*!
-       * \brief cellEdgeDimension. Edge indices start from the bottom and go in a counter clockwise order.
-       * \return
-       */
-      virtual IDimension *cellEdgeDimension() const = 0;
+    //   /*!
+    //    * \brief cellEdgeDimension. Edge indices start from the bottom and go in a counter clockwise order.
+    //    * \return
+    //    */
+    //   virtual IDimension *cellEdgeDimension() const = 0;
 
-      /*!
-       * \brief cellNodeDimension. Node indices start from the bottom left and go in a counter clockwise order.
-       * \return
-       */
-      virtual IDimension *cellNodeDimension() const = 0;
+    //   /*!
+    //    * \brief cellNodeDimension. Node indices start from the bottom left and go in a counter clockwise order.
+    //    * \return
+    //    */
+    //   virtual IDimension *cellNodeDimension() const = 0;
 
-      /*!
-       * \brief getValue for given x cell index, y cell index, edge index, and node index.
-       * \param xCellIndex is the x cell index from where to obtain the requested data.
-       * \param yCellIndex is the y cell index from where to obtain the requested data.
-       * \param cellEdgeIndex is the cell edge index from where to obtain the requested data.
-       * \param cellNodeIndex is the cell node index from where to obtain the requested data.
-       * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       */
-      virtual void getValue(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, void *data) const = 0;
+    //   /*!
+    //    * \brief getValue for given x cell index, y cell index, edge index, and node index.
+    //    * \param xCellIndex is the x cell index from where to obtain the requested data.
+    //    * \param yCellIndex is the y cell index from where to obtain the requested data.
+    //    * \param cellEdgeIndex is the cell edge index from where to obtain the requested data.
+    //    * \param cellNodeIndex is the cell node index from where to obtain the requested data.
+    //    * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+    //    */
+    //   virtual void getValue(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, void *data) const = 0;
 
-      /*!
-       * \brief setValue for given x cell index, y cell index, edge index, and node index.
-       * \param xCellIndex is the x cell index from where to write data.
-       * \param yCellIndex is the y cell index from where to write data.
-       * \param cellEdgeIndex is the cell edge index from where to write data.
-       * \param cellNodeIndex is the cell node index from where to write data.
-       * \param data is a pointer data thata to is to be copied
-       */
-      virtual void setValue(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, const void *data) = 0;
-    };
+    //   /*!
+    //    * \brief setValue for given x cell index, y cell index, edge index, and node index.
+    //    * \param xCellIndex is the x cell index from where to write data.
+    //    * \param yCellIndex is the y cell index from where to write data.
+    //    * \param cellEdgeIndex is the cell edge index from where to write data.
+    //    * \param cellNodeIndex is the cell node index from where to write data.
+    //    * \param data is a pointer data thata to is to be copied
+    //    */
+    //   virtual void setValue(int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, const void *data) = 0;
+    // };
 
-    /*!
-     * \brief An IRegularGrid3DComponentItem represents an IRegularGrid3D IComponentItem
-     */
-    class IRegularGrid3DComponentDataItem : public virtual IComponentDataItem
-    {
+    // /*!
+    //  * \brief An IRegularGrid3DComponentItem represents an IRegularGrid3D IComponentItem
+    //  */
+    // class IRegularGrid3DComponentDataItem : public virtual IComponentDataItem
+    // {
 
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::setValue;
+    //   using IComponentDataItem::getValue;
+    //   using IComponentDataItem::setValue;
 
-    public:
+    // public:
 
-      /*!
-       * \brief ~IRegularGrid3DComponentItem.
-       */
-      virtual ~IRegularGrid3DComponentDataItem() = default;
+    //   /*!
+    //    * \brief ~IRegularGrid3DComponentItem.
+    //    */
+    //   virtual ~IRegularGrid3DComponentDataItem() = default;
 
-      /*!
-       * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
-       */
-      virtual IRegularGrid3D *grid() const = 0;
+    //   /*!
+    //    * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
+    //    */
+    //   virtual IRegularGrid3D *grid() const = 0;
 
-      /*!
-       * \brief meshDataType
-       * \return The type of mesh data.
-       */
-      virtual MeshDataType meshDataType() const = 0;
+    //   /*!
+    //    * \brief meshDataType
+    //    * \return The type of mesh data.
+    //    */
+    //   virtual MeshDataType meshDataType() const = 0;
 
-      /*!
-       * \brief Number of X cells IDimension.
-       */
-      virtual IDimension *xCellDimension() const = 0;
+    //   /*!
+    //    * \brief Number of X cells IDimension.
+    //    */
+    //   virtual IDimension *xCellDimension() const = 0;
 
-      /*!
-       * \brief Number of Y cells IDimension.
-       */
-      virtual IDimension *yCellDimension() const = 0;
+    //   /*!
+    //    * \brief Number of Y cells IDimension.
+    //    */
+    //   virtual IDimension *yCellDimension() const = 0;
 
-      /*!
-       * \brief Number of Z cells IDimension.
-       */
-      virtual IDimension *zCellDimension() const = 0;
+    //   /*!
+    //    * \brief Number of Z cells IDimension.
+    //    */
+    //   virtual IDimension *zCellDimension() const = 0;
 
-      /*!
-       * \brief cellFaceDimension 0 = Top , 1 = Bottom, 2 = left , 3 = Right, Up = 4, Down = 5
-       * \return The dimension for the cell faces.
-       */
-      virtual IDimension *cellFaceDimension() const = 0;
+    //   /*!
+    //    * \brief cellFaceDimension 0 = Top , 1 = Bottom, 2 = left , 3 = Right, Up = 4, Down = 5
+    //    * \return The dimension for the cell faces.
+    //    */
+    //   virtual IDimension *cellFaceDimension() const = 0;
 
-      /*!
-       * \brief cellNodeDimension Node indices start from the bottom left and go in a counter clockwise order.
-       * \return The dimension for the cell nodes.
-       */
-      virtual IDimension *cellNodeDimension() const = 0;
+    //   /*!
+    //    * \brief cellNodeDimension Node indices start from the bottom left and go in a counter clockwise order.
+    //    * \return The dimension for the cell nodes.
+    //    */
+    //   virtual IDimension *cellNodeDimension() const = 0;
 
-      /*!
-       * \brief getValue for given x cell index, y cell index, z cell index, face index, and node index.
-       * \param xCellIndex is the x cell index from where to obtain the requested data.
-       * \param yCellIndex is the y cell index from where to obtain the requested data.
-       * \param zCellIndex is the z cell index from where to obtain the requested data.
-       * \param cellFaceIndex is the cell face index from where to obtain the requested data.
-       * \param cellNodeIndex is the cell node index from where to obtain the requested data.
-       * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       */
-      virtual void getValue(int xCellIndex, int yCellIndex, int zCellIndex,
-                            int cellFaceIndex, int cellNodeIndex, void *data) const = 0;
+    //   /*!
+    //    * \brief getValue for given x cell index, y cell index, z cell index, face index, and node index.
+    //    * \param xCellIndex is the x cell index from where to obtain the requested data.
+    //    * \param yCellIndex is the y cell index from where to obtain the requested data.
+    //    * \param zCellIndex is the z cell index from where to obtain the requested data.
+    //    * \param cellFaceIndex is the cell face index from where to obtain the requested data.
+    //    * \param cellNodeIndex is the cell node index from where to obtain the requested data.
+    //    * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+    //    */
+    //   virtual void getValue(int xCellIndex, int yCellIndex, int zCellIndex,
+    //                         int cellFaceIndex, int cellNodeIndex, void *data) const = 0;
 
-      /*!
-       * \brief setValue for given x cell index, y cell index, z cell index, face index, and node index.
-       * \param xCellIndex is the x cell index from where to write data.
-       * \param yCellIndex is the y cell index from where to write data.
-       * \param zCellIndex is the z cell index from where to write data.
-       * \param cellFaceIndex is the cell face index from where to write data.
-       * \param cellNodeIndex is the cell node index from where to write data.
-       * \param data is a pointer data thata to is to be copied
-       */
-      virtual void setValue(int xCellIndex, int yCellIndex, int zCellIndex,
-                            int cellFaceIndex, int cellNodeIndex, const void *data) = 0;
-    };
+    //   /*!
+    //    * \brief setValue for given x cell index, y cell index, z cell index, face index, and node index.
+    //    * \param xCellIndex is the x cell index from where to write data.
+    //    * \param yCellIndex is the y cell index from where to write data.
+    //    * \param zCellIndex is the z cell index from where to write data.
+    //    * \param cellFaceIndex is the cell face index from where to write data.
+    //    * \param cellNodeIndex is the cell node index from where to write data.
+    //    * \param data is a pointer data thata to is to be copied
+    //    */
+    //   virtual void setValue(int xCellIndex, int yCellIndex, int zCellIndex,
+    //                         int cellFaceIndex, int cellNodeIndex, const void *data) = 0;
+    // };
 
-    /*!
-     * \brief The IVectorComponentDataItem class
-     */
-    class IVectorComponentDataItem : public virtual IComponentDataItem
-    {
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::setValue;
+    // /*!
+    //  * \brief The IVectorComponentDataItem class
+    //  */
+    // class IVectorComponentDataItem : public virtual IComponentDataItem
+    // {
+    //   using IComponentDataItem::getValue;
+    //   using IComponentDataItem::setValue;
 
-    public:
-      /*!
-       * \brief ~IVectorComponentDataItem
-       */
-      virtual ~IVectorComponentDataItem() = default;
+    // public:
+    //   /*!
+    //    * \brief ~IVectorComponentDataItem
+    //    */
+    //   virtual ~IVectorComponentDataItem() = default;
 
-      /*!
-       * \brief locationCount represents the number of locations.
-       * \return The number of locations.
-       */
-      virtual int locationsCount() const = 0;
+    //   /*!
+    //    * \brief locationCount represents the number of locations.
+    //    * \return The number of locations.
+    //    */
+    //   virtual int locationsCount() const = 0;
 
-      /*!
-       * \brief location returns the IPoint at the given location index.
-       * \param locationIndex is the location index from where to obtain the requested data.
-       * \return
-       */
-      virtual IPoint *location(int locationIndex) const = 0;
+    //   /*!
+    //    * \brief location returns the IPoint at the given location index.
+    //    * \param locationIndex is the location index from where to obtain the requested data.
+    //    * \return
+    //    */
+    //   virtual IPoint *location(int locationIndex) const = 0;
 
-      /*!
-       * \brief locationsDimension represents the dimension for the locations.
-       * \return The dimension for the locations.
-       */
-      virtual IDimension *locationsDimension() const = 0;
+    //   /*!
+    //    * \brief locationsDimension represents the dimension for the locations.
+    //    * \return The dimension for the locations.
+    //    */
+    //   virtual IDimension *locationsDimension() const = 0;
 
-      /*!
-       * \brief dataTypeDimension alway has a length of 3. 0 = x-direction value,
-       * 1 = y-direction, 2 = z-direction,
-       * \return The dimension for the data type.
-       */
-      virtual IDimension *spatialDimension() const = 0;
+    //   /*!
+    //    * \brief dataTypeDimension alway has a length of 3. 0 = x-direction value,
+    //    * 1 = y-direction, 2 = z-direction,
+    //    * \return The dimension for the data type.
+    //    */
+    //   virtual IDimension *spatialDimension() const = 0;
 
-      /*!
-       * \brief getValue for given location index and spatial dimension index.
-       * \param locationIndex is the location index from where to obtain the requested data.
-       * \param spatialDimensionIndex is the spatial dimension index from where to obtain the requested data.
-       * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       */
-      virtual void getValue(int locationIndex, int spatialDimensionIndex, void *data) const = 0;
+    //   /*!
+    //    * \brief getValue for given location index and spatial dimension index.
+    //    * \param locationIndex is the location index from where to obtain the requested data.
+    //    * \param spatialDimensionIndex is the spatial dimension index from where to obtain the requested data.
+    //    * \param data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+    //    */
+    //   virtual void getValue(int locationIndex, int spatialDimensionIndex, void *data) const = 0;
 
-      /*!
-       * \brief getValues for given location index and spatial dimension index.
-       * \param locationIndex is the location index from where to obtain the requested data.
-       * \param spatialDimensionIndex is the spatial dimension index from where to obtain the requested data.
-       * \param locationStride is the size for hyperslab from which to copy data.
-       * \param spatialDimensionStride is the size for hyperslab from which to copy data.
-       * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
-       */
-      virtual void getValues(int locationIndex, int spatialDimensionIndex,
-                             int locationStride, int spatialDimensionStride, void *data) const = 0;
-      /*!
-       * \brief setValue for given location index and spatial dimension index.
-       * \param locationIndex is the location index from where to write data.
-       * \param spatialDimensionIndex is the spatial dimension index from where to write data.
-       * \param data is a pointer data thata to is to be copied
-       */
-      virtual void setValue(int locationIndex, int spatialDimensionIndex, const void *data) = 0;
+    //   /*!
+    //    * \brief getValues for given location index and spatial dimension index.
+    //    * \param locationIndex is the location index from where to obtain the requested data.
+    //    * \param spatialDimensionIndex is the spatial dimension index from where to obtain the requested data.
+    //    * \param locationStride is the size for hyperslab from which to copy data.
+    //    * \param spatialDimensionStride is the size for hyperslab from which to copy data.
+    //    * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
+    //    */
+    //   virtual void getValues(int locationIndex, int spatialDimensionIndex,
+    //                          int locationStride, int spatialDimensionStride, void *data) const = 0;
+    //   /*!
+    //    * \brief setValue for given location index and spatial dimension index.
+    //    * \param locationIndex is the location index from where to write data.
+    //    * \param spatialDimensionIndex is the spatial dimension index from where to write data.
+    //    * \param data is a pointer data thata to is to be copied
+    //    */
+    //   virtual void setValue(int locationIndex, int spatialDimensionIndex, const void *data) = 0;
 
-      /*!
-       * \brief setValues for given location index and spatial dimension index.
-       * \param locationIndex is the location index from where to write data.
-       * \param spatialDimensionIndex is the spatial dimension index from where to write data.
-       * \param locationStride is the size for hyperslab where data is to be written.
-       * \param spatialDimensionStride is the size for hyperslab where data is to be written.
-       * \param data is the input multi dimensional array to be written.
-       */
-      virtual void setValues(int locationIndex, int spatialDimensionIndex,
-                             int locationStride, int spatialDimensionStride, const void *data) = 0;
-    };
+    //   /*!
+    //    * \brief setValues for given location index and spatial dimension index.
+    //    * \param locationIndex is the location index from where to write data.
+    //    * \param spatialDimensionIndex is the spatial dimension index from where to write data.
+    //    * \param locationStride is the size for hyperslab where data is to be written.
+    //    * \param spatialDimensionStride is the size for hyperslab where data is to be written.
+    //    * \param data is the input multi dimensional array to be written.
+    //    */
+    //   virtual void setValues(int locationIndex, int spatialDimensionIndex,
+    //                          int locationStride, int spatialDimensionStride, const void *data) = 0;
+    // };
   }
 }
 
