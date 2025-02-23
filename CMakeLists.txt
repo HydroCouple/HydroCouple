@@ -5,17 +5,13 @@
 #
 # This file is part of HydroCouple.
 #
-# HydroCouple is free software: you can redistribute it and/or modify it under
-# the terms of the GNU Lesser General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
-# later version.
-#
-# HydroCouple is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
-# for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
+# You can redistribute it and/or modify it under the terms of the
+# MIT License as published by the Free Software Foundation.
+# This file and its associated files is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+# 
+# You should have received a copy of the MIT License
 # along with HydroCouple. If not, see <http://www.gnu.org/licenses/>.
 # 
 # Copyright: 2004-2025
@@ -33,7 +29,6 @@ project(
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 
 add_library(
     ${PROJECT_NAME}
@@ -76,7 +71,7 @@ execute_process(
 string(
     UUID BUILD_ID 
     NAMESPACE "00000000-0000-0000-0000-000000000000" 
-    NAME "https:www.hydrcouple.org" 
+    NAME "https://www.hydrocouple.org" 
     TYPE MD5
 )
 
@@ -147,12 +142,6 @@ install(
     PATTERN "*.txt"
     PATTERN "*.h"
 )
-
-# add_custom_target(${PROJECT_NAME}
-#     COMMAND ${CMAKE_MAKE_PROGRAM} package
-#     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-#     DEPENDS ${PROJECT_NAME}
-# )
 
 # Configure CPack driven installer package
 set(CPACK_GENERATOR "TGZ")

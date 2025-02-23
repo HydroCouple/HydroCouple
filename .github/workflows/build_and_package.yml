@@ -1,8 +1,8 @@
-name: Build and Package
+name: Build and Package HydroCouple Interface Definitions
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" , "dev"]
   pull_request:
     branches: [ "master"]
 
@@ -10,6 +10,11 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   QT_VERSION: 6.4.*
+  VCPKG_EXE: ${{ github.workspace }}/vcpkg/vcpkg
+  NUGET_FEED_URL: https://nuget.pkg.github.com/HydroCouple/index.json
+  NUGET_USER_NAME: ${{ secrets.NUGET_USER_NAME }}
+  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/HydroCouple/index.json,readwrite"
 
 jobs:
   build:
@@ -20,6 +25,8 @@ jobs:
         include:
           - os: ubuntu-latest
             alias: Linux
+            shell: bash
+            shell_extension: .sh
             env:
               - BUILD_TYPE: Release
 
@@ -48,10 +55,23 @@ jobs:
         with:
           python-version: '3.8'
 
+      - name: Install NuGet
+        uses: hydrocouple/hydrocouple/.github/workflows/nuget_install.yml
+        with:
+          os: ${{ matrix.os }}
+      
+      - name: Bootstrap vcpkg
+        run: |
+          ${{ github.workspace }}/vcpkg/bootstrap-vcpkg.${{ matrix.shell_extension }}
+          ${{ env.VCPKG_EXE }} fetch nuget sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -ApiKey ${{ env.NUGET_API_KEY }}
+          ${{ env.VCPKG_EXE }} fetch nuget setapikey ${{ env.NUGET_API_KEY }} -Source github
+
       - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+        run: |
+          cmake --preset=default
+          cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
         # Build your program with the given configuration
