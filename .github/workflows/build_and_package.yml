@@ -55,11 +55,20 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Install NuGet
-        uses: ./.github/workflows/nuget_install.yml
-        with:
-          os: ${{ matrix.os }}
-      
+      - name: Install NuGet (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install nuget
+        
+      - name: Install NuGet (macOS)
+        if: matrix.os == 'macos-13' || matrix.os == 'macos-latest'
+        run: |
+          brew install nuget
+
+      - name: Verify NuGet Installation
+        run: |
+          nuget --version
+    
       - name: Bootstrap vcpkg
         run: |
           ${{ github.workspace }}/vcpkg/bootstrap-vcpkg.${{ matrix.shell_extension }}
