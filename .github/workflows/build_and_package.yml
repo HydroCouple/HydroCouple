@@ -56,7 +56,7 @@ jobs:
           python-version: '3.8'
 
       - name: Install NuGet
-        uses: hydrocouple/hydrocouple/.github/workflows/nuget_install.yml
+        uses: ./.github/workflows/nuget_install.yml
         with:
           os: ${{ matrix.os }}
       
