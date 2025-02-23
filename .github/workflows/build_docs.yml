@@ -1,4 +1,4 @@
-name: Build and deploy HydroCouple documentation to HydroCouple website
+name: Build and Deploy HydroCouple Interface Documentation
 
 on:
   push:
