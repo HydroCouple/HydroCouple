@@ -12,7 +12,7 @@
         {
             "name": "osx-x64",
             "inherits": "default",
-            "generator": "Ninja",
+            "generator": "Xcode",
             "environment": {
                 "VCPKG_TARGET_TRIPLET": "x64-osx"
             }
