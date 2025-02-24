@@ -10,20 +10,59 @@
             }
         },
         {
-            "name": "osx-x64",
+            "name": "windows",
             "inherits": "default",
-            "generator": "Xcode",
-            "environment": {
-                "VCPKG_TARGET_TRIPLET": "x64-osx"
+            "description": "Windows build using Visual Studio generator",
+            "generator": "Visual Studio 17 2022",
+            "architecture": {
+                "value": "x64"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
             }
         },
         {
-            "name": "linux-x64",
+            "name": "linux",
             "inherits": "default",
-            "generator": "Unix Makefiles",
-            "environment": {
-                "VCPKG_TARGET_TRIPLET": "x64-linux"
+            "description": "Linux build using Ninja generator",
+            "generator": "Ninja",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
             }
+        },
+        {
+            "name": "macos",
+            "inherits": "default",
+            "description": "macOS build using Unix Makefiles generator",
+            "generator": "Unix Makefiles",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "configurePreset": "default"
+        },
+        {
+            "name": "windows",
+            "configurePreset": "windows"
+        },
+        {
+            "name": "linux",
+            "configurePreset": "linux"
+        },
+        {
+            "name": "macos",
+            "configurePreset": "macos"
         }
     ]
 }

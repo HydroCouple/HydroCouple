@@ -127,6 +127,13 @@ jobs:
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} 
 
+      - name: Publish
+        env:
+          USERNAME: cbuahin
+          PACKAGE: ${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg
+        run: |
+          nuget push ${{ env.PACKAGE }} -Source github
+
       - name: Upload Artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -145,10 +152,3 @@ jobs:
             build-${{ matrix.alias }}/*.dmg
             build-${{ matrix.alias }}/*.nupkg
 
-      - name: Publish
-        env:
-          USERNAME: cbuahin
-          REMOTE_STORE: "https://nuget.pkg.github.com/Hydrocouple/index.json"
-          PACKAGE: ${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg
-        run: |
-          nuget push ${{ env.PACKAGE }} -Source github
