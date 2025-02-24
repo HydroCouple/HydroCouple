@@ -132,13 +132,6 @@ jobs:
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} 
 
-      - name: Publish
-        env:
-          USERNAME: cbuahin
-          PACKAGE: ${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg
-        run: |
-          nuget push ${{ env.PACKAGE }} -Source github
-
       - name: Upload Artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -147,13 +140,13 @@ jobs:
           path: |
             build-${{ matrix.alias }}/*.tar.gz
             build-${{ matrix.alias }}/*.zip
-            build-${{ matrix.alias }}/*.deb
-            build-${{ matrix.alias }}/*.rpm
-            build-${{ matrix.alias }}/*.msi
-            build-${{ matrix.alias }}/*.dmg
-            build-${{ matrix.alias }}/*.pkg
-            build-${{ matrix.alias }}/*.exe
-            build-${{ matrix.alias }}/*.AppImage
-            build-${{ matrix.alias }}/*.dmg
+            # build-${{ matrix.alias }}/*.deb
+            # build-${{ matrix.alias }}/*.rpm
+            # build-${{ matrix.alias }}/*.msi
+            # build-${{ matrix.alias }}/*.dmg
+            # build-${{ matrix.alias }}/*.pkg
+            # build-${{ matrix.alias }}/*.exe
+            # build-${{ matrix.alias }}/*.AppImage
+            # build-${{ matrix.alias }}/*.dmg
             build-${{ matrix.alias }}/*.nupkg
 
