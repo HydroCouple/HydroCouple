@@ -1,0 +1,17 @@
+{
+    "name": "hydrocouple",
+    "description": "HydroCouple Component-Based Modeling Interface Definitions",
+    "license": "MIT",
+    "homepage": "https://www.hydrocouple.org",
+    "version-semver": "2.0.0-alpha.1",
+    "dependencies": [
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        }
+    ]
+}

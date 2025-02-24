@@ -8,10 +8,9 @@
  * \license
  * This file and its associated files, and libraries are free software.
  * You can redistribute it and/or modify it under the terms of the
- * Lesser GNU Lesser General Public License as published by the Free Software Foundation;
- * either version 3 of the License, or (at your option) any later version.
+ * MIT License as published by the Free Software Foundation.
  * This file and its associated files is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
  * \copyright Copyright 2014-2024, Caleb Buahin, All rights reserved.
  * \date 2014-2024
@@ -35,557 +34,695 @@ namespace HydroCouple
     /*!
      * \brief ITimeGeometryComponentItem represents an IComponentItem with both temporal and geometric components.
      */
-    class ITimeGeometryComponentDataItem : public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    class ITimeGeometryComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IGeometryComponentDataItem
     {
 
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::setValue;
+    public:
+      using IGeometryComponentDataItem::getValue;
+      using IGeometryComponentDataItem::getValues;
+      using IGeometryComponentDataItem::setValue;
+      using IGeometryComponentDataItem::setValues;
+      using ITimeSeriesComponentDataItem::getValue;
+      using ITimeSeriesComponentDataItem::getValues;
+      using ITimeSeriesComponentDataItem::setValue;
+      using ITimeSeriesComponentDataItem::setValues;
 
-      public:
+      /*!
+       * \brief ~ITimeGeometryComponentItem.
+       */
+      virtual ~ITimeGeometryComponentDataItem() = default;
 
-        /*!
-         * \brief ~ITimeGeometryComponentItem.
-         */
-        virtual ~ITimeGeometryComponentDataItem() = 0;
+      /*!
+       * \brief getValue Gets the value for given time dimension index and geometry dimension index.
+       * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
+       * \param timeIndex is the time dimension index from where to obtain the requested data.
+       * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
+       * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist otherwise an empty vector.
+       */
+      virtual void getValue(
+          hydrocouple_variant &data,
+          int timeIndex,
+          int geometryIndex,
+          const initializer_list<int> &dimensionIndexes = {}) const = 0;
 
-        /*!
-         * \brief geometryType
-         * \return
-         */
-        virtual HydroCouple::Spatial::IGeometry::GeometryType geometryType() const = 0;
+      /*!
+       * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
+       * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
+       * \param timeIndex is the time dimension index from where to obtain the requested data.
+       * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
+       * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist otherwise an empty vector.
+       * \param timeIndexLength is the length of the time dimension for the data to be obtained.
+       * \param geometryIndexLength is the length of the geometry dimension for the data to be obtained.
+       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       */
+      virtual void getValues(
+          hydrocouple_variant *data,
+          int timeIndex,
+          int geometryIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeIndexLength = 1,
+          int geometryIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) const = 0;
 
-        /*!
-         * \brief geometryCount The number of geometries in the data item.
-         * \return The number of geometries in the data item.
-         */
-        virtual int geometryCount() const = 0;
+      /*!
+       * \brief setValues Sets the value for given time dimension index and geometry dimension index.
+       * \param data is the input array to be written.
+       * \param timeIndex is the time dimension index where data is to be written.
+       * \param geometryIndex is the geometry dimension index where data is to be written.
+       * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist otherwise an empty vector.
+       */
+      virtual void setValue(
+          const hydrocouple_variant &data,
+          int timeIndex,
+          int geometryIndex,
+          const initializer_list<int> &dimensionIndexes = {}) = 0;
 
-        /*!
-         * \brief geometry The geometry at the specified index.
-         * \param geometryIndex The index of the geometry to return.
-         * \return The geometry at the specified index.
-         */
-        virtual HydroCouple::Spatial::IGeometry *geometry(int geometryIndex) const = 0;
-
-        /*!
-         * \returns The dimension attributes for the data with the geometry. 
-         * This can be the field name for an attribute for a shapefile.
-         * Must be the first dimension in the dimensions() list
-         */
-        virtual HydroCouple::IDimension *geometryDimension() const = 0;
-
-        /*!
-         * \brief envelope The envelope of the data item.
-         * \return The envelope of the data item.
-         */
-        virtual HydroCouple::Spatial::IEnvelope *envelope() const = 0;
-
-        /*!
-         * \brief getValue Gets the value for given time dimension index and geometry dimension index.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
-         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValue(int timeIndex, int geometryIndex, void *data) const = 0;
-
-        /*!
-        * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
-        * \param timeIndex is the time dimension index from where to obtain the requested data.
-        * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
-        * \param timeStride is the size for the time dimension for hyperslab from which to copy data.
-        * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
-        * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
-        */
-        virtual void getValues(int timeIndex, int geometryIndex, int timeStride, int geomStride, void *data) const = 0;
-
-        /*!
-         * \brief setValues Sets the value for given time dimension index and geometry dimension index.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param geometryIndex is the geometry dimension index where data is to be written.
-         * \param data is the input array to be written.
-         */
-        virtual void setValue(int timeIndex, int geometryIndex, const void *data) = 0;
-
-        /*!
-         * \brief Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
-         * \param timeStride is the size for the time dimension for hyperslab from which to copy data.
-         * \param geomStride is the size for the geometry dimension for hyperslab from which to copy data.
-         * \param data is the input multi dimensional array to be written.
-         */
-        virtual void setValues(int timeIndex, int geometryIndex, int timeStride, int geomStride, const void *data) = 0;
-
+      /*!
+       * \brief Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
+       * \param data is the input multi dimensional array to be written.
+       * \param timeIndex is the time dimension index from where to obtain the requested data.
+       * \param geometryIndex is the geometry dimension index from where to obtain the requested data.
+       * \param dimensionIndexes indexes to use for the other dimensions to get the data if they exist otherwise an empty vector.
+       * \param timeIndexLength is the length of the time dimension for the data to be obtained.
+       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       */
+      virtual void setValues(
+          const hydrocouple_variant *data,
+          int timeIndex,
+          int geometryIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeIndexLength = 1,
+          int geometryIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) = 0;
     };
 
     /*!
      * \brief The ITimeNetworkComponentDataItem class
      */
-    class ITimeNetworkComponentDataItem : public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    class ITimeNetworkComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::INetworkComponentDataItem
     {
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::setValue;
 
-      public:
+    public:
+      using INetworkComponentDataItem::getValue;
+      using INetworkComponentDataItem::getValues;
+      using INetworkComponentDataItem::setValue;
+      using INetworkComponentDataItem::setValues;
+      using ITimeSeriesComponentDataItem::getValue;
+      using ITimeSeriesComponentDataItem::getValues;
+      using ITimeSeriesComponentDataItem::setValue;
+      using ITimeSeriesComponentDataItem::setValues;
 
-        /*!
-         * \brief ~ITimeNetworkComponentItem.
-         */
-        virtual ~ITimeNetworkComponentDataItem() = 0;
+      /*!
+       * \brief getValue for given edge dimension index and node dimension index.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
+       * \param[in] vertexDimensionIndex is the node dimension index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       */
+      virtual void getValue(
+          hydrocouple_variant &data,
+          int timeDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {}) const = 0;
 
-        /*!
-         * \brief network associated with this ITimeNetworkComponentItem.
-         * \return The network associated with this ITimeNetworkComponentItem.
-         */
-        virtual HydroCouple::Spatial::INetwork *network() const = 0;
+      /*!
+       * \brief getValues for given edge dimension index and node dimension index and size for a hyperslab.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
+       * \param[in] vertexDimensionIndex is the node dimension index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for any additional dimensions for the data to be obtained.
+       * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] edgeDimensionIndexLength is the length of the edge dimension for the data to be obtained.
+       * \param[in] vertexDimensionIndexLength is the length of the node dimension for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       */
+      virtual void getValues(
+          hydrocouple_variant *data,
+          int timeDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeDimensionIndexLength = 1,
+          int edgeDimensionIndexLength = 1,
+          int vertexDimensionIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) const = 0;
 
-        /*!
-         * \brief meshDataType The mesh data type for the network.
-         * \return The mesh data type for the network.
-         */
-        virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
+      /*!
+       * \brief setValue for given edge dimension index and node dimension index and data.
+       * \param[out] data is a pointer data thata to is to be copied
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
+       * \param[in] vertexDimensionIndex is the node dimension index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       */
+      virtual void setValue(
+          const hydrocouple_variant &data,
+          int timeDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {}) = 0;
 
-        /*!
-         * \brief edgeDimension The dimension for the edges of the network.
-         * \return The dimension for the edges of the network.
-         */
-        virtual IDimension *edgeDimension() const = 0;
-
-        /*!
-         * \brief nodeDimension The dimension for the nodes of the network.
-         * \return The dimension for the nodes of the network.
-         */
-        virtual IDimension *nodeDimension() const = 0;
-
-        /*!
-         * \brief getValue Gets the value for given time dimension index, edge dimension index and node dimension index.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
-         * \param nodeDimensionIndex is the node dimension index from where to obtain the requested data.
-         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValue(int timeIndex,  int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
-
-        /*!
-         * \brief setValue Sets the value for given time dimension index, edge dimension index and node dimension index.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param edgeDimensionIndex is the edge dimension index where data is to be written.
-         * \param nodeDimensionIndex is the node dimension index where data is to be written.
-         * \param data is the input array to be written.
-         */
-        virtual void setValue(int timeIndex, int edgeDimensionIndex, int nodeDimensionIndex, const void *data) = 0;
+      /*!
+       * \brief setValues for given edge dimension index and node dimension index and size for a hyperslab.
+       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
+       * \param[in] vertexDimensionIndex is the node dimension index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] edgeDimensionIndexLength is the length of the edge dimension for the data to be obtained.
+       * \param[in] vertexDimensionIndexLength is the length of the node dimension for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained.
+       */
+      virtual void setValues(
+          const hydrocouple_variant *data,
+          int timeDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeDimensionIndexLength = 1,
+          int edgeDimensionIndexLength = 1,
+          int vertexDimensionIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) = 0;
     };
 
     /*!
-     * \brief The ITimePolyhedralSurfaceComponentItem class.
+     * \brief The ITimeSeriesPolyhedralSurfaceComponentDataItem class.
      */
-    class ITimePolyhedralSurfaceComponentDataItem :
-        public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    class ITimeSeriesPolyhedralSurfaceComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem
     {
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::setValue;
 
-      public:
+    public:
+      using ITimeSeriesComponentDataItem::getValue;
+      using ITimeSeriesComponentDataItem::getValues;
+      using ITimeSeriesComponentDataItem::setValue;
+      using ITimeSeriesComponentDataItem::setValues;
 
-        /*!
-         * \brief ~ITimePolyhedralSurfaceComponentItem.
-         */
-        virtual ~ITimePolyhedralSurfaceComponentDataItem() = 0;
+      using IPolyhedralSurfaceComponentDataItem::getValue;
+      using IPolyhedralSurfaceComponentDataItem::getValues;
+      using IPolyhedralSurfaceComponentDataItem::setValue;
+      using IPolyhedralSurfaceComponentDataItem::setValues;
 
-        /*!
-         * \brief polyhedralSurfaceDataType The mesh data type for the polyhedral surface.
-         * \return The mesh data type for the polyhedral surface.
-         */
-        virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
+      /*!
+       * \brief ~ITimePolyhedralSurfaceComponentItem.
+       */
+      virtual ~ITimeSeriesPolyhedralSurfaceComponentDataItem() = default;
 
-        /*!
-         * \returns The IPolyhedralSurface associated with this IPolyhedralSurfaceDimension.
-         */
-        virtual HydroCouple::Spatial::IPolyhedralSurface *polyhedralSurface() const = 0;
+      /*!
+       * \brief getValue for given cell dimension index, edge dimension index, and node dimension index.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] patchDimensionIndex is the cell dimension index from where to obtain the requested data.
+       * \param[in] edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
+       * \param[in] vertexDimensionIndex is the node dimension index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       */
+      virtual void getValue(
+          hydrocouple_variant &data,
+          int timeDimensionIndex,
+          int patchDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {}) const = 0;
 
-        /*!
-          * \brief cellDimension The dimension for the cells of the polyhedral surface.
-         * \returns The dimension for the cells of the polyhedral surface.
-         */
-        virtual IDimension *cellDimension() const = 0;
+      /*!
+       * \brief getValues for given cell dimension index, edge dimension index and node dimension index and size for a hyperslab.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] patchDimensionIndex are the cell dimension indexes from where to obtain the requested data.
+       * \param[in] edgeDimensionIndex are the edge dimension indexes from where to obtain the requested data. If user wants to
+       * only obtain cell data for MeshDataType::Cell, this vector should be empty.
+       * \param[in] vertexDimensionIndex are the node dimension indexes from where to obtain the requested data. If user wants to
+       * only obtain cell or edge data for MeshDataType::Cell or MeshDataType::Edge, this vector should be empty.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] patchDimensionIndexLength are the lengths of the cell dimensions for the data to be obtained.
+       * \param[in] edgeDimensionIndexLength are the lengths of the edge dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       * \param[in] vertexDimensionIndexLength are the lengths of the node dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       */
+      virtual void getValues(
+          hydrocouple_variant *data,
+          int timeDimensionIndex,
+          int patchDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeDimensionIndexLength = 1,
+          int patchDimensionIndexLength = 1,
+          int edgeDimensionIndexLength = 1,
+          int vertexDimensionIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) const = 0;
 
-        /*!
-         * \brief edgeDimension The dimension for the edges of the polyhedral surface.
-         * \return The dimension for the edges of the polyhedral surface.
-         */
-        virtual IDimension *edgeDimension() const = 0;
+      /*!
+       * \brief setValues for given cell dimension index, edge dimension index, and node dimension index.
+       * \param[in] data is a pointer data thata to is to be copied to the mesh.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] patchDimensionIndex is the face dimension index from where to write data.
+       * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
+       * \param[in] vertexDimensionIndex is the edge dimension index from where to obtain the requested data. If user wants to
+       * only obtain cell data for MeshDataType::Cell, this vector should be empty.
+       * \param dimensionIndexes are the indexes for the data to be obtained.
+       */
+      virtual void setValue(
+          const hydrocouple_variant &data,
+          int timeDimensionIndex,
+          int patchDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {}) = 0;
 
-        /*!
-         * \brief nodeDimension The dimension for the nodes of the polyhedral surface.
-         * \return The dimension for the nodes of the polyhedral surface.
-         */
-        virtual IDimension *nodeDimension() const = 0;
-
-        /*!
-         * \brief getValue Gets the value for given time dimension index, cell dimension index, edge dimension index and node dimension index.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param cellDimensionIndex is the cell dimension index from where to obtain the requested data.
-         * \param edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
-         * \param nodeDimensionIndex is the node dimension index from where to obtain the requested data.
-         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValue(int timeIndex, int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex, void *data) const = 0;
-
-        /*!
-         * \brief setValues Sets the value for given time dimension index, cell dimension index, edge dimension index and node dimension index.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param cellDimensionIndex is the cell dimension index where data is to be written.
-         * \param edgeDimensionIndex is the edge dimension index where data is to be written.
-         * \param nodeDimensionIndex is the node dimension index where data is to be written.
-         * \param data is the input array to be written.
-         */
-        virtual void setValue(int timeIndex, int cellDimensionIndex, int edgeDimensionIndex, int nodeDimensionIndex,  const void *data) = 0;
+      /*!
+       * \brief setValues for given cell dimension index, edge dimension index, and node dimension index and size for a hyperslab.
+       * \param[in] data is a pointer data thata to is to be copied to the mesh.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] patchDimensionIndex are the cell dimension indexes from where to write data.
+       * \param[in] edgeDimensionIndex are the edge dimension indexes from where to write data.
+       * \param[in] vertexDimensionIndex are the node dimension indexes from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] patchDimensionIndexLength are the lengths of the cell dimensions for the data to be obtained.
+       * \param[in] edgeDimensionIndexLength are the lengths of the edge dimensions for the data to be obtained.
+       * \param[in] vertexDimensionIndexLength are the lengths of the node dimensions for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the other dimensions for the data to be obtained.
+       */
+      virtual void setValues(
+          const hydrocouple_variant *data,
+          int timeDimensionIndex,
+          int patchDimensionIndex,
+          int edgeDimensionIndex,
+          int vertexDimensionIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeDimensionIndexLength = 1,
+          int patchDimensionIndexLength = 1,
+          int edgeDimensionIndexLength = 1,
+          int vertexDimensionIndexLength = 1,
+          const initializer_list<int> &dimensionLengths) = 0;
     };
 
     /*!
      * \brief The ITINComponentItem class.
      */
-    class ITimeTINComponentDataItem : public virtual ITimePolyhedralSurfaceComponentDataItem
+    class ITimeSeriesTINComponentDataItem : public virtual ITimeSeriesPolyhedralSurfaceComponentDataItem
     {
-      public:
+    public:
+      /*!
+       * \brief ~ITimeTINComponentItem.
+       */
+      virtual ~ITimeSeriesTINComponentDataItem() = default;
 
-        /*!
-         * \brief ~ITimeTINComponentItem.
-         */
-        virtual ~ITimeTINComponentDataItem() = 0;
-
-        /*!
-           * \returns The ITIN associated with this ITINComponentDataItem.
-           */
-        virtual HydroCouple::Spatial::ITIN* TIN() const = 0;
-
+      /*!
+       * \returns The ITIN associated with this ITINComponentDataItem.
+       */
+      virtual HydroCouple::Spatial::ITIN *TIN() const = 0;
     };
 
     /*!
      * \brief The ITimeRasterComponentDataItem class.
      */
-    class ITimeRasterComponentDataItem :  public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    class ITimeSeriesRasterComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IRasterComponentDataItem
     {
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::setValue;
 
-      public:
+    public:
+      using IRasterComponentDataItem::getValue;
+      using IRasterComponentDataItem::getValues;
+      using IRasterComponentDataItem::setValue;
+      using IRasterComponentDataItem::setValues;
+      using ITimeSeriesComponentDataItem::getValue;
+      using ITimeSeriesComponentDataItem::getValues;
+      using ITimeSeriesComponentDataItem::setValue;
+      using ITimeSeriesComponentDataItem::setValues;
 
-        /*!
-         * \brief ~ITimeRasterComponentItem.
-         */
-        virtual ~ITimeRasterComponentDataItem() = 0;
+      /*!
+       * \brief ~ITimeSeriesRasterComponentDataItem Destructor.
+       */
+      virtual ~ITimeSeriesRasterComponentDataItem() = default;
 
-        /*!
-         * \brief IRaster associated with this IRasterComponentDataItem.
-         */
-        virtual HydroCouple::Spatial::IRaster* raster() const = 0;
+      /*!
+       * \brief getValue for given x dimension index, y dimension index, and band dimension index.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xIndex is the x dimension index from where to obtain the requested data.
+       * \param[in] yIndex is the y dimension index from where to obtain the requested data.
+       * \param[in] bandIndex is the band dimension index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       */
+      virtual void getValue(
+          hydrocouple_variant &data,
+          int timeDimensionIndex,
+          int xIndex,
+          int yIndex,
+          int bandIndex,
+          const initializer_list<int> &dimensionIndexes = {}) const = 0;
 
-        /*!
-         * \brief IDimension for xDirection.
-         */
-        virtual IDimension* xDimension() const = 0;
+      /*!
+       * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
+       * \param[out] data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xIndex is the x dimension index from where to obtain the requested data.
+       * \param[in] yIndex is the y dimension index from where to obtain the requested data.
+       * \param[in] bandIndex is the band dimension index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] xIndexLength is the length of the x dimension for the data to be obtained.
+       * \param[in] yIndexLength is the length of the y dimension for the data to be obtained.
+       * \param[in] bandIndexLength is the length of the band dimension for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the other dimensions for the data to be obtained.
+       */
+      virtual void getValues(
+          hydrocouple_variant *data,
+          int timeDimensionIndex,
+          int xIndex,
+          int yIndex,
+          int bandIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeDimensionIndexLength = 1,
+          int xIndexLength = 1,
+          int yIndexLength = 1,
+          int bandIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) const = 0;
 
-        /*!
-         * \brief IDimension for yDirection.
-         */
-        virtual IDimension* yDimension() const = 0;
+      /*!
+       * \brief setValue for given x dimension index, y dimension index, and band dimension index.
+       * \param[in] data  is a pointer data thata to is to be copied
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xIndex is the x dimension index from where to write data.
+       * \param[in] yIndex is the y dimension index from where to write data.
+       * \param[in] band  is the band dimension index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       */
+      virtual void setValue(
+          const hydrocouple_variant &data,
+          int timeDimensionIndex,
+          int xIndex,
+          int yIndex,
+          int band,
+          const initializer_list<int> &dimensionIndexes = {}) = 0;
 
-        /*!
-         * \brief IDimension for IRasterBands.
-         */
-        virtual IDimension* bandDimension() const = 0;
-
-        /*!
-         * \brief getValue Gets the value for given time dimension index, x dimension index, y dimension index and band dimension index.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xIndex is the x dimension index from where to obtain the requested data.
-         * \param yIndex is the y dimension index from where to obtain the requested data.
-         * \param band is the band dimension index from where to obtain the requested data.
-         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValue(int timeIndex, int xIndex, int yIndex, int band, void *data) const = 0;
-
-        /*!
-         * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xindex is the x dimension index from where to obtain the requested data.
-         * \param yindex is the y dimension index from where to obtain the requested data.
-         * \param bandIndex is the band dimension index from where to obtain the requested data.
-         * \param timeStride is the size for the time dimension for hyperslab from which to copy data.
-         * \param xstride is the x size for hyperslab from which to copy data.
-         * \param ystride is the x size for hyperslab from which to copy data.
-         * \param bandStride is the band size for hyperslab from which to copy data.
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void getValues(int timeIndex, int xindex, int yindex,
-                               int bandIndex, int timeStride, int xstride,
-                               int ystride, int bandStride, void *data) const = 0;
-
-        /*!
-         * \brief setValue Sets the value for given time dimension index, x dimension index, y dimension index and band dimension index.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param xIndex is the x dimension index where data is to be written.
-         * \param yIndex is the y dimension index where data is to be written.
-         * \param band is the band dimension index where data is to be written.
-         * \param data is the input array to be written.
-         */
-        virtual void setValue(int timeIndex, int xIndex, int yIndex, int band, const void *data) = 0;
-
-        /*!
-         * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param xindex is the x dimension index where to set data.
-         * \param yindex is the y dimension index where to set data.
-         * \param bandIndex is the band dimension index from where to obtain the requested data.
-         * \param timeStride is the size for the time dimension for hyperslab from which to copy data.
-         * \param xstride is the x size for hyperslab from which to copy data.
-         * \param ystride is the x size for hyperslab from which to copy data.
-         * \param bandStride is the band size for hyperslab from which to copy data.
-         * \param data is the input array to be written.
-         */
-        virtual void setValues(int timeIndex,int xindex, int yindex,
-                               int bandIndex, int timeStride, int xstride,
-                               int ystride, int bandStride, const void *data) = 0;
-
+      /*!
+       * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
+       * \param[in] data is the input array to be written.
+       * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xIndex is the x dimension index where to set data.
+       * \param[in] yIndex is the y dimension index where to set data.
+       * \param[in] bandIndex is the band dimension index where to set data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] xIndexLength is the x size for hyperslab where data is to be written.
+       * \param[in] yIndexLength is the y size for hyperslab where data is to be written.
+       * \param[in] bandIndexLength is the band size for hyperslab where data is to be written.
+       * \param[in] dimensionLengths are the lengths of the other dimensions for the data to be obtained.
+       */
+      virtual void setValues(
+          const hydrocouple_variant *data,
+          int timeDimensionIndex,
+          int xIndex,
+          int yIndex,
+          int bandIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeDimensionIndexLength = 1,
+          int xIndexLength = 1,
+          int yIndexLength = 1,
+          int bandIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) = 0;
     };
 
     /*!
      * \brief The ITimeRegularGrid2DComponentItem class.
      */
-    class ITimeRegularGrid2DComponentDataItem :  public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    class ITimeRegularGrid2DComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IRegularGrid2DComponentDataItem
     {
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::setValue;
 
-      public:
+    public:
+      using IRegularGrid2DComponentDataItem::getValue;
+      using IRegularGrid2DComponentDataItem::getValues;
+      using IRegularGrid2DComponentDataItem::setValue;
+      using IRegularGrid2DComponentDataItem::setValues;
+      using ITimeSeriesComponentDataItem::getValue;
+      using ITimeSeriesComponentDataItem::getValues;
+      using ITimeSeriesComponentDataItem::setValue;
+      using ITimeSeriesComponentDataItem::setValues;
 
-        /*!
-         * \brief ~ITimeRegularGrid2DComponentItem. Destructor.
-         */
-        virtual ~ITimeRegularGrid2DComponentDataItem() = 0;
+      /*!
+       * \brief ~ITimeRegularGrid2DComponentItem. Destructor.
+       */
+      virtual ~ITimeRegularGrid2DComponentDataItem() = default;
 
-        /*!
-         * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
-         */
-        virtual HydroCouple::Spatial::IRegularGrid2D *grid() const = 0;
+      /*!
+       * \brief getValue for given x cell index, y cell index, edge index, and node index.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
+       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
+       * \param[in] cellEdgeIndex is the cell edge index from where to obtain the requested data.
+       * \param[in] cellNodeIndex is the cell node index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.  If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       */
+      virtual void getValue(
+          hydrocouple_variant &data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int cellEdgeIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {}) const = 0;
 
-        /*!
-         * \brief meshDataType The mesh data type for the regular grid.
-         * \return The mesh data type for the regular grid.
-         */
-        virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
+      /*!
+       * \brief getValues for given x cell index, y cell index, edge index, and node index and size for a hyperslab.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
+       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
+       * \param[in] cellEdgeIndex is the cell edge index from where to obtain the requested data.
+       * \param[in] cellVertexIndex is the cell node index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       * \param[in] timeIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
+       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
+       * \param[in] cellEdgeIndexLength is the length of the cell edge index for the data to be obtained.
+       * \param[in] cellVertexIndexLength is the length of the cell node index for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       */
+      virtual void getValues(
+          hydrocouple_variant *data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int cellEdgeIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeIndexLength = 1,
+          int xCellIndexLength = 1,
+          int yCellIndexLength = 1,
+          int cellEdgeIndexLength = 1,
+          int cellVertexIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) const = 0;
 
-        /*!
-        * \brief Number of X cells IDimension.
-        */
-        virtual IDimension *xCellDimension() const = 0;
+      /*!
+       * \brief setValue for given x cell index, y cell index, edge index, and node index.
+       * \param[in] data is a pointer data thata to is to be copied to the mesh.
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to write data.
+       * \param[in] yCellIndex is the y cell index from where to write data.
+       * \param[in] cellEdgeIndex is the cell edge index from where to write data.
+       * \param[in] cellVertexIndex is the cell node index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       */
+      virtual void setValue(
+          const hydrocouple_variant &data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int cellEdgeIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {}) = 0;
 
-        /*!
-        * \brief Number of Y cells IDimension.
-        */
-        virtual IDimension *yCellDimension() const = 0;
-
-        /*!
-        * \brief cellEdgeDimension. Edge indices start from the bottom and go in a counter clockwise order.
-        * \return
-        */
-        virtual IDimension *cellEdgeDimension() const = 0;
-
-        /*!
-        * \brief cellNodeDimension. Node indices start from the bottom left and go in a counter clockwise order.
-        * \return
-        */
-        virtual IDimension *cellNodeDimension() const = 0;
-
-        /*!
-         * \brief getValue Gets the value for given time dimension index, x cell dimension index, y cell dimension index, cell edge dimension index and cell node dimension index.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xCellIndex is the x cell dimension index from where to obtain the requested data.
-         * \param yCellIndex is the y cell dimension index from where to obtain the requested data.
-         * \param cellEdgeIndex is the cell edge dimension index from where to obtain the requested data.
-         * \param cellNodeIndex is the cell node dimension index from where to obtain the requested data.
-         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValue(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, void *data) const = 0;
-
-
-        /*!
-         * \brief setValue Sets the value for given time dimension index, x cell dimension index, y cell dimension index, cell edge dimension index and cell node dimension index.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param xCellIndex is the x cell dimension index where data is to be written.
-         * \param yCellIndex  is the y cell dimension index where data is to be written.
-         * \param cellEdgeIndex is the cell edge dimension index where data is to be written.
-         * \param cellNodeIndex is the cell node dimension index where data is to be written.
-         * \param data is the input array to be written.
-         */
-        virtual void setValue(int timeIndex, int xCellIndex, int yCellIndex, int cellEdgeIndex, int cellNodeIndex, const void *data) = 0;
+      /*!
+       * \brief setValues for given x cell index, y cell index, edge index, and node index and size for a hyperslab.
+       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to write data.
+       * \param[in] yCellIndex is the y cell index from where to write data.
+       * \param[in] cellEdgeIndex is the cell edge index from where to write data.
+       * \param[in] cellNodeIndex is the cell node index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       * \param[in] timeIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
+       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
+       * \param[in] cellEdgeIndexLength is the length of the cell edge index for the data to be obtained.
+       * \param[in] cellNodeIndexLength is the length of the cell node index for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       */
+      virtual void setValues(
+          const hydrocouple_variant *data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int cellEdgeIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeIndexLength = 1,
+          int xCellIndexLength = 1,
+          int yCellIndexLength = 1,
+          int cellEdgeIndexLength = 1,
+          int cellVertexIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) = 0;
     };
 
     /*!
      * \brief The ITimeRegularGrid3DComponentItem class.
      */
-    class ITimeRegularGrid3DComponentDataItem :  public virtual HydroCouple::Temporal::ITimeComponentDataItem
+    class ITimeRegularGrid3DComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IRegularGrid3DComponentDataItem
     {
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::setValue;
 
-      public:
+    public:
+      using IRegularGrid3DComponentDataItem::getValue;
+      using IRegularGrid3DComponentDataItem::getValues;
+      using IRegularGrid3DComponentDataItem::setValue;
+      using IRegularGrid3DComponentDataItem::setValues;
+      using ITimeSeriesComponentDataItem::getValue;
+      using ITimeSeriesComponentDataItem::getValues;
+      using ITimeSeriesComponentDataItem::setValue;
+      using ITimeSeriesComponentDataItem::setValues;
 
-        /*!
-         * \brief ~ITimeRegularGrid3DComponentItem. Destructor.
-         */
-        virtual ~ITimeRegularGrid3DComponentDataItem() = 0;
+      /*!
+       * \brief ~ITimeRegularGrid3DComponentItem. Destructor.
+       */
+      virtual ~ITimeRegularGrid3DComponentDataItem() = default;
 
-        /*!
-         * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
-         */
-        virtual HydroCouple::Spatial::IRegularGrid3D *grid() const = 0;
+      /*!
+       * \brief getValue for given x cell index, y cell index, z cell index, face index, and node index.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
+       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
+       * \param[in] zCellIndex is the z cell index from where to obtain the requested data.
+       * \param[in] cellFaceIndex is the cell face index from where to obtain the requested data.
+       * \param[in] cellVertexIndex is the cell node index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       */
+      virtual void getValue(
+          hydrocouple_variant &data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int zCellIndex,
+          int cellFaceIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {}) const = 0;
 
-        /*!
-         * \brief meshDataType The mesh data type for the regular grid.
-         * \return The mesh data type for the regular grid.
-         */
-        virtual HydroCouple::Spatial::MeshDataType meshDataType() const = 0;
+      /*!
+       * \brief getValues for given x cell index, y cell index, z cell index, face index, and node index and size for a hyperslab.
+       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
+       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
+       * \param[in] zCellIndex is the z cell index from where to obtain the requested data.
+       * \param[in] cellFaceIndex is the cell face index from where to obtain the requested data.
+       * \param[in] cellVertexIndex is the cell node index from where to obtain the requested data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       * \param[in] timeIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
+       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
+       * \param[in] zCellIndexLength is the length of the z cell index for the data to be obtained.
+       * \param[in] cellFaceIndexLength is the length of the cell face index for the data to be obtained.
+       * \param[in] cellVertexIndexLength is the length of the cell node index for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       */
+      virtual void getValues(
+          hydrocouple_variant *data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int zCellIndex,
+          int cellFaceIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeIndexLength = 1,
+          int xCellIndexLength = 1,
+          int yCellIndexLength = 1,
+          int zCellIndexLength = 1,
+          int cellFaceIndexLength = 1,
+          int cellVertexIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) const = 0;
 
-        /*!
-         * \brief Number of X cells IDimension.
-         */
-        virtual IDimension *xCellDimension() const = 0;
+      /*!
+       * \brief setValue for given x cell index, y cell index, z cell index, face index, and node index.
+       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to write data.
+       * \param[in] yCellIndex is the y cell index from where to write data.
+       * \param[in] zCellIndex is the z cell index from where to write data.
+       * \param[in] cellFaceIndex is the cell face index from where to write data.
+       * \param[in] cellVertexIndex is the cell node index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
+       * the length of the vector must be equal to the number of other dimensions
+       */
+      virtual void setValue(
+          const hydrocouple_variant &data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int zCellIndex,
+          int cellFaceIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {}) = 0;
 
-        /*!
-         * \brief Number of Y cells IDimension.
-         */
-        virtual IDimension *yCellDimension() const = 0;
-
-        /*!
-         * \brief Number of Z cells IDimension.
-         */
-        virtual IDimension *zCellDimension() const = 0;
-
-        /*!
-         * \brief cellFaceDimension 0 = Top , 1 = Bottom, 2 = left , 3 = Right, Up = 4, Down = 5
-         * \return
-         */
-        virtual IDimension *cellFaceDimension() const = 0;
-
-        /*!
-         * \brief cellNodeDimension
-         * \return
-         */
-        virtual IDimension *cellNodeDimension() const = 0;
-
-        /*!
-         * \brief getValue  Gets the value for given time dimension index, x cell dimension index, y cell dimension index, z cell dimension index, cell face dimension index and cell node dimension index.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param xCellIndex is the x cell dimension index from where to obtain the requested data.
-         * \param yCellIndex is the y cell dimension index from where to obtain the requested data.
-         * \param zCellIndex is the z cell dimension index from where to obtain the requested data.
-         * \param cellFaceIndex is the cell face dimension index from where to obtain the requested data.
-         * \param cellNodeIndex is the cell node dimension index from where to obtain the requested data.
-         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValue(int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex,
-                              int cellFaceIndex, int cellNodeIndex, void *data) const = 0;
-
-        /*!
-         * \brief setValue Sets the value for given time dimension index, x cell dimension index, y cell dimension index, z cell dimension index, cell face dimension index and cell node dimension index.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param xCellIndex is the x cell dimension index where data is to be written.
-         * \param yCellIndex is the y cell dimension index where data is to be written.
-         * \param zCellIndex is the z cell dimension index where data is to be written.
-         * \param cellFaceIndex is the cell face dimension index where data is to be written.
-         * \param cellNodeIndex is the cell node dimension index where data is to be written.
-         * \param data is the input array to be written.
-         */
-        virtual void setValue(int timeIndex, int xCellIndex, int yCellIndex, int zCellIndex,
-                              int cellFaceIndex, int cellNodeIndex, const void *data) = 0;
-
-    };
-
-    /*!
-     * \brief The ITimeVectorComponentDataItem class
-     */
-    class ITimeVectorComponentDataItem : public virtual HydroCouple::Temporal::ITimeComponentDataItem
-    {
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::setValue;
-
-      public:
-
-        /*!
-         * \brief ~ITimeVectorComponentItem.
-         */
-        virtual ~ITimeVectorComponentDataItem() = 0;
-
-        /*!
-         * \brief locationCount
-         * \return
-         */
-        virtual int locationsCount() const = 0;
-
-        /*!
-         * \brief location The location at the specified index.
-         * \param locationIndex The index of the location to return.
-         * \return The location at the specified index.
-         */
-        virtual HydroCouple::Spatial::IPoint *location(int locationIndex) const = 0;
-
-        /*!
-         * \brief locationsDimension The dimension for the locations of the vector.
-         * \return The dimension for the locations of the vector.
-         */
-        virtual IDimension *locationsDimension() const = 0;
-
-        /*!
-         * \brief dataTypeDimension alway has a length of 3. 0 = x-direction value,
-         * 1 = y-direction, 2 = z-direction,
-         * \return
-         */
-        virtual IDimension *spatialDimension() const = 0;
-
-        /*!
-         * \brief getValue Gets the value for given time dimension index, location dimension index and spatial dimension index.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param locationIndex is the location dimension index from where to obtain the requested data.
-         * \param spatialIndex is the spatial dimension index from where to obtain the requested data.
-         * \param data is the array where data is to be written. Must be allocated beforehand with the correct data type.
-         */
-        virtual void getValue(int timeIndex, int locationIndex, int spatialIndex, void *data) const = 0;
-
-        /*!
-         * \brief getValues Gets a multi-dimensional array of values for given dimension for a hyperslab.
-         * \param timeIndex is the time dimension index from where to obtain the requested data.
-         * \param locationIndex is the location dimension index from where to obtain the requested data.
-         * \param spatialDimensionIndex is the spatial dimension index from where to obtain the requested data.
-         * \param locationStride is the size for the location dimension for hyperslab from which to copy data.
-         * \param spatialDimensionStride is the size for the spatial dimension for hyperslab from which to copy data.
-         * \param data is the multi dimensional array where data is to be written. Must be allocated beforehand.
-         */
-        virtual void getValues(int timeIndex, int locationIndex, int spatialDimensionIndex,
-                               int locationStride, int spatialDimensionStride, void *data) const = 0;
-        /*!
-         * \brief setValue Sets the value for given time dimension index, location dimension index and spatial dimension index.
-         * \param timeIndex is the time dimension index where data is to be written.
-         * \param locationIndex is the location dimension index where data is to be written.
-         * \param spatialDimensionIndex is the spatial dimension index where data is to be written.
-         * \param data is the input array to be written.
-         */ 
-        virtual void setValue(int timeIndex, int locationIndex, int spatialDimensionIndex, const void *data) = 0;
-
-        /*!
-         * \brief setValues Sets a multi-dimensional array of values for given dimension for a hyperslab.
-         * \param timeIndex is the  time dimension index where data is to be written.
-         * \param locationIndex is the location dimension index where data is to be written.
-         * \param spatialDimensionIndex is the spatial dimension index where data is to be written.
-         * \param locationStride is the size for the location dimension for hyperslab from which to copy data.
-         * \param spatialDimensionStride is the size for the spatial dimension for hyperslab from which to copy data.
-         * \param data is the input multi dimensional array to be written.
-         */
-        virtual void setValues(int timeIndex, int locationIndex, int spatialDimensionIndex,
-                               int locationStride, int spatialDimensionStride, const void *data) = 0;
+      /*!
+       * \brief setValues for given x cell index, y cell index, z cell index, face index, and node index and size for a hyperslab.
+       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
+       * \param[in] xCellIndex is the x cell index from where to write data.
+       * \param[in] yCellIndex is the y cell index from where to write data.
+       * \param[in] zCellIndex is the z cell index from where to write data.
+       * \param[in] cellFaceIndex is the cell face index from where to write data.
+       * \param[in] cellVertexIndex is the cell node index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
+       * \param[in] timeIndexLength is the length of the time dimension for the data to be obtained.
+       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
+       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
+       * \param[in] zCellIndexLength is the length of the z cell index for the data to be obtained.
+       * \param[in] cellFaceIndexLength is the length of the cell face index for the data to be obtained.
+       * \param[in] cellVertexIndexLength is the length of the cell node index for the data to be obtained.
+       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
+       * otherwise the length of the vector must be equal to the number of dimensions.
+       */
+      virtual void setValues(
+          const hydrocouple_variant *data,
+          int timeIndex,
+          int xCellIndex,
+          int yCellIndex,
+          int zCellIndex,
+          int cellFaceIndex,
+          int cellVertexIndex,
+          const initializer_list<int> &dimensionIndexes = {},
+          int timeIndexLength = 1,
+          int xCellIndexLength = 1,
+          int yCellIndexLength = 1,
+          int zCellIndexLength = 1,
+          int cellFaceIndexLength = 1,
+          int cellVertexIndexLength = 1,
+          const initializer_list<int> &dimensionLengths = {}) = 0;
     };
   }
-} 
+}
 #endif // HYDROCOUPLESPATIOTEMPORAL_H
-

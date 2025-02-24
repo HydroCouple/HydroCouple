@@ -1,0 +1,68 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "default",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            }
+        },
+        {
+            "name": "windows",
+            "inherits": "default",
+            "description": "Windows build using Visual Studio generator",
+            "generator": "Visual Studio 17 2022",
+            "architecture": {
+                "value": "x64"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "linux",
+            "inherits": "default",
+            "description": "Linux build using Ninja generator",
+            "generator": "Unix Makefiles",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "macos",
+            "inherits": "default",
+            "description": "macOS build using Unix Makefiles generator",
+            "generator": "Xcode",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "configurePreset": "default"
+        },
+        {
+            "name": "windows",
+            "configurePreset": "windows"
+        },
+        {
+            "name": "linux",
+            "configurePreset": "linux"
+        },
+        {
+            "name": "macos",
+            "configurePreset": "macos"
+        }
+    ]
+}

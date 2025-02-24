@@ -1,66 +1,152 @@
-name: Build and Package
+name: Build and Package HydroCouple Interface
 
 on:
   push:
-    branches: [ "master", "dev"]
+    branches: [ "master" , "dev"]
   pull_request:
-    branches: [ "master", "dev"]
+    branches: [ "master"]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   QT_VERSION: 6.4.*
+  VCPKG_ROOT: "${{ github.workspace }}/vcpkg"
+  VCPKG_EXE:  "${{ github.workspace }}/vcpkg/vcpkg"
+  NUGET_FEED_URL: https://nuget.pkg.github.com/HydroCouple/index.json
+  NUGET_USER_NAME: ${{ secrets.NUGET_USER_NAME }}
+  NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN  }}
+  VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/HydroCouple/index.json,readwrite"
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-13, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            name: "Ubuntu 18.04"
-            env:
-              - BUILD_TYPE: Release
-          - os: macos-latest
-            name: "macOS 10.15"
-            env:
-              - BUILD_TYPE: Release
-          - os: windows-latest
-            name: "Windows Server 2019"
+            alias: Linux
+            shell: bash
+            preset_alias: linux
+            shell_extension: .sh
+            vcpkg_triplet: x64-linux
             env:
               - BUILD_TYPE: Release
 
+          - os: macos-13
+            alias: intel-mac
+            preset_alias: macos
+            shell: bash
+            shell_extension: .sh
+            env:
+              - BUILD_TYPE: Release
+
+          - os: macos-latest
+            alias: apple-silicon
+            preset_alias: macos
+            shell: bash
+            shell_extension: .sh
+            env:
+              - BUILD_TYPE: Release
+
+          - os: windows-latest
+            alias: win64
+            preset_alias: windows
+            shell: cmd
+            shell_extension: .bat
+            env:
+              - BUILD_TYPE: Release
+    permissions: write-all
+ 
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
-          python-version: '3.8'
+          path: HydroCouple
+      
+      - name: Checkout VCPKG
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/vcpkg
+          ref: 2025.02.14
+          path: vcpkg
+        
+      - name: Bootstrap VCPKG (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        working-directory: ${{ env.VCPKG_ROOT }}
+        run: |
+          bootstrap-vcpkg${{ matrix.shell_extension }}
+          vcpkg integrate install
+      
+      - name: Bootstrap VCPKG (Unix like)
+        if: ${{ matrix.os != 'windows-latest' }}
+        working-directory: ${{ env.VCPKG_ROOT }}
+        run: |
+          ./bootstrap-vcpkg${{ matrix.shell_extension }}
+          chmod +x vcpkg
+
+      - name: Install Mono (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mono-complete
+
+      - name: Install NuGet
+        uses: nuget/setup-nuget@v2
+        with:
+          nuget-version: 5.x
+
+      - name: Install NuGet (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          .$(vcpkg fetch nuget) sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
+          .$(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
+          .$(vcpkg fetch nuget) sources
+
+
+      - name: Configure NugGet (Unix like)
+        if: ${{ matrix.os != 'windows-latest' }}
+        working-directory: ${{ env.VCPKG_ROOT }}
+        run: |
+          mono `./vcpkg fetch nuget | tail -n 1` sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }} 
+          mono `./vcpkg fetch nuget | tail -n 1` setapikey ${{ env.NUGET_API_KEY }} -Source github 
+          mono `./vcpkg fetch nuget | tail -n 1` sources
 
       - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        working-directory: HydroCouple
+        env:
+          VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
+        run: |
+          cmake --preset=${{ matrix.preset_alias }}
+          cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
+        working-directory: HydroCouple
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target package
+        run: cmake --build ${{github.workspace}}/build-${{ matrix.alias }} --config ${{env.BUILD_TYPE}} --target package
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/build-${{ matrix.alias }}
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} 
 
       - name: Upload Artifacts
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: build-test-artifacts
+          name: build-artifacts-${{ matrix.alias }}
           path: |
-            build/*.tar.gz
+            build-${{ matrix.alias }}/*.tar.gz
+            build-${{ matrix.alias }}/*.zip
+            # build-${{ matrix.alias }}/*.deb
+            # build-${{ matrix.alias }}/*.rpm
+            # build-${{ matrix.alias }}/*.msi
+            # build-${{ matrix.alias }}/*.dmg
+            # build-${{ matrix.alias }}/*.pkg
+            # build-${{ matrix.alias }}/*.exe
+            # build-${{ matrix.alias }}/*.AppImage
+            # build-${{ matrix.alias }}/*.dmg
+            build-${{ matrix.alias }}/*.nupkg
 
