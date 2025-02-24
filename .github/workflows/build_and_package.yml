@@ -10,7 +10,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   QT_VERSION: 6.4.*
-  VCPKG_EXE: ${{ github.workspace }}/vcpkg/vcpkg
+  VCPKG_EXE: $(VCPKG_INSTALLATION_ROOT)/vcpkg
   NUGET_FEED_URL: https://nuget.pkg.github.com/HydroCouple/index.json
   NUGET_USER_NAME: ${{ secrets.NUGET_USER_NAME }}
   NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
@@ -32,16 +32,22 @@ jobs:
 
           - os: macos-13
             alias: intel-mac
+            shell: bash
+            shell_extension: .sh
             env:
               - BUILD_TYPE: Release
 
           - os: macos-latest
             alias: apple-silicon
+            shell: bash
+            shell_extension: .sh
             env:
               - BUILD_TYPE: Release
 
           - os: windows-latest
             alias: win64
+            shell: cmd
+            shell_extension: .bat
             env:
               - BUILD_TYPE: Release
 
@@ -64,13 +70,13 @@ jobs:
     
       - name: Bootstrap vcpkg
         run: |
-          ${{ github.workspace }}/vcpkg/bootstrap-vcpkg.${{ matrix.shell_extension }}
+          ${{ env.VCPKG_INSTALLATION_ROOT }}/bootstrap-vcpkg.${{ matrix.shell_extension }}
           ${{ env.VCPKG_EXE }} fetch nuget sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -ApiKey ${{ env.NUGET_API_KEY }}
           ${{ env.VCPKG_EXE }} fetch nuget setapikey ${{ env.NUGET_API_KEY }} -Source github
 
       - name: Configure CMake
         env:
-          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+          VCPKG_ROOT:  ${{ env.VCPKG_INSTALLATION_ROOT }}
         run: |
           cmake --preset=default
           cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
