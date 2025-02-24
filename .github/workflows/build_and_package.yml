@@ -60,7 +60,7 @@ jobs:
 
       - name: Verify NuGet Installation
         run: |
-          nuget --version
+          nuget help
     
       - name: Bootstrap vcpkg
         run: |
