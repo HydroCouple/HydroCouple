@@ -61,7 +61,7 @@ jobs:
       - name: Checkout VCPKG
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/microsoft/vcpkg.git
+          repository: microsoft/vcpkg
           ref: 2025.02.14
         
       - name: Bootstrap VCPKG (Windows)
