@@ -1,4 +1,4 @@
-name: Build and Package HydroCouple Interface
+name: Build and Package
 
 on:
   push:
