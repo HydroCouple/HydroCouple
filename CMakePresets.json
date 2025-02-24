@@ -27,7 +27,7 @@
             "name": "linux",
             "inherits": "default",
             "description": "Linux build using Ninja generator",
-            "generator": "Ninja",
+            "generator": "Unix Makefiles",
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
@@ -38,7 +38,7 @@
             "name": "macos",
             "inherits": "default",
             "description": "macOS build using Unix Makefiles generator",
-            "generator": "Unix Makefiles",
+            "generator": "Xcode",
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
