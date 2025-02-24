@@ -8,11 +8,7 @@ on:
 
 jobs:
   build:
-    permissions:
-      contents: read
-      packages: write
-      pull-requests: write
-
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
 
@@ -40,13 +36,13 @@ jobs:
         repository: HydroCouple/hydrocouple.github.io
         ref: dev
         path: hydrocouple.github.io
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.NUGET_API_KEY }}
         persist-credentials: true
 
     - name: Push Docs to HydroCouple Website Repo
       run: |
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name ${{ secrets.NUGET_USER_NAME }}
+        git config --global user.name  "github-actions[bot]"
         git config --global credential.helper cache
         rm -rf hydrocouple.github.io/hydrocoupledocs/html
         cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
