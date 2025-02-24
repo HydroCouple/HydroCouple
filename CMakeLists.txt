@@ -106,6 +106,7 @@ install(
     FILE ${PROJECT_NAME}Targets.cmake
     NAMESPACE ${PROJECT_NAME}::
     DESTINATION lib/cmake
+)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
