@@ -40,7 +40,7 @@ jobs:
         repository: HydroCouple/hydrocouple.github.io
         ref: dev
         path: hydrocouple.github.io
-        token: ${{ secrets.API_TOKEN_GITHUB }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         persist-credentials: true
 
     - name: Push Docs to HydroCouple Website Repo
