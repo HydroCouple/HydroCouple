@@ -1,8 +1,8 @@
-name: Build and Deploy HydroCouple Interface Documentation
+name: Build and Deploy Documentation
 
 on:
   push:
-    branches: [ "master"]
+    branches: [ "master", "dev"]
   pull_request:
     branches: [ "master"]
 
@@ -47,9 +47,16 @@ jobs:
         rm -rf hydrocouple.github.io/hydrocoupledocs/html
         cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
         cd hydrocouple.github.io
-        git add -A
-        git commit -m "CI: Updated HydroCouple Docs"
-        git push 
+
+        git fetch origin
+        
+        if [ -n "$(git status --porcelain)" ]; then
+          git add -A
+          git commit -m "CI: Updated HydroCouple Docs"
+          git push origin dev
+        else
+          echo "No changes to commit"
+        fi
       
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
