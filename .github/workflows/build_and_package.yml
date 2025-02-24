@@ -2,7 +2,7 @@ name: Build and Package
 
 on:
   push:
-    branches: [ "master" , "dev"]
+    branches: [ "master"]
   pull_request:
     branches: [ "master"]
 
