@@ -14,7 +14,7 @@ env:
   VCPKG_EXE:  "${{ github.workspace }}/vcpkg/vcpkg"
   NUGET_FEED_URL: https://nuget.pkg.github.com/HydroCouple/index.json
   NUGET_USER_NAME: ${{ secrets.NUGET_USER_NAME }}
-  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN  }}
   VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/HydroCouple/index.json,readwrite"
 
 jobs:
