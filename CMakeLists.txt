@@ -144,7 +144,7 @@ install(
 )
 
 # Configure CPack driven installer package
-set(CPACK_GENERATOR "TGZ;ZIP;NuGet");
+set(CPACK_GENERATOR "TGZ;ZIP;NuGet")
 
 set(CPACK_PACKAGE_NAME "HydroCouple")
 set(CPACK_ARCHIVE_FILE_NAME "HydroCouple")
