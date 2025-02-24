@@ -81,26 +81,23 @@ jobs:
           ./bootstrap-vcpkg${{ matrix.shell_extension }}
           chmod +x vcpkg
 
-      # - name: Install Mono (Linux)
-      #   if: ${{ matrix.os == 'ubuntu-latest' }}
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y mono-complete
-
-      # - name: Install NuGet
-      #   uses: nuget/setup-nuget@v2
-
-      - name: Install Nuget (MacOS)
-        if: ${{ matrix.os == 'macos-13' || matrix.os == 'macos-latest' }}
+      - name: Install Mono (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          brew install nuget  
+          sudo apt-get update
+          sudo apt-get install -y mono-complete
+
+      - name: Install NuGet
+        uses: nuget/setup-nuget@v2
+        with:
+          nuget-version: 5.x
 
       - name: Install NuGet (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           .$(vcpkg fetch nuget) sources
-          .$(vcpkg fetch nuget) sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
-          .$(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
+          .$(vcpkg fetch nuget) sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }} --debug
+          .$(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github --debug
 
 
       - name: Configure NugGet (Unix like)
@@ -108,8 +105,8 @@ jobs:
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
           mono `./vcpkg fetch nuget | tail -n 1` sources
-          mono `./vcpkg fetch nuget | tail -n 1` sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
-          mono `./vcpkg fetch nuget | tail -n 1` setapikey ${{ env.NUGET_API_KEY }} -Source github
+          mono `./vcpkg fetch nuget | tail -n 1` sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }} --debug
+          mono `./vcpkg fetch nuget | tail -n 1` setapikey ${{ env.NUGET_API_KEY }} -Source github --debug
 
       - name: Configure CMake
         working-directory: HydroCouple
