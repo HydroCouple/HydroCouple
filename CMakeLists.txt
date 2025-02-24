@@ -105,8 +105,7 @@ install(
     EXPORT ${PROJECT_NAME}Targets
     FILE ${PROJECT_NAME}Targets.cmake
     NAMESPACE ${PROJECT_NAME}::
-    DESTINATION lib/cmake/${PROJECT_NAME}
- )
+    DESTINATION lib/cmake
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -114,7 +113,7 @@ include(CMakePackageConfigHelpers)
 configure_package_config_file(
    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
 )
 
 write_basic_package_version_file(
@@ -128,7 +127,7 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     License.md
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
 )
 
 install(
@@ -156,5 +155,10 @@ set(CPACK_NUGET_PACKAGE_ID "HydroCouple")
 set(CPACK_NUGET_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
 set(CPACK_NUGET_PACKAGE_AUTHORS ${CPACK_PACKAGE_VENDOR})
 set(CPACK_NUGET_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
+set(CPACK_NUGET_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
+set(CPACK_NUGET_PACKAGE_AUTHOR ${CPACK_PACKAGE_CONTACT})
+set(CPACK_NUGET_PACKAGE_LICENSE_URL "https://opensource.org/licenses/MIT")
+set(CPACK_NUGET_PACKAGE_PROJECT_URL "https://hydrocouple.org")
+set(CPACK_NUGET_PACKAGE_ICON_URL "https://github.com/HydroCouple/hydrocouple.github.io/blob/master/img/hydrocouple_logo.png")
 
 include(CPack)

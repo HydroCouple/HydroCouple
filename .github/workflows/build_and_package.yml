@@ -145,3 +145,10 @@ jobs:
             build-${{ matrix.alias }}/*.dmg
             build-${{ matrix.alias }}/*.nupkg
 
+      - name: Publish
+        env:
+          USERNAME: cbuahin
+          REMOTE_STORE: "https://nuget.pkg.github.com/Hydrocouple/index.json"
+          PACKAGE: ${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg
+        run: |
+          nuget push ${{ env.PACKAGE }} -Source github
