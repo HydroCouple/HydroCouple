@@ -11,7 +11,7 @@ env:
   BUILD_TYPE: Release
   QT_VERSION: 6.4.*
   VCPKG_ROOT: "$VCPKG_INSTALLATION_ROOT"
-  VCPKG_EXE: ./"$VCPKG_INSTALLATION_ROOT/vcpkg"
+  VCPKG_EXE:  "$VCPKG_INSTALLATION_ROOT/vcpkg"
   NUGET_FEED_URL: https://nuget.pkg.github.com/HydroCouple/index.json
   NUGET_USER_NAME: ${{ secrets.NUGET_USER_NAME }}
   NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
