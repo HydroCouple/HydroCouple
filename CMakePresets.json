@@ -1,13 +1,29 @@
 {
     "version": 2,
     "configurePresets": [
-      {
-        "name": "default",
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build",
-        "cacheVariables": {
-          "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        {
+            "name": "default",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            }
+        },
+        {
+            "name": "osx-x64",
+            "inherits": "default",
+            "generator": "Ninja",
+            "environment": {
+                "VCPKG_TARGET_TRIPLET": "x64-osx"
+            }
+        },
+        {
+            "name": "linux-x64",
+            "inherits": "default",
+            "generator": "Unix Makefiles",
+            "environment": {
+                "VCPKG_TARGET_TRIPLET": "x64-linux"
+            }
         }
-      }
     ]
-  }
+}
