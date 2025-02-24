@@ -98,9 +98,9 @@ jobs:
       - name: Configure NugGet
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
-         .\$(vcpkg fetch nuget) sources
-         .\$(vcpkg fetch nuget) sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
-         .\$(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source HydroCouple
+         $(vcpkg fetch nuget) sources
+         $(vcpkg fetch nuget) sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
+         $(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source HydroCouple
 
       - name: Configure CMake
         working-directory: HydroCouple
