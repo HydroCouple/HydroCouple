@@ -3,7 +3,6 @@
     "description": "HydroCouple Component-Based Modeling Interface Definitions",
     "license": "MIT",
     "homepage": "https://www.hydrocouple.org",
-    "version": "2.0.0",
     "version-semver": "2.0.0-alpha.1",
     "dependencies": [
         {
