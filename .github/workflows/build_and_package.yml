@@ -72,6 +72,7 @@ jobs:
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
           bootstrap-vcpkg${{ matrix.shell_extension }}
+          .\vcpkg integrate install
       
       - name: Bootstrap VCPKG (Unix like)
         if: ${{ matrix.os != 'windows-latest' }}
@@ -95,7 +96,7 @@ jobs:
       - name: Configure NugGet
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
-         .$(${{ env.VCPKG_EXE }} fetch nuget) sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -ApiKey ${{ env.NUGET_API_KEY }}
+         .$(${{ env.VCPKG_EXE }} fetch nuget) sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
          .$(${{ env.VCPKG_EXE }} fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
 
       - name: Configure CMake
