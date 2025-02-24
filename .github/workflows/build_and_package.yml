@@ -10,8 +10,8 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   QT_VERSION: 6.4.*
-  GA_VCPKG_ROOT: "$VCPKG_INSTALLATION_ROOT"
-  GA_VCPKG_EXE:  "$VCPKG_INSTALLATION_ROOT/vcpkg"
+  VCPKG_ROOT: "${{ github.workspace }}/vcpkg"
+  VCPKG_EXE:  "${{ github.workspace }}/vcpkg/vcpkg"
   NUGET_FEED_URL: https://nuget.pkg.github.com/HydroCouple/index.json
   NUGET_USER_NAME: ${{ secrets.NUGET_USER_NAME }}
   NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
@@ -28,6 +28,7 @@ jobs:
             alias: Linux
             shell: bash
             shell_extension: .sh
+            vcpkg_triplet: x64-linux
             env:
               - BUILD_TYPE: Release
 
@@ -54,14 +55,26 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Checkout VCPKG
+        uses: actions/checkout@v4
         with:
-          python-version: '3.8'
+          repository: https://github.com/microsoft/vcpkg.git
+          ref: 2025.02.14
+        
+      - name: Bootstrap VCPKG (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        working-directory: ${{ env.VCPKG_ROOT }}
+        run: |
+          bootstrap-vcpkg${{ matrix.shell_extension }}
       
+      - name: Bootstrap VCPKG (Unix like)
+        if: ${{ matrix.os != 'windows-latest' }}
+        working-directory: ${{ env.VCPKG_ROOT }}
+        run: |
+          ./bootstrap-vcpkg${{ matrix.shell_extension }}
 
       - name: Install Mono (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -76,16 +89,15 @@ jobs:
         run: |
           nuget help
     
-      - name: Bootstrap vcpkg
+      - name: Configure NugGet
+        working-directory: ${{ env.VCPKG_ROOT }}
         run: |
-         echo "VCPKG_ROOT: ${{ env.GA_VCPKG_ROOT }}"
-         ${{ env.GA_VCPKG_ROOT }}/bootstrap-vcpkg${{ matrix.shell_extension }}
-         ${{ env.GA_VCPKG_EXE }} fetch nuget sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -ApiKey ${{ env.NUGET_API_KEY }}
-         ${{ env.GA_VCPKG_EXE }} fetch nuget setapikey ${{ env.NUGET_API_KEY }} -Source github
+         .$(${{ env.VCPKG_EXE }} fetch nuget) sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -ApiKey ${{ env.NUGET_API_KEY }}
+         .$(${{ env.VCPKG_EXE }} fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
 
       - name: Configure CMake
         env:
-          VCPKG_ROOT:  ${{ env.GA_VCPKG_ROOT }}
+          VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
         run: |
           cmake --preset=default
           cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
