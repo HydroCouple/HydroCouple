@@ -57,12 +57,15 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          path: HydroCouple
       
       - name: Checkout VCPKG
         uses: actions/checkout@v4
         with:
           repository: microsoft/vcpkg
           ref: 2025.02.14
+          path: vcpkg
         
       - name: Bootstrap VCPKG (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
@@ -96,6 +99,7 @@ jobs:
          .$(${{ env.VCPKG_EXE }} fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
 
       - name: Configure CMake
+        working-directory: HydroCouple
         env:
           VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
         run: |
@@ -103,6 +107,7 @@ jobs:
           cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
+        working-directory: HydroCouple
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build-${{ matrix.alias }} --config ${{env.BUILD_TYPE}} --target package
 
