@@ -56,10 +56,8 @@ jobs:
             shell_extension: .bat
             env:
               - BUILD_TYPE: Release
-    permissions:
-      contents: read
-      packages: write
-      pull-requests: write           
+    permissions: write-all
+ 
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repository
