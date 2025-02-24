@@ -27,6 +27,7 @@ jobs:
           - os: ubuntu-latest
             alias: Linux
             shell: bash
+            preset_alias: linux
             shell_extension: .sh
             vcpkg_triplet: x64-linux
             env:
@@ -34,6 +35,7 @@ jobs:
 
           - os: macos-13
             alias: intel-mac
+            preset_alias: macos
             shell: bash
             shell_extension: .sh
             env:
@@ -41,6 +43,7 @@ jobs:
 
           - os: macos-latest
             alias: apple-silicon
+            preset_alias: macos
             shell: bash
             shell_extension: .sh
             env:
@@ -48,6 +51,7 @@ jobs:
 
           - os: windows-latest
             alias: win64
+            preset_alias: windows
             shell: cmd
             shell_extension: .bat
             env:
@@ -113,7 +117,7 @@ jobs:
         env:
           VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
         run: |
-          cmake --preset=default
+          cmake --preset=${{ matrix.preset_alias }}
           cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
