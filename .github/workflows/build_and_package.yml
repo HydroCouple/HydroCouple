@@ -134,4 +134,14 @@ jobs:
           name: build-artifacts-${{ matrix.alias }}
           path: |
             build-${{ matrix.alias }}/*.tar.gz
+            build-${{ matrix.alias }}/*.zip
+            build-${{ matrix.alias }}/*.deb
+            build-${{ matrix.alias }}/*.rpm
+            build-${{ matrix.alias }}/*.msi
+            build-${{ matrix.alias }}/*.dmg
+            build-${{ matrix.alias }}/*.pkg
+            build-${{ matrix.alias }}/*.exe
+            build-${{ matrix.alias }}/*.AppImage
+            build-${{ matrix.alias }}/*.dmg
+            build-${{ matrix.alias }}/*.nupkg
 
