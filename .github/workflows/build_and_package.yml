@@ -73,13 +73,13 @@ jobs:
         run: |
           bootstrap-vcpkg${{ matrix.shell_extension }}
           vcpkg integrate install
-          chmod +x vcpkg
       
       - name: Bootstrap VCPKG (Unix like)
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
           ./bootstrap-vcpkg${{ matrix.shell_extension }}
+          chmod +x vcpkg
 
       - name: Install Mono (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
@@ -106,9 +106,9 @@ jobs:
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
-         ./vcpkg fetch nuget sources
-         ./vcpkg fetch nuget sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
-         ./vcpkg fetch nuget setapikey ${{ env.NUGET_API_KEY }} -Source github
+         $(./vcpkg fetch nuget) sources
+         $(./vcpkg fetch nuget) sources add -Name github -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -Password ${{ env.NUGET_API_KEY }}
+         $(./vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
 
       - name: Configure CMake
         working-directory: HydroCouple
