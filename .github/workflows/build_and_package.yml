@@ -79,11 +79,8 @@ jobs:
           nuget help
     
       - name: Bootstrap vcpkg
-        env:
-          VCPKG_EXE: ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg
         run: |
-          echo ${{ env.VCPKG_EXE }}
-          echo ${{ env.VCPKG_INSTALLATION_ROOT }}
+          echo  $VCPKG_INSTALLATION_ROOT
           # ".$(VCPKG_INSTALLATION_ROOT)/bootstrap-vcpkg${{ matrix.shell_extension }}"
           # ${{ env.VCPKG_EXE }} fetch nuget sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -ApiKey ${{ env.NUGET_API_KEY }}
           # ${{ env.VCPKG_EXE }} fetch nuget setapikey ${{ env.NUGET_API_KEY }} -Source github
