@@ -81,13 +81,13 @@ jobs:
     
       - name: Bootstrap vcpkg
         run: |
-          ./${{ env.VCPKG_INSTALLATION_ROOT }}/bootstrap-vcpkg${{ matrix.shell_extension }}
+          .$(VCPKG_INSTALLATION_ROOT)/bootstrap-vcpkg${{ matrix.shell_extension }}
           ${{ env.VCPKG_EXE }} fetch nuget sources add -Name HydroCouple -Source ${{ env.NUGET_FEED_URL }} -UserName ${{ env.NUGET_USER_NAME }} -ApiKey ${{ env.NUGET_API_KEY }}
           ${{ env.VCPKG_EXE }} fetch nuget setapikey ${{ env.NUGET_API_KEY }} -Source github
 
       - name: Configure CMake
         env:
-          VCPKG_ROOT:  ${{ env.VCPKG_INSTALLATION_ROOT }}
+          VCPKG_ROOT:  $(env.VCPKG_INSTALLATION_ROOT)
         run: |
           cmake --preset=default
           cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
