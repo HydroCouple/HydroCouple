@@ -18,7 +18,8 @@ env:
   VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/HydroCouple/index.json,readwrite"
 
 jobs:
-  build:
+  build_and_package:
+    name: Build, Package, Test, and Deploy
     strategy:
       fail-fast: false
       matrix:

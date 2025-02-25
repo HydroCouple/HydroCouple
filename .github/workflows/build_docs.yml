@@ -7,7 +7,8 @@ on:
     branches: [ "master"]
 
 jobs:
-  build:
+  build_docs:
+    name: Build Documentation
     permissions: write-all
     environment:
       name: github-pages
