@@ -160,7 +160,7 @@ string(TOLOWER ${ARCHITECTURE} ARCHITECTURE)
 if(WIN32)
     set(CPACK_GENERATOR "ZIP;NuGet")
 else()
-    set(CPACK_GENERATOR "TGZ;ZIP;DEB;RPM;NuGet")
+    set(CPACK_GENERATOR "TGZ;NuGet")
 endif()
 
 # Common package settings
@@ -168,10 +168,6 @@ set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_VENDOR "hydrocouple.org")
 set(CPACK_PACKAGE_CONTACT "Caleb Buahin <caleb.buahin@gmail.com>")
-set(
-    CPACK_NUGET_PACKAGE_ICON_URL
-    "https://github.com/HydroCouple/hydrocouple.github.io/blob/master/img/hydrocouple_logo.png"
-)
 
 # NuGet package settings 
 set(CPACK_NUGET_PACKAGE_ID  ${PROJECT_NAME})
