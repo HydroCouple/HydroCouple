@@ -179,6 +179,5 @@ set(CPACK_NUGET_PACKAGE_AUTHOR ${CPACK_PACKAGE_CONTACT})
 set(CPACK_NUGET_PACKAGE_LICENSE_URL "https://opensource.org/licenses/MIT")
 set(CPACK_NUGET_PACKAGE_PROJECT_URL "https://hydrocouple.org")
 set(CPACK_NUGET_PACKAGE_ICON_URL "https://github.com/HydroCouple/hydrocouple.github.io/blob/master/img/hydrocouple_logo.png")
-set(CPACK_NUGET_PACKAGE_README ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
 
 include(CPack)

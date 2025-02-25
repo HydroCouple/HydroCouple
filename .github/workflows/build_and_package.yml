@@ -122,11 +122,11 @@ jobs:
           VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
         run: |
           cmake --preset=${{ matrix.preset_alias }}
-          cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-          cmake --build ${{github.workspace}}/build-${{ matrix.alias }} --config ${{env.BUILD_TYPE}} --target package
+          cmake -B ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake --build ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} --config ${{env.BUILD_TYPE}} --target package
 
       - name: Unit Testing
-        working-directory: ${{github.workspace}}/build-${{ matrix.alias }}
+        working-directory: ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} 
@@ -134,13 +134,13 @@ jobs:
       - name: Upload NuGet Packages (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          nuget push "${{github.workspace}}\build-${{ matrix.alias }}\*.nupkg" -Source github -SkipDuplicate
+          nuget push "${{github.workspace}}\build-${{ matrix.vcpkg_triplet }}\*.nupkg" -Source github -SkipDuplicate
 
       - name: Upload NuGet Packages (Unix like)
         working-directory: ${{ env.VCPKG_ROOT }}
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
-          mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg" -Source github -SkipDuplicate
+          mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}/*.nupkg" -Source github -SkipDuplicate
 
       - name: Upload Artifacts
         if: ${{ always() }}
@@ -148,7 +148,7 @@ jobs:
         with:
           name: build-artifacts-${{ matrix.vcpkg_triplet }}
           path: |
-            build-${{ matrix.alias }}/*.tar.gz
-            build-${{ matrix.alias }}/*.zip
-            build-${{ matrix.alias }}/*.nupkg
+            build-${{ matrix.vcpkg_triplet }}/*.tar.gz
+            build-${{ matrix.vcpkg_triplet }}/*.zip
+            build-${{ matrix.vcpkg_triplet }}/*.nupkg
 
