@@ -131,6 +131,17 @@ jobs:
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} 
+      
+      - name: Upload NuGet Packages (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          nuget push ${{github.workspace}}\build-${{ matrix.alias }}\*.nupkg -Source github
+
+      - name: Upload NuGet Packages (Unix like)
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: |
+          mono `./vcpkg fetch nuget | tail -n 1` push ${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg -Source github
+
 
       - name: Upload Artifacts
         if: ${{ always() }}
@@ -140,13 +151,5 @@ jobs:
           path: |
             build-${{ matrix.alias }}/*.tar.gz
             build-${{ matrix.alias }}/*.zip
-            # build-${{ matrix.alias }}/*.deb
-            # build-${{ matrix.alias }}/*.rpm
-            # build-${{ matrix.alias }}/*.msi
-            # build-${{ matrix.alias }}/*.dmg
-            # build-${{ matrix.alias }}/*.pkg
-            # build-${{ matrix.alias }}/*.exe
-            # build-${{ matrix.alias }}/*.AppImage
-            # build-${{ matrix.alias }}/*.dmg
             build-${{ matrix.alias }}/*.nupkg
 
