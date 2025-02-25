@@ -143,18 +143,37 @@ install(
 )
 
 # Configure CPack driven installer package
-set(CPACK_GENERATOR "TGZ;ZIP;NuGet")
 
-set(CPACK_PACKAGE_NAME "HydroCouple")
-set(CPACK_ARCHIVE_FILE_NAME "HydroCouple")
+# Get OS and architecture
+
+set(OS_NAME "${CMAKE_SYSTEM_NAME}")
+set(OS_VERSION "${CMAKE_SYSTEM_VERSION}")
+set(ARCHITECTURE "${CMAKE_SYSTEM_PROCESSOR}")
+
+# Format OS name for consistency
+string(TOLOWER ${OS_NAME} OS_NAME)
+string(REPLACE " " "_" OS_NAME ${OS_NAME})
+
+string(TOLOWER ${ARCHITECTURE} ARCHITECTURE)
+
+# if window only pack tar zip and Nugget
+if(WIN32)
+    set(CPACK_GENERATOR "ZIP;NuGet")
+else()
+    set(CPACK_GENERATOR "TGZ;NuGet")
+endif()
+
+# Common package settings
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "HydroCouple Interface Definitions for C++")
 set(CPACK_PACKAGE_VENDOR "hydrocouple.org")
+set(CPACK_PACKAGE_CONTACT "Caleb Buahin <caleb.buahin@gmail.com>")
 
-set(CPACK_NUGET_PACKAGE_ID "HydroCouple")
-set(CPACK_NUGET_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
-set(CPACK_NUGET_PACKAGE_AUTHORS ${CPACK_PACKAGE_VENDOR})
-set(CPACK_NUGET_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
+# NuGet package settings 
+set(CPACK_NUGET_PACKAGE_ID  ${PROJECT_NAME})
+
+# Qualify package name with os and architecture
+set(CPACK_NUGET_PACKAGE_NAME "${PROJECT_NAME}.${ARCHITECTURE}.${OS_NAME}")
 set(CPACK_NUGET_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
 set(CPACK_NUGET_PACKAGE_AUTHOR ${CPACK_PACKAGE_CONTACT})
 set(CPACK_NUGET_PACKAGE_LICENSE_URL "https://opensource.org/licenses/MIT")

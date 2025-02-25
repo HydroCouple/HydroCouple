@@ -2,7 +2,7 @@ name: Build and Package
 
 on:
   push:
-    branches: [ "master"]
+    branches: [ "master", "dev"]
   pull_request:
     branches: [ "master"]
 
@@ -18,7 +18,8 @@ env:
   VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/HydroCouple/index.json,readwrite"
 
 jobs:
-  build:
+  build_and_package:
+    name: Build, Package, Test, and Deploy
     strategy:
       fail-fast: false
       matrix:
@@ -38,6 +39,7 @@ jobs:
             preset_alias: macos
             shell: bash
             shell_extension: .sh
+            vcpkg_triplet: x64-osx
             env:
               - BUILD_TYPE: Release
 
@@ -46,6 +48,7 @@ jobs:
             preset_alias: macos
             shell: bash
             shell_extension: .sh
+            vcpkg_triplet: arm64-osx
             env:
               - BUILD_TYPE: Release
 
@@ -54,6 +57,7 @@ jobs:
             preset_alias: windows
             shell: cmd
             shell_extension: .bat
+            vcpkg_triplet: x64-windows
             env:
               - BUILD_TYPE: Release
     permissions: write-all
@@ -104,7 +108,6 @@ jobs:
           .$(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
           .$(vcpkg fetch nuget) sources
 
-
       - name: Configure NugGet (Unix like)
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: ${{ env.VCPKG_ROOT }}
@@ -113,40 +116,39 @@ jobs:
           mono `./vcpkg fetch nuget | tail -n 1` setapikey ${{ env.NUGET_API_KEY }} -Source github 
           mono `./vcpkg fetch nuget | tail -n 1` sources
 
-      - name: Configure CMake
+      - name: CMake Configure and Build Binaries
         working-directory: HydroCouple
         env:
           VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
         run: |
           cmake --preset=${{ matrix.preset_alias }}
-          cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake -B ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake --build ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} --config ${{env.BUILD_TYPE}} --target package
 
-      - name: Build
-        working-directory: HydroCouple
-        # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build-${{ matrix.alias }} --config ${{env.BUILD_TYPE}} --target package
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build-${{ matrix.alias }}
+      - name: Unit Testing
+        working-directory: ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} 
+      
+      - name: Upload NuGet Packages (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          nuget push "${{github.workspace}}\build-${{ matrix.vcpkg_triplet }}\*.nupkg" -Source github -SkipDuplicate
+
+      - name: Upload NuGet Packages (Unix like)
+        working-directory: ${{ env.VCPKG_ROOT }}
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: |
+          mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}/*.nupkg" -Source github -SkipDuplicate
 
       - name: Upload Artifacts
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ matrix.alias }}
+          name: build-artifacts-${{ matrix.vcpkg_triplet }}
           path: |
-            build-${{ matrix.alias }}/*.tar.gz
-            build-${{ matrix.alias }}/*.zip
-            # build-${{ matrix.alias }}/*.deb
-            # build-${{ matrix.alias }}/*.rpm
-            # build-${{ matrix.alias }}/*.msi
-            # build-${{ matrix.alias }}/*.dmg
-            # build-${{ matrix.alias }}/*.pkg
-            # build-${{ matrix.alias }}/*.exe
-            # build-${{ matrix.alias }}/*.AppImage
-            # build-${{ matrix.alias }}/*.dmg
-            build-${{ matrix.alias }}/*.nupkg
+            build-${{ matrix.vcpkg_triplet }}/*.tar.gz
+            build-${{ matrix.vcpkg_triplet }}/*.zip
+            build-${{ matrix.vcpkg_triplet }}/*.nupkg
 
