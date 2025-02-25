@@ -105,7 +105,6 @@ jobs:
           .$(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
           .$(vcpkg fetch nuget) sources
 
-
       - name: Configure NugGet (Unix like)
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: ${{ env.VCPKG_ROOT }}
@@ -114,20 +113,16 @@ jobs:
           mono `./vcpkg fetch nuget | tail -n 1` setapikey ${{ env.NUGET_API_KEY }} -Source github 
           mono `./vcpkg fetch nuget | tail -n 1` sources
 
-      - name: Configure CMake
+      - name: CMake Configure and Build Binaries
         working-directory: HydroCouple
         env:
           VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
         run: |
           cmake --preset=${{ matrix.preset_alias }}
           cmake -B ${{github.workspace}}/build-${{ matrix.alias }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake --build ${{github.workspace}}/build-${{ matrix.alias }} --config ${{env.BUILD_TYPE}} --target package
 
-      - name: Build
-        working-directory: HydroCouple
-        # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build-${{ matrix.alias }} --config ${{env.BUILD_TYPE}} --target package
-
-      - name: Test
+      - name: Unit Testing
         working-directory: ${{github.workspace}}/build-${{ matrix.alias }}
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
@@ -142,9 +137,6 @@ jobs:
         working-directory: ${{ env.VCPKG_ROOT }}
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
-          # # replace forward slashes in workspace path with backslashes
-          # workspace_path=$(echo ${{github.workspace}} | sed 's/\//\\/g')
-          # mono `./vcpkg fetch nuget | tail -n 1` push "${workspace_path}\\build-${{ matrix.alias }}\\*.nupkg" -Source github -SkipDuplicate
           mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg" -Source github -SkipDuplicate
 
       - name: Upload Artifacts
