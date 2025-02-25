@@ -141,7 +141,7 @@ jobs:
       - name: Upload NuGet Packages (Unix like)
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
-          mono `./vcpkg fetch nuget | tail -n 1` push ${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg -Source github
+          mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg" -Source github
 
 
       - name: Upload Artifacts
