@@ -55,32 +55,4 @@ jobs:
       with:
         name: hydrocouple-docs
         path: HydroCouple/docs/*.tar.gz
-      
-    # - name: Checkout HydroCouple Docs Repo
-    #   uses: actions/checkout@v4
-    #   with:
-    #     repository: HydroCouple/hydrocouple.github.io
-    #     ref: dev
-    #     path: hydrocouple.github.io
-    #     token: ${{ secrets.NUGET_API_KEY }}
-    #     persist-credentials: true
-  
-    # - name: Push Docs to HydroCouple Website Repo
-    #   run: |
-    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-    #     git config --global user.name  "github-actions[bot]"
-    #     git config --global credential.helper cache
-    #     rm -rf hydrocouple.github.io/hydrocoupledocs/html
-    #     cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
-    #     cd hydrocouple.github.io
-
-    #     git fetch origin
-        
-    #     if [ -n "$(git status --porcelain)" ]; then
-    #       git add -A
-    #       git commit -m "CI: Updated HydroCouple Docs"
-    #       git push origin dev
-    #     else
-    #       echo "No changes to commit"
-    #     fi
-  
+    
