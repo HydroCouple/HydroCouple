@@ -135,7 +135,7 @@ jobs:
       
       - name: Upload NuGet Packages
         run: |
-          nuget push "${{github.workspace}}\build-${{ matrix.alias }}\*.nupkg" -Source github --skip-duplicate
+          nuget push "${{github.workspace}}\build-${{ matrix.alias }}\*.nupkg" -Source github -SkipDuplicate
 
       - name: Upload Artifacts
         if: ${{ always() }}
