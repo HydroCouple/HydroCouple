@@ -39,7 +39,7 @@ jobs:
             preset_alias: macos
             shell: bash
             shell_extension: .sh
-            vcpgk_triplet: x64-osx
+            vcpkg_triplet: x64-osx
             env:
               - BUILD_TYPE: Release
 
@@ -48,7 +48,7 @@ jobs:
             preset_alias: macos
             shell: bash
             shell_extension: .sh
-            vcpgk_triplet: arm64-osx
+            vcpkg_triplet: arm64-osx
             env:
               - BUILD_TYPE: Release
 
@@ -57,7 +57,7 @@ jobs:
             preset_alias: windows
             shell: cmd
             shell_extension: .bat
-            vcpgk_triplet: x64-windows
+            vcpkg_triplet: x64-windows
             env:
               - BUILD_TYPE: Release
     permissions: write-all
