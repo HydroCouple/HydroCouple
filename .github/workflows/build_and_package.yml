@@ -133,9 +133,17 @@ jobs:
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} 
       
-      - name: Upload NuGet Packages
+      - name: Upload NuGet Packages (Windows)
+        if: ${{ matrix.os == 'windows-latest' }}
         run: |
           nuget push "${{github.workspace}}\build-${{ matrix.alias }}\*.nupkg" -Source github -SkipDuplicate
+
+      - name: Upload NuGet Packages (Unix like)
+        if: ${{ matrix.os != 'windows-latest' }}
+        run: |
+          # replace forward slashes in workspace path with backslashes
+          workspace_path=$(echo ${{github.workspace}} | sed 's/\//\\/g')
+          mono `./vcpkg fetch nuget | tail -n 1` push "${workspace_path}\\build-${{ matrix.alias }}\\*.nupkg" -Source github -SkipDuplicate
 
       - name: Upload Artifacts
         if: ${{ always() }}
