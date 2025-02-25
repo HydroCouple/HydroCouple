@@ -142,9 +142,10 @@ jobs:
         working-directory: ${{ env.VCPKG_ROOT }}
         if: ${{ matrix.os != 'windows-latest' }}
         run: |
-          # replace forward slashes in workspace path with backslashes
-          workspace_path=$(echo ${{github.workspace}} | sed 's/\//\\/g')
-          mono `./vcpkg fetch nuget | tail -n 1` push "${workspace_path}\\build-${{ matrix.alias }}\\*.nupkg" -Source github -SkipDuplicate
+          # # replace forward slashes in workspace path with backslashes
+          # workspace_path=$(echo ${{github.workspace}} | sed 's/\//\\/g')
+          # mono `./vcpkg fetch nuget | tail -n 1` push "${workspace_path}\\build-${{ matrix.alias }}\\*.nupkg" -Source github -SkipDuplicate
+          mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.alias }}/*.nupkg" -Source github -SkipDuplicate
 
       - name: Upload Artifacts
         if: ${{ always() }}
