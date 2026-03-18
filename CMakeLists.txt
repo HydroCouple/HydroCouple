@@ -95,7 +95,7 @@ endif()
 
 install(
     FILES 
-        License.md
+        License
         README.md
     DESTINATION .
 )
