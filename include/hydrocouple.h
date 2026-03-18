@@ -12,8 +12,8 @@
  * This file and its associated files is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2025, Caleb Buahin, All rights reserved.
- * \date 2014-2025
+ * \copyright Copyright 2026, Caleb Buahin, All rights reserved.
+ * \date 2014-2026
  * \pre
  * \bug
  * \warning
@@ -28,17 +28,20 @@
 #include <array>
 #include <vector>
 #include <any>
+#include <cstdint>
 #include <functional>
 #include <list>
 #include <set>
 #include <memory>
+#include <typeinfo>
+#include <unordered_map>
 
 using namespace std;
 
 /*!
- * \brief The ByteOrder enum of serialized data
+ * \brief The ByteOrder enum class indicates the byte order of serialized data.
  */
-enum ByteOrder
+enum class ByteOrder : uint8_t
 {
 
   /*!
@@ -71,6 +74,8 @@ namespace HydroCouple
   class IAdaptedOutputFactory;
   class IAdaptedOutputFactoryComponent;
   class IUnit;
+  class IComponentDataItem;
+  class IComponentDataItemValueChanged;
   class IComponentStatusChangeEventArgs;
   class IWorkflowComponent;
   class IWorkflowComponentStatusChangeEventArgs;
@@ -699,20 +704,20 @@ namespace HydroCouple
     virtual void finish() = 0;
 
     /*!
-     * \brief workflow is the workflow that this component is part of.
-     * \return
+     * \brief Gets the workflow that this component is part of.
+     * \return The IWorkflowComponent that this component belongs to, or nullptr if not part of a workflow.
      */
     virtual const IWorkflowComponent *workflow() const = 0;
 
     /*!
-     * \brief setWorkflow
+     * \brief Sets the workflow that this component is part of.
      * \param[in] workflow is the workflow that this component is part of.
      */
     virtual void setWorkflow(const IWorkflowComponent *workflow) = 0;
 
     /*!
-     * \brief mpiNumProcesses
-     * \return Returns the number of MPI processes allocated to this component.
+     * \brief Gets the number of MPI processes allocated to this component.
+     * \return The number of MPI processes allocated to this component.
      */
     virtual int mpiNumOfProcesses() const = 0;
 
@@ -729,8 +734,8 @@ namespace HydroCouple
     virtual void mpiSetProcessRank(int processRank) = 0;
 
     /*!
-     * \brief mpiAllocatedProcesses are the set of MPI processes/ranks allocated to this component.
-     * \return
+     * \brief Gets the set of MPI processes/ranks allocated to this component.
+     * \return A set of integers representing the MPI processes/ranks allocated to this component.
      */
     virtual set<int> mpiAllocatedProcesses() const = 0;
 
@@ -745,17 +750,17 @@ namespace HydroCouple
     virtual void mpiAllocateProcesses(const set<int> &mpiProcessesToAllocate) = 0;
 
     /*!
-     * \brief mpiClearAllocatedProcesses
+     * \brief Clears all MPI processes/ranks allocated to this component.
      */
     virtual void mpiClearAllocatedProcesses() = 0;
 
     /*!
-     * \brief referenceDirectory
+     * \brief Gets the reference directory for this component instance.
      * \details All relative file paths specified that are associated with this component instance are referenced
      * from this directory. Typically, this will be the directory for the project file for the current composition. Values
      * are typically set from the Composition GUI and can be referenced internally for saving files and writing
      * arguments for the component.
-     * \return
+     * \return The reference directory path as a string.
      */
     virtual string referenceDirectory() const = 0;
 
@@ -803,20 +808,20 @@ namespace HydroCouple
     virtual ~IProxyModelComponent() = default;
 
     /*!
-     * \brief parentMpiProcessRank
-     * \return An integer representing the MPI process rank of its parent model
+     * \brief Gets the MPI process rank of the parent model.
+     * \return An integer representing the MPI process rank of its parent model.
      */
     virtual int parentMpiProcessRank() const = 0;
 
     /*!
-     * \brief parentProcessAddress
-     * \return A string representing the address of its parent model
+     * \brief Gets the address of the parent model process.
+     * \return A string representing the address of its parent model.
      */
     virtual string parentProcessAddress() const = 0;
 
     /*!
-     * \brief parentId
-     * \return A string representing the unique identifier of its parent model
+     * \brief Gets the unique identifier of the parent model.
+     * \return A string representing the unique identifier of its parent model.
      */
     virtual string parentId() const = 0;
   };
@@ -920,12 +925,12 @@ namespace HydroCouple
     virtual ~IValueDefinition() = default;
 
     /*!
-     * \brief The object types of value that will be available
-     * and is returned by the GetValues function.IPropertyChanged.
+     * \brief Gets the object types of value that will be available
+     * and is returned by the GetValues function.
      *
-     * \returns the value type associated with this IValueDefinition
+     * \returns A const reference to the type_info associated with this IValueDefinition.
      */
-    virtual type_info type() const = 0;
+    virtual const type_info &type() const = 0;
 
     //! The value representing that data is missing.
     virtual hydrocouple_variant missingValue() const = 0;
@@ -1294,14 +1299,14 @@ namespace HydroCouple
     virtual IUnit *unit() const = 0;
 
     /*!
-     * \brief minValue
-     * \return
+     * \brief Gets the minimum allowed value for this quantity.
+     * \return A hydrocouple_variant representing the minimum value.
      */
     virtual hydrocouple_variant minValue() const = 0;
 
     /*!
-     * \brief maxValue
-     * \return
+     * \brief Gets the maximum allowed value for this quantity.
+     * \return A hydrocouple_variant representing the maximum value.
      */
     virtual hydrocouple_variant maxValue() const = 0;
   };
@@ -1443,15 +1448,15 @@ namespace HydroCouple
 
     /*!
      * \brief Gets the dimension indexes of the data that changed.
-     * \returns The dimension indexes of the data that changed.
+     * \returns A vector containing the dimension indexes of the data that changed.
      */
-    virtual initializer_list<int> dimensionIndexes() const = 0;
+    virtual vector<int> dimensionIndexes() const = 0;
 
     /*!
      * \brief Gets the strides of the data that changed.
-     * \returns The lengths of the dimensions for the data that changed. If empty a single value was changed.
+     * \returns A vector containing the lengths of the dimensions for the data that changed. If empty a single value was changed.
      */
-    virtual initializer_list<int> dimensionLengths() const = 0;
+    virtual vector<int> dimensionLengths() const = 0;
   };
 
   /*!
@@ -1479,8 +1484,8 @@ namespace HydroCouple
        */
       File,
 
-      /*
-       * \brief Enumeration indicating that the argument was read from a URL.
+      /*!
+       * \brief Enumeration indicating that the argument input is in JSON format.
        */
       JSON,
 
@@ -1529,7 +1534,6 @@ namespace HydroCouple
 
     /*!
      * \brief Writes data to files associated with this argument if they exist.
-     * \return
      */
     virtual void saveData() = 0;
 
@@ -1541,9 +1545,10 @@ namespace HydroCouple
     virtual list<string> fileFilters() const = 0;
 
     /*!
-     * \brief Valid IComponentDataItem instance types that can be read by this argument.
+     * \brief Gets the valid IComponentDataItem instance types that can be read by this argument.
+     * \returns A list of pointers to type_info objects representing the valid component data item types.
      */
-    virtual list<type_info> validComponentDataItemTypes() const = 0;
+    virtual list<const type_info *> validComponentDataItemTypes() const = 0;
 
     /*!
      * \brief Boolean indicating whether this IArgument copy its values from a string.
@@ -1553,8 +1558,8 @@ namespace HydroCouple
     virtual bool isValidArgType(ArgumentInputType argType) const = 0;
 
     /*!
-     * \brief argumentIOType
-     * \return
+     * \brief Gets the current input type used for this argument.
+     * \return The ArgumentInputType indicating how this argument was initialized.
      */
     virtual ArgumentInputType currentArgumentInputType() const = 0;
 
@@ -1944,19 +1949,19 @@ namespace HydroCouple
     virtual bool isRequiredProvider(const IIdentity *providerLabel) const = 0;
 
     /*!
-     * \brief providers
-     * \return
+     * \brief Gets the list of providers supplying data to this multi-input.
+     * \return A vector of IOutput pointers representing the providers.
      */
     virtual vector<IOutput *> providers() const = 0;
 
     /*!
      * \brief canConsume checks if the provider can supply data to this consumer.
-     * \param provider is the IOutput that can supply the data to this IInput.
-     * \param message is the error message from the canConsume function.
-     * \param providerRoleIdentifier is the IIdentity label specifying where to add the provider.
+     * \param[in] provider is the IOutput that can supply the data to this IInput.
+     * \param[out] message is the error message from the canConsume function.
+     * \param[in] providerRoleIdentifier is the IIdentity label specifying where to add the provider.
      * \return boolean indicating whether the provider can supply data to this consumer.
      */
-    virtual void canConsume(IOutput *provider, string &message, const IIdentity *providerRoleIdentifier = nullptr) const = 0;
+    virtual bool canConsume(IOutput *provider, string &message, const IIdentity *providerRoleIdentifier = nullptr) const = 0;
 
     /*!
      * \brief addProvider adds a provider to the list of providers.
@@ -1966,8 +1971,9 @@ namespace HydroCouple
     virtual bool addProvider(IOutput *provider, const IIdentity *providerRoleIdentifier = nullptr) = 0;
 
     /*!
-     * \brief removeProvider
-     * \param provider
+     * \brief Removes a provider from the list of providers.
+     * \param provider is the IOutput to remove from the list of providers.
+     * \return True if the provider was removed successfully, otherwise false.
      */
     virtual bool removeProvider(IOutput *provider) = 0;
   };
@@ -1990,8 +1996,8 @@ namespace HydroCouple
     virtual ~IIdBasedComponentDataItem() = default;
 
     /*!
-     * \brief identifiers
-     * \return
+     * \brief Gets the identifiers associated with this id-based component data item.
+     * \return A vector of strings representing the identifiers.
      */
     virtual vector<string> identifiers() const = 0;
 
@@ -2136,8 +2142,8 @@ namespace HydroCouple
     virtual ~IWorkflowComponent() = default;
 
     /*!
-     * \brief componentInfo
-     * \return
+     * \brief Gets the metadata information about this workflow component.
+     * \return A pointer to the IWorkflowComponentInfo for this component.
      */
     virtual IWorkflowComponentInfo *componentInfo() const = 0;
 
@@ -2155,29 +2161,29 @@ namespace HydroCouple
     virtual bool isRequiredModelComponent(const IIdentity *modelComponentLabel) const = 0;
 
     /*!
-     * \brief initialize
+     * \brief Initializes the workflow component.
      */
     virtual void initialize() = 0;
 
     /*!
-     * \brief update
+     * \brief Updates the workflow component for the current time step.
      */
     virtual void update() = 0;
 
     /*!
-     * \brief finish
+     * \brief Finalizes the workflow component and releases resources.
      */
     virtual void finish() = 0;
 
     /*!
-     * \brief status
-     * \return
+     * \brief Gets the current status of the workflow component.
+     * \return The current WorkflowStatus of this component.
      */
     virtual WorkflowStatus status() const = 0;
 
     /*!
-     * \brief modelComponents
-     * \return
+     * \brief Gets the model components managed by this workflow.
+     * \return A vector of IModelComponent pointers managed by this workflow.
      */
     virtual vector<IModelComponent *> modelComponents() const = 0;
 

@@ -84,6 +84,15 @@ configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h
 )
 
+# ---- Testing ----
+option(HYDROCOUPLE_BUILD_TESTS "Build HydroCouple tests" ON)
+
+if(HYDROCOUPLE_BUILD_TESTS)
+    enable_testing()
+    find_package(GTest CONFIG REQUIRED)
+    add_subdirectory(tests)
+endif()
+
 install(
     FILES 
         License.md

@@ -1,4 +1,4 @@
-name: Build and Package
+name: Build and Unit Test
 
 on:
   push:
@@ -7,19 +7,17 @@ on:
     branches: [ "master"]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  QT_VERSION: 6.4.*
   VCPKG_ROOT: "${{ github.workspace }}/vcpkg"
   VCPKG_EXE:  "${{ github.workspace }}/vcpkg/vcpkg"
   NUGET_FEED_URL: https://nuget.pkg.github.com/HydroCouple/index.json
   NUGET_USER_NAME: ${{ secrets.NUGET_USER_NAME }}
-  NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN  }}
+  NUGET_API_KEY: ${{ secrets.GITHUB_TOKEN }}
   VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/HydroCouple/index.json,readwrite"
 
 jobs:
-  build_and_package:
-    name: Build, Package, and Deploy
+  build_and_unit_test:
+    name: Build and Unit Test
     strategy:
       fail-fast: false
       matrix:
@@ -31,8 +29,6 @@ jobs:
             preset_alias: linux
             shell_extension: .sh
             vcpkg_triplet: x64-linux
-            env:
-              - BUILD_TYPE: Release
 
           - os: macos-13
             alias: intel-mac
@@ -40,8 +36,6 @@ jobs:
             shell: bash
             shell_extension: .sh
             vcpkg_triplet: x64-osx
-            env:
-              - BUILD_TYPE: Release
 
           - os: macos-latest
             alias: apple-silicon
@@ -49,8 +43,6 @@ jobs:
             shell: bash
             shell_extension: .sh
             vcpkg_triplet: arm64-osx
-            env:
-              - BUILD_TYPE: Release
 
           - os: windows-latest
             alias: win64
@@ -58,31 +50,29 @@ jobs:
             shell: cmd
             shell_extension: .bat
             vcpkg_triplet: x64-windows
-            env:
-              - BUILD_TYPE: Release
     permissions: write-all
- 
+
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           path: HydroCouple
-      
+
       - name: Checkout VCPKG
         uses: actions/checkout@v4
         with:
           repository: microsoft/vcpkg
           ref: 2025.02.14
           path: vcpkg
-        
+
       - name: Bootstrap VCPKG (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
           bootstrap-vcpkg${{ matrix.shell_extension }}
           vcpkg integrate install
-      
+
       - name: Bootstrap VCPKG (Unix like)
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: ${{ env.VCPKG_ROOT }}
@@ -108,7 +98,7 @@ jobs:
           .$(vcpkg fetch nuget) setapikey ${{ env.NUGET_API_KEY }} -Source github
           .$(vcpkg fetch nuget) sources
 
-      - name: Configure NugGet (Unix like)
+      - name: Configure NuGet (Unix like)
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: ${{ env.VCPKG_ROOT }}
         run: |
@@ -116,33 +106,15 @@ jobs:
           mono `./vcpkg fetch nuget | tail -n 1` setapikey ${{ env.NUGET_API_KEY }} -Source github 
           mono `./vcpkg fetch nuget | tail -n 1` sources
 
-      - name: CMake Configure and Build Binaries
+      - name: CMake Configure and Build
         working-directory: HydroCouple
         env:
-          VCPKG_ROOT:  ${{ env.VCPKG_ROOT }}
+          VCPKG_ROOT: ${{ env.VCPKG_ROOT }}
         run: |
           cmake --preset=${{ matrix.preset_alias }}
-          cmake -B ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DHYDROCOUPLE_BUILD_TESTS=OFF
-          cmake --build ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} --config ${{env.BUILD_TYPE}} --target package
-      
-      - name: Upload NuGet Packages (Windows)
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          nuget push "${{github.workspace}}\build-${{ matrix.vcpkg_triplet }}\*.nupkg" -Source github -SkipDuplicate
+          cmake -B ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DHYDROCOUPLE_BUILD_TESTS=ON
+          cmake --build ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} --config ${{env.BUILD_TYPE}}
 
-      - name: Upload NuGet Packages (Unix like)
-        working-directory: ${{ env.VCPKG_ROOT }}
-        if: ${{ matrix.os != 'windows-latest' }}
-        run: |
-          mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}/*.nupkg" -Source github -SkipDuplicate
-
-      - name: Upload Artifacts
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts-${{ matrix.vcpkg_triplet }}
-          path: |
-            build-${{ matrix.vcpkg_triplet }}/*.tar.gz
-            build-${{ matrix.vcpkg_triplet }}/*.zip
-            build-${{ matrix.vcpkg_triplet }}/*.nupkg
-
+      - name: Run Unit Tests
+        working-directory: ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}
+        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
