@@ -135,7 +135,7 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-    License.md
+    License
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
 )
 
