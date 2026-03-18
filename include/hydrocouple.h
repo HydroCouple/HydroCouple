@@ -64,6 +64,7 @@ namespace HydroCouple
   //! Forward declarations
   template <typename... Args>
   class ISignal;
+  class IComponentDataItem;
   class IModelComponent;
   class IAdaptedOutputFactory;
   class IArgument;
