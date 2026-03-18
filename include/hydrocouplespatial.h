@@ -12,8 +12,8 @@
  * This file and its associated files is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
- * \copyright Copyright 2014-2025, Caleb Buahin, All rights reserved.
- * \date 2014-2025
+ * \copyright Copyright 2014-2026, Caleb Buahin, All rights reserved.
+ * \date 2014-2026
  * \pre
  * \bug
  * \warning
@@ -40,10 +40,10 @@ namespace HydroCouple
     class IPolyhedralSurface;
 
     /*!
-     * \brief The MeshDataType enum describes the part of the
+     * \brief The MeshDataObjectType enum describes the part of the
      * geometry of the mesh that data corresponds to.
      */
-    enum MeshDataObjectType
+    enum class MeshDataObjectType
     {
 
       /*!
@@ -62,7 +62,7 @@ namespace HydroCouple
       Edge,
 
       /*!
-       * \brief The data corresponds to the edges of the mesh.
+       * \brief The data corresponds to the faces of the mesh.
        */
       Face,
     };
@@ -70,7 +70,7 @@ namespace HydroCouple
     /*!
      * \brief The types of data available in a network.
      */
-    enum NetworkDataObjectType
+    enum class NetworkDataObjectType
     {
       /*!
        * \brief The data corresponds to the nodes of the network.
@@ -86,7 +86,7 @@ namespace HydroCouple
     /*!
      * \brief The types of data available in a mesh.
      */
-    enum MeshDataType
+    enum class MeshDataType
     {
       //! Single scalar value.
       Scalar,
@@ -101,7 +101,7 @@ namespace HydroCouple
     /*!
      * \brief The types of data available in a network.
      */
-    enum NetworkDataType
+    enum class NetworkDataType
     {
       //! Single scalar value.
       Scalar,
@@ -134,7 +134,7 @@ namespace HydroCouple
 
     public:
       /*!
-       * \brief The Well-known Text Representation of the Spatial Reference System.
+       * \brief ISpatialReferenceSystem destructor.
        */
       virtual ~ISpatialReferenceSystem() = default;
 
@@ -168,43 +168,43 @@ namespace HydroCouple
     {
     public:
       /*!
-       * \brief The minimum x-coordinate value for this IEnvelope.
+       * \brief IEnvelope destructor.
        */
       virtual ~IEnvelope() = default;
 
       /*!
-       * \brief minX The minimum x-coordinate value for this IEnvelope.
-       * \return
+       * \brief The minimum x-coordinate value for this IEnvelope.
+       * \return The minimum x-coordinate.
        */
       virtual double minX() const = 0;
 
       /*!
-       * \brief maxX The maximum x-coordinate value for this IEnvelope.
-       * \return
+       * \brief The maximum x-coordinate value for this IEnvelope.
+       * \return The maximum x-coordinate.
        */
       virtual double maxX() const = 0;
 
       /*!
-       * \brief minY The minimum y-coordinate value for this IEnvelope.
-       * \return
+       * \brief The minimum y-coordinate value for this IEnvelope.
+       * \return The minimum y-coordinate.
        */
       virtual double minY() const = 0;
 
       /*!
-       * \brief maxY The maximum y-coordinate value for this IEnvelope.
-       * \return
+       * \brief The maximum y-coordinate value for this IEnvelope.
+       * \return The maximum y-coordinate.
        */
       virtual double maxY() const = 0;
 
       /*!
-       * \brief minZ The minimum z-coordinate value for this IEnvelope.
-       * \return
+       * \brief The minimum z-coordinate value for this IEnvelope.
+       * \return The minimum z-coordinate.
        */
       virtual double minZ() const = 0;
 
       /*!
-       * \brief maxZ The maximum z-coordinate value for this IEnvelope.
-       * \return
+       * \brief The maximum z-coordinate value for this IEnvelope.
+       * \return The maximum z-coordinate.
        */
       virtual double maxZ() const = 0;
     };
@@ -298,7 +298,7 @@ namespace HydroCouple
       };
 
       /*!
-       * \brief The type of IGeometry.
+       * \brief IGeometry destructor.
        */
       virtual ~IGeometry() = default;
 
@@ -586,12 +586,12 @@ namespace HydroCouple
       virtual double y() const = 0;
 
       /*!
-       * \brief The x-coordinate value for this IPoint. Returns NIL otherwise.
+       * \brief The z-coordinate value for this IPoint. Returns NIL otherwise.
        */
       virtual double z() const = 0;
 
       /*!
-       * \brief The x-coordinate value for this IPoint. Returns NIL otherwise.
+       * \brief The m-coordinate value for this IPoint. Returns NIL otherwise.
        */
       virtual double m() const = 0;
     };
@@ -857,7 +857,7 @@ namespace HydroCouple
 
       /*!
        * \brief The target face of this edge, if dual. Otherwise null if not dual.
-       * \return
+       * \return The target face polygon, or null if not dual.
        */
       virtual IPolygon *face() = 0;
 
@@ -987,8 +987,8 @@ namespace HydroCouple
       virtual IPoint *pointOnSurface() const = 0;
 
       /*!
-       * \brief boundaryMultiCurve
-       * \return
+       * \brief Gets the boundary of this surface as a multi-curve.
+       * \return The boundary multi-curve of this surface.
        */
       virtual IMultiCurve *boundaryMultiCurve() const = 0;
     };
@@ -1019,8 +1019,7 @@ namespace HydroCouple
       virtual IPoint *centroid() const = 0;
 
       /*!
-       * \brief The mathematical centroid for this ISurface as an IPoint.
-       * The result is not guaranteed to be on this ISurface.
+       * \brief A Point guaranteed to be on this ISurface.
        */
       virtual IPoint *pointOnSurface() const = 0;
     };
@@ -1093,8 +1092,8 @@ namespace HydroCouple
       virtual IEdge *edge() const = 0;
 
       /*!
-       * \brief polyhydralSurface
-       * \returns the surface this IPolygon belongs to. Otherwise returns Null.
+       * \brief Gets the polyhedral surface this polygon belongs to.
+       * \returns The surface this IPolygon belongs to, or null if not associated with a surface.
        */
       virtual IPolyhedralSurface *polyhydralSurface() const = 0;
     };
@@ -1154,7 +1153,7 @@ namespace HydroCouple
     {
     public:
       /*!
-       * \brief ~Network destructor.
+       * \brief INetwork destructor.
        */
       virtual ~INetwork() = default;
 
@@ -1165,20 +1164,20 @@ namespace HydroCouple
       virtual int edgeCount() const = 0;
 
       /*!
-       * \brief edge
+       * \brief Gets the edge at the specified index in the network.
        * \param index of the edge in the network.
        * \return The edge at the specified index.
        */
       virtual IEdge *edge(int index) const = 0;
 
       /*!
-       * \brief vertexCount
+       * \brief Gets the number of vertices in the network.
        * \return Number of vertices in the network.
        */
       virtual int vertexCount() const = 0;
 
       /*!
-       * \brief vertex
+       * \brief Gets the vertex at the specified index in the network.
        * \param index of the vertex in the network.
        * \return The vertex at the specified index.
        */
@@ -1240,8 +1239,8 @@ namespace HydroCouple
       virtual IPolygon *patch(int index) const = 0;
 
       /*!
-       * \brief vertexCount represents the number of all the vertices shared by the patches.
-       * \return
+       * \brief Gets the number of vertices shared by the patches.
+       * \return The count of all shared vertices.
        */
       virtual int vertexCount() const = 0;
 
@@ -1438,8 +1437,8 @@ namespace HydroCouple
       virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
 
       /*!
-       * \brief gridType
-       * \return
+       * \brief Gets the type of regular grid.
+       * \return The RegularGridType of this 2D grid.
        */
       virtual RegularGridType gridType() const = 0;
 
@@ -1497,8 +1496,8 @@ namespace HydroCouple
       virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
 
       /*!
-       * \brief gridType
-       * \return
+       * \brief Gets the type of regular grid.
+       * \return The RegularGridType of this 3D grid.
        */
       virtual RegularGridType gridType() const = 0;
 
@@ -1568,26 +1567,26 @@ namespace HydroCouple
       using IComponentDataItem::setValues;
 
       /*!
-       * \brief IGeometryComponentItem destructor.
+       * \brief IGeometryComponentDataItem destructor.
        */
       virtual ~IGeometryComponentDataItem() = default;
 
       /*!
-       * \brief geometryType
-       * \return
+       * \brief Gets the geometry type for this component data item.
+       * \return The IGeometry::GeometryType of the geometries in this item.
        */
       virtual IGeometry::GeometryType geometryType() const = 0;
 
       /*!
-       * \brief geometryCount
-       * \return
+       * \brief Gets the number of geometries in this component data item.
+       * \return The number of geometries.
        */
       virtual int geometryCount() const = 0;
 
       /*!
-       * \brief geometry
-       * \param geometryIndex
-       * \return
+       * \brief Gets the geometry at the specified index.
+       * \param geometryIndex is the index of the geometry to retrieve.
+       * \return The IGeometry at the specified index.
        */
       virtual IGeometry *geometry(int geometryIndex) const = 0;
 
@@ -1598,8 +1597,8 @@ namespace HydroCouple
       virtual HydroCouple::IDimension *geometryDimension() const = 0;
 
       /*!
-       * \brief envelope
-       * \return
+       * \brief Gets the bounding envelope for all geometries in this component data item.
+       * \return The IEnvelope bounding all geometries.
        */
       virtual HydroCouple::Spatial::IEnvelope *envelope() const = 0;
 
@@ -1632,12 +1631,12 @@ namespace HydroCouple
 
       /*!
        * \brief Sets value for given geometry dimension index.
-       * \param data is a pointer data thata to is to be copied
-       * \param geometryDimensionIndex is the geometry dimension index from where to write data.
-       * \param dimensionIndexes are the indexes for the data to be obtained.
+       * \param[in] data is the value to be set.
+       * \param[in] geometryDimensionIndex is the geometry dimension index from where to write data.
+       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
        */
       virtual void setValue(
-          const hydrocouple_variant *data,
+          const hydrocouple_variant &data,
           int geometryDimensionIndex,
           const initializer_list<int> &dimensionIndexes = {}) = 0;
 
@@ -1682,14 +1681,14 @@ namespace HydroCouple
       virtual INetwork *network() const = 0;
 
       /*!
-       * \brief MeshDataObject that represents the artifact of network that is associated with the data.
-       * \return The MeshDataObject that represents the artifact of network that is associated with the data.
+       * \brief Gets the type of network data object associated with the data.
+       * \return The NetworkDataObjectType that represents the artifact of the network associated with the data.
        */
       virtual NetworkDataObjectType networkDataObjectType() const = 0;
 
       /*!
-       * \brief meshDataType represents the type of mesh data type stored in the network.
-       * \return The type of mesh data type stored in the network.
+       * \brief Gets the type of network data stored.
+       * \return The NetworkDataType stored in the network.
        */
       virtual NetworkDataType networkDataType() const = 0;
 
@@ -1785,19 +1784,19 @@ namespace HydroCouple
       using IComponentDataItem::setValues;
 
       /*!
-       * \brief IPolyhedralSurfaceComponentItem destructor.
+       * \brief IPolyhedralSurfaceComponentDataItem destructor.
        */
       virtual ~IPolyhedralSurfaceComponentDataItem() = default;
 
       /*!
-       * \brief meshDataType represents the type of mesh data.
-       * \return The type of mesh data.
+       * \brief Gets the type of mesh data object associated with this component data item.
+       * \return The MeshDataObjectType of the data.
        */
       virtual MeshDataObjectType meshDataObjectType() const = 0;
 
       /*!
-       * \brief polyhedralSurface
-       * \return The IPolyhedralSurface associated with this IPolyhedralSurfaceComponentItem.
+       * \brief Gets the type of mesh data stored.
+       * \return The MeshDataType of the data.
        */
       virtual MeshDataType meshDataType() const = 0;
 
@@ -1905,7 +1904,7 @@ namespace HydroCouple
           int patchDimensionIndexLength = 1,
           int edgeDimensionIndexLength = 1,
           int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths) = 0;
+          const initializer_list<int> &dimensionLengths = {}) = 0;
     };
 
     /*!
@@ -1949,7 +1948,7 @@ namespace HydroCouple
       using IComponentDataItem::setValues;
 
       /*!
-       * \brief IRasterComponentItem destructor.
+       * \brief IRasterComponentDataItem destructor.
        */
       virtual ~IRasterComponentDataItem() = default;
 
@@ -2067,7 +2066,7 @@ namespace HydroCouple
       using IComponentDataItem::setValues;
 
       /*!
-       * \brief ~IRegularGrid2DComponentItem.
+       * \brief IRegularGrid2DComponentDataItem destructor.
        */
       virtual ~IRegularGrid2DComponentDataItem() = default;
 
@@ -2078,8 +2077,8 @@ namespace HydroCouple
       virtual IRegularGrid2D *grid() const = 0;
 
       /*!
-       * \brief meshDataType represents the type of mesh data type stored in the grid.
-       * \return The type of mesh data type stored in the grid.
+       * \brief Gets the type of mesh data object stored in the grid.
+       * \return The MeshDataObjectType of the grid data.
        */
       virtual MeshDataObjectType meshDataObjectType() const = 0;
 
@@ -2213,7 +2212,7 @@ namespace HydroCouple
       using IComponentDataItem::setValues;
 
       /*!
-       * \brief ~IRegularGrid3DComponentItem.
+       * \brief IRegularGrid3DComponentDataItem destructor.
        */
       virtual ~IRegularGrid3DComponentDataItem() = default;
 
@@ -2223,8 +2222,8 @@ namespace HydroCouple
       virtual IRegularGrid3D *grid() const = 0;
 
       /*!
-       * \brief meshDataType
-       * \return The type of mesh data.
+       * \brief Gets the type of mesh data object stored in the grid.
+       * \return The MeshDataObjectType of the grid data.
        */
       virtual MeshDataObjectType meshDataObjectType() const = 0;
 

@@ -1,4 +1,4 @@
-name: Build and Deploy Documentation
+name: Build Documentation
 
 on:
   push:
@@ -7,13 +7,18 @@ on:
     branches: [ "master"]
 
 jobs:
-  build:
+  build_docs:
+    name: Build Documentation
     permissions: write-all
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     steps:
 
     - name: Checkout HydroCouple Repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4 
       with:
         path: HydroCouple
         persist-credentials: false
@@ -27,39 +32,28 @@ jobs:
       run : |
         cd HydroCouple/docs
         doxygen Doxyfile
-        tar -czvf hydrocouple_docs.tar.gz html
+        cp CNAME html/
         cd ../../
 
-    - name: Checkout HydroCouple Docs Repo
-      uses: actions/checkout@v4
+    - name : Upload Documentation
+      uses: actions/upload-pages-artifact@v3
       with:
-        repository: HydroCouple/hydrocouple.github.io
-        ref: dev
-        path: hydrocouple.github.io
-        token: ${{ secrets.NUGET_API_KEY }}
-        persist-credentials: true
+        path: HydroCouple/docs/html
 
-    - name: Push Docs to HydroCouple Website Repo
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+
+    - name: Deploy Docs
+      id: deployment
+      uses: actions/deploy-pages@v4
+    
+    - name: TAR Docs
       run: |
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name  "github-actions[bot]"
-        git config --global credential.helper cache
-        rm -rf hydrocouple.github.io/hydrocoupledocs/html
-        cp -RT HydroCouple/docs/html hydrocouple.github.io/hydrocoupledocs/html
-        cd hydrocouple.github.io
+        tar -czvf HydroCouple/docs/hydrocouple_docs.tar.gz HydroCouple/docs/html
 
-        git fetch origin
-        
-        if [ -n "$(git status --porcelain)" ]; then
-          git add -A
-          git commit -m "CI: Updated HydroCouple Docs"
-          git push origin dev
-        else
-          echo "No changes to commit"
-        fi
-      
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: hydrocouple-docs
         path: HydroCouple/docs/*.tar.gz
+    

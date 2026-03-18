@@ -23,6 +23,7 @@
 #define HYDROCOUPLESPATIALWKB_H
 
 #include <stdint.h>
+#include <type_traits>
 
 union WKBGeometry;
 union WKBGeometryZ;
@@ -106,18 +107,18 @@ struct LinearRingZM
 };
 
 /*!
- * \brief The WKBByteOrder enum
+ * \brief The WKBByteOrder enum class indicates the byte order of serialized WKB data.
  */
-enum WKBByteOrder
+enum class WKBByteOrder : uint8_t
 {
-  wkbXDR = 0, // Big Endian
-  wkbNDR = 1 // Little Endian
+  wkbXDR = 0, //!< Big Endian
+  wkbNDR = 1  //!< Little Endian
 };
 
 /*!
- * \brief The WKBGeometryType enum
+ * \brief The WKBGeometryType enum class enumerates OGC WKB geometry type codes.
  */
-enum WKBGeometryType
+enum class WKBGeometryType : uint32_t
 {
   wkbPoint = 1,
   wkbLineString = 2,
@@ -132,7 +133,7 @@ enum WKBGeometryType
   wkbPointZ = 1001,
   wkbLineStringZ = 1002,
   wkbPolygonZ = 1003,
-  wkbTrianglez = 1017,
+  wkbTriangleZ = 1017,
   wkbMultiPointZ = 1004,
   wkbMultiLineStringZ = 1005,
   wkbMultiPolygonZ = 1006,
@@ -167,7 +168,7 @@ enum WKBGeometryType
 struct WKBPoint
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 1;
+    static constexpr uint32_t wkbType = 1;
     Point point;
 };
 
@@ -177,7 +178,7 @@ struct WKBPoint
 struct WKBPointZ
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 1001;
+    static constexpr uint32_t wkbType = 1001;
     PointZ point;
 };
 
@@ -187,7 +188,7 @@ struct WKBPointZ
 struct WKBPointM
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 2001;
+    static constexpr uint32_t wkbType = 2001;
     PointM point;
 };
 
@@ -197,7 +198,7 @@ struct WKBPointM
 struct WKBPointZM
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 3001;
+    static constexpr uint32_t wkbType = 3001;
     PointZM point;
 };
 
@@ -207,7 +208,7 @@ struct WKBPointZM
 struct WKBLineString
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 2;
+    static constexpr uint32_t wkbType = 2;
     uint32_t numPoints;
     Point *points;
 };
@@ -218,7 +219,7 @@ struct WKBLineString
 struct WKBLineStringZ
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 1002;
+    static constexpr uint32_t wkbType = 1002;
     uint32_t numPoints;
     PointZ *points;
 };
@@ -229,7 +230,7 @@ struct WKBLineStringZ
 struct WKBLineStringM
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 2002;
+    static constexpr uint32_t wkbType = 2002;
     uint32_t numPoints;
     PointM *points;
 };
@@ -240,9 +241,9 @@ struct WKBLineStringM
 struct WKBLineStringZM
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 3002;
+    static constexpr uint32_t wkbType = 3002;
     uint32_t numPoints;
-    PointZM points;
+    PointZM *points;
 };
 
 /*!
@@ -251,7 +252,7 @@ struct WKBLineStringZM
 struct WKBPolygon
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 3;
+    static constexpr uint32_t wkbType = 3;
     uint32_t numRings;
     LinearRing *rings;
 };
@@ -262,7 +263,7 @@ struct WKBPolygon
 struct WKBPolygonZ
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 1003;
+    static constexpr uint32_t wkbType = 1003;
     uint32_t numRings;
     LinearRingZ *rings;
 };
@@ -273,7 +274,7 @@ struct WKBPolygonZ
 struct WKBPolygonM
 {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 2003;
+    static constexpr uint32_t wkbType = 2003;
     uint32_t numRings;
     LinearRingM *rings;
 };
@@ -283,7 +284,7 @@ struct WKBPolygonM
  */
 struct WKBPolygonZM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 3003;
+    static constexpr uint32_t wkbType = 3003;
     uint32_t numRings;
     LinearRingZM *rings;
 };
@@ -293,7 +294,7 @@ struct WKBPolygonZM {
  */
 struct WKBTriangle {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 17;
+    static constexpr uint32_t wkbType = 17;
     uint32_t numRings;
     LinearRing *rings;
 };
@@ -303,7 +304,7 @@ struct WKBTriangle {
  */
 struct WKBTriangleZ {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 1017;
+    static constexpr uint32_t wkbType = 1017;
     uint32_t numRings;
     LinearRingZ *rings;
 };
@@ -313,7 +314,7 @@ struct WKBTriangleZ {
  */
 struct WKBTriangleM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 2017;
+    static constexpr uint32_t wkbType = 2017;
     uint32_t numRings;
     LinearRingM *rings;
 };
@@ -323,7 +324,7 @@ struct WKBTriangleM {
  */
 struct WKBTriangleZM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 3017;
+    static constexpr uint32_t wkbType = 3017;
     uint32_t numRings;
     LinearRingZM *rings;
 };
@@ -333,7 +334,7 @@ struct WKBTriangleZM {
  */
 struct WKBPolyhedralSurface {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 15;
+    static constexpr uint32_t wkbType = 15;
     uint32_t numPolygons;
     WKBPolygon *polygons;
 };
@@ -343,7 +344,7 @@ struct WKBPolyhedralSurface {
  */
 struct WKBPolyhedralSurfaceZ {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=1015;
+    static constexpr uint32_t wkbType=1015;
     uint32_t numPolygons;
     WKBPolygonZ *polygons;
 };
@@ -353,7 +354,7 @@ struct WKBPolyhedralSurfaceZ {
  */
 struct WKBPolyhedralSurfaceM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=2015;
+    static constexpr uint32_t wkbType=2015;
     uint32_t numPolygons;
     WKBPolygonM *polygons;
 };
@@ -363,7 +364,7 @@ struct WKBPolyhedralSurfaceM {
  */
 struct WKBPolyhedralSurfaceZM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=3015;
+    static constexpr uint32_t wkbType=3015;
     uint32_t numPolygons;
     WKBPolygonZM *polygons;
 };
@@ -373,7 +374,7 @@ struct WKBPolyhedralSurfaceZM {
  */
 struct WKBTIN {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 16;
+    static constexpr uint32_t wkbType = 16;
     uint32_t numPolygons;
     WKBPolygon *polygons;
 };
@@ -383,7 +384,7 @@ struct WKBTIN {
  */
 struct WKBTINZ {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=1016;
+    static constexpr uint32_t wkbType=1016;
     uint32_t numPolygons;
     WKBPolygonZ *polygons;
 };
@@ -393,7 +394,7 @@ struct WKBTINZ {
  */
 struct WKBTINM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=2016;
+    static constexpr uint32_t wkbType=2016;
     uint32_t numPolygons;
     WKBPolygonM *polygons;
 };
@@ -403,7 +404,7 @@ struct WKBTINM {
  */
 struct WKBTINZM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=3016;
+    static constexpr uint32_t wkbType=3016;
     uint32_t numPolygons;
     WKBPolygonZM *polygons;
 };
@@ -413,7 +414,7 @@ struct WKBTINZM {
  */
 struct WKBMultiPoint {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=4;
+    static constexpr uint32_t wkbType=4;
     uint32_t numPoints;
     WKBPoint *points;
 };
@@ -423,7 +424,7 @@ struct WKBMultiPoint {
  */
 struct WKBMultiPointZ {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=1004;
+    static constexpr uint32_t wkbType=1004;
     uint32_t numPoints;
     WKBPointZ *points;
 };
@@ -433,7 +434,7 @@ struct WKBMultiPointZ {
  */
 struct WKBMultiPointM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=2004;
+    static constexpr uint32_t wkbType=2004;
     uint32_t numPoints;
     WKBPointM *points;
 };
@@ -443,7 +444,7 @@ struct WKBMultiPointM {
  */
 struct WKBMultiPointZM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType=3004;
+    static constexpr uint32_t wkbType=3004;
     uint32_t numPoints;
     WKBPointZM *points;
 };
@@ -453,7 +454,7 @@ struct WKBMultiPointZM {
  */
 struct WKBMultiLineString {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 5;
+    static constexpr uint32_t wkbType = 5;
     uint32_t numLineStrings;
     WKBLineString *lineStrings;
 };
@@ -463,7 +464,7 @@ struct WKBMultiLineString {
  */
 struct WKBMultiLineStringZ {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 1005;
+    static constexpr uint32_t wkbType = 1005;
     uint32_t numLineStrings;
     WKBLineStringZ *lineStrings;
 };
@@ -473,7 +474,7 @@ struct WKBMultiLineStringZ {
  */
 struct WKBMultiLineStringM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 2005;
+    static constexpr uint32_t wkbType = 2005;
     uint32_t numLineStrings;
     WKBLineStringM *lineStrings;
 };
@@ -483,7 +484,7 @@ struct WKBMultiLineStringM {
  */
 struct WKBMultiLineStringZM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 3005;
+    static constexpr uint32_t wkbType = 3005;
     uint32_t numLineStrings;
     WKBLineStringZM *lineStrings;
 };
@@ -493,7 +494,7 @@ struct WKBMultiLineStringZM {
  */
 struct WKBMultiPolygon {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 6;
+    static constexpr uint32_t wkbType = 6;
     uint32_t numPolygons;
     WKBPolygon *polygons;
 };
@@ -503,7 +504,7 @@ struct WKBMultiPolygon {
  */
 struct WKBMultiPolygonZ {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 1006;
+    static constexpr uint32_t wkbType = 1006;
     uint32_t numPolygons;
     WKBPolygonZ *polygons;
 };
@@ -513,7 +514,7 @@ struct WKBMultiPolygonZ {
  */
 struct WKBMultiPolygonM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 2006;
+    static constexpr uint32_t wkbType = 2006;
     uint32_t numPolygons;
     WKBPolygonM *polygons;
 };
@@ -523,7 +524,7 @@ struct WKBMultiPolygonM {
  */
 struct WKBMultiPolygonZM {
     WKBByteOrder byteOrder;
-    static const uint32_t wkbType = 3006;
+    static constexpr uint32_t wkbType = 3006;
     uint32_t numPolygons;
     WKBPolygonZM *polygons;
 };
@@ -533,7 +534,7 @@ struct WKBMultiPolygonZM {
  */
 struct WKBGeometryCollection {
     WKBByteOrder byte_order;
-    static const uint32_t wkbType = 7;
+    static constexpr uint32_t wkbType = 7;
     uint32_t numGeometries;
     WKBGeometry *geometries;
 };
@@ -543,7 +544,7 @@ struct WKBGeometryCollection {
  */
 struct WKBGeometryCollectionZ {
     WKBByteOrder byte_order;
-    static const uint32_t wkbType = 1007;
+    static constexpr uint32_t wkbType = 1007;
     uint32_t numGeometries;
     WKBGeometryZ *geometries;
 };
@@ -553,7 +554,7 @@ struct WKBGeometryCollectionZ {
  */
 struct WKBGeometryCollectionM {
     WKBByteOrder byte_order;
-    static const uint32_t wkbType = 2007;
+    static constexpr uint32_t wkbType = 2007;
     uint32_t numGeometries;
     WKBGeometryM *geometries;
 };
@@ -563,7 +564,7 @@ struct WKBGeometryCollectionM {
  */
 struct WKBGeometryCollectionZM {
     WKBByteOrder byte_order;
-    static const uint32_t wkbType = 3007;
+    static constexpr uint32_t wkbType = 3007;
     uint32_t numGeometries;
     WKBGeometryZM *geometries;
 };
@@ -628,12 +629,91 @@ union WKBGeometryZM
     WKBLineStringZM linestringzm;
     WKBPolygonZM polygonzm;
     WKBTriangleZM trianglezm;
-    WKBPolyhedralSurfaceM Polyhedralsurfacezm;
+    WKBPolyhedralSurfaceZM Polyhedralsurfacezm;
     WKBTINZM tinzm;
     WKBMultiPointZM mpointzm;
     WKBMultiLineStringZM mlinestringzm;
-    WKBMultiPolygonZ mpolygonzm;
+    WKBMultiPolygonZM mpolygonzm;
     WKBGeometryCollectionZM collectionzm;
 };
+
+// ============================================================================
+// Structure-of-Arrays (SoA) coordinate buffers for cache-efficient bulk processing.
+// These provide non-owning views into contiguous coordinate component arrays,
+// enabling SIMD-friendly iteration over individual coordinate dimensions.
+// ============================================================================
+
+/*!
+ * \brief Non-owning SoA view over 2D coordinate data (x, y stored in separate arrays).
+ * \details Enables cache-efficient iteration over individual coordinate components
+ * for SIMD and data-oriented processing patterns. The caller is responsible
+ * for managing the lifetime and allocation of the underlying arrays.
+ */
+struct CoordinateBuffer2D
+{
+    double *x;        //!< Pointer to contiguous array of x-coordinates.
+    double *y;        //!< Pointer to contiguous array of y-coordinates.
+    uint32_t count;   //!< Number of coordinate tuples.
+};
+
+/*!
+ * \brief Non-owning SoA view over 3D coordinate data (x, y, z stored in separate arrays).
+ */
+struct CoordinateBuffer3D
+{
+    double *x;        //!< Pointer to contiguous array of x-coordinates.
+    double *y;        //!< Pointer to contiguous array of y-coordinates.
+    double *z;        //!< Pointer to contiguous array of z-coordinates.
+    uint32_t count;   //!< Number of coordinate tuples.
+};
+
+/*!
+ * \brief Non-owning SoA view over 2D+M coordinate data (x, y, m stored in separate arrays).
+ */
+struct CoordinateBufferM
+{
+    double *x;        //!< Pointer to contiguous array of x-coordinates.
+    double *y;        //!< Pointer to contiguous array of y-coordinates.
+    double *m;        //!< Pointer to contiguous array of measure values.
+    uint32_t count;   //!< Number of coordinate tuples.
+};
+
+/*!
+ * \brief Non-owning SoA view over 3D+M coordinate data (x, y, z, m stored in separate arrays).
+ */
+struct CoordinateBuffer3DM
+{
+    double *x;        //!< Pointer to contiguous array of x-coordinates.
+    double *y;        //!< Pointer to contiguous array of y-coordinates.
+    double *z;        //!< Pointer to contiguous array of z-coordinates.
+    double *m;        //!< Pointer to contiguous array of measure values.
+    uint32_t count;   //!< Number of coordinate tuples.
+};
+
+// ============================================================================
+// Compile-time type property assertions
+// ============================================================================
+
+static_assert(std::is_trivially_copyable_v<Point>, "Point must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<PointZ>, "PointZ must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<PointM>, "PointM must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<PointZM>, "PointZM must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<LinearRing>, "LinearRing must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<CoordinateBuffer2D>, "CoordinateBuffer2D must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<CoordinateBuffer3D>, "CoordinateBuffer3D must be trivially copyable");
+static_assert(std::is_trivially_copyable_v<CoordinateBuffer3DM>, "CoordinateBuffer3DM must be trivially copyable");
+
+static_assert(std::is_standard_layout_v<Point>, "Point must be standard layout");
+static_assert(std::is_standard_layout_v<PointZ>, "PointZ must be standard layout");
+static_assert(std::is_standard_layout_v<PointM>, "PointM must be standard layout");
+static_assert(std::is_standard_layout_v<PointZM>, "PointZM must be standard layout");
+static_assert(std::is_standard_layout_v<CoordinateBuffer2D>, "CoordinateBuffer2D must be standard layout");
+static_assert(std::is_standard_layout_v<CoordinateBuffer3D>, "CoordinateBuffer3D must be standard layout");
+static_assert(std::is_standard_layout_v<CoordinateBuffer3DM>, "CoordinateBuffer3DM must be standard layout");
+
+static_assert(sizeof(Point) == 2 * sizeof(double), "Point must have no padding");
+static_assert(sizeof(PointZ) == 3 * sizeof(double), "PointZ must have no padding");
+static_assert(sizeof(PointM) == 3 * sizeof(double), "PointM must have no padding");
+static_assert(sizeof(PointZM) == 4 * sizeof(double), "PointZM must have no padding");
 
 #endif // HYDROCOUPLESPATIALWKB_H
