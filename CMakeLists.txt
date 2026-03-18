@@ -85,7 +85,7 @@ configure_file(
 )
 
 # ---- Testing ----
-option(HYDROCOUPLE_BUILD_TESTS "Build HydroCouple tests" ON)
+option(HYDROCOUPLE_BUILD_TESTS "Build HydroCouple tests" OFF)
 
 if(HYDROCOUPLE_BUILD_TESTS)
     enable_testing()
