@@ -114,8 +114,7 @@ jobs:
         env:
           VCPKG_ROOT: ${{ env.VCPKG_ROOT }}
         run: |
-          cmake --preset=${{ matrix.preset_alias }}
-          cmake -B ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DHYDROCOUPLE_BUILD_TESTS=ON
+          cmake -B ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DHYDROCOUPLE_BUILD_TESTS=ON
           cmake --build ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }} --config ${{env.BUILD_TYPE}}
 
       - name: Run Unit Tests
