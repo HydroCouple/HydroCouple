@@ -104,6 +104,33 @@ namespace HydroCouple
       std::any>;
 
   /*!
+   * \brief Comparator for hydrocouple_variant that enables use in ordered containers.
+   * \details Compares by variant index first, then by held value for types that
+   * support ordering. std::monostate and std::any are treated as equal when they
+   * share the same index.
+   */
+  struct hydrocouple_variant_less
+  {
+    bool operator()(const hydrocouple_variant &lhs, const hydrocouple_variant &rhs) const
+    {
+      if (lhs.index() != rhs.index())
+        return lhs.index() < rhs.index();
+      return std::visit([&rhs](const auto &a) -> bool
+                        {
+        using T = std::decay_t<decltype(a)>;
+        if constexpr (std::is_same_v<T, std::monostate> || std::is_same_v<T, std::any>)
+          return false;
+        else
+          return a < std::get<T>(rhs); }, lhs);
+    }
+  };
+
+  /*!
+   * \brief Type alias for an ordered set of hydrocouple_variant values.
+   */
+  using hydrocouple_variant_set = std::set<hydrocouple_variant, hydrocouple_variant_less>;
+
+  /*!
    * \brief ISlot interface class must be implemented by classes that want to listen to signals.
    * \details ISlot is a template class that can be used to listen to signals with any number of arguments.
    * \tparam Args are the arguments that will be passed by the signal.
@@ -1009,7 +1036,7 @@ namespace HydroCouple
      * If the quality is not ordered the list contains the ICategory's in an unspecified order.
      * When it is ordered the list contains the ICategory's in the same sequence.
      */
-    [[nodiscard]] virtual std::set<hydrocouple_variant> categories() const = 0;
+    [[nodiscard]] virtual hydrocouple_variant_set categories() const = 0;
 
     /*!
      * \brief Checks if the IQuality is defined by an ordered set of ICategory or not.
