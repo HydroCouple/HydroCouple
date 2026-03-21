@@ -2,22 +2,20 @@
  * \file   hydrocoupletemporal.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version   2.0.0
- * \description
- * This header file contains the temporal interface definitions for the
- * HydroCouple component-based modeling definitions.
+ * \brief Temporal interface definitions for the HydroCouple component-based modeling framework.
+ * \details This header file contains the temporal interface definitions for the
+ * HydroCouple component-based modeling framework. It defines interfaces for
+ * date/time representation, time spans, time-marching model components,
+ * and time-series component data items.
  * \license
- * This file and its associated files, and libraries are free software.
+ * This file and its associated files and libraries are free software.
  * You can redistribute it and/or modify it under the terms of the
  * MIT License as published by the Free Software Foundation.
- * This file and its associated files is distributed in the hope that it will be useful,
+ * This file and its associated files are distributed in the hope that they will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for details.
  * \copyright Copyright 2014-2025, Caleb Buahin, All rights reserved.
  * \date 2014-2025
- * \pre
- * \bug
- * \warning
- * \todo
  */
 
 #ifndef HYDROCOUPLETEMPORAL_H
@@ -25,7 +23,6 @@
 
 #include "hydrocouple.h"
 
-using namespace std;
 
 namespace HydroCouple
 {
@@ -38,7 +35,7 @@ namespace HydroCouple
     class IDateTime : public virtual HydroCouple::IPropertyChanged
     {
     public:
-      /*
+      /*!
        * \brief ~IDateTime destructor.
        */
       virtual ~IDateTime() = default;
@@ -46,17 +43,17 @@ namespace HydroCouple
       /*!
        * \brief Date and time as a julian day value.
        */
-      virtual double julianDay() const = 0;
+      [[nodiscard]] virtual double julianDay() const = 0;
 
       /*!
        * \brief Modified Julian day value.
        */
-      virtual double modifiedJulianDay() const = 0;
+      [[nodiscard]] virtual double modifiedJulianDay() const = 0;
 
       /*!
        * \brief Serial date number.
        */
-      virtual double serialDate() const = 0;
+      [[nodiscard]] virtual double serialDate() const = 0;
     };
 
     /*!
@@ -75,11 +72,12 @@ namespace HydroCouple
        * \brief Duration of the timespan in days.
        * \return double value of the duration.
        */
-      virtual double duration() const = 0;
+      [[nodiscard]] virtual double duration() const = 0;
     };
 
     /*!
-     * \brief The ITimeModelComponent class for time marching models.
+     * \brief ITimeModelComponent is an IModelComponent that advances through
+     * time during simulation and provides access to the current simulation time.
      */
     class ITimeModelComponent : public virtual HydroCouple::IModelComponent
     {
@@ -93,13 +91,13 @@ namespace HydroCouple
        * \brief Gets the current date and time of the model simulation.
        * \return IDateTime pointer representing the current date and time.
        */
-      virtual IDateTime *currentDateTime() const = 0;
+      [[nodiscard]] virtual IDateTime *currentDateTime() const = 0;
 
       /*!
        * \brief simulationPeriod of the model.
        * \return ITimeSpan pointer. The time horizon of the model.
        */
-      virtual ITimeSpan *simulationPeriod() const = 0;
+      [[nodiscard]] virtual ITimeSpan *simulationPeriod() const = 0;
     };
 
     /*!
@@ -129,25 +127,25 @@ namespace HydroCouple
        * \param[in] timeIndex is the index of the time to retrieve.
        * \return A pointer to the IDateTime at the specified index.
        */
-      virtual const IDateTime *time(int timeIndex) const = 0;
+      [[nodiscard]] virtual const IDateTime *time(int timeIndex) const = 0;
 
       /*!
        * \brief Gets the number of times.
        * \return The number of times.
        */
-      virtual int timeCount() const = 0;
+      [[nodiscard]] virtual int timeCount() const = 0;
 
       /*!
        * \brief Gets the ITimeSpan associated with this data item.
        * \return A pointer to the ITimeSpan.
        */
-      virtual ITimeSpan *timeSpan() const = 0;
+      [[nodiscard]] virtual ITimeSpan *timeSpan() const = 0;
 
       /*!
        * \brief Gets the IDimension of the times.
        * \return A pointer to the IDimension.
        */
-      virtual IDimension *timeDimension() const = 0;
+      [[nodiscard]] virtual IDimension *timeDimension() const = 0;
 
       /*!
       * \brief Gets a single value for given time dimension index.
@@ -158,7 +156,7 @@ namespace HydroCouple
       virtual void getValue(
         hydrocouple_variant& data,
         int timeDimensionIndex,
-        const initializer_list<int>& dimensionIndexes = {}) const = 0;
+        std::span<const int> dimensionIndexes = {}) const = 0;
 
       /*!
       * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
@@ -172,9 +170,9 @@ namespace HydroCouple
       virtual void getValues(
         hydrocouple_variant *data,
         int timeDimensionIndex,
-        const initializer_list<int> &dimensionIndexes = {},
+        std::span<const int>dimensionIndexes = {},
         int timeDimensionIndexLength = 1,
-        const initializer_list<int> &dimensionLengths = {}) const = 0;
+        std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
       * \brief Sets a single value for given time dimension index.
@@ -185,7 +183,7 @@ namespace HydroCouple
       virtual void setValue(
         const hydrocouple_variant &data,
         int timeDimensionIndex,
-        const initializer_list<int> &dimensionIndexes = {}) = 0;
+        std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
       * \brief Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
@@ -199,14 +197,15 @@ namespace HydroCouple
       virtual void setValues(
         const hydrocouple_variant *data,
         int timeDimensionIndex,
-        const initializer_list<int> &dimensionIndexes = {},
+        std::span<const int>dimensionIndexes = {},
         int timeDimensionIndexLength = 1,
-        const initializer_list<int> &dimensionLengths = {}) = 0;
+        std::span<const int>dimensionLengths = {}) = 0;
 
     };
 
     /*!
-     * \brief The ITimeIdBasedComponentDataItem class
+     * \brief ITimeIdBasedComponentDataItem is an IComponentDataItem with both
+     * temporal and identifier-based dimensions for accessing multi-dimensional time-series data.
      */
     class ITimeIdBasedComponentDataItem : public virtual IComponentDataItem,
                                           public virtual ITimeSeriesComponentDataItem
@@ -234,13 +233,13 @@ namespace HydroCouple
        * \brief identifiers associated with this dimension.
        * \return vector<string> of identifiers
        */
-      virtual vector<string> identifiers() const = 0;
+      [[nodiscard]] virtual std::vector<std::string> identifiers() const = 0;
 
       /*!
        * \brief idDimensions associated with this dimension.
        * \return IDimension of the identifiers associated with this dimension.
        */
-      virtual IDimension *identifierDimension() const = 0;
+      [[nodiscard]] virtual IDimension *identifierDimension() const = 0;
 
       /*!
        * \brief Gets a single value for given id dimension index.
@@ -252,7 +251,7 @@ namespace HydroCouple
         hydrocouple_variant &data,
         int timeIndex, 
         int idIndex, 
-        const initializer_list<int> &dimensionIndexes = {}) const = 0;
+        std::span<const int>dimensionIndexes = {}) const = 0;
 
       /*!
        * \brief Gets a multi-dimensional array of values for given id dimension index and size for a hyperslab.
@@ -268,10 +267,10 @@ namespace HydroCouple
         hydrocouple_variant *data,
         int timeIndex, 
         int idIndex, 
-        const initializer_list<int> &dimensionIndexes = {},
+        std::span<const int>dimensionIndexes = {},
         int timeIndexLength = 1,
         int idIndexLength = 1,
-        const initializer_list<int> &dimensionLengths = {}) const = 0;
+        std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
        * \brief Sets a single value for given id dimension index.
@@ -284,7 +283,7 @@ namespace HydroCouple
         const hydrocouple_variant &data,
         int timeIndex, 
         int idIndex, 
-        const initializer_list<int> &dimensionIndexes = {}) = 0;
+        std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
        * \brief Sets a multi-dimensional array of values for given
@@ -301,10 +300,10 @@ namespace HydroCouple
         const hydrocouple_variant *data,
         int timeIndex,
         int idIndex,
-        const initializer_list<int> &dimensionIndexes = {},
+        std::span<const int>dimensionIndexes = {},
         int timeIndexLength = 1,
         int idIndexLength = 1,
-        const initializer_list<int> &dimensionLengths = {}) = 0;
+        std::span<const int>dimensionLengths = {}) = 0;
     };
   }
 }

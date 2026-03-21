@@ -2,8 +2,8 @@
     "name": "hydrocouple",
     "version-semver": "2.0.0",
     "description": "HydroCouple Component-Based Modeling Interface Definitions for C++",
-    "license": "MIT",
     "homepage": "https://hydrocouple.org",
+    "license": "MIT",
     "supports": "!uwp",
     "dependencies": [
         {
@@ -14,16 +14,5 @@
             "name": "vcpkg-cmake-config",
             "host": true
         }
-    ],
-    "features": {
-        "tests": {
-            "description": "Build unit tests",
-            "dependencies": [
-                "gtest"
-            ]
-        }
-    },
-    "default-features": [
-        "tests"
     ]
 }

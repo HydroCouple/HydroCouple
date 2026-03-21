@@ -2,21 +2,22 @@
  * \file hydrocouplespatialwkb.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version 2.0.0
- * \description
- * This header file contains the structures for the OGC wkb SFA specifications.
+ * \brief Well-Known Binary (WKB) structures for OGC Simple Features Access geometry serialization.
+ * \details This header file contains the C-compatible structures for parsing and
+ * constructing OGC WKB (Well-Known Binary) geometry representations as defined by
+ * the Simple Features Access (SFA) specification. It includes Point, LineString,
+ * Polygon, Triangle, PolyhedralSurface, TIN, and collection types with 2D, Z, M,
+ * and ZM coordinate variants, as well as Structure-of-Arrays coordinate buffers
+ * for efficient batch processing.
  * \license
- * This file and its associated files, and libraries are free software.
+ * This file and its associated files and libraries are free software.
  * You can redistribute it and/or modify it under the terms of the
  * MIT License as published by the Free Software Foundation.
- * This file and its associated files is distributed in the hope that it will be useful,
+ * This file and its associated files are distributed in the hope that they will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for details.
  * \copyright Copyright 2014-2025, Caleb Buahin, All rights reserved.
  * \date 2014-2025
- * \pre
- * \bug
- * \warning
- * \todo
  */
 
 #ifndef HYDROCOUPLESPATIALWKB_H
@@ -31,47 +32,47 @@ union WKBGeometryM;
 union WKBGeometryZM;
 
 /*!
- * \brief The Point struct
+ * \brief A 2D point with x and y coordinates.
  */
 struct Point
 {
-    double x;
-    double y;
+    double x; //!< The x-coordinate.
+    double y; //!< The y-coordinate.
 };
 
 /*!
- * \brief The PointZ struct
+ * \brief A 3D point with x, y, and z coordinates.
  */
 struct PointZ
 {
-    double x;
-    double y;
-    double z;
+    double x; //!< The x-coordinate.
+    double y; //!< The y-coordinate.
+    double z; //!< The z-coordinate (elevation).
 };
 
 /*!
- * \brief The PointM struct
+ * \brief A 2D point with x, y, and an associated measure (m) value.
  */
 struct PointM
 {
-    double x;
-    double y;
-    double m;
+    double x; //!< The x-coordinate.
+    double y; //!< The y-coordinate.
+    double m; //!< The measure value.
 };
 
 /*!
- * \brief The PointZM struct
+ * \brief A 3D point with x, y, z coordinates and an associated measure (m) value.
  */
 struct PointZM
 {
-    double x;
-    double y;
-    double z;
-    double m;
+    double x; //!< The x-coordinate.
+    double y; //!< The y-coordinate.
+    double z; //!< The z-coordinate (elevation).
+    double m; //!< The measure value.
 };
 
 /*!
- * \brief The LinearRing struct
+ * \brief A closed sequence of 2D Points forming a ring boundary.
  */
 struct LinearRing
 {
@@ -80,7 +81,7 @@ struct LinearRing
 };
 
 /*!
- * \brief The LinearRingZ struct
+ * \brief A closed sequence of 3D PointZ values forming a ring boundary.
  */
 struct LinearRingZ
 {
@@ -89,7 +90,7 @@ struct LinearRingZ
 };
 
 /*!
- * \brief The LinearRingM struct
+ * \brief A closed sequence of PointM values forming a ring boundary with measures.
  */
 struct LinearRingM
 {
@@ -98,7 +99,7 @@ struct LinearRingM
 };
 
 /*!
- * \brief The LinearRingZM struct
+ * \brief A closed sequence of PointZM values forming a ring boundary with z and measure.
  */
 struct LinearRingZM
 {
@@ -163,7 +164,7 @@ enum class WKBGeometryType : uint32_t
 };
 
 /*!
- * \brief The WKBPoint struct
+ * \brief WKB-encoded 2D point geometry (type code 1).
  */
 struct WKBPoint
 {
@@ -173,7 +174,7 @@ struct WKBPoint
 };
 
 /*!
- * \brief The WKBPointZ struct
+ * \brief WKB-encoded 3D point geometry with z-coordinate (type code 1001).
  */
 struct WKBPointZ
 {
@@ -183,7 +184,7 @@ struct WKBPointZ
 };
 
 /*!
- * \brief The WKBPointM struct
+ * \brief WKB-encoded 2D point geometry with measure (type code 2001).
  */
 struct WKBPointM
 {
@@ -193,7 +194,7 @@ struct WKBPointM
 };
 
 /*!
- * \brief The WKBPointZM struct
+ * \brief WKB-encoded 3D point geometry with z-coordinate and measure (type code 3001).
  */
 struct WKBPointZM
 {
@@ -203,7 +204,7 @@ struct WKBPointZM
 };
 
 /*!
- * \brief The WKBLineString struct
+ * \brief WKB-encoded 2D line string geometry (type code 2).
  */
 struct WKBLineString
 {
@@ -214,7 +215,7 @@ struct WKBLineString
 };
 
 /*!
- * \brief The WKBLineStringZ struct
+ * \brief WKB-encoded 3D line string geometry with z-coordinates (type code 1002).
  */
 struct WKBLineStringZ
 {
@@ -225,7 +226,7 @@ struct WKBLineStringZ
 };
 
 /*!
- * \brief The WKBLineStringM struct
+ * \brief WKB-encoded 2D line string geometry with measures (type code 2002).
  */
 struct WKBLineStringM
 {
@@ -236,7 +237,7 @@ struct WKBLineStringM
 };
 
 /*!
- * \brief The WKBLineStringZM struct
+ * \brief WKB-encoded 3D line string geometry with z-coordinates and measures (type code 3002).
  */
 struct WKBLineStringZM
 {
@@ -247,7 +248,7 @@ struct WKBLineStringZM
 };
 
 /*!
- * \brief The WKBPolygon struct
+ * \brief WKB-encoded 2D polygon geometry defined by linear rings (type code 3).
  */
 struct WKBPolygon
 {
@@ -258,7 +259,7 @@ struct WKBPolygon
 };
 
 /*!
- * \brief The WKBPolygonZ struct
+ * \brief WKB-encoded 3D polygon geometry with z-coordinates (type code 1003).
  */
 struct WKBPolygonZ
 {
@@ -269,7 +270,7 @@ struct WKBPolygonZ
 };
 
 /*!
- * \brief The WKBPolygonM struct
+ * \brief WKB-encoded 2D polygon geometry with measures (type code 2003).
  */
 struct WKBPolygonM
 {
@@ -280,7 +281,7 @@ struct WKBPolygonM
 };
 
 /*!
- * \brief The WKBPolygonZM struct
+ * \brief WKB-encoded 3D polygon geometry with z-coordinates and measures (type code 3003).
  */
 struct WKBPolygonZM {
     WKBByteOrder byteOrder;
@@ -290,7 +291,7 @@ struct WKBPolygonZM {
 };
 
 /*!
- * \brief The WKBTriangle struct
+ * \brief WKB-encoded 2D triangle geometry with exactly one exterior ring of four points (type code 17).
  */
 struct WKBTriangle {
     WKBByteOrder byteOrder;
@@ -300,7 +301,7 @@ struct WKBTriangle {
 };
 
 /*!
- * \brief The WKBTriangleZ struct
+ * \brief WKB-encoded 3D triangle geometry with z-coordinates (type code 1017).
  */
 struct WKBTriangleZ {
     WKBByteOrder byteOrder;
@@ -310,7 +311,7 @@ struct WKBTriangleZ {
 };
 
 /*!
- * \brief The WKBTriangleM struct
+ * \brief WKB-encoded 2D triangle geometry with measures (type code 2017).
  */
 struct WKBTriangleM {
     WKBByteOrder byteOrder;
@@ -320,7 +321,7 @@ struct WKBTriangleM {
 };
 
 /*!
- * \brief The WKBTriangleZM struct
+ * \brief WKB-encoded 3D triangle geometry with z-coordinates and measures (type code 3017).
  */
 struct WKBTriangleZM {
     WKBByteOrder byteOrder;
@@ -330,7 +331,7 @@ struct WKBTriangleZM {
 };
 
 /*!
- * \brief The WKBPolyhedralSurface struct
+ * \brief WKB-encoded 2D polyhedral surface as a collection of polygons (type code 15).
  */
 struct WKBPolyhedralSurface {
     WKBByteOrder byteOrder;
@@ -340,7 +341,7 @@ struct WKBPolyhedralSurface {
 };
 
 /*!
- * \brief The WKBPolyhedralSurfaceZ struct
+ * \brief WKB-encoded 3D polyhedral surface with z-coordinates (type code 1015).
  */
 struct WKBPolyhedralSurfaceZ {
     WKBByteOrder byteOrder;
@@ -350,7 +351,7 @@ struct WKBPolyhedralSurfaceZ {
 };
 
 /*!
- * \brief The WKBPolyhedralSurfaceM struct
+ * \brief WKB-encoded 2D polyhedral surface with measures (type code 2015).
  */
 struct WKBPolyhedralSurfaceM {
     WKBByteOrder byteOrder;
@@ -360,7 +361,7 @@ struct WKBPolyhedralSurfaceM {
 };
 
 /*!
- * \brief The WKBPolyhedralSurfaceZM struct
+ * \brief WKB-encoded 3D polyhedral surface with z-coordinates and measures (type code 3015).
  */
 struct WKBPolyhedralSurfaceZM {
     WKBByteOrder byteOrder;
@@ -370,7 +371,7 @@ struct WKBPolyhedralSurfaceZM {
 };
 
 /*!
- * \brief The WKBTIN struct
+ * \brief WKB-encoded 2D Triangulated Irregular Network (type code 16).
  */
 struct WKBTIN {
     WKBByteOrder byteOrder;
@@ -380,7 +381,7 @@ struct WKBTIN {
 };
 
 /*!
- * \brief The WKBTINZ struct
+ * \brief WKB-encoded 3D Triangulated Irregular Network with z-coordinates (type code 1016).
  */
 struct WKBTINZ {
     WKBByteOrder byteOrder;
@@ -390,7 +391,7 @@ struct WKBTINZ {
 };
 
 /*!
- * \brief The WKBTINM struct
+ * \brief WKB-encoded 2D Triangulated Irregular Network with measures (type code 2016).
  */
 struct WKBTINM {
     WKBByteOrder byteOrder;
@@ -400,7 +401,7 @@ struct WKBTINM {
 };
 
 /*!
- * \brief The WKBTINZM struct
+ * \brief WKB-encoded 3D Triangulated Irregular Network with z-coordinates and measures (type code 3016).
  */
 struct WKBTINZM {
     WKBByteOrder byteOrder;
@@ -410,7 +411,7 @@ struct WKBTINZM {
 };
 
 /*!
- * \brief The WKBMultiPoint struct
+ * \brief WKB-encoded 2D multi-point collection (type code 4).
  */
 struct WKBMultiPoint {
     WKBByteOrder byteOrder;
@@ -420,7 +421,7 @@ struct WKBMultiPoint {
 };
 
 /*!
- * \brief The WKBMultiPointZ struct
+ * \brief WKB-encoded 3D multi-point collection with z-coordinates (type code 1004).
  */
 struct WKBMultiPointZ {
     WKBByteOrder byteOrder;
@@ -430,7 +431,7 @@ struct WKBMultiPointZ {
 };
 
 /*!
- * \brief The WKBMultiPointM struct
+ * \brief WKB-encoded 2D multi-point collection with measures (type code 2004).
  */
 struct WKBMultiPointM {
     WKBByteOrder byteOrder;
@@ -440,7 +441,7 @@ struct WKBMultiPointM {
 };
 
 /*!
- * \brief The WKBMultiPointZM struct
+ * \brief WKB-encoded 3D multi-point collection with z-coordinates and measures (type code 3004).
  */
 struct WKBMultiPointZM {
     WKBByteOrder byteOrder;
@@ -450,7 +451,7 @@ struct WKBMultiPointZM {
 };
 
 /*!
- * \brief The WKBMultiLineString struct
+ * \brief WKB-encoded 2D multi-line-string collection (type code 5).
  */
 struct WKBMultiLineString {
     WKBByteOrder byteOrder;
@@ -460,7 +461,7 @@ struct WKBMultiLineString {
 };
 
 /*!
- * \brief The WKBMultiLineStringZ struct
+ * \brief WKB-encoded 3D multi-line-string collection with z-coordinates (type code 1005).
  */
 struct WKBMultiLineStringZ {
     WKBByteOrder byteOrder;
@@ -470,7 +471,7 @@ struct WKBMultiLineStringZ {
 };
 
 /*!
- * \brief The WKBMultiLineStringM struct
+ * \brief WKB-encoded 2D multi-line-string collection with measures (type code 2005).
  */
 struct WKBMultiLineStringM {
     WKBByteOrder byteOrder;
@@ -480,7 +481,7 @@ struct WKBMultiLineStringM {
 };
 
 /*!
- * \brief The WKBMultiLineStringZM struct
+ * \brief WKB-encoded 3D multi-line-string collection with z-coordinates and measures (type code 3005).
  */
 struct WKBMultiLineStringZM {
     WKBByteOrder byteOrder;
@@ -490,7 +491,7 @@ struct WKBMultiLineStringZM {
 };
 
 /*!
- * \brief The WKBMultiPolygon struct
+ * \brief WKB-encoded 2D multi-polygon collection (type code 6).
  */
 struct WKBMultiPolygon {
     WKBByteOrder byteOrder;
@@ -500,7 +501,7 @@ struct WKBMultiPolygon {
 };
 
 /*!
- * \brief The WKBMultiPolygonZ struct
+ * \brief WKB-encoded 3D multi-polygon collection with z-coordinates (type code 1006).
  */
 struct WKBMultiPolygonZ {
     WKBByteOrder byteOrder;
@@ -510,7 +511,7 @@ struct WKBMultiPolygonZ {
 };
 
 /*!
- * \brief The WKBMultiPolygonM struct
+ * \brief WKB-encoded 2D multi-polygon collection with measures (type code 2006).
  */
 struct WKBMultiPolygonM {
     WKBByteOrder byteOrder;
@@ -520,7 +521,7 @@ struct WKBMultiPolygonM {
 };
 
 /*!
- * \brief The WKBMultiPolygonZM struct
+ * \brief WKB-encoded 3D multi-polygon collection with z-coordinates and measures (type code 3006).
  */
 struct WKBMultiPolygonZM {
     WKBByteOrder byteOrder;
@@ -530,7 +531,7 @@ struct WKBMultiPolygonZM {
 };
 
 /*!
- * \brief The WKBGeometryCollection struct
+ * \brief WKB-encoded heterogeneous 2D geometry collection (type code 7).
  */
 struct WKBGeometryCollection {
     WKBByteOrder byte_order;
@@ -540,7 +541,7 @@ struct WKBGeometryCollection {
 };
 
 /*!
- * \brief The WKBGeometryCollectionZ struct
+ * \brief WKB-encoded heterogeneous 3D geometry collection with z-coordinates (type code 1007).
  */
 struct WKBGeometryCollectionZ {
     WKBByteOrder byte_order;
@@ -550,7 +551,7 @@ struct WKBGeometryCollectionZ {
 };
 
 /*!
- * \brief The WKBGeometryCollectionM struct
+ * \brief WKB-encoded heterogeneous 2D geometry collection with measures (type code 2007).
  */
 struct WKBGeometryCollectionM {
     WKBByteOrder byte_order;
@@ -560,7 +561,7 @@ struct WKBGeometryCollectionM {
 };
 
 /*!
- * \brief The WKBGeometryCollectionZM struct
+ * \brief WKB-encoded heterogeneous 3D geometry collection with z-coordinates and measures (type code 3007).
  */
 struct WKBGeometryCollectionZM {
     WKBByteOrder byte_order;
@@ -570,7 +571,9 @@ struct WKBGeometryCollectionZM {
 };
 
 /*!
- * \brief The WKBGeometry union
+ * \brief Type-punning union over all 2D WKB geometry structs.
+ * \details Allows interpreting a raw WKB byte stream as the appropriate
+ * concrete geometry type after inspecting the wkbType field.
  */
 union WKBGeometry
 {
@@ -587,7 +590,7 @@ union WKBGeometry
 };
 
 /*!
- * \brief The WKBGeometryZ union
+ * \brief Type-punning union over all 3D (Z) WKB geometry structs.
  */
 union WKBGeometryZ {
 
@@ -604,7 +607,7 @@ union WKBGeometryZ {
 };
 
 /*!
- * \brief The WKBGeometryM union
+ * \brief Type-punning union over all 2D+M WKB geometry structs.
  */
 union WKBGeometryM
 {
@@ -621,7 +624,7 @@ union WKBGeometryM
 };
 
 /*!
- * \brief The WKBGeometryZM union
+ * \brief Type-punning union over all 3D+M WKB geometry structs.
  */
 union WKBGeometryZM
 {

@@ -2,22 +2,20 @@
  * \file hydrocouplespatiotemporal.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
  * \version 2.0.0
- * \description
- * This header file contains the spatio-temporal interface definitions for the
- * HydroCouple component-based modeling definitions.
+ * \brief Spatio-temporal interface definitions for the HydroCouple component-based modeling framework.
+ * \details This header file contains the spatio-temporal interface definitions for the
+ * HydroCouple component-based modeling framework. It defines component data item
+ * interfaces that combine both spatial and temporal dimensions, including
+ * time-varying geometry, network, mesh, raster, and regular grid data items.
  * \license
- * This file and its associated files, and libraries are free software.
+ * This file and its associated files and libraries are free software.
  * You can redistribute it and/or modify it under the terms of the
  * MIT License as published by the Free Software Foundation.
- * This file and its associated files is distributed in the hope that it will be useful,
+ * This file and its associated files are distributed in the hope that they will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for details.
  * \copyright Copyright 2014-2025, Caleb Buahin, All rights reserved.
  * \date 2014-2025
- * \pre
- * \bug
- * \warning
- * \todo
  */
 
 #ifndef HYDROCOUPLESPATIOTEMPORAL_H
@@ -32,7 +30,7 @@ namespace HydroCouple
   namespace SpatioTemporal
   {
     /*!
-     * \brief ITimeGeometryComponentItem represents an IComponentItem with both temporal and geometric components.
+     * \brief ITimeGeometryComponentDataItem is an IComponentDataItem with both temporal and geometric dimensions.
      */
     class ITimeGeometryComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IGeometryComponentDataItem
     {
@@ -63,7 +61,7 @@ namespace HydroCouple
           hydrocouple_variant &data,
           int timeIndex,
           int geometryIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
+          std::span<const int>dimensionIndexes = {}) const = 0;
 
       /*!
        * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
@@ -79,10 +77,10 @@ namespace HydroCouple
           hydrocouple_variant *data,
           int timeIndex,
           int geometryIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeIndexLength = 1,
           int geometryIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
+          std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
        * \brief setValues Sets the value for given time dimension index and geometry dimension index.
@@ -95,7 +93,7 @@ namespace HydroCouple
           const hydrocouple_variant &data,
           int timeIndex,
           int geometryIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
+          std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
        * \brief Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
@@ -110,14 +108,15 @@ namespace HydroCouple
           const hydrocouple_variant *data,
           int timeIndex,
           int geometryIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeIndexLength = 1,
           int geometryIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+          std::span<const int>dimensionLengths = {}) = 0;
     };
 
     /*!
-     * \brief The ITimeNetworkComponentDataItem class
+     * \brief ITimeNetworkComponentDataItem is an IComponentDataItem with both temporal
+     * and network (edge/vertex) dimensions.
      */
     class ITimeNetworkComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::INetworkComponentDataItem
     {
@@ -145,7 +144,7 @@ namespace HydroCouple
           int timeDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
+          std::span<const int>dimensionIndexes = {}) const = 0;
 
       /*!
        * \brief getValues for given edge dimension index and node dimension index and size for a hyperslab.
@@ -165,15 +164,15 @@ namespace HydroCouple
           int timeDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeDimensionIndexLength = 1,
           int edgeDimensionIndexLength = 1,
           int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
+          std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
        * \brief setValue for given edge dimension index and node dimension index and data.
-       * \param[out] data is a pointer data thata to is to be copied
+       * \param[out] data is a pointer data that is to be copied
        * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
        * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
        * \param[in] vertexDimensionIndex is the node dimension index from where to write data.
@@ -184,11 +183,11 @@ namespace HydroCouple
           int timeDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
+          std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
        * \brief setValues for given edge dimension index and node dimension index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] data is a pointer data that is to be copied
        * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
        * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
        * \param[in] vertexDimensionIndex is the node dimension index from where to write data.
@@ -204,15 +203,16 @@ namespace HydroCouple
           int timeDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeDimensionIndexLength = 1,
           int edgeDimensionIndexLength = 1,
           int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+          std::span<const int>dimensionLengths = {}) = 0;
     };
 
     /*!
-     * \brief The ITimeSeriesPolyhedralSurfaceComponentDataItem class.
+     * \brief ITimeSeriesPolyhedralSurfaceComponentDataItem is an IComponentDataItem with both
+     * temporal and polyhedral surface mesh (patch/edge/vertex) dimensions.
      */
     class ITimeSeriesPolyhedralSurfaceComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem
     {
@@ -248,7 +248,7 @@ namespace HydroCouple
           int patchDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
+          std::span<const int>dimensionIndexes = {}) const = 0;
 
       /*!
        * \brief getValues for given cell dimension index, edge dimension index and node dimension index and size for a hyperslab.
@@ -256,9 +256,9 @@ namespace HydroCouple
        * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
        * \param[in] patchDimensionIndex are the cell dimension indexes from where to obtain the requested data.
        * \param[in] edgeDimensionIndex are the edge dimension indexes from where to obtain the requested data. If user wants to
-       * only obtain cell data for MeshDataType::Cell, this vector should be empty.
+       * only obtain cell data for MeshDataObjectType::Cell, this vector should be empty.
        * \param[in] vertexDimensionIndex are the node dimension indexes from where to obtain the requested data. If user wants to
-       * only obtain cell or edge data for MeshDataType::Cell or MeshDataType::Edge, this vector should be empty.
+       * only obtain cell or edge data for MeshDataObjectType::Cell or MeshDataObjectType::Edge, this vector should be empty.
        * \param[in] dimensionIndexes are the indexes for the data to be obtained.
        * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
        * \param[in] patchDimensionIndexLength are the lengths of the cell dimensions for the data to be obtained.
@@ -275,21 +275,21 @@ namespace HydroCouple
           int patchDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeDimensionIndexLength = 1,
           int patchDimensionIndexLength = 1,
           int edgeDimensionIndexLength = 1,
           int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
+          std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
        * \brief setValues for given cell dimension index, edge dimension index, and node dimension index.
-       * \param[in] data is a pointer data thata to is to be copied to the mesh.
+       * \param[in] data is a pointer data that is to be copied to the mesh.
        * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
        * \param[in] patchDimensionIndex is the face dimension index from where to write data.
        * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
        * \param[in] vertexDimensionIndex is the edge dimension index from where to obtain the requested data. If user wants to
-       * only obtain cell data for MeshDataType::Cell, this vector should be empty.
+       * only obtain cell data for MeshDataObjectType::Cell, this vector should be empty.
        * \param dimensionIndexes are the indexes for the data to be obtained.
        */
       virtual void setValue(
@@ -298,11 +298,11 @@ namespace HydroCouple
           int patchDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
+          std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
        * \brief setValues for given cell dimension index, edge dimension index, and node dimension index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied to the mesh.
+       * \param[in] data is a pointer data that is to be copied to the mesh.
        * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
        * \param[in] patchDimensionIndex are the cell dimension indexes from where to write data.
        * \param[in] edgeDimensionIndex are the edge dimension indexes from where to write data.
@@ -321,16 +321,17 @@ namespace HydroCouple
           int patchDimensionIndex,
           int edgeDimensionIndex,
           int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeDimensionIndexLength = 1,
           int patchDimensionIndexLength = 1,
           int edgeDimensionIndexLength = 1,
           int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+          std::span<const int>dimensionLengths = {}) = 0;
     };
 
     /*!
-     * \brief The ITINComponentItem class.
+     * \brief ITimeSeriesTINComponentDataItem is an ITimeSeriesPolyhedralSurfaceComponentDataItem
+     * whose surface consists exclusively of ITriangle patches.
      */
     class ITimeSeriesTINComponentDataItem : public virtual ITimeSeriesPolyhedralSurfaceComponentDataItem
     {
@@ -343,11 +344,12 @@ namespace HydroCouple
       /*!
        * \returns The ITIN associated with this ITINComponentDataItem.
        */
-      virtual HydroCouple::Spatial::ITIN *TIN() const = 0;
+      [[nodiscard]] virtual HydroCouple::Spatial::ITIN *TIN() const = 0;
     };
 
     /*!
-     * \brief The ITimeRasterComponentDataItem class.
+     * \brief ITimeSeriesRasterComponentDataItem is an IComponentDataItem with both
+     * temporal and raster (x/y/band) dimensions.
      */
     class ITimeSeriesRasterComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IRasterComponentDataItem
     {
@@ -383,7 +385,7 @@ namespace HydroCouple
           int xIndex,
           int yIndex,
           int bandIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
+          std::span<const int>dimensionIndexes = {}) const = 0;
 
       /*!
        * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -406,16 +408,16 @@ namespace HydroCouple
           int xIndex,
           int yIndex,
           int bandIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeDimensionIndexLength = 1,
           int xIndexLength = 1,
           int yIndexLength = 1,
           int bandIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
+          std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
        * \brief setValue for given x dimension index, y dimension index, and band dimension index.
-       * \param[in] data  is a pointer data thata to is to be copied
+       * \param[in] data  is a pointer data that is to be copied
        * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
        * \param[in] xIndex is the x dimension index from where to write data.
        * \param[in] yIndex is the y dimension index from where to write data.
@@ -429,7 +431,7 @@ namespace HydroCouple
           int xIndex,
           int yIndex,
           int band,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
+          std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
        * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
@@ -452,16 +454,17 @@ namespace HydroCouple
           int xIndex,
           int yIndex,
           int bandIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeDimensionIndexLength = 1,
           int xIndexLength = 1,
           int yIndexLength = 1,
           int bandIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+          std::span<const int>dimensionLengths = {}) = 0;
     };
 
     /*!
-     * \brief The ITimeRegularGrid2DComponentItem class.
+     * \brief ITimeRegularGrid2DComponentDataItem is an IComponentDataItem with both
+     * temporal and 2D regular grid (xCell/yCell/edge/vertex) dimensions.
      */
     class ITimeRegularGrid2DComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IRegularGrid2DComponentDataItem
     {
@@ -499,7 +502,7 @@ namespace HydroCouple
           int yCellIndex,
           int cellEdgeIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
+          std::span<const int>dimensionIndexes = {}) const = 0;
 
       /*!
        * \brief getValues for given x cell index, y cell index, edge index, and node index and size for a hyperslab.
@@ -525,17 +528,17 @@ namespace HydroCouple
           int yCellIndex,
           int cellEdgeIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeIndexLength = 1,
           int xCellIndexLength = 1,
           int yCellIndexLength = 1,
           int cellEdgeIndexLength = 1,
           int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
+          std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
        * \brief setValue for given x cell index, y cell index, edge index, and node index.
-       * \param[in] data is a pointer data thata to is to be copied to the mesh.
+       * \param[in] data is a pointer data that is to be copied to the mesh.
        * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
        * \param[in] xCellIndex is the x cell index from where to write data.
        * \param[in] yCellIndex is the y cell index from where to write data.
@@ -551,11 +554,11 @@ namespace HydroCouple
           int yCellIndex,
           int cellEdgeIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
+          std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
        * \brief setValues for given x cell index, y cell index, edge index, and node index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] data is a pointer data that is to be copied
        * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
        * \param[in] xCellIndex is the x cell index from where to write data.
        * \param[in] yCellIndex is the y cell index from where to write data.
@@ -577,17 +580,18 @@ namespace HydroCouple
           int yCellIndex,
           int cellEdgeIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeIndexLength = 1,
           int xCellIndexLength = 1,
           int yCellIndexLength = 1,
           int cellEdgeIndexLength = 1,
           int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+          std::span<const int>dimensionLengths = {}) = 0;
     };
 
     /*!
-     * \brief The ITimeRegularGrid3DComponentItem class.
+     * \brief ITimeRegularGrid3DComponentDataItem is an IComponentDataItem with both
+     * temporal and 3D regular grid (xCell/yCell/zCell/face/vertex) dimensions.
      */
     class ITimeRegularGrid3DComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem, public virtual HydroCouple::Spatial::IRegularGrid3DComponentDataItem
     {
@@ -627,7 +631,7 @@ namespace HydroCouple
           int zCellIndex,
           int cellFaceIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
+          std::span<const int>dimensionIndexes = {}) const = 0;
 
       /*!
        * \brief getValues for given x cell index, y cell index, z cell index, face index, and node index and size for a hyperslab.
@@ -656,18 +660,18 @@ namespace HydroCouple
           int zCellIndex,
           int cellFaceIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeIndexLength = 1,
           int xCellIndexLength = 1,
           int yCellIndexLength = 1,
           int zCellIndexLength = 1,
           int cellFaceIndexLength = 1,
           int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
+          std::span<const int>dimensionLengths = {}) const = 0;
 
       /*!
        * \brief setValue for given x cell index, y cell index, z cell index, face index, and node index.
-       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] data is a pointer data that is to be copied
        * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
        * \param[in] xCellIndex is the x cell index from where to write data.
        * \param[in] yCellIndex is the y cell index from where to write data.
@@ -685,11 +689,11 @@ namespace HydroCouple
           int zCellIndex,
           int cellFaceIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
+          std::span<const int>dimensionIndexes = {}) = 0;
 
       /*!
        * \brief setValues for given x cell index, y cell index, z cell index, face index, and node index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied
+       * \param[in] data is a pointer data that is to be copied
        * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
        * \param[in] xCellIndex is the x cell index from where to write data.
        * \param[in] yCellIndex is the y cell index from where to write data.
@@ -714,14 +718,14 @@ namespace HydroCouple
           int zCellIndex,
           int cellFaceIndex,
           int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {},
+          std::span<const int>dimensionIndexes = {},
           int timeIndexLength = 1,
           int xCellIndexLength = 1,
           int yCellIndexLength = 1,
           int zCellIndexLength = 1,
           int cellFaceIndexLength = 1,
           int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+          std::span<const int>dimensionLengths = {}) = 0;
     };
   }
 }
