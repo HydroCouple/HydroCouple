@@ -643,6 +643,15 @@ namespace HydroCouple
        * \brief The IModelComponent has successfully performed its finalization actions.
        * Re-initialization of the IModelComponent instance is not possible and should not be attempted.
        * Instead the instance should be disposed, e.g. through the garbage collection mechanism
+       *
+       * \details What a component releases in this state is its *computational*
+       * resources — solver state, threads, scratch memory. Its data items may
+       * remain readable: a component backed by previously recorded results is
+       * Finished from the moment it is initialized, and exists precisely so its
+       * results() and outputs() can be read afterwards for analysis and
+       * visualization. Consumers must therefore not assume that Finished
+       * implies unreadable values; a component that genuinely cannot serve
+       * values after finalization should say so through its data items.
        */
       Finished,
 
