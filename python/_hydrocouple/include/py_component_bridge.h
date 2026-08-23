@@ -18,6 +18,7 @@
 
 #include <Python.h>
 #include "hydrocouple.h"
+#include "py_data_item_bridge.h"
 
 #include <algorithm>
 #include <memory>
@@ -50,6 +51,11 @@ class PyModelComponentBridge
     mutable std::string m_cachedCaption;
     mutable std::string m_cachedDescription;
     mutable std::string m_cachedRefDir;
+
+    // Bridges for the Python component's result data items, keyed by the
+    // wrapped Python object so repeated results() calls return stable
+    // IComponentDataItem pointers.
+    mutable std::vector<std::unique_ptr<PyComponentDataItemBridge>> m_resultBridges;
 
     // ----- helper: get a Python attr as std::string ---
     std::string pystr(const char *attr) const
@@ -336,7 +342,49 @@ public:
 
     [[nodiscard]] std::vector<IComponentDataItem *> results() const override
     {
-        return {};
+        // Bridge each Python result data item to a real C++
+        // IComponentDataItem*. Bridges are cached by Python identity so
+        // pointers stay stable across calls.
+        PyGILState_STATE gs = PyGILState_Ensure();
+        std::vector<IComponentDataItem *> out;
+        PyObject *val = PyObject_GetAttrString(m_pyobj, "results");
+        if (val)
+        {
+            PyObject *seq = PySequence_Fast(val, "results must be a sequence");
+            if (seq)
+            {
+                Py_ssize_t n = PySequence_Fast_GET_SIZE(seq);
+                out.reserve(static_cast<size_t>(n));
+                for (Py_ssize_t i = 0; i < n; ++i)
+                {
+                    PyObject *item = PySequence_Fast_GET_ITEM(seq, i); // borrowed
+                    PyComponentDataItemBridge *bridge = nullptr;
+                    for (auto &existing : m_resultBridges)
+                    {
+                        if (existing->pyObject() == item)
+                        {
+                            bridge = existing.get();
+                            break;
+                        }
+                    }
+                    if (!bridge)
+                    {
+                        m_resultBridges.push_back(
+                            std::make_unique<PyComponentDataItemBridge>(
+                                item,
+                                const_cast<PyModelComponentBridge *>(this)));
+                        bridge = m_resultBridges.back().get();
+                    }
+                    out.push_back(bridge);
+                }
+                Py_DECREF(seq);
+            }
+            Py_DECREF(val);
+        }
+        if (PyErr_Occurred())
+            PyErr_Print();
+        PyGILState_Release(gs);
+        return out;
     }
 
     void initialize() override { pycall("initialize"); }

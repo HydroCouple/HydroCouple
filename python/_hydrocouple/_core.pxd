@@ -486,3 +486,9 @@ cdef class CppDimensionWrapper:
 
     @staticmethod
     cdef CppDimensionWrapper wrap(IDimension* ptr)
+
+
+cdef class PyComponentBridge:
+    cdef PyModelComponentBridge* _bridge
+
+    cdef IModelComponent* ptr(self)

@@ -1054,8 +1054,6 @@ cdef class PyComponentBridge:
         # bridge exposes a C++ IModelComponent* usable by C++ workflows
     """
 
-    cdef cpp.PyModelComponentBridge* _bridge
-
     def __cinit__(self, object py_component):
         self._bridge = cpp.make_py_component_bridge(<PyObject*>py_component)
 

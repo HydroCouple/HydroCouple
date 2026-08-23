@@ -77,6 +77,7 @@ EXTENSIONS = [
     _ext("_temporal"),
     _ext("_spatial"),
     _ext("_spatiotemporal"),
+    _ext("_testing"),
 ]
 
 setup(
