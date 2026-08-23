@@ -1,6 +1,6 @@
 {
     "name": "hydrocouple",
-    "version-semver": "2.0.0",
+    "version-semver": "2.0.0-alpha.1",
     "description": "HydroCouple Component-Based Modeling Interface Definitions for C++",
     "license": "MIT",
     "homepage": "https://hydrocouple.org",

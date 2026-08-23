@@ -1,20 +1,19 @@
 #
-# CMakeLists.txt - CMake configuration for hydrocouple header files
+# CMakeLists.txt - CMake configuration for the HydroCouple interface headers
 #
 # Author: Caleb Buahin (caleb.buahin@gmail.com)
 #
 # This file is part of HydroCouple.
 #
-# You can redistribute it and/or modify it under the terms of the
-# MIT License as published by the Free Software Foundation.
-# This file and its associated files is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-# FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
-# 
-# You should have received a copy of the MIT License
-# along with HydroCouple. If not, see <http://www.gnu.org/licenses/>.
-# 
-# Copyright: 2004-2025
+# SPDX-License-Identifier: MIT
+#
+# You can redistribute it and/or modify it under the terms of the MIT
+# License; see the License file in the repository root for details. It is
+# distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+# Copyright: 2014-2026
 #
 
 cmake_minimum_required(VERSION 3.19)
