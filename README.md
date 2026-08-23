@@ -264,7 +264,7 @@ HydroCouple version 2.0.0-alpha.1 provides seven header files defining interface
 
 All interfaces are pure-virtual with an `I` prefix (e.g., `IModelComponent`) and designed for implementation by concrete model components. The interface headers contain no executable code; each specialization documents a canonical dimension ordering so producers and consumers agree on hyperslab layouts without negotiation.
 
-For detailed API documentation, see [https://hydrocouple.org/HydroCouple/](https://hydrocouple.org/HydroCouple/) (C++) and [https://hydrocouple.org/HydroCouple/python/](https://hydrocouple.org/HydroCouple/python/) (Python).
+For detailed API documentation, see [https://hydrocouple.org/HydroCouple/](https://hydrocouple.org/HydroCouple/) (C++) and [https://hydrocouple.org/HydroCouple/python/](https://hydrocouple.org/HydroCouple/python/) (Python). For concrete base classes implementing this standard, see [HydroCoupleSDK](https://hydrocouple.org/HydroCoupleSDK/).
 
 ---
 
@@ -336,6 +336,7 @@ Both documentation sites are co-deployed by `build_docs.yml` and cross-linked (t
 
 - **C++ interface standard (Doxygen):** [https://hydrocouple.org/HydroCouple/](https://hydrocouple.org/HydroCouple/)
 - **Python bindings (Sphinx):** [https://hydrocouple.org/HydroCouple/python/](https://hydrocouple.org/HydroCouple/python/)
+- **HydroCoupleSDK (reference implementation):** [https://hydrocouple.org/HydroCoupleSDK/](https://hydrocouple.org/HydroCoupleSDK/) — concrete base classes implementing this standard ([source](https://github.com/HydroCouple/HydroCoupleSDK))
 
 Release notes live in [CHANGELOG.md](CHANGELOG.md).
 
