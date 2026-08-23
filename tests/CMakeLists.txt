@@ -1,4 +1,5 @@
 add_executable(hydrocouple_tests
+    test_core_types.cpp
     test_hydrocouple.cpp
     test_spatial_wkb.cpp
 )

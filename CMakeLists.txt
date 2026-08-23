@@ -33,6 +33,8 @@ include(GNUInstallDirs)
 
 add_library(${PROJECT_NAME} INTERFACE
     include/hydrocouple.h
+    include/hydrocoupledistributed.h
+    include/hydrocouplehelpers.h
     include/hydrocouplespatial.h
     include/hydrocouplespatialwkb.h
     include/hydrocouplespatiotemporal.h
@@ -145,6 +147,8 @@ install(
 install(
     FILES
     include/hydrocouple.h
+    include/hydrocoupledistributed.h
+    include/hydrocouplehelpers.h
     include/hydrocouplespatial.h
     include/hydrocouplespatialwkb.h
     include/hydrocouplespatiotemporal.h

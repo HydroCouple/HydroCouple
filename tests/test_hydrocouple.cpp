@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 
 #include "hydrocouple.h"
+#include "hydrocouplehelpers.h"
+#include "hydrocoupledistributed.h"
 #include "hydrocoupletemporal.h"
 #include "hydrocouplespatial.h"
 #include "hydrocouplespatiotemporal.h"
@@ -14,10 +16,10 @@
 #include <span>
 #include <string>
 #include <type_traits>
-#include <variant>
 #include <vector>
 
 using namespace HydroCouple;
+using namespace HydroCouple::Helpers;
 
 // ============================================================================
 // ByteOrder enum class tests
@@ -37,93 +39,6 @@ TEST(ByteOrderTest, IsEnumClass)
 }
 
 // ============================================================================
-// hydrocouple_variant tests
-// ============================================================================
-
-TEST(HydroCoupleVariantTest, HoldsAllNumericTypes)
-{
-    hydrocouple_variant v_bool = true;
-    EXPECT_TRUE(std::get<bool>(v_bool));
-
-    hydrocouple_variant v_char = 'A';
-    EXPECT_EQ(std::get<char>(v_char), 'A');
-
-    hydrocouple_variant v_i8 = static_cast<int8_t>(42);
-    EXPECT_EQ(std::get<int8_t>(v_i8), 42);
-
-    hydrocouple_variant v_i16 = static_cast<int16_t>(1000);
-    EXPECT_EQ(std::get<int16_t>(v_i16), 1000);
-
-    hydrocouple_variant v_i32 = static_cast<int32_t>(100);
-    EXPECT_EQ(std::get<int32_t>(v_i32), 100);
-
-    hydrocouple_variant v_i64 = static_cast<int64_t>(123456789L);
-    EXPECT_EQ(std::get<int64_t>(v_i64), 123456789L);
-
-    hydrocouple_variant v_float = 3.14f;
-    EXPECT_FLOAT_EQ(std::get<float>(v_float), 3.14f);
-
-    hydrocouple_variant v_double = 2.71828;
-    EXPECT_DOUBLE_EQ(std::get<double>(v_double), 2.71828);
-
-    hydrocouple_variant v_ldouble = static_cast<long double>(1.41421356L);
-    EXPECT_DOUBLE_EQ(static_cast<double>(std::get<long double>(v_ldouble)),
-                     static_cast<double>(1.41421356L));
-}
-
-TEST(HydroCoupleVariantTest, HoldsUnsignedTypes)
-{
-    hydrocouple_variant v_u8 = static_cast<uint8_t>(255);
-    EXPECT_EQ(std::get<uint8_t>(v_u8), 255);
-
-    hydrocouple_variant v_u16 = static_cast<uint16_t>(65535);
-    EXPECT_EQ(std::get<uint16_t>(v_u16), 65535);
-
-    hydrocouple_variant v_u32 = static_cast<uint32_t>(4294967295U);
-    EXPECT_EQ(std::get<uint32_t>(v_u32), 4294967295U);
-
-    hydrocouple_variant v_u64 = static_cast<uint64_t>(123456789ULL);
-    EXPECT_EQ(std::get<uint64_t>(v_u64), 123456789ULL);
-}
-
-TEST(HydroCoupleVariantTest, HoldsString)
-{
-    hydrocouple_variant v_string = std::string("Hello HydroCouple");
-    EXPECT_EQ(std::get<std::string>(v_string), "Hello HydroCouple");
-}
-
-TEST(HydroCoupleVariantTest, HoldsAny)
-{
-    int data = 42;
-    hydrocouple_variant v_any = std::any(data);
-    EXPECT_EQ(std::any_cast<int>(std::get<std::any>(v_any)), 42);
-}
-
-TEST(HydroCoupleVariantTest, HoldsMonostate)
-{
-    hydrocouple_variant v_mono = std::monostate{};
-    EXPECT_TRUE(std::holds_alternative<std::monostate>(v_mono));
-}
-
-TEST(HydroCoupleVariantTest, VariantSize)
-{
-    // Variant should hold exactly 16 alternative types
-    // (monostate, bool, char, int8..int64, uint8..uint64, float, double, long double, string, any)
-    EXPECT_EQ(std::variant_size_v<hydrocouple_variant>, 16u);
-}
-
-TEST(HydroCoupleVariantTest, ValueSemantics)
-{
-    hydrocouple_variant v1 = 42;
-    hydrocouple_variant v2 = v1;
-    EXPECT_EQ(std::get<int>(v2), 42);
-
-    v2 = 99;
-    EXPECT_EQ(std::get<int>(v1), 42);
-    EXPECT_EQ(std::get<int>(v2), 99);
-}
-
-// ============================================================================
 // IModelComponent::ComponentStatus enum tests
 // ============================================================================
 
@@ -139,10 +54,11 @@ TEST(ComponentStatusTest, EnumValues)
     EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Preparing), 7);
     EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Updating), 8);
     EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Updated), 9);
-    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Done), 10);
-    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Finishing), 11);
-    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Finished), 12);
-    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Failed), 13);
+    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Checkpointing), 10);
+    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Done), 11);
+    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Finishing), 12);
+    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Finished), 13);
+    EXPECT_EQ(static_cast<int>(IModelComponent::ComponentStatus::Failed), 14);
 }
 
 TEST(ComponentStatusTest, IsEnumClass)
@@ -160,9 +76,10 @@ TEST(ArgumentInputTypeTest, EnumValues)
     EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::String), 0);
     EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::File), 1);
     EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::JSON), 2);
-    EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::XML), 3);
-    EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::URL), 4);
-    EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::MEMORY_OBJECT), 5);
+    EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::YAML), 3);
+    EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::XML), 4);
+    EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::URL), 5);
+    EXPECT_EQ(static_cast<int>(IArgument::ArgumentInputType::MEMORY_OBJECT), 6);
 }
 
 TEST(ArgumentInputTypeTest, IsEnumClass)
@@ -646,7 +563,9 @@ TEST(InterfaceTest, AdditionalCoreInterfacesAreAbstract)
     EXPECT_TRUE(std::is_abstract_v<IAdaptedOutputFactoryComponent>);
     EXPECT_TRUE(std::is_abstract_v<IAdaptedOutputFactoryComponentInfo>);
     EXPECT_TRUE(std::is_abstract_v<IIdBasedComponentDataItem>);
-    EXPECT_TRUE(std::is_abstract_v<IProxyModelComponent>);
+    EXPECT_TRUE(std::is_abstract_v<ILicensedComponent>);
+    EXPECT_TRUE(std::is_abstract_v<IUIProvider>);
+    EXPECT_TRUE(std::is_abstract_v<ICheckpointableModelComponent>);
     EXPECT_TRUE(std::is_abstract_v<IWorkflowComponent>);
     EXPECT_TRUE(std::is_abstract_v<IWorkflowComponentInfo>);
     EXPECT_TRUE(std::is_abstract_v<IWorkflowComponentStatusChangeEventArgs>);
@@ -670,7 +589,9 @@ TEST(InterfaceTest, AdditionalCoreInterfacesHaveVirtualDestructors)
     EXPECT_TRUE(std::has_virtual_destructor_v<IAdaptedOutputFactoryComponent>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IAdaptedOutputFactoryComponentInfo>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IIdBasedComponentDataItem>);
-    EXPECT_TRUE(std::has_virtual_destructor_v<IProxyModelComponent>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<ILicensedComponent>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<IUIProvider>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<ICheckpointableModelComponent>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IWorkflowComponentInfo>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IWorkflowComponentStatusChangeEventArgs>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IModelComponentInfo>);
@@ -767,10 +688,10 @@ TEST(InheritanceTest, CoreInheritanceChain)
     EXPECT_TRUE((std::is_base_of_v<IIdentity, IComponentInfo>));
     EXPECT_TRUE((std::is_base_of_v<IComponentInfo, IModelComponentInfo>));
 
-    // IIdentity -> IModelComponent -> ICloneableModelComponent
+    // IIdentity -> IModelComponent -> ICloneableModelComponent / ICheckpointableModelComponent
     EXPECT_TRUE((std::is_base_of_v<IIdentity, IModelComponent>));
     EXPECT_TRUE((std::is_base_of_v<IModelComponent, ICloneableModelComponent>));
-    EXPECT_TRUE((std::is_base_of_v<IModelComponent, IProxyModelComponent>));
+    EXPECT_TRUE((std::is_base_of_v<IModelComponent, ICheckpointableModelComponent>));
 
     // IDescription -> IValueDefinition -> IQuality / IQuantity
     EXPECT_TRUE((std::is_base_of_v<IDescription, IValueDefinition>));
@@ -883,58 +804,99 @@ TEST(InheritanceTest, SpatioTemporalMultipleInheritance)
 }
 
 // ============================================================================
-// std::span<const int> parameter acceptance tests
+// Distributed interface tests
 // ============================================================================
 
-// Minimal concrete implementation of IComponentDataItem for span parameter testing.
-// Only the methods under test are implemented; all others abort if called.
+using namespace HydroCouple::Distributed;
+
+TEST(DistributedInterfaceTest, InterfacesAreAbstract)
+{
+    EXPECT_TRUE(std::is_abstract_v<IExchangeRequest>);
+    EXPECT_TRUE(std::is_abstract_v<ITransport>);
+    EXPECT_TRUE(std::is_abstract_v<IDistributedModelComponent>);
+    EXPECT_TRUE(std::is_abstract_v<IProxyModelComponent>);
+    EXPECT_TRUE(std::is_abstract_v<IPartitionedComponentDataItem>);
+}
+
+TEST(DistributedInterfaceTest, InterfacesHaveVirtualDestructors)
+{
+    EXPECT_TRUE(std::has_virtual_destructor_v<IExchangeRequest>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<ITransport>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<IDistributedModelComponent>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<IProxyModelComponent>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<IPartitionedComponentDataItem>);
+}
+
+TEST(DistributedInterfaceTest, InheritanceChain)
+{
+    EXPECT_TRUE((std::is_base_of_v<IModelComponent, IDistributedModelComponent>));
+    EXPECT_TRUE((std::is_base_of_v<IDistributedModelComponent, IProxyModelComponent>));
+    EXPECT_TRUE((std::is_base_of_v<IModelComponent, IProxyModelComponent>));
+    EXPECT_TRUE((std::is_base_of_v<IComponentDataItem, IPartitionedComponentDataItem>));
+}
+
+TEST(DistributedInterfaceTest, EndpointDefaults)
+{
+    ITransport::Endpoint e;
+    EXPECT_TRUE(e.address.empty());
+    EXPECT_EQ(e.rank, -1);
+}
+
+// ============================================================================
+// IMeshView tests
+// ============================================================================
+
+TEST(MeshViewTest, IsAbstractWithVirtualDestructor)
+{
+    EXPECT_TRUE(std::is_abstract_v<Spatial::IMeshView>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<Spatial::IMeshView>);
+}
+
+// ============================================================================
+// Hyperslab parameter acceptance tests over the typed data plane
+// ============================================================================
+
+// Minimal concrete implementation of IComponentDataItem capturing hyperslab
+// selections for verification.
 class StubComponentDataItem final : public IComponentDataItem
 {
 public:
-    // Capture calls for verification
-    mutable std::vector<int> lastDimensionIndexes;
-    mutable std::vector<int> lastDimensionLengths;
-    mutable int lastDimensionLengthResult = 0;
+    mutable std::vector<int64_t> lastStart;
+    mutable std::vector<int64_t> lastCount;
+    mutable DataKind lastBufferKind = DataKind::Unknown;
+    mutable void *lastBufferData = nullptr;
 
-    // IComponentDataItem span-parameter methods
-    int dimensionLength(std::span<const int> dimensionIndexes = {}) const override
+    std::vector<int64_t> shape() const override { return {4, 5}; }
+    DataKind dataKind() const override { return DataKind::Float64; }
+
+    bool getValuesInto(const BufferDescriptor &destination,
+                       std::span<const int64_t> start,
+                       std::span<const int64_t> count,
+                       std::string * = nullptr) const override
     {
-        lastDimensionIndexes.assign(dimensionIndexes.begin(), dimensionIndexes.end());
-        return lastDimensionLengthResult;
+        lastStart.assign(start.begin(), start.end());
+        lastCount.assign(count.begin(), count.end());
+        lastBufferKind = destination.kind;
+        lastBufferData = destination.data;
+        return true;
     }
 
-    void getValue(hydrocouple_variant &, std::span<const int> dimensionIndexes) const override
+    bool setValuesFrom(const BufferDescriptor &source,
+                       std::span<const int64_t> start,
+                       std::span<const int64_t> count,
+                       std::string * = nullptr) override
     {
-        lastDimensionIndexes.assign(dimensionIndexes.begin(), dimensionIndexes.end());
-    }
-
-    void getValues(hydrocouple_variant *, std::span<const int> dimensionIndexes,
-                   std::span<const int> dimensionLengths = {}) const override
-    {
-        lastDimensionIndexes.assign(dimensionIndexes.begin(), dimensionIndexes.end());
-        lastDimensionLengths.assign(dimensionLengths.begin(), dimensionLengths.end());
-    }
-
-    void setValue(const hydrocouple_variant &, std::span<const int> dimensionIndexes) override
-    {
-        lastDimensionIndexes.assign(dimensionIndexes.begin(), dimensionIndexes.end());
-    }
-
-    void setValues(const hydrocouple_variant *, std::span<const int> dimensionIndexes,
-                   std::span<const int> dimensionLengths = {}) override
-    {
-        lastDimensionIndexes.assign(dimensionIndexes.begin(), dimensionIndexes.end());
-        lastDimensionLengths.assign(dimensionLengths.begin(), dimensionLengths.end());
+        lastStart.assign(start.begin(), start.end());
+        lastCount.assign(count.begin(), count.end());
+        lastBufferKind = source.kind;
+        lastBufferData = source.data;
+        return true;
     }
 
     // Stubs for remaining pure virtuals
     IModelComponent *modelComponent() const override { return nullptr; }
     std::vector<IDimension *> dimensions() const override { return {}; }
     IValueDefinition *valueDefinition() const override { return nullptr; }
-    bool hasEditor() const override { return false; }
-    void showEditor(void * = nullptr) override {}
-    bool hasViewer() const override { return false; }
-    void showViewer(void * = nullptr) override {}
 
     // IIdentity / IDescription stubs
     const std::string &id() const override { static std::string s; return s; }
@@ -955,100 +917,71 @@ public:
     void emit(std::string) override {}
 };
 
-TEST(SpanParameterTest, AcceptsEmptySpan)
+TEST(HyperslabParameterTest, AcceptsStdArraySelections)
 {
     StubComponentDataItem stub;
-    stub.lastDimensionLengthResult = 42;
+    std::array<int64_t, 2> start = {1, 2};
+    std::array<int64_t, 2> count = {2, 3};
+    double buffer[6] = {};
 
-    int result = stub.dimensionLength();
-    EXPECT_EQ(result, 42);
-    EXPECT_TRUE(stub.lastDimensionIndexes.empty());
+    EXPECT_TRUE(stub.getValuesInto(
+        makeContiguous(buffer, DataKind::Float64, count), start, count));
+    ASSERT_EQ(stub.lastStart.size(), 2u);
+    EXPECT_EQ(stub.lastStart[0], 1);
+    EXPECT_EQ(stub.lastStart[1], 2);
+    ASSERT_EQ(stub.lastCount.size(), 2u);
+    EXPECT_EQ(stub.lastCount[0], 2);
+    EXPECT_EQ(stub.lastCount[1], 3);
+    EXPECT_EQ(stub.lastBufferKind, DataKind::Float64);
+    EXPECT_EQ(stub.lastBufferData, buffer);
 }
 
-TEST(SpanParameterTest, AcceptsStdArray)
+TEST(HyperslabParameterTest, AcceptsStdVectorSelections)
 {
     StubComponentDataItem stub;
-    std::array<int, 2> idx = {3, 7};
-    hydrocouple_variant v;
+    std::vector<int64_t> start = {0, 0};
+    std::vector<int64_t> count = {4, 5};
+    std::vector<double> buffer(20);
 
-    stub.getValue(v, idx);
-    ASSERT_EQ(stub.lastDimensionIndexes.size(), 2u);
-    EXPECT_EQ(stub.lastDimensionIndexes[0], 3);
-    EXPECT_EQ(stub.lastDimensionIndexes[1], 7);
+    EXPECT_TRUE(stub.setValuesFrom(
+        makeContiguous(buffer.data(), DataKind::Float64, count), start, count));
+    EXPECT_EQ(stub.lastStart, start);
+    EXPECT_EQ(stub.lastCount, count);
 }
 
-TEST(SpanParameterTest, AcceptsStdVector)
+TEST(HyperslabParameterTest, ScalarTemplateHelperRoutesThroughBulkPath)
 {
     StubComponentDataItem stub;
-    std::vector<int> idx = {1, 2, 3};
-    hydrocouple_variant v;
+    double value = 0.0;
+    std::array<int64_t, 2> index = {3, 4};
 
-    stub.getValue(v, idx);
-    ASSERT_EQ(stub.lastDimensionIndexes.size(), 3u);
-    EXPECT_EQ(stub.lastDimensionIndexes[0], 1);
-    EXPECT_EQ(stub.lastDimensionIndexes[1], 2);
-    EXPECT_EQ(stub.lastDimensionIndexes[2], 3);
+    EXPECT_TRUE(getValue(stub, value, index));
+    ASSERT_EQ(stub.lastStart.size(), 2u);
+    EXPECT_EQ(stub.lastStart[0], 3);
+    EXPECT_EQ(stub.lastStart[1], 4);
+    ASSERT_EQ(stub.lastCount.size(), 2u);
+    EXPECT_EQ(stub.lastCount[0], 1);
+    EXPECT_EQ(stub.lastCount[1], 1);
+    EXPECT_EQ(stub.lastBufferKind, DataKind::Float64);
+    EXPECT_EQ(stub.lastBufferData, &value);
+
+    const double toWrite = 9.5;
+    EXPECT_TRUE(setValue(stub, toWrite, index));
+    EXPECT_EQ(stub.lastBufferKind, DataKind::Float64);
 }
 
-TEST(SpanParameterTest, AcceptsCArray)
+TEST(HyperslabParameterTest, SpanTemplateHelperRoutesThroughBulkPath)
 {
     StubComponentDataItem stub;
-    int idx[] = {10, 20};
-    hydrocouple_variant v;
+    std::vector<double> dest(6);
+    std::array<int64_t, 2> start = {0, 1};
+    std::array<int64_t, 2> count = {2, 3};
 
-    stub.getValue(v, idx);
-    ASSERT_EQ(stub.lastDimensionIndexes.size(), 2u);
-    EXPECT_EQ(stub.lastDimensionIndexes[0], 10);
-    EXPECT_EQ(stub.lastDimensionIndexes[1], 20);
-}
+    EXPECT_TRUE(getValues(stub, std::span<double>(dest), start, count));
+    EXPECT_EQ(stub.lastBufferKind, DataKind::Float64);
+    EXPECT_EQ(stub.lastBufferData, dest.data());
 
-TEST(SpanParameterTest, AcceptsInitializerListViaArray)
-{
-    StubComponentDataItem stub;
-    hydrocouple_variant v;
-
-    // std::span from a brace-init-list via std::array
-    std::array<int, 3> idx{5, 10, 15};
-    stub.getValue(v, idx);
-    ASSERT_EQ(stub.lastDimensionIndexes.size(), 3u);
-    EXPECT_EQ(stub.lastDimensionIndexes[2], 15);
-}
-
-TEST(SpanParameterTest, GetValuesWithLengths)
-{
-    StubComponentDataItem stub;
-    std::array<int, 2> idx = {0, 0};
-    std::array<int, 2> len = {10, 20};
-    hydrocouple_variant data[200];
-
-    stub.getValues(data, idx, len);
-    ASSERT_EQ(stub.lastDimensionIndexes.size(), 2u);
-    ASSERT_EQ(stub.lastDimensionLengths.size(), 2u);
-    EXPECT_EQ(stub.lastDimensionLengths[0], 10);
-    EXPECT_EQ(stub.lastDimensionLengths[1], 20);
-}
-
-TEST(SpanParameterTest, SetValuesWithLengths)
-{
-    StubComponentDataItem stub;
-    std::array<int, 1> idx = {5};
-    std::array<int, 1> len = {3};
-    hydrocouple_variant data[3];
-
-    stub.setValues(data, idx, len);
-    ASSERT_EQ(stub.lastDimensionIndexes.size(), 1u);
-    EXPECT_EQ(stub.lastDimensionIndexes[0], 5);
-    ASSERT_EQ(stub.lastDimensionLengths.size(), 1u);
-    EXPECT_EQ(stub.lastDimensionLengths[0], 3);
-}
-
-TEST(SpanParameterTest, SetValueSingleIndex)
-{
-    StubComponentDataItem stub;
-    std::array<int, 1> idx = {99};
-    hydrocouple_variant v = 42.0;
-
-    stub.setValue(v, idx);
-    ASSERT_EQ(stub.lastDimensionIndexes.size(), 1u);
-    EXPECT_EQ(stub.lastDimensionIndexes[0], 99);
+    std::vector<double> src(6, 1.5);
+    EXPECT_TRUE(setValues(stub, std::span<const double>(src), start, count));
+    EXPECT_EQ(stub.lastBufferData, const_cast<double *>(src.data()));
 }

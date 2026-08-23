@@ -11,9 +11,8 @@
  * for efficient batch processing.
  * \license
  * This file and its associated files and libraries are free software.
- * You can redistribute it and/or modify it under the terms of the
- * MIT License as published by the Free Software Foundation.
- * This file and its associated files are distributed in the hope that they will be useful,
+ * You can redistribute them and/or modify them under the terms of the
+ * MIT License. They are distributed in the hope that they will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for details.
  * \copyright Copyright 2014-2025, Caleb Buahin, All rights reserved.

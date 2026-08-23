@@ -9,13 +9,12 @@
  * and time-series component data items.
  * \license
  * This file and its associated files and libraries are free software.
- * You can redistribute it and/or modify it under the terms of the
- * MIT License as published by the Free Software Foundation.
- * This file and its associated files are distributed in the hope that they will be useful,
+ * You can redistribute them and/or modify them under the terms of the
+ * MIT License. They are distributed in the hope that they will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for details.
- * \copyright Copyright 2014-2025, Caleb Buahin, All rights reserved.
- * \date 2014-2025
+ * \copyright Copyright 2014-2026, Caleb Buahin, All rights reserved.
+ * \date 2014-2026
  */
 
 #ifndef HYDROCOUPLETEMPORAL_H
@@ -31,6 +30,10 @@ namespace HydroCouple
   {
     /*!
      * \brief IDateTime interface based on a Julian day
+     * \details The normative convention is the astronomical Julian day number in the
+     * proleptic Gregorian ("standard") calendar, UTC. Persistence layers writing CF
+     * metadata should therefore emit units of "days since ..." with
+     * calendar = "standard".
      */
     class IDateTime : public virtual HydroCouple::IPropertyChanged
     {
@@ -110,13 +113,8 @@ namespace HydroCouple
      */
     class ITimeSeriesComponentDataItem : public virtual IComponentDataItem
     {
-    
-    public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
 
+    public:
       /*!
        * \brief ~ITimeSeriesComponentDataItem destructor.
        */
@@ -127,13 +125,23 @@ namespace HydroCouple
        * \param[in] timeIndex is the index of the time to retrieve.
        * \return A pointer to the IDateTime at the specified index.
        */
-      [[nodiscard]] virtual const IDateTime *time(int timeIndex) const = 0;
+      [[nodiscard]] virtual const IDateTime *time(int64_t timeIndex) const = 0;
 
       /*!
        * \brief Gets the number of times.
        * \return The number of times.
        */
-      [[nodiscard]] virtual int timeCount() const = 0;
+      [[nodiscard]] virtual int64_t timeCount() const = 0;
+
+      /*!
+       * \brief Bulk access to all time coordinates as Julian day values.
+       * \details The span has timeCount() elements, is ordered with the time dimension,
+       * and remains valid until the time dimension changes. This is the accessor IO
+       * writers and interpolating adapters must use; time(int64_t) is a per-element
+       * convenience for spot queries.
+       * \return A span of Julian day values.
+       */
+      [[nodiscard]] virtual std::span<const double> times() const = 0;
 
       /*!
        * \brief Gets the ITimeSpan associated with this data item.
@@ -143,167 +151,42 @@ namespace HydroCouple
 
       /*!
        * \brief Gets the IDimension of the times.
+       * \details Canonical dimension ordering: the time dimension is dimension 0 of
+       * shape(); any additional dimensions follow. Data access uses the inherited
+       * getValuesInto()/setValuesFrom() hyperslab API with the time index as start[0],
+       * so "current time step, all entities" is a contiguous slab.
        * \return A pointer to the IDimension.
        */
       [[nodiscard]] virtual IDimension *timeDimension() const = 0;
-
-      /*!
-      * \brief Gets a single value for given time dimension index.
-      * \param[out] data is a pointer to the location data is to be written.
-      * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
-      * \param[in] dimensionIndexes are the indexes for additional dimension for the data to be obtained. Empty vector if no additional dimensions.
-      */
-      virtual void getValue(
-        hydrocouple_variant& data,
-        int timeDimensionIndex,
-        std::span<const int> dimensionIndexes = {}) const = 0;
-
-      /*!
-      * \brief Gets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
-      * \param[out] data is a pointer to the location data is to be written.
-      * \param[in] timeDimensionIndex is the time dimension index from where to obtain the requested data.
-      * \param[in] dimensionIndexes indexes to use for the other dimensions to get the data if they exist. Otherwise an empty vector.
-      * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
-      * \param[in] dimensionLengths are the lengths of the dimensions for the data to be set. If empty a single value is set,
-      * otherwise the length of the vector must be equal to the number of dimensions.
-      */
-      virtual void getValues(
-        hydrocouple_variant *data,
-        int timeDimensionIndex,
-        std::span<const int>dimensionIndexes = {},
-        int timeDimensionIndexLength = 1,
-        std::span<const int>dimensionLengths = {}) const = 0;
-
-      /*!
-      * \brief Sets a single value for given time dimension index.
-      * \param[in] data is the pointer to the input data to be set.
-      * \param[in] timeDimensionIndex is the time dimension index from where to write data.
-      * \param[in] dimensionIndexes indexes to use for the other dimensions to get the data if they exist. Otherwise an empty vector.
-      */
-      virtual void setValue(
-        const hydrocouple_variant &data,
-        int timeDimensionIndex,
-        std::span<const int>dimensionIndexes = {}) = 0;
-
-      /*!
-      * \brief Sets a multi-dimensional array of values for given time dimension index and size for a hyperslab.
-      * \param[in] data is the pointer to the input data to be set.
-      * \param[in] timeDimensionIndex is the time dimension index from where to write data.
-      * \param[in] dimensionIndexes indexes to use for the other dimensions to get the data if they exist. Otherwise an empty vector.
-      * \param[in] timeDimensionIndexLength is the length of the time dimension for the data to be obtained.
-      * \param[in] dimensionLengths are the lengths of the dimensions for the data to be set. If empty a single value is set,
-      * otherwise the length of the vector must be equal to the number of dimensions.
-      */
-      virtual void setValues(
-        const hydrocouple_variant *data,
-        int timeDimensionIndex,
-        std::span<const int>dimensionIndexes = {},
-        int timeDimensionIndexLength = 1,
-        std::span<const int>dimensionLengths = {}) = 0;
-
     };
 
     /*!
      * \brief ITimeIdBasedComponentDataItem is an IComponentDataItem with both
      * temporal and identifier-based dimensions for accessing multi-dimensional time-series data.
      */
-    class ITimeIdBasedComponentDataItem : public virtual IComponentDataItem,
-                                          public virtual ITimeSeriesComponentDataItem
+    class ITimeIdBasedComponentDataItem : public virtual ITimeSeriesComponentDataItem
     {
 
-
-
     public:
-        
-        using IComponentDataItem::getValue;
-        using IComponentDataItem::getValues;
-        using IComponentDataItem::setValue;
-        using IComponentDataItem::setValues;
-        using ITimeSeriesComponentDataItem::getValue;
-        using ITimeSeriesComponentDataItem::getValues;
-        using ITimeSeriesComponentDataItem::setValue;
-        using ITimeSeriesComponentDataItem::setValues;
-
       /*!
        * \brief ~ITimeIdBasedComponentDataItem destructor.
        */
       virtual ~ITimeIdBasedComponentDataItem() = default;
 
       /*!
-       * \brief identifiers associated with this dimension.
+       * \brief identifiers associated with the identifier dimension.
        * \return vector<string> of identifiers
        */
       [[nodiscard]] virtual std::vector<std::string> identifiers() const = 0;
 
       /*!
-       * \brief idDimensions associated with this dimension.
-       * \return IDimension of the identifiers associated with this dimension.
+       * \brief identifierDimension associated with this data item.
+       * \details Canonical dimension ordering: time is dimension 0, the identifier
+       * dimension is dimension 1; any additional dimensions follow. Data access uses
+       * the inherited getValuesInto()/setValuesFrom() hyperslab API.
+       * \return IDimension of the identifiers associated with this data item.
        */
       [[nodiscard]] virtual IDimension *identifierDimension() const = 0;
-
-      /*!
-       * \brief Gets a single value for given id dimension index.
-       * \param[out] data is a pre-allocated pointer to the location data is to be written.
-       * \param[in] idIndex is the id dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for additional dimension for the data to be obtained. Empty vector if no additional dimensions.
-       */
-      virtual void getValue(
-        hydrocouple_variant &data,
-        int timeIndex, 
-        int idIndex, 
-        std::span<const int>dimensionIndexes = {}) const = 0;
-
-      /*!
-       * \brief Gets a multi-dimensional array of values for given id dimension index and size for a hyperslab.
-       * \param[out] data is pre-allocated pointer to the location data is to be written.
-       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
-       * \param[in] idIndex is the id dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for additional dimension for the data to be obtained. Empty vector if no additional dimensions.
-       * \param[in] timeIndexLength is the length of the time dimension for the data to be obtained.
-       * \param[in] idIndexLength is the length of the id dimension for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       */
-      virtual void getValues(
-        hydrocouple_variant *data,
-        int timeIndex, 
-        int idIndex, 
-        std::span<const int>dimensionIndexes = {},
-        int timeIndexLength = 1,
-        int idIndexLength = 1,
-        std::span<const int>dimensionLengths = {}) const = 0;
-
-      /*!
-       * \brief Sets a single value for given id dimension index.
-       * \param[in] data is the pointer to a pre-allocated location where data to be written.
-       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
-       * \param[in] idIndex is the id dimension index where data is to be written.
-       * \param[in] dimensionIndexes are the indexes for additional dimension for the data to be obtained. Empty vector if no additional dimensions.
-       */
-      virtual void setValue(
-        const hydrocouple_variant &data,
-        int timeIndex, 
-        int idIndex, 
-        std::span<const int>dimensionIndexes = {}) = 0;
-
-      /*!
-       * \brief Sets a multi-dimensional array of values for given
-       * id dimension index and size for a hyperslab.
-       * \param[in] data is the input multi dimensional array to be written.
-       * \param[in] timeIndex is the time dimension index from where to obtain the requested data.
-       * \param[in] idIndex is the id dimension index where data is to be written.
-       * \param[in] dimensionIndexes are the indexes for additional dimension for the data to be obtained. Empty vector if no additional dimensions.
-       * \param[in] timeIndexLength is the length of the time dimension for the data to be obtained.
-       * \param[in] idIndexLength is the length of the id dimension for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned.
-       */
-      virtual void setValues(
-        const hydrocouple_variant *data,
-        int timeIndex,
-        int idIndex,
-        std::span<const int>dimensionIndexes = {},
-        int timeIndexLength = 1,
-        int idIndexLength = 1,
-        std::span<const int>dimensionLengths = {}) = 0;
     };
   }
 }
