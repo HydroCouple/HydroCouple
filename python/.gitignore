@@ -1,0 +1,12 @@
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.so
+*.pyd
+_hydrocouple/*.cpp
+__pycache__/
+.pytest_cache/
+.coverage
+wheelhouse/
+docs/_build/
