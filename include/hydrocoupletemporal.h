@@ -1,7 +1,7 @@
 /*!
  * \file   hydrocoupletemporal.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version   2.0.0
+ * \version   2.0.0-alpha.1
  * \brief Temporal interface definitions for the HydroCouple component-based modeling framework.
  * \details This header file contains the temporal interface definitions for the
  * HydroCouple component-based modeling framework. It defines interfaces for

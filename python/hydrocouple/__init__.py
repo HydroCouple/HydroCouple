@@ -65,7 +65,8 @@ from hydrocouple.core import (
     IWorkflowComponentStatusChangeEventArgs,
 )
 
-__version__ = "2.0.0"
+# PEP 440 form of the C++ release designation 2.0.0-alpha.1
+__version__ = "2.0.0a1"
 
 __all__ = [
     "AreaUnits",

@@ -1,7 +1,7 @@
 /*!
  * \file hydrocouplespatiotemporal.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0
+ * \version 2.0.0-alpha.1
  * \brief Spatiotemporal interface definitions for the HydroCouple component-based modeling framework.
  * \details This header file contains the spatiotemporal interface definitions for the
  * HydroCouple component-based modeling framework. It defines component data items

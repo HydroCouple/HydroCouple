@@ -1,7 +1,7 @@
 /*!
  * \file hydrocouplehelpers.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0
+ * \version 2.0.0-alpha.1
  * \brief Non-normative convenience helpers for the HydroCouple interface standard.
  * \details This header is the single deliberate exception to the standard's
  * no-implementation rule: the interface headers (hydrocouple.h and companions)

@@ -1,7 +1,7 @@
 /*!
  * \file hydrocouplespatialwkb.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0
+ * \version 2.0.0-alpha.1
  * \brief Well-Known Binary (WKB) structures for OGC Simple Features Access geometry serialization.
  * \details This header file contains the C-compatible structures for parsing and
  * constructing OGC WKB (Well-Known Binary) geometry representations as defined by

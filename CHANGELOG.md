@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 — 2026-08-22
+## 2.0.0-alpha.1 — 2026-08-22
 
 Breaking modernization of the interface standard for HPC, GPU, and cloud execution. Header-only; C++20; MIT. See `docs/INTERFACE_REVIEW.md` for the full rationale.
 

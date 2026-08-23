@@ -330,7 +330,7 @@ class TestPythonConsumesCpp:
         component, info, handle = load(str(cpp_component_lib))
         assert component.id == "cpp-sine"
         assert info.developer == "HydroCouple interop test"
-        assert info.version == "2.0.0"
+        assert info.version == "2.0.0-alpha.1"
         assert isinstance(component, IModelComponent)
 
     def test_lifecycle_and_hyperslab_reads(self, cpp_component_lib):

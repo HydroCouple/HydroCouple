@@ -28,19 +28,42 @@ INCLUDE_DIRS = [
 
 
 # ---------------------------------------------------------------------------
-# Version — single-sourced from include/version.h
+# Version — single-sourced from the repository, converted to PEP 440
 # ---------------------------------------------------------------------------
+def _semver_to_pep440(version: str) -> str:
+    """Convert a semver pre-release (2.0.0-alpha.1) to PEP 440 (2.0.0a1)."""
+    return (version
+            .replace("-alpha.", "a")
+            .replace("-beta.", "b")
+            .replace("-rc.", "rc"))
+
+
 def _read_version() -> str:
+    # CMakeLists.txt is the authoritative, always-in-repo source
+    # (the generated version.h is gitignored and may be stale).
+    cmake_lists = os.path.normpath(
+        os.path.join(HERE, "..", "CMakeLists.txt"))
+    try:
+        text = open(cmake_lists, encoding="utf-8").read()
+        base = re.search(r'^\s*VERSION\s+([0-9.]+)\s*$', text, re.MULTILINE)
+        suffix = re.search(
+            r'set\(HYDROCOUPLE_VERSION_SUFFIX\s+"([^"]*)"\)', text)
+        if base:
+            return _semver_to_pep440(
+                base.group(1) + (suffix.group(1) if suffix else ""))
+    except OSError:
+        pass
+    # Fallback for sdist layouts without the repository root.
     version_h = os.path.join(HYDROCOUPLE_INCLUDE, "version.h")
     try:
         with open(version_h, encoding="utf-8") as fh:
-            match = re.search(r'#define\s+PROJECT_VERSION\s+"([^"]+)"',
+            match = re.search(r'#define\s+PROJECT_VERSION\s+"([^"@]+)"',
                               fh.read())
             if match:
-                return match.group(1)
+                return _semver_to_pep440(match.group(1))
     except OSError:
         pass
-    return "2.0.0"
+    return "2.0.0a1"
 
 
 # ---------------------------------------------------------------------------

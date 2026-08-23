@@ -20,7 +20,7 @@ try:
     version = hydrocouple.__version__
     release = hydrocouple.__version__
 except Exception:
-    version = '2.0.0'
+    version = '2.0.0a1'
     release = version
 
 # -- General configuration ------------------------------------------------

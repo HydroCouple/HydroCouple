@@ -261,7 +261,7 @@ public:
     [[nodiscard]] std::string copyright() const override { return "2026 Caleb Buahin"; }
     [[nodiscard]] std::string url() const override { return "https://hydrocouple.org"; }
     [[nodiscard]] std::string email() const override { return "caleb.buahin@gmail.com"; }
-    [[nodiscard]] std::string version() const override { return "2.0.0"; }
+    [[nodiscard]] std::string version() const override { return "2.0.0-alpha.1"; }
     [[nodiscard]] std::set<std::string> tags() const override { return {"test"}; }
 
     // IModelComponentInfo

@@ -27,6 +27,12 @@ project(
     DESCRIPTION  "HydroCouple Interface Definitions for C++"
 )
 
+# Pre-release designation. CMake's project(VERSION) only accepts numeric
+# components, so the suffix is carried separately and composed into the
+# full version used for version.h, packaging, and docs.
+set(HYDROCOUPLE_VERSION_SUFFIX "-alpha.1")
+set(HYDROCOUPLE_FULL_VERSION "${PROJECT_VERSION}${HYDROCOUPLE_VERSION_SUFFIX}")
+
 include(GNUInstallDirs)
 
 # ---- Header-only interface library ----
@@ -179,7 +185,7 @@ else()
 endif()
 
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_VERSION ${HYDROCOUPLE_FULL_VERSION})
 set(CPACK_PACKAGE_VENDOR "hydrocouple.org")
 set(CPACK_PACKAGE_CONTACT "Caleb Buahin <caleb.buahin@gmail.com>")
 
