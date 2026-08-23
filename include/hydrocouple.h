@@ -2186,10 +2186,20 @@ namespace HydroCouple
       Initializing,
       //! The workflow component has successfully initialized.
       Initialized,
+      //! The workflow component is validating the composition (cross-component links, required roles).
+      Validating,
+      //! The workflow component found the composition valid and ready to prepare.
+      Validated,
+      //! The workflow component is preparing the composition for computation (e.g., driving IModelComponent::prepare(), building execution schedules, negotiating exchange patterns).
+      Preparing,
+      //! The workflow component has prepared the composition and can begin updating.
+      Prepared,
       //! The workflow component is performing an update step.
       Updating,
       //! The workflow component has successfully updated.
       Updated,
+      //! The workflow component is paused at a synchronization point (see requestPause()) and can be resumed.
+      Paused,
       //! The workflow component has completed all update steps.
       Done,
       //! The workflow component is finalizing and releasing resources.
@@ -2230,7 +2240,45 @@ namespace HydroCouple
     virtual void initialize() = 0;
 
     /*!
-     * \brief Updates the workflow component for the current time step.
+     * \brief Validates the composition as a whole before computation begins.
+     *
+     * \details Where IModelComponent::validate() checks one component in isolation,
+     * the workflow validates the coupled composition: that every required role is
+     * filled (see isRequiredModelComponent()), that connected exchange items are
+     * compatible, and that any feedback loops in the connection graph are ones the
+     * workflow's execution strategy can resolve. Must only be called after
+     * initialize() and after the exchange connections have been established.
+     * Transitions status() through WorkflowStatus::Validating to
+     * WorkflowStatus::Validated on success or WorkflowStatus::Failed otherwise.
+     *
+     * \return An empty vector when the composition is valid; otherwise one
+     * human-readable description per problem found.
+     */
+    [[nodiscard]] virtual std::vector<std::string> validate() = 0;
+
+    /*!
+     * \brief Prepares the composition for computation.
+     *
+     * \details The workflow drives IModelComponent::prepare() on its managed
+     * components and performs its own pre-computation work, such as deriving an
+     * execution schedule from the connection graph or negotiating distributed
+     * exchange patterns. Must only be called after validate() has succeeded.
+     * Transitions status() through WorkflowStatus::Preparing to
+     * WorkflowStatus::Prepared on success or WorkflowStatus::Failed otherwise.
+     */
+    virtual void prepare() = 0;
+
+    /*!
+     * \brief Performs one orchestration step.
+     *
+     * \details One call advances the composition to the workflow's next
+     * synchronization point; what constitutes that point is defined by the
+     * concrete workflow's execution strategy (e.g., servicing one request-reply
+     * chain from a trigger input, or advancing every component to the next
+     * common synchronization interval). Callers repeat update() until status()
+     * becomes WorkflowStatus::Done, WorkflowStatus::Paused, or
+     * WorkflowStatus::Failed. Pause and stop requests are honored at
+     * synchronization points (see requestPause() and requestStop()).
      */
     virtual void update() = 0;
 
@@ -2238,6 +2286,49 @@ namespace HydroCouple
      * \brief Finalizes the workflow component and releases resources.
      */
     virtual void finish() = 0;
+
+    /*!
+     * \brief Requests a cooperative stop of the workflow.
+     *
+     * \details The workflow completes the in-flight orchestration step, then
+     * transitions to WorkflowStatus::Done instead of starting another step, so
+     * that finish() can produce a consistent final state. Safe to call from a
+     * signal handler thread; takes effect at the next synchronization point.
+     */
+    virtual void requestStop() = 0;
+
+    /*!
+     * \brief Requests a cooperative pause of the workflow.
+     *
+     * \details The workflow completes the in-flight orchestration step, then
+     * transitions to WorkflowStatus::Paused instead of starting another step.
+     * A paused composition is at a consistent synchronization point — the
+     * natural moment to checkpoint components that implement
+     * ICheckpointableModelComponent. Resume with resume().
+     */
+    virtual void requestPause() = 0;
+
+    /*!
+     * \brief Resumes a paused workflow.
+     *
+     * \details Transitions status() from WorkflowStatus::Paused back to
+     * WorkflowStatus::Updated so that update() may be called again. Has no
+     * effect when the workflow is not paused.
+     */
+    virtual void resume() = 0;
+
+    /*!
+     * \brief Drains this workflow's diagnostic queue.
+     *
+     * \details Mirrors IModelComponent::errors(): the workflow must queue an
+     * ErrorEntry for every Warning-or-worse condition it detects — including
+     * failures surfaced by its managed components — and must queue a
+     * Severity::Fatal entry whenever it transitions to WorkflowStatus::Failed.
+     *
+     * \param clearAfterRead when true, the queue is emptied after being read.
+     * \return The queued diagnostic records in the order they were recorded.
+     */
+    [[nodiscard]] virtual std::vector<ErrorEntry> errors(bool clearAfterRead = false) = 0;
 
     /*!
      * \brief Gets the current status of the workflow component.
@@ -2256,9 +2347,11 @@ namespace HydroCouple
      * \param component is the IModelComponent to add to the workflow.
      * \param modelRoleIdentifier is the IIdentity of the role of the model component. If null, the component is added as a standalone component.
      * in which case the workflow likely does not require ordered or specific components for its operation.
+     * \param message is an optional out parameter that receives a description of why the
+     * component could not be added (e.g., unknown role, duplicate component) when returning false.
      * \return True if the component was added successfully, otherwise false.
      */
-    [[nodiscard]] virtual bool addModelComponent(IModelComponent *component, const IIdentity *modelRoleIdentifier = nullptr) = 0;
+    [[nodiscard]] virtual bool addModelComponent(IModelComponent *component, const IIdentity *modelRoleIdentifier = nullptr, std::string *message = nullptr) = 0;
 
     /*!
      * \brief removeModelComponent Removes model component instance from workflow
