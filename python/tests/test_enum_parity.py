@@ -122,3 +122,64 @@ class TestSpatialEnumParity:
     def test_raster_data_type(self):
         _assert_parity(spatial.RasterDataType, "hydrocouplespatial.h",
                        "RasterDataType")
+
+
+# ---------------------------------------------------------------------------
+# Cython declaration parity
+# ---------------------------------------------------------------------------
+#
+# The .pxd files restate the same enums a third time, for Cython. Nothing
+# else checks them: the members are not referenced from any .pyx, so a stale
+# declaration compiles cleanly and the parity tests above only look at the
+# pure-Python enums. WorkflowStatus drifted here undetected for exactly that
+# reason. Only membership and order are asserted -- the .pxd deliberately
+# omits values, since the C++ header supplies them.
+
+PXD_DIR = os.path.join(os.path.dirname(__file__), "..", "_hydrocouple")
+
+# cdef enum class <CythonName> ["<C++::qualified::Name>"] [(storage)]:
+# followed by one indented member per line. Nested C++ enums carry the
+# qualified name as a C-name string, optionally after a line continuation;
+# top-level ones omit it, and the Cython name is the C++ name.
+_PXD_ENUM = re.compile(
+    r"cdef enum class (\w+)\s*(?:\\\s*\n\s*)?(?:\"([^\"]+)\")?"
+    r"\s*(?:\([^)]*\))?\s*:\n((?:[ \t]+\w+\n)+)")
+
+
+def _parse_pxd_enums(pxd: str) -> dict[str, tuple[str, list[str]]]:
+    """Extract {cython_name: (cpp_enum_name, [member, ...])} from a .pxd."""
+    text = open(os.path.join(PXD_DIR, pxd), encoding="utf-8").read()
+    enums: dict[str, tuple[str, list[str]]] = {}
+    for cython_name, c_name, body in _PXD_ENUM.findall(text):
+        cpp_name = c_name.split("::")[-1] if c_name else cython_name
+        enums[cython_name] = (cpp_name, body.split())
+    return enums
+
+
+@pytest.mark.parametrize("pxd,header", [
+    ("_core.pxd", "hydrocouple.h"),
+    ("_spatial.pxd", "hydrocouplespatial.h"),
+])
+def test_pxd_enum_members_exist_in_order(pxd, header):
+    """Every member a .pxd declares must exist in the header, in order.
+
+    Deliberately a subsequence check, not equality: Cython declarations are
+    allowed to be partial (``_spatial.pxd`` names 5 of GeometryType's 72),
+    and members bind to C++ enumerators by name, so the header always
+    supplies the values. That also means a .pxd missing newly inserted
+    members is stale documentation rather than a defect -- the real
+    value-level guard is the pure-Python parity above, since
+    ``hydrocouple/core.py`` restates the integers and nothing checks it.
+
+    What this catches: a member that no longer exists in the header, and a
+    declaration reordered against it. Neither is caught by the compiler
+    while the member goes unreferenced from any .pyx.
+    """
+    declared = _parse_pxd_enums(pxd)
+    assert declared, f"no enum declarations parsed out of {pxd}"
+    for cython_name, (cpp_name, members) in declared.items():
+        cpp_members = list(_parse_cpp_enum(header, cpp_name))
+        remaining = iter(cpp_members)
+        assert all(m in remaining for m in members), (
+            f"{pxd} {cython_name} is not an in-order subset of C++ "
+            f"{cpp_name}: pxd={members} cpp={cpp_members}")

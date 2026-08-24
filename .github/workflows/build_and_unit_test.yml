@@ -127,3 +127,40 @@ jobs:
       - name: Run Unit Tests
         working-directory: ${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}
         run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
+
+  # The Python bindings restate the headers — enum values in
+  # hydrocouple/core.py and _hydrocouple/_core.pxd, and the ABC layer's
+  # method surface. Nothing in the compiler checks that restatement, so
+  # tests/test_enum_parity.py parses the headers and compares. It only
+  # helps if it runs: the WorkflowStatus renumbering shipped with the
+  # bindings silently mapping C++ Validating onto Python Updating, and
+  # this suite would have caught it the day it landed.
+  #
+  # The extension is built rather than assumed: 38 of the 98 tests drive
+  # the compiled Cython layer, and they pass vacuously against a stale
+  # .so. Building from source takes ~30 s.
+  python_bindings:
+    name: Python Bindings
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build and test dependencies
+        working-directory: python
+        run: python -m pip install --upgrade pip "Cython>=3.0" "numpy>=1.21" "setuptools>=64" pytest
+
+      - name: Build Cython extension in place
+        working-directory: python
+        run: python setup.py build_ext --inplace
+
+      - name: Run Python test suite
+        working-directory: python
+        env:
+          PYTHONPATH: .
+        run: python -m pytest tests/ -q

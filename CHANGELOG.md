@@ -20,19 +20,33 @@ shift: `Updating` 3 → 7, `Updated` 4 → 8, `Done` 5 → 10, `Finishing` 6 →
 `Finished` 7 → 12, `Failed` 8 → 13. Anything that persisted or transmitted
 the old integers must be remapped.
 
+### Testing and CI
+
+- **The Python suite now runs in CI** (`python_bindings` job). It never had,
+  which is why `test_enum_parity.py` — written precisely to catch bindings
+  drifting from the headers — did not catch the `WorkflowStatus`
+  renumbering. The job builds the Cython extension from source rather than
+  assuming one: 38 of the 100 tests drive the compiled layer and pass
+  vacuously against a stale `.so`. Build plus suite is roughly 30 seconds.
+- `test_enum_parity.py` additionally checks the `.pxd` declarations against
+  the headers. This is an in-order-subset check, not equality — Cython
+  declarations are legitimately partial (`_spatial.pxd` names 5 of
+  `GeometryType`'s 72 members) — so it catches a member that no longer
+  exists in the header or one reordered against it, neither of which the
+  compiler reports while the member goes unreferenced.
+
 ### Fixes
 
 - The `WorkflowStatus` renumbering above was not propagated when it landed.
   `tests/test_hydrocouple.cpp` still asserted the old values (this is the
-  CI failure on Linux and macOS), and — more seriously — the Python
-  bindings still declared the old nine-member enum in both
-  `hydrocouple/core.py` and `_hydrocouple/_core.pxd`. Since
-  `IWorkflowComponent.status` converts the C++ value through
-  `WorkflowStatus(<int>…)`, a C++ `Validating` (3) would have arrived in
-  Python as `Updating` (3) — silent misreporting rather than an error, with
-  `Paused`/`Done`/`Finishing`/`Finished`/`Failed` raising `ValueError`.
-  `python/tests/test_enum_parity.py` catches exactly this, and does fail on
-  the old values; nothing in CI runs it.
+  CI failure on Linux and macOS), and — more seriously — `hydrocouple/core.py`
+  still declared the old nine-member enum. Since `IWorkflowComponent.status`
+  converts the C++ value through `WorkflowStatus(<int>…)`, a C++ `Validating`
+  (3) would have arrived in Python as `Updating` (3) — silent misreporting
+  rather than an error, with `Paused` and everything above it raising
+  `ValueError`. `_hydrocouple/_core.pxd` was stale too, but harmlessly:
+  Cython binds enum members to C++ enumerators by name, so the header
+  supplies the values regardless. It is brought up to date as documentation.
 - The vcpkg pin (`2025.02.14`) can no longer build on Windows. Old vcpkg
   releases do not stay frozen: `vcpkg_acquire_msys.cmake` pins exact MSYS2
   package versions, MSYS2 mirrors carry only current packages, and the
