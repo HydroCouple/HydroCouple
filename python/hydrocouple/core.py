@@ -211,12 +211,17 @@ class WorkflowStatus(IntEnum):
     Created = 0
     Initializing = 1
     Initialized = 2
-    Updating = 3
-    Updated = 4
-    Done = 5
-    Finishing = 6
-    Finished = 7
-    Failed = 8
+    Validating = 3
+    Validated = 4
+    Preparing = 5
+    Prepared = 6
+    Updating = 7
+    Updated = 8
+    Paused = 9
+    Done = 10
+    Finishing = 11
+    Finished = 12
+    Failed = 13
 
 
 # ---------------------------------------------------------------------------

@@ -1,5 +1,45 @@
 # Changelog
 
+## Unreleased
+
+### `IWorkflowComponent` advanced for orchestrated execution (breaking)
+
+`validate()` and `prepare()` become explicit lifecycle phases mirroring the
+component lifecycle, so a workflow can drive composition-wide validation and
+preparation before any update runs. Cooperative `requestStop()`,
+`requestPause()`, and `resume()` are honored at synchronization points —
+consistent global moments, which is what `ICheckpointableModelComponent`
+needs. `errors()` gives the workflow the same diagnostic queue the model
+components have, and `addModelComponent()` reports rejection rather than
+failing silently.
+
+`WorkflowStatus` accordingly gains `Validating`, `Validated`, `Preparing`,
+`Prepared`, and `Paused`. **These are inserted in lifecycle order, not
+appended**, so the numeric values of `Updating` and everything after it
+shift: `Updating` 3 → 7, `Updated` 4 → 8, `Done` 5 → 10, `Finishing` 6 → 11,
+`Finished` 7 → 12, `Failed` 8 → 13. Anything that persisted or transmitted
+the old integers must be remapped.
+
+### Fixes
+
+- The `WorkflowStatus` renumbering above was not propagated when it landed.
+  `tests/test_hydrocouple.cpp` still asserted the old values (this is the
+  CI failure on Linux and macOS), and — more seriously — the Python
+  bindings still declared the old nine-member enum in both
+  `hydrocouple/core.py` and `_hydrocouple/_core.pxd`. Since
+  `IWorkflowComponent.status` converts the C++ value through
+  `WorkflowStatus(<int>…)`, a C++ `Validating` (3) would have arrived in
+  Python as `Updating` (3) — silent misreporting rather than an error, with
+  `Paused`/`Done`/`Finishing`/`Finished`/`Failed` raising `ValueError`.
+  `python/tests/test_enum_parity.py` catches exactly this, and does fail on
+  the old values; nothing in CI runs it.
+- The vcpkg pin (`2025.02.14`) can no longer build on Windows. Old vcpkg
+  releases do not stay frozen: `vcpkg_acquire_msys.cmake` pins exact MSYS2
+  package versions, MSYS2 mirrors carry only current packages, and the
+  pinned `msys2-runtime-3.5.4-2` now 404s on every mirror — so any port
+  calling `vcpkg_fixup_pkgconfig` (gtest among them) fails. Both workflows
+  now pin `2026.07.29`, matching the other HydroCouple projects.
+
 ## 2.0.0-alpha.1 — 2026-08-22
 
 Breaking modernization of the interface standard for HPC, GPU, and cloud execution. Header-only; C++20; MIT. See `docs/INTERFACE_REVIEW.md` for the full rationale.

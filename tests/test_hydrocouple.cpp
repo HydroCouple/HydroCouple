@@ -97,12 +97,17 @@ TEST(WorkflowStatusTest, EnumValues)
     EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Created), 0);
     EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Initializing), 1);
     EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Initialized), 2);
-    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Updating), 3);
-    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Updated), 4);
-    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Done), 5);
-    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Finishing), 6);
-    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Finished), 7);
-    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Failed), 8);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Validating), 3);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Validated), 4);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Preparing), 5);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Prepared), 6);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Updating), 7);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Updated), 8);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Paused), 9);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Done), 10);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Finishing), 11);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Finished), 12);
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Failed), 13);
 }
 
 TEST(WorkflowStatusTest, IsEnumClass)

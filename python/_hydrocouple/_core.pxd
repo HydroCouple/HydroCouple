@@ -431,8 +431,13 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         Created
         Initializing
         Initialized
+        Validating
+        Validated
+        Preparing
+        Prepared
         Updating
         Updated
+        Paused
         Done
         Finishing
         Finished

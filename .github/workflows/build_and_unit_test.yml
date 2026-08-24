@@ -56,7 +56,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: microsoft/vcpkg
-          ref: 2025.02.14
+          # Keep in step with the other HydroCouple projects. Old vcpkg
+          # releases stop working over time rather than staying frozen:
+          # their vcpkg_acquire_msys.cmake pins exact MSYS2 package
+          # versions, and MSYS2 mirrors serve only current packages, so
+          # every mirror eventually 404s on the pinned msys2-runtime and
+          # any port calling vcpkg_fixup_pkgconfig (gtest included) fails
+          # to build on Windows.
+          ref: 2026.07.29
           path: vcpkg
 
       - name: Bootstrap VCPKG (Windows)

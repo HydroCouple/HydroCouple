@@ -67,7 +67,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: microsoft/vcpkg
-          ref: 2025.02.14
+          # See build_and_unit_test.yml: pinned MSYS2 packages in old vcpkg
+          # releases disappear from the mirrors, breaking Windows builds.
+          ref: 2026.07.29
           path: vcpkg
         
       - name: Bootstrap VCPKG (Windows)
