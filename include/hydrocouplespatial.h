@@ -1,23 +1,21 @@
 /*!
  * \file hydrocouplespatial.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0
- * \description
- * This header file contains the geospatial interface definitions for the
- * HydroCouple component-based modeling definitions.
+ * \version 2.0.0-alpha.1
+ * \brief Geospatial interface definitions for the HydroCouple component-based modeling framework.
+ * \details This header file contains the geospatial interface definitions for the
+ * HydroCouple component-based modeling framework. It defines interfaces following the
+ * OGC Simple Features Access specification for geometry types, spatial reference systems,
+ * mesh/network data structures, raster data, regular grids, and their corresponding
+ * component data item interfaces.
  * \license
- * This file and its associated files, and libraries are free software.
- * You can redistribute it and/or modify it under the terms of the
- * MIT License as published by the Free Software Foundation.
- * This file and its associated files is distributed in the hope that it will be useful,
+ * This file and its associated files and libraries are free software.
+ * You can redistribute them and/or modify them under the terms of the
+ * MIT License. They are distributed in the hope that they will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for details.
  * \copyright Copyright 2014-2026, Caleb Buahin, All rights reserved.
  * \date 2014-2026
- * \pre
- * \bug
- * \warning
- * \todo
  */
 
 #ifndef HYDROCOUPLESPATIAL_H
@@ -25,7 +23,6 @@
 
 #include "hydrocouple.h"
 
-using namespace std;
 
 namespace HydroCouple
 {
@@ -35,6 +32,7 @@ namespace HydroCouple
   namespace Spatial
   {
     class IEdge;
+    class IMeshView;
     class IRasterBand;
     class IPolygon;
     class IPolyhedralSurface;
@@ -84,24 +82,10 @@ namespace HydroCouple
     };
 
     /*!
-     * \brief The types of data available in a mesh.
+     * \brief SpatialDataType describes the type of spatial data
+     * (applicable to meshes, networks, and other spatial structures).
      */
-    enum class MeshDataType
-    {
-      //! Single scalar value.
-      Scalar,
-      //! Multiple scalar values.
-      MultiScalar,
-      //! Vector values.
-      Vector,
-      //! Tensor values.
-      Tensor,
-    };
-
-    /*!
-     * \brief The types of data available in a network.
-     */
-    enum class NetworkDataType
+    enum class SpatialDataType
     {
       //! Single scalar value.
       Scalar,
@@ -116,7 +100,7 @@ namespace HydroCouple
     /*!
      * \brief The types of regular grids.
      */
-    enum RegularGridType
+    enum class RegularGridType
     {
       //! Cartesian grid.
       Cartesian,
@@ -127,7 +111,8 @@ namespace HydroCouple
     };
 
     /*!
-     * \brief Spatial Reference System
+     * \brief ISpatialReferenceSystem describes the coordinate reference system
+     * for spatial geometric objects.
      */
     class ISpatialReferenceSystem
     {
@@ -143,26 +128,26 @@ namespace HydroCouple
        * This will normally be a foreign key to an index of reference systems
        * stored in either the same or some other datastore.
        */
-      virtual int authSRID() const = 0;
+      [[nodiscard]] virtual int authSRID() const = 0;
 
       /*!
        * \brief The Authority Specific Spatial Reference System Identifier.
        */
-      virtual string authName() const = 0;
+      [[nodiscard]] virtual const std::string &authName() const = 0;
 
       /*!
        * Well-known Text description of the Spatial Reference System.
        */
-      virtual string srText() const = 0;
+      [[nodiscard]] virtual const std::string &srText() const = 0;
 
       /*!
        * \brief The measurement distance units for the Spatial Reference System.
        */
-      virtual HydroCouple::IUnit::DistanceUnits distanceUnits() const = 0;
+      [[nodiscard]] virtual HydroCouple::IUnit::DistanceUnits distanceUnits() const = 0;
     };
 
     /*!
-     * \brief The IEnvelope class
+     * \brief IEnvelope represents the minimum bounding box of a geometry.
      */
     class IEnvelope
     {
@@ -176,37 +161,37 @@ namespace HydroCouple
        * \brief The minimum x-coordinate value for this IEnvelope.
        * \return The minimum x-coordinate.
        */
-      virtual double minX() const = 0;
+      [[nodiscard]] virtual double minX() const = 0;
 
       /*!
        * \brief The maximum x-coordinate value for this IEnvelope.
        * \return The maximum x-coordinate.
        */
-      virtual double maxX() const = 0;
+      [[nodiscard]] virtual double maxX() const = 0;
 
       /*!
        * \brief The minimum y-coordinate value for this IEnvelope.
        * \return The minimum y-coordinate.
        */
-      virtual double minY() const = 0;
+      [[nodiscard]] virtual double minY() const = 0;
 
       /*!
        * \brief The maximum y-coordinate value for this IEnvelope.
        * \return The maximum y-coordinate.
        */
-      virtual double maxY() const = 0;
+      [[nodiscard]] virtual double maxY() const = 0;
 
       /*!
        * \brief The minimum z-coordinate value for this IEnvelope.
        * \return The minimum z-coordinate.
        */
-      virtual double minZ() const = 0;
+      [[nodiscard]] virtual double minZ() const = 0;
 
       /*!
        * \brief The maximum z-coordinate value for this IEnvelope.
        * \return The maximum z-coordinate.
        */
-      virtual double maxZ() const = 0;
+      [[nodiscard]] virtual double maxZ() const = 0;
     };
 
     /*!
@@ -218,7 +203,7 @@ namespace HydroCouple
       /*!
        * \brief The type of IGeometry.
        */
-      enum GeometryType
+      enum class GeometryType
       {
         Geometry = 0,
         Point = 1,
@@ -306,13 +291,13 @@ namespace HydroCouple
        * \brief id of the geometry.
        * \return id of the geometry.
        */
-      virtual string id() const = 0;
+      [[nodiscard]] virtual const std::string &id() const = 0;
 
       /*!
        * \brief index of the geometry if it is part of a collection.
        * \return index of the geometry in a collection.
        */
-      virtual unsigned int index() const = 0;
+      [[nodiscard]] virtual unsigned int index() const = 0;
 
       /*!
        * \brief The inherent dimension of this geometric object, which must be less than or equal to the coordinate dimension.
@@ -321,52 +306,50 @@ namespace HydroCouple
        * \returns 0 for points, 1 for lines and 2 for surfaces.
        *
        */
-      virtual int dimension() const = 0;
+      [[nodiscard]] virtual int dimension() const = 0;
 
       /*!
        * \brief Get the dimension of the coordinates in this object.
        *
        * \returns In practice this will return 2 or 3. It can also return 0 in the case of an empty point.
        */
-      virtual int coordinateDimension() const = 0;
+      [[nodiscard]] virtual int coordinateDimension() const = 0;
 
       /*!
-       * \brief Get the dimension of the coordinates in this object.
+       * \brief Gets the geometry type of this object.
        *
-       * \details Returns an enum representing the instantiable subtype of Geometry of which this
-       * geometric object is an instantiable member.The name of the subtype of Geometry is returned as a string.
-       *
-       * \returns In practice this will return 2 or 3. It can also return 0 in the case of an empty point.
+       * \returns A GeometryType enum value representing the instantiable subtype of Geometry
+       * of which this geometric object is a member.
        */
-      virtual GeometryType geometryType() const = 0;
+      [[nodiscard]] virtual GeometryType geometryType() const = 0;
 
       /*!
        * \brief Spatial reference system of geometric object.
        */
-      virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
+      [[nodiscard]] virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
 
       /*!
        * \brief The minimum bounding box for this Geometry, returned as a IGeometry. Recalculated at the time of the call
        * \returns The minimum bounding box for this Geometry.
        */
-      virtual IEnvelope *envelope() const = 0;
+      [[nodiscard]] virtual IEnvelope *envelope() const = 0;
 
       /*!
        * \brief Exports this geometric object to a specific Well-known Text Representation of Geometry.
        * \returns Well-known Text Representation of Geometry.
        */
-      virtual string getWKT() const = 0;
+      [[nodiscard]] virtual std::string getWKT() const = 0;
 
       /*!
        * \brief Exports this geometric object to a specific Well-known byte Representation of Geometry.
        */
-      virtual unsigned char *getWKB(int &size) const = 0;
+      [[nodiscard]] virtual std::vector<unsigned char> getWKB() const = 0;
 
       /*!
        * \brief If true, then this geometric object represents the empty point set ∅ for the coordinate space.
        * \returns <code>true</code> if this geometric object is the empty Geometry.
        */
-      virtual bool isEmpty() const = 0;
+      [[nodiscard]] virtual bool isEmpty() const = 0;
 
       /*!
        * \brief Returns <code>true</code> if this geometric object has no anomalous
@@ -375,17 +358,17 @@ namespace HydroCouple
        * \details The description of each instantiable geometric class will include the specific
        * conditions that cause an instance of that class to be classified as not simple.
        */
-      virtual bool isSimple() const = 0;
+      [[nodiscard]] virtual bool isSimple() const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object has z coordinate values.
        */
-      virtual bool is3D() const = 0;
+      [[nodiscard]] virtual bool is3D() const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object has m coordinate values.
        */
-      virtual bool isMeasured() const = 0;
+      [[nodiscard]] virtual bool isMeasured() const = 0;
 
       /*!
        * \brief Returns the closure of the combinatorial boundary of
@@ -396,7 +379,7 @@ namespace HydroCouple
        * section 3.12.2). The return type is integer, but is interpreted as Boolean, TRUE=1, FALSE=0.
        *
        */
-      virtual IGeometry *boundary() const = 0;
+      [[nodiscard]] virtual IGeometry *boundary() const = 0;
 
       /** @name Query
        *Query functions
@@ -406,42 +389,42 @@ namespace HydroCouple
       /*!
        * \returns <code>true</code> if this geometric object is spatially equal to geom.
        */
-      virtual bool equals(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool equals(const IGeometry &geom) const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object is spatially disjoint to geom.
        */
-      virtual bool disjoint(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool disjoint(const IGeometry &geom) const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object is spatially intersects to geom.
        */
-      virtual bool intersects(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool intersects(const IGeometry &geom) const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object is spatially touches to geom.
        */
-      virtual bool touches(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool touches(const IGeometry &geom) const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object is spatially crosses to geom.
        */
-      virtual bool crosses(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool crosses(const IGeometry &geom) const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object is spatially within to geom.
        */
-      virtual bool within(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool within(const IGeometry &geom) const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object is spatially contains to geom.
        */
-      virtual bool contains(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool contains(const IGeometry &geom) const = 0;
 
       /*!
        * \returns <code>true</code> if this geometric object is spatially overlaps to geom.
        */
-      virtual bool overlaps(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool overlaps(const IGeometry &geom) const = 0;
 
       /*!
        * \details This returns <code>false</code> if all the tested intersections
@@ -452,17 +435,17 @@ namespace HydroCouple
        * exterior of the two geometric objects as specified by the values in the intersectionPatternMatrix.
        *
        */
-      virtual bool relate(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual bool relate(const IGeometry &geom) const = 0;
 
       /*!
        * \returns a derived geometry collection value that matches the specified m coordinate value.
        */
-      virtual IGeometry *locateAlong(double value) const = 0;
+      [[nodiscard]] virtual IGeometry *locateAlong(double value) const = 0;
 
       /*!
        * \returns a derived geometry collection value that matches the specified range of m coordinate values inclusively.
        */
-      virtual IGeometry *locateBetween(double mStart, double mEnd) const = 0;
+      [[nodiscard]] virtual IGeometry *locateBetween(double mStart, double mEnd) const = 0;
 
       ///@}
 
@@ -479,7 +462,7 @@ namespace HydroCouple
        * find a point on each geometric object involved, such that the distance
        * between these 2 points is the returned distance between their geometric objects.
        */
-      virtual double distance(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual double distance(const IGeometry &geom) const = 0;
 
       /*!
        * \brief Returns a geometric object that represents all Points whose distance
@@ -488,7 +471,7 @@ namespace HydroCouple
        * \details Calculations are in the spatial reference system of this geometric object. Because of the limitations of linear interpolation, there will often be some relatively
        * small error in this distance, but it should be near the resolution of the coordinates used.
        */
-      virtual IGeometry *buffer(double bufferDistance) const = 0;
+      [[nodiscard]] virtual IGeometry *buffer(double bufferDistance) const = 0;
 
       /*!
        * \returns a geometric object that represents the convex hull of this geometric object.
@@ -496,27 +479,27 @@ namespace HydroCouple
        * \details Convex hulls, being dependent on straight lines, can be accurately represented
        * in linear interpolations for any geometry restricted to linear interpolations.
        */
-      virtual IGeometry *convexHull() const = 0;
+      [[nodiscard]] virtual IGeometry *convexHull() const = 0;
 
       /*!
        * \returns a geometric object that represents the Point set intersection of this geometric object with geom.
        */
-      virtual IGeometry *intersection(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual IGeometry *intersection(const IGeometry &geom) const = 0;
 
       /*!
        * \returns a geometric object that represents the Point set union of this geometric object with geom.
        */
-      virtual IGeometry *unionG(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual IGeometry *unionG(const IGeometry &geom) const = 0;
 
       /*!
        * \returns a geometric object that represents the Point set difference of this geometric object with geom.
        */
-      virtual IGeometry *difference(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual IGeometry *difference(const IGeometry &geom) const = 0;
 
       /*!
        * \returns a geometric object that represents the Point set symmetric difference of this geometric object with geom.
        */
-      virtual IGeometry *symmetricDifference(const IGeometry &geom) const = 0;
+      [[nodiscard]] virtual IGeometry *symmetricDifference(const IGeometry &geom) const = 0;
 
       //@}
     };
@@ -547,14 +530,14 @@ namespace HydroCouple
        * \brief The number of geometries in this IGeometryCollection
        * \returns The number of geometries in this IGeometryCollection.
        */
-      virtual int geometryCount() const = 0;
+      [[nodiscard]] virtual int geometryCount() const = 0;
 
       /*!
        * \brief The IGeometry object associated with a specified index.
        * \param index of the geometry in this IGeometryCollection.
        * \return The IGeometry object associated with this index.
        */
-      virtual IGeometry *geometry(int index) const = 0;
+      [[nodiscard]] virtual IGeometry *geometry(int index) const = 0;
     };
 
     /*!
@@ -578,22 +561,22 @@ namespace HydroCouple
       /*!
        * \brief The x-coordinate value for this IPoint.
        */
-      virtual double x() const = 0;
+      [[nodiscard]] virtual double x() const = 0;
 
       /*!
        * \brief The y-coordinate value for this IPoint.
        */
-      virtual double y() const = 0;
+      [[nodiscard]] virtual double y() const = 0;
 
       /*!
        * \brief The z-coordinate value for this IPoint. Returns NIL otherwise.
        */
-      virtual double z() const = 0;
+      [[nodiscard]] virtual double z() const = 0;
 
       /*!
        * \brief The m-coordinate value for this IPoint. Returns NIL otherwise.
        */
-      virtual double m() const = 0;
+      [[nodiscard]] virtual double m() const = 0;
     };
 
     /*!
@@ -621,7 +604,7 @@ namespace HydroCouple
       /*!
        * \returns the index sup(th) IPoint in this IGeometryCollection.
        */
-      virtual IPoint *point(int index) const = 0;
+      [[nodiscard]] virtual IPoint *point(int index) const = 0;
     };
 
     /*!
@@ -639,14 +622,14 @@ namespace HydroCouple
        * \brief unique index identifier
        * \return
        */
-      virtual unsigned int index() const = 0;
+      [[nodiscard]] virtual unsigned int index() const = 0;
 
       /*!
        * \brief An arbitrary outgoing IEdge from this vertex.
        * \returns An edge whose origin is this vertex;
        *    null if isolated
        */
-      virtual IEdge *edge() const = 0;
+      [[nodiscard]] virtual IEdge *edge() const = 0;
     };
 
     /*!
@@ -684,28 +667,28 @@ namespace HydroCouple
       /*!
        * \brief The length of this ICurve in its associated ISpatialReferenceSystem.
        */
-      virtual double length() const = 0;
+      [[nodiscard]] virtual double length() const = 0;
 
       /*!
        * \brief The start IPoint of this ICurve.
        */
-      virtual IPoint *startPoint() const = 0;
+      [[nodiscard]] virtual IPoint *startPoint() const = 0;
 
       /*!
        * \brief The end IPoint of this ICurve.
        */
-      virtual IPoint *endPoint() const = 0;
+      [[nodiscard]] virtual IPoint *endPoint() const = 0;
 
       /*!
        * \returns True if this ICurve is closed[startPoint() = endPoint()].
        */
-      virtual bool isClosed() const = 0;
+      [[nodiscard]] virtual bool isClosed() const = 0;
 
       /*!
        * \returns True if this ICurve is closed [startPoint() = endPoint()]
        * and this ICurve is simple(does not pass through the same Point more than once).
        */
-      virtual bool isRing() const = 0;
+      [[nodiscard]] virtual bool isRing() const = 0;
     };
 
     /*!
@@ -738,13 +721,13 @@ namespace HydroCouple
        * \returns 1 (TRUE) if this MultiCurve is
        * closed[startPoint ( ) = endPoint ( ) for each ICurve in this IMultiCurve].
        */
-      virtual bool isClosed() const = 0;
+      [[nodiscard]] virtual bool isClosed() const = 0;
 
       /*!
        * \brief The Length of this IMultiCurve which is equal to the sum
        * of the lengths of the element ICurves.
        */
-      virtual double length() const = 0;
+      [[nodiscard]] virtual double length() const = 0;
     };
 
     /*!
@@ -762,12 +745,12 @@ namespace HydroCouple
       /*!
        * \brief The number of IPoints in this ILineString.
        */
-      virtual int pointCount() const = 0;
+      [[nodiscard]] virtual int pointCount() const = 0;
 
       /*!
        * \returns the specified IPoint at index in this ILineString.
        */
-      virtual IPoint *point(int index) const = 0;
+      [[nodiscard]] virtual IPoint *point(int index) const = 0;
     };
 
     /*!
@@ -782,7 +765,7 @@ namespace HydroCouple
       virtual ~IMultiLineString() = default;
 
       //! Returns the ILineString at index
-      virtual ILineString *lineString(int index) const = 0;
+      [[nodiscard]] virtual ILineString *lineString(int index) const = 0;
     };
 
     /*!
@@ -827,116 +810,116 @@ namespace HydroCouple
        * \brief unique index identifier
        * \return
        */
-      virtual unsigned int index() const = 0;
+      [[nodiscard]] virtual unsigned int index() const = 0;
 
       /*!
        * \brief The origin IVertex of this IEdge.
        * \returns the origin of this IEdge; NULL if currently unknown.
        */
-      virtual IVertex *orig() = 0;
+      [[nodiscard]] virtual IVertex *orig() const = 0;
 
       /*!
        * \brief The destination IVertex of this IEdge.
        * \returns the destination of this IEdge; NULL if currently unknown.
        */
-      virtual IVertex *dest() = 0;
+      [[nodiscard]] virtual IVertex *dest() const = 0;
 
       /*!
        * \brief The left face of this edge.
        * \returns the left face of this edge;
        *  Null if currently unknown
        */
-      virtual IPolygon *left() = 0;
+      [[nodiscard]] virtual IPolygon *left() const = 0;
 
       /*!
        * \brief The right face of this edge.
        * \returns The right face of this edge;
        *    null if currently unknown
        */
-      virtual IPolygon *right() = 0;
+      [[nodiscard]] virtual IPolygon *right() const = 0;
 
       /*!
        * \brief The target face of this edge, if dual. Otherwise null if not dual.
        * \return The target face polygon, or null if not dual.
        */
-      virtual IPolygon *face() = 0;
+      [[nodiscard]] virtual IPolygon *face() const = 0;
 
       /*!
        * \brief The dual of this edge, directed from its right to its left.
        * \returns The right to left dual of this edge;
        *    will be nonnull
        */
-      virtual IEdge *rot() = 0;
+      [[nodiscard]] virtual IEdge *rot() const = 0;
 
       /*!
        * \brief The dual of this IEdge, directed from its left to its right.
        * \returns The left to right dual of this edge;
        *    will be nonnull
        */
-      virtual IEdge *invRot() = 0;
+      [[nodiscard]] virtual IEdge *invRot() const = 0;
 
       /*!
        * \brief The IEdge from the destination to the origin of this IEdge.
        * \returns The symmetric of this edge;
        *    will be nonnull
        */
-      virtual IEdge *sym() = 0;
+      [[nodiscard]] virtual IEdge *sym() const = 0;
 
       /*!
        * \brief The next ccw edge around (from) the origin of this IEdge.
        * \returns The next edge from the origin;
        *    will be nonnull
        */
-      virtual IEdge *origNext() = 0;
+      [[nodiscard]] virtual IEdge *origNext() const = 0;
 
       /*!
        * \brief The next cw edge around (from) the origin of this edge.
        * \returns The previous edge from the origin;
        *    will be nonnull
        */
-      virtual IEdge *origPrev() = 0;
+      [[nodiscard]] virtual IEdge *origPrev() const = 0;
 
       /*!
        * \brief The next ccw edge around (into) the destination of this edge.
        * \returns The next edge to the destination;
        *    will be nonnull
        */
-      virtual IEdge *destNext() = 0;
+      [[nodiscard]] virtual IEdge *destNext() const = 0;
 
       /*!
        * \brief The next cw edge around (into) the destination of this edge.
        * \returns The previous edge to the destination;
        *    will be nonnull
        */
-      virtual IEdge *destPrev() = 0;
+      [[nodiscard]] virtual IEdge *destPrev() const = 0;
 
       /*!
        * \brief The ccw edge around the left face following this edge.
        * \returns The next left face edge;
        *    will be nonnull
        */
-      virtual IEdge *leftNext() = 0;
+      [[nodiscard]] virtual IEdge *leftNext() const = 0;
 
       /*!
        * \brief The ccw edge around the left face before this edge.
        * \returns The previous left face edge;
        *    will be nonnull
        */
-      virtual IEdge *leftPrev() = 0;
+      [[nodiscard]] virtual IEdge *leftPrev() const = 0;
 
       /*!
        * \brief The edge around the right face ccw following this edge.
        * \returns The next right face edge;
        *    will be nonnull
        */
-      virtual IEdge *rightNext() = 0;
+      [[nodiscard]] virtual IEdge *rightNext() const = 0;
 
       /*!
        * \brief The IEdge around the right face ccw before this IEdge.
        * \returns The previous right face edge;
        *    will be nonnull
        */
-      virtual IEdge *rightPrev() = 0;
+      [[nodiscard]] virtual IEdge *rightPrev() const = 0;
     };
 
     /*!
@@ -973,24 +956,24 @@ namespace HydroCouple
        * \brief The area of this ISurface, as measured in
        * the spatial reference system of this ISurface.
        */
-      virtual double area() const = 0;
+      [[nodiscard]] virtual double area() const = 0;
 
       /*!
        * \brief The mathematical centroid for this ISurface as a Point.
        * The result is not guaranteed to be on this ISurface.
        */
-      virtual IPoint *centroid() const = 0;
+      [[nodiscard]] virtual IPoint *centroid() const = 0;
 
       /*!
        * \brief A Point guaranteed to be on this Surface.
        */
-      virtual IPoint *pointOnSurface() const = 0;
+      [[nodiscard]] virtual IPoint *pointOnSurface() const = 0;
 
       /*!
        * \brief Gets the boundary of this surface as a multi-curve.
        * \return The boundary multi-curve of this surface.
        */
-      virtual IMultiCurve *boundaryMultiCurve() const = 0;
+      [[nodiscard]] virtual IMultiCurve *boundaryMultiCurve() const = 0;
     };
 
     /*!
@@ -1010,18 +993,18 @@ namespace HydroCouple
        * \brief The area of this ISurface, as measured in
        * the spatial reference system of this ISurface.
        */
-      virtual double area() const = 0;
+      [[nodiscard]] virtual double area() const = 0;
 
       /*!
        * \brief The mathematical centroid for this ISurface as an IPoint.
        * The result is not guaranteed to be on this ISurface.
        */
-      virtual IPoint *centroid() const = 0;
+      [[nodiscard]] virtual IPoint *centroid() const = 0;
 
       /*!
        * \brief A Point guaranteed to be on this ISurface.
        */
-      virtual IPoint *pointOnSurface() const = 0;
+      [[nodiscard]] virtual IPoint *pointOnSurface() const = 0;
     };
 
     /*!
@@ -1072,30 +1055,30 @@ namespace HydroCouple
       /*!
        * \returns the exterior ring of this IPolygon.
        */
-      virtual ILineString *exteriorRing() const = 0;
+      [[nodiscard]] virtual ILineString *exteriorRing() const = 0;
 
       /*!
        * \returns the number of interior rings in this IPolygon.
        */
-      virtual int interiorRingCount() const = 0;
+      [[nodiscard]] virtual int interiorRingCount() const = 0;
 
       /*!
        * \returns the index - th interior ring for this IPolygon as a ILineString.
        */
-      virtual ILineString *interiorRing(int index) const = 0;
+      [[nodiscard]] virtual ILineString *interiorRing(int index) const = 0;
 
       /*!
        * \brief An arbitrary adjacent edge for this IPolygon.
        * \returns An edge that is adjacent to this face;
        *    null if degenerate
        */
-      virtual IEdge *edge() const = 0;
+      [[nodiscard]] virtual IEdge *edge() const = 0;
 
       /*!
        * \brief Gets the polyhedral surface this polygon belongs to.
        * \returns The surface this IPolygon belongs to, or null if not associated with a surface.
        */
-      virtual IPolyhedralSurface *polyhydralSurface() const = 0;
+      [[nodiscard]] virtual IPolyhedralSurface *polyhedralSurface() const = 0;
     };
 
     /*!
@@ -1110,7 +1093,7 @@ namespace HydroCouple
       /*!
        * \returns the index sup(th) polygon in this IMultiPolygon/IGeometryCollection.
        */
-      virtual IPolygon *polygon(int index) const = 0;
+      [[nodiscard]] virtual IPolygon *polygon(int index) const = 0;
     };
 
     /*!
@@ -1128,26 +1111,26 @@ namespace HydroCouple
       /*!
        * \brief The first vertex of this ITriangle.
        */
-      virtual IVertex *vertex1() const = 0;
+      [[nodiscard]] virtual IVertex *vertex1() const = 0;
 
       /*!
        * \brief The second vertex of this ITriangle.
        */
-      virtual IVertex *vertex2() const = 0;
+      [[nodiscard]] virtual IVertex *vertex2() const = 0;
 
       /*!
        * \brief The third vertex of this ITriangle.
        */
-      virtual IVertex *vertex3() const = 0;
+      [[nodiscard]] virtual IVertex *vertex3() const = 0;
 
       /*!
        * \brief The vertex of this ITriangle at the specified index.
        */
-      virtual IVertex *vertex(int index) const = 0;
+      [[nodiscard]] virtual IVertex *vertex(int index) const = 0;
     };
 
     /*!
-     * \brief The INetwork class.
+     * \brief INetwork represents a graph structure of connected vertices and edges.
      */
     class INetwork : public virtual IIdentity
     {
@@ -1158,65 +1141,42 @@ namespace HydroCouple
       virtual ~INetwork() = default;
 
       /*!
-       * \brief edgeCount represents the number of all the edges in the network.
-       * \return Count of all the edges in the network.
+       * \brief The number of edges in the network.
        */
-      virtual int edgeCount() const = 0;
+      [[nodiscard]] virtual int64_t edgeCount() const = 0;
 
       /*!
-       * \brief Gets the edge at the specified index in the network.
-       * \param index of the edge in the network.
-       * \return The edge at the specified index.
+       * \brief The IEdge at the specified index.
+       * \param[in] index of the edge to retrieve.
        */
-      virtual IEdge *edge(int index) const = 0;
+      [[nodiscard]] virtual IEdge *edge(int64_t index) const = 0;
 
       /*!
-       * \brief Gets the number of vertices in the network.
-       * \return Number of vertices in the network.
+       * \brief The number of vertices in the network.
        */
-      virtual int vertexCount() const = 0;
+      [[nodiscard]] virtual int64_t vertexCount() const = 0;
 
       /*!
-       * \brief Gets the vertex at the specified index in the network.
-       * \param index of the vertex in the network.
-       * \return The vertex at the specified index.
+       * \brief The IVertex at the specified index.
+       * \param[in] index of the vertex to retrieve.
        */
-      virtual IVertex *vertex(int index) const = 0;
+      [[nodiscard]] virtual IVertex *vertex(int64_t index) const = 0;
+
+      /*!
+       * \brief Bulk structure-of-arrays view of this network's geometry and connectivity.
+       * \details This is the accessor partitioners, interpolating adapters, IO writers,
+       * and device staging must use; the per-entity object accessors above are a
+       * convenience for spot queries and editing.
+       * \returns The IMeshView over this network; never nullptr.
+       */
+      [[nodiscard]] virtual const IMeshView *meshView() const = 0;
     };
 
     /*!
-     * \brief An IPolyhedralSurface is a contiguous collection of polygons,
-     * which share common boundary segments.
-     *
-     * \details For each pair of IPolygons that "touch", the common
-     * boundary shall be expressible as a finite collection of ILineStrings
-     * such ILineString shall be part of the boundary of at most 2 IPolygon patches.
-     * A ITIN (triangulated irregular network)
-     * is a IPolyhedralSurface consisting only of ITriangle patches.
-     *
-     * \details For any two IPolygons that share a common boundary,
-     * the "top" of the IPolygon shall be consistent. This means
-     * that when two ILinearRings from these two IPolygons
-     * traverse the common boundary segment, they do so in
-     * opposite directions. Since the IPolyhedral surface
-     * is contiguous, all IPolygons will be thus consistently oriented.
-     * This means that a non-oriented surface (such as Möbius band) shall not
-     * have single surface representations.
-     * They may be represented by a IMultiSurface.
-     *
-     * \details  If each such ILineString is the boundary of exactly 2 IPolygon patches,
-     * then the IPolyhedralSurface is a simple,
-     * closed polyhedron and is topologically isomorphic to the surface of a sphere.
-     * By the Jordan Surface Theorem (Jordan's Theorem for 2-spheres),
-     * such polyhedrons enclose a solid topologically isomorphic to the interior of a
-     * sphere; the ball. In this case, the "top" of the surface will
-     * either point inward or outward of the enclosed finite solid.
-     * If outward, the surface is the exterior boundary of the
-     * enclosed surface. If inward, the surface is the interior of the
-     * infinite complement of the enclosed solid. A Ball with
-     * some number of voids (holes) inside can thus be presented
-     * as one exterior boundary shell, and some number in interior boundary shells.
-     *
+     * \brief An IPolyhedralSurface is a contiguous collection of polygon patches or facets
+     * stitched together along their shared boundary edges.
+     * \details If a IPolyhedralSurface is closed it bounds a solid. Patches are
+     * consistently oriented; boundary edges are shared by at most two patches.
      */
     class IPolyhedralSurface : public virtual ISurface
     {
@@ -1227,41 +1187,46 @@ namespace HydroCouple
       virtual ~IPolyhedralSurface() = default;
 
       /*!
-       * \brief The number of polygons in this surface.
-       * \returns The number of including polygons.
+       * \brief The number of polygon patches in this surface.
        */
-      virtual int patchCount() const = 0;
+      [[nodiscard]] virtual int64_t patchCount() const = 0;
 
       /*!
-       * \returns An IPolygon in this surface, the order is arbitrary.
-       * \param index of the IPolygon patch.
+       * \brief The IPolygon patch at the specified index.
+       * \param[in] index of the patch to retrieve.
        */
-      virtual IPolygon *patch(int index) const = 0;
+      [[nodiscard]] virtual IPolygon *patch(int64_t index) const = 0;
 
       /*!
-       * \brief Gets the number of vertices shared by the patches.
-       * \return The count of all shared vertices.
+       * \brief The number of vertices in this surface.
        */
-      virtual int vertexCount() const = 0;
+      [[nodiscard]] virtual int64_t vertexCount() const = 0;
 
       /*!
-       * \brief vertex of the network with the specified index.
-       * \param index of the vertex in the network.
-       * \return The vertex at the specified index.
+       * \brief The IVertex at the specified index.
+       * \param[in] index of the vertex to retrieve.
        */
-      virtual IVertex *vertex(int index) const = 0;
+      [[nodiscard]] virtual IVertex *vertex(int64_t index) const = 0;
 
       /*!
-       * \returns The collection of polygons in this surface that
-       * bounds the given polygon "polygon" for any polygon "polygon" in the surface.
+       * \brief The collection of polygons in this surface that bound the given polygon.
+       * \param[in] polygon whose bounding polygons are requested.
        */
-      virtual IMultiPolygon *boundingPolygons(const IPolygon *polygon) const = 0;
+      [[nodiscard]] virtual IMultiPolygon *boundingPolygons(const IPolygon *polygon) const = 0;
 
       /*!
-       * \returns 1 (True) if the polygon closes on itself,
-       * and thus has no boundary and encloses a solid.
+       * \brief Checks whether this surface is closed and therefore bounds a solid.
        */
-      virtual bool isClosed() const = 0;
+      [[nodiscard]] virtual bool isClosed() const = 0;
+
+      /*!
+       * \brief Bulk structure-of-arrays view of this surface's geometry and connectivity.
+       * \details This is the accessor partitioners, interpolating adapters, IO writers,
+       * and device staging must use; the per-entity object accessors above are a
+       * convenience for spot queries and editing.
+       * \returns The IMeshView over this surface; never nullptr.
+       */
+      [[nodiscard]] virtual const IMeshView *meshView() const = 0;
     };
 
     /*!
@@ -1277,9 +1242,10 @@ namespace HydroCouple
       virtual ~ITIN() = default;
 
       /*!
-       * \returns an ITriangle in this surface, the order is arbitrary.
+       * \brief The ITriangle patch at the specified index.
+       * \param[in] index of the triangle to retrieve.
        */
-      virtual ITriangle *triangle(int index) const = 0;
+      [[nodiscard]] virtual ITriangle *triangle(int64_t index) const = 0;
     };
 
     /*!
@@ -1292,7 +1258,7 @@ namespace HydroCouple
       /*!
        * \brief The data type associated with a raster.
        */
-      enum RasterDataType
+      enum class RasterDataType
       {
         //! Unknown or unspecified type
         Unknown,
@@ -1332,17 +1298,17 @@ namespace HydroCouple
       /*!
        * \brief Number of pixels in the x direction.
        */
-      virtual int xSize() const = 0;
+      [[nodiscard]] virtual int xSize() const = 0;
 
       /*!
        * \brief Number of pixels in y direction.
        */
-      virtual int ySize() const = 0;
+      [[nodiscard]] virtual int ySize() const = 0;
 
       /*!
        * \brief Number of raster bands.
        */
-      virtual int rasterBandCount() const = 0;
+      [[nodiscard]] virtual int rasterBandCount() const = 0;
 
       /*!
        * \brief Adds a new IRasterBand.
@@ -1350,9 +1316,9 @@ namespace HydroCouple
       virtual void addRasterBand(RasterDataType dataType) = 0;
 
       /*!
-       * \brief The ISpatialReferenceSystem represents the spatial reference system of goemetric object.
+       * \brief The ISpatialReferenceSystem represents the spatial reference system of this raster.
        */
-      virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
+      [[nodiscard]] virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
 
       /*!
        * \brief Fetches the affine transformation coefficients. It is an array of size 6.
@@ -1367,7 +1333,7 @@ namespace HydroCouple
       /*!
        * \brief Gets the IRasterBand for the band with index bandIndex.
        */
-      virtual IRasterBand *getRasterBand(int bandIndex) const = 0;
+      [[nodiscard]] virtual IRasterBand *getRasterBand(int bandIndex) const = 0;
     };
 
     /*!
@@ -1383,45 +1349,46 @@ namespace HydroCouple
       virtual ~IRasterBand() = default;
 
       //! Number of pixels in the x direction
-      virtual int xSize() const = 0;
+      [[nodiscard]] virtual int xSize() const = 0;
 
       //! Number of pixels in y direction
-      virtual int ySize() const = 0;
+      [[nodiscard]] virtual int ySize() const = 0;
 
       //! Parent IRaster of this IRasterBand
-      virtual IRaster *raster() const = 0;
+      [[nodiscard]] virtual IRaster *raster() const = 0;
 
       //! Raster data type
-      virtual IRaster::RasterDataType dataType() const = 0;
+      [[nodiscard]] virtual IRaster::RasterDataType dataType() const = 0;
 
       /*!
        * \brief Reads data into the image block.
-       * \param xOffset is the pixel offset to the top left corner of the region of the band to be accessed. This would be zero to start from the left side.</param>
-       * \param yOffset is the line offset to the top left corner of the region of the band to be accessed. This would be zero to start from the top.</param>
-       * \param xSize is the width of the region of the band to be accessed in pixels.</param>
-       * \param ySize is the height of the region of the band to be accessed in lines.</param>
-       * \param image is the pointer to where data is to be written. Delete after use.
+       * \param[in] xOffset is the pixel offset to the top left corner of the region of the band to be accessed. This would be zero to start from the left side.
+       * \param[in] yOffset is the line offset to the top left corner of the region of the band to be accessed. This would be zero to start from the top.
+       * \param[in] xSize is the width of the region of the band to be accessed in pixels.
+       * \param[in] ySize is the height of the region of the band to be accessed in lines.
+       * \param[out] image is the pointer to where data is to be written. Must be pre-allocated with the correct size.
        */
       virtual void read(int xOffset, int yOffset, int xSize, int ySize, void *image) const = 0;
 
       /*!
        * \brief Writes image into the raster band.
-       * \param xOffset is the pixel offset to the top left corner of the region of the band to be accessed. This would be zero to start from the left side.</param>
-       * \param yOffset is the line offset to the top left corner of the region of the band to be accessed. This would be zero to start from the top.</param>
-       * \param xSize is the width of the region of the band to be accessed in pixels.</param>
-       * \param ySize is the height of the region of the band to be accessed in lines.</param>
-       * \param image is the pointer to where data is to be written. Delete after use.
+       * \param[in] xOffset is the pixel offset to the top left corner of the region of the band to be accessed. This would be zero to start from the left side.
+       * \param[in] yOffset is the line offset to the top left corner of the region of the band to be accessed. This would be zero to start from the top.
+       * \param[in] xSize is the width of the region of the band to be accessed in pixels.
+       * \param[in] ySize is the height of the region of the band to be accessed in lines.
+       * \param[in] image is the pointer to the image data to be written to the raster band.
        */
       virtual void write(int xOffset, int yOffset, int xSize, int ySize, const void *image) = 0;
 
       /*!
        * The nodata value for this IRasterBand.
        */
-      virtual double noData() const = 0;
+      [[nodiscard]] virtual double noData() const = 0;
     };
 
     /*!
-     * \brief The IRegularGrid2D class
+     * \brief IRegularGrid2D represents a two-dimensional structured grid
+     * of nodes and cells.
      */
     class IRegularGrid2D : public virtual IIdentity
     {
@@ -1432,55 +1399,80 @@ namespace HydroCouple
       virtual ~IRegularGrid2D() = default;
 
       /*!
-       * \brief The ISpatialReferenceSystem represents the spatial reference system of goemetric object.
+       * \brief The ISpatialReferenceSystem represents the spatial reference system of this geometric object.
        */
-      virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
+      [[nodiscard]] virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
 
       /*!
        * \brief Gets the type of regular grid.
        * \return The RegularGridType of this 2D grid.
        */
-      virtual RegularGridType gridType() const = 0;
+      [[nodiscard]] virtual RegularGridType gridType() const = 0;
 
       /*!
        * \brief numXNodes represents the number of nodes in the x direction.
        * \return number of nodes in the x direction.
        */
-      virtual int numXNodes() const = 0;
+      [[nodiscard]] virtual int numXNodes() const = 0;
 
       /*!
        * \brief numYNodes represents the number of nodes in the y direction.
        * \return number of nodes in the y direction.
        */
-      virtual int numYNodes() const = 0;
+      [[nodiscard]] virtual int numYNodes() const = 0;
 
       /*!
        * \brief xNodeLocation provides the x location coordinate for the x-node and y-node indexes.
+       * \details Per-node convenience accessor; bulk consumers must use nodeXs().
        * \param xNodeIndex the x-node index.
        * \param yNodeIndex the y-node index
        * \return returns x location coordinate for the x-node and y-node provided
        */
-      virtual double xNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
+      [[nodiscard]] virtual double xNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
 
       /*!
-       * \brief yNodeLocation provides the x location coordinate for the x-node and y-node indexes.
+       * \brief yNodeLocation provides the y location coordinate for the x-node and y-node indexes.
+       * \details Per-node convenience accessor; bulk consumers must use nodeYs().
        * \param xNodeIndex the x-node index.
        * \param yNodeIndex the y-node index
        * \return returns y location coordinate for the x-node and y-node provided
        */
-      virtual double yNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
+      [[nodiscard]] virtual double yNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
+
+      /*!
+       * \brief Bulk x coordinates of all nodes, row-major [yNode][xNode].
+       * \details The span has numYNodes()*numXNodes() elements and remains valid until
+       * the grid geometry changes.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeXs() const = 0;
+
+      /*!
+       * \brief Bulk y coordinates of all nodes, row-major [yNode][xNode].
+       * \details The span has numYNodes()*numXNodes() elements and remains valid until
+       * the grid geometry changes.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeYs() const = 0;
 
       /*!
        * \brief isActive is a bool indicating whether a cell is active.
+       * \details Per-cell convenience accessor; bulk consumers must use activeCells().
        * \param xCellIndex the x cell index for the cell. Must be less than numXNodes() - 1.
        * \param yCellIndex the y cell index for the cell. Must be less than numYNodes() - 1.
        * \return a bool indicating whether a cell is active.
        */
-      virtual bool isActive(int xCellIndex, int yCellIndex) const = 0;
+      [[nodiscard]] virtual bool isActive(int xCellIndex, int yCellIndex) const = 0;
+
+      /*!
+       * \brief Bulk activity mask of all cells, row-major [yCell][xCell]; nonzero means active.
+       * \details The span has (numYNodes()-1)*(numXNodes()-1) elements and remains valid
+       * until the grid changes.
+       */
+      [[nodiscard]] virtual std::span<const uint8_t> activeCells() const = 0;
     };
 
     /*!
-     * \brief The IRegularGrid3D class
+     * \brief IRegularGrid3D represents a three-dimensional structured grid
+     * of nodes and cells.
      */
     class IRegularGrid3D : public virtual IIdentity
     {
@@ -1491,874 +1483,452 @@ namespace HydroCouple
       virtual ~IRegularGrid3D() = default;
 
       /*!
-       * \brief The ISpatialReferenceSystem represents the spatial reference system of goemetric object.
+       * \brief The ISpatialReferenceSystem represents the spatial reference system of this grid.
        */
-      virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
+      [[nodiscard]] virtual ISpatialReferenceSystem *spatialReferenceSystem() const = 0;
 
       /*!
        * \brief Gets the type of regular grid.
        * \return The RegularGridType of this 3D grid.
        */
-      virtual RegularGridType gridType() const = 0;
+      [[nodiscard]] virtual RegularGridType gridType() const = 0;
 
       /*!
        * \brief numXNodes represents the number of nodes in the x direction.
        * \return number of nodes in the x direction.
        */
-      virtual int numXNodes() const = 0;
+      [[nodiscard]] virtual int numXNodes() const = 0;
 
       /*!
        * \brief numYNodes represents the number of nodes in the y direction.
        * \return number of nodes in the y direction.
        */
-      virtual int numYNodes() const = 0;
+      [[nodiscard]] virtual int numYNodes() const = 0;
 
       /*!
        * \brief numZNodes represents the number of nodes in the z direction.
        * \return number of nodes in the z direction.
        */
-      virtual int numZNodes() const = 0;
+      [[nodiscard]] virtual int numZNodes() const = 0;
 
       /*!
        * \brief xNodeLocation provides the x location coordinate for the x-node and y-node indexes.
+       * \details Per-node convenience accessor; bulk consumers must use nodeXs().
        * \param xNodeIndex the x-node index.
        * \param yNodeIndex the y-node index
        * \return returns x location coordinate for the x-node and y-node provided
        */
-      virtual double xNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
+      [[nodiscard]] virtual double xNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
 
       /*!
-       * \brief yNodeLocation provides the x location coordinate for the x-node and y-node indexes.
+       * \brief yNodeLocation provides the y location coordinate for the x-node and y-node indexes.
+       * \details Per-node convenience accessor; bulk consumers must use nodeYs().
        * \param xNodeIndex the x-node index.
        * \param yNodeIndex the y-node index
        * \return returns y location coordinate for the x-node and y-node provided
        */
-      virtual double yNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
+      [[nodiscard]] virtual double yNodeLocation(int xNodeIndex, int yNodeIndex) const = 0;
 
       /*!
        * \brief zNodeLocation provides the z location coordinate for the x-node, y-node, and z-node indexes.
+       * \details Per-node convenience accessor; bulk consumers must use nodeZs().
        * \param xNodeIndex the x-node index.
        * \param yNodeIndex the y-node index
        * \param zNodeIndex the z-node index
        * \return returns z location coordinate for the x-node, y-node, and z-node indexes.
        */
-      virtual double zNodeLocation(int xNodeIndex, int yNodeIndex, int zNodeIndex) const = 0;
+      [[nodiscard]] virtual double zNodeLocation(int xNodeIndex, int yNodeIndex, int zNodeIndex) const = 0;
+
+      /*!
+       * \brief Bulk x coordinates of all nodes in a horizontal layer, row-major [yNode][xNode].
+       * \details The span has numYNodes()*numXNodes() elements (plan coordinates are
+       * layer-invariant) and remains valid until the grid geometry changes.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeXs() const = 0;
+
+      /*!
+       * \brief Bulk y coordinates of all nodes in a horizontal layer, row-major [yNode][xNode].
+       * \details The span has numYNodes()*numXNodes() elements (plan coordinates are
+       * layer-invariant) and remains valid until the grid geometry changes.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeYs() const = 0;
+
+      /*!
+       * \brief Bulk z coordinates of all nodes, row-major [zNode][yNode][xNode].
+       * \details The span has numZNodes()*numYNodes()*numXNodes() elements and remains
+       * valid until the grid geometry changes.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeZs() const = 0;
 
       /*!
        * \brief isActive is a bool indicating whether a cell is active.
+       * \details Per-cell convenience accessor; bulk consumers must use activeCells().
        * \param xCellIndex the x cell index for the cell. Must be less than numXNodes() - 1.
        * \param yCellIndex the y cell index for the cell. Must be less than numYNodes() - 1.
        * \param zCellIndex the z cell index for the cell. Must be less than numZNodes() - 1.
        * \return a bool indicating whether a cell is active.
        */
-      virtual bool isActive(int xCellIndex, int yCellIndex, int zCellIndex) const = 0;
+      [[nodiscard]] virtual bool isActive(int xCellIndex, int yCellIndex, int zCellIndex) const = 0;
+
+      /*!
+       * \brief Bulk activity mask of all cells, row-major [zCell][yCell][xCell]; nonzero means active.
+       * \details The span has (numZNodes()-1)*(numYNodes()-1)*(numXNodes()-1) elements
+       * and remains valid until the grid changes.
+       */
+      [[nodiscard]] virtual std::span<const uint8_t> activeCells() const = 0;
     };
 
     /*!
-     * \brief IGeometryComponentItem represents IGeometryCollection IComponentItem. This class must be implemented as an abstract class
+     * \brief IMeshView is a bulk, structure-of-arrays view of an unstructured mesh or
+     * network: flat coordinate spans plus CSR (compressed sparse row) connectivity.
+     *
+     * \details The layout is deliberately congruent with the UGRID conventions so that
+     * persistence (face_node_connectivity, node coordinate arrays), message packing,
+     * and device staging can all consume the view without transformation. All spans
+     * remain valid until the underlying mesh topology or geometry changes. Obtained
+     * from INetwork::meshView(), IPolyhedralSurface::meshView(), and their
+     * specializations.
+     */
+    class IMeshView
+    {
+    public:
+      /*!
+       * \brief IMeshView destructor.
+       */
+      virtual ~IMeshView() = default;
+
+      /*!
+       * \brief The number of nodes (vertices) in the mesh.
+       */
+      [[nodiscard]] virtual int64_t nodeCount() const = 0;
+
+      /*!
+       * \brief The number of edges in the mesh.
+       */
+      [[nodiscard]] virtual int64_t edgeCount() const = 0;
+
+      /*!
+       * \brief The number of faces (patches/cells) in the mesh; 0 for a pure network.
+       */
+      [[nodiscard]] virtual int64_t faceCount() const = 0;
+
+      /*!
+       * \brief x coordinates of all nodes; the span has nodeCount() elements.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeX() const = 0;
+
+      /*!
+       * \brief y coordinates of all nodes; the span has nodeCount() elements.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeY() const = 0;
+
+      /*!
+       * \brief z coordinates of all nodes; the span has nodeCount() elements, or is empty for a 2D mesh.
+       */
+      [[nodiscard]] virtual std::span<const double> nodeZ() const = 0;
+
+      /*!
+       * \brief CSR row offsets into faceNodes(): the nodes of face f are
+       * faceNodes()[faceNodeOffsets()[f] ... faceNodeOffsets()[f+1]).
+       * \details The span has faceCount() + 1 elements; it is empty for a pure network.
+       */
+      [[nodiscard]] virtual std::span<const int64_t> faceNodeOffsets() const = 0;
+
+      /*!
+       * \brief Concatenated node indexes of all faces, ordered counter-clockwise per face.
+       */
+      [[nodiscard]] virtual std::span<const int64_t> faceNodes() const = 0;
+
+      /*!
+       * \brief Node index pairs of all edges: edge e connects edgeNodes()[2*e] and edgeNodes()[2*e + 1].
+       * \details The span has 2 * edgeCount() elements.
+       */
+      [[nodiscard]] virtual std::span<const int64_t> edgeNodes() const = 0;
+    };
+
+    /*!
+     * \brief IGeometryComponentDataItem is an IComponentDataItem whose data is associated
+     * with a collection of IGeometry objects. This class must be implemented as an abstract class.
+     * \details Canonical dimension ordering: the geometry dimension is dimension 0 of
+     * shape(); any additional dimensions follow. Data access uses the inherited
+     * getValuesInto()/setValuesFrom() hyperslab API.
      */
     class IGeometryComponentDataItem : public virtual IComponentDataItem
     {
-
     public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
-
       /*!
        * \brief IGeometryComponentDataItem destructor.
        */
       virtual ~IGeometryComponentDataItem() = default;
 
       /*!
-       * \brief Gets the geometry type for this component data item.
-       * \return The IGeometry::GeometryType of the geometries in this item.
+       * \brief The type of the geometries this data item is associated with.
        */
-      virtual IGeometry::GeometryType geometryType() const = 0;
+      [[nodiscard]] virtual IGeometry::GeometryType geometryType() const = 0;
 
       /*!
-       * \brief Gets the number of geometries in this component data item.
-       * \return The number of geometries.
+       * \brief The number of geometries associated with this data item.
        */
-      virtual int geometryCount() const = 0;
+      [[nodiscard]] virtual int64_t geometryCount() const = 0;
 
       /*!
-       * \brief Gets the geometry at the specified index.
-       * \param geometryIndex is the index of the geometry to retrieve.
-       * \return The IGeometry at the specified index.
+       * \brief The IGeometry at the specified index.
+       * \param[in] geometryIndex of the geometry to retrieve.
        */
-      virtual IGeometry *geometry(int geometryIndex) const = 0;
+      [[nodiscard]] virtual IGeometry *geometry(int64_t geometryIndex) const = 0;
 
       /*!
-       * \returns The dimension attributes for the data with the geometry. This can be the field name
-       * for an attribute for a shapefile. Must be the first dimension in the dimensions() list
+       * \brief The IDimension of the geometries (dimension 0 of shape()).
        */
-      virtual HydroCouple::IDimension *geometryDimension() const = 0;
+      [[nodiscard]] virtual HydroCouple::IDimension *geometryDimension() const = 0;
 
       /*!
-       * \brief Gets the bounding envelope for all geometries in this component data item.
-       * \return The IEnvelope bounding all geometries.
+       * \brief The IEnvelope bounding all geometries of this data item.
        */
-      virtual HydroCouple::Spatial::IEnvelope *envelope() const = 0;
-
-      /*!
-       * \brief Gets value for given geometry dimension index.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] geometryDimensionIndex is the geometry dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for additional dimension for the data to be obtained. Empty vector if no additional dimensions.
-       */
-      virtual void getValue(
-          hydrocouple_variant &data,
-          int geometryDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
-
-      /*!
-       * \brief Gets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
-       * \param data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
-       * \param geometryDimensionIndex is the start geometry dimension index from where to obtain the requested data.
-       * \param dimensionIndexes are the indexes for the data to be obtained.
-       * \param geometryDimensionLength is the length of the geometry dimension for the data to be obtained.
-       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void getValues(
-          hydrocouple_variant *data,
-          int geometryDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int geometryDimensionLength = 1,
-          const initializer_list<int> &dimensionLength = {}) const = 0;
-
-      /*!
-       * \brief Sets value for given geometry dimension index.
-       * \param[in] data is the value to be set.
-       * \param[in] geometryDimensionIndex is the geometry dimension index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       */
-      virtual void setValue(
-          const hydrocouple_variant &data,
-          int geometryDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
-
-      /*!
-       * \brief Sets a multi-dimensional array of values for given geometry dimension index and size for a hyperslab.
-       * \param data is the input multi dimensional array to be written.
-       * \param geometryDimensionIndex is the start geometry dimension index from where to write data.
-       * \param dimensionIndexes are the indexes for the data to be obtained.
-       * \param geometryDimensionLength is the length of the geometry dimension for the data to be obtained.
-       * \param dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void setValues(
-          const hydrocouple_variant *data,
-          int geometryDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int geometryDimensionLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+      [[nodiscard]] virtual HydroCouple::Spatial::IEnvelope *envelope() const = 0;
     };
 
     /*!
-     * \brief The INetworkComponentDataItem class
+     * \brief INetworkComponentDataItem is an IComponentDataItem whose data is
+     * associated with the edges and/or vertices of an INetwork.
+     * \details Canonical dimension ordering: the entity dimension selected by
+     * networkDataType() (edge or vertex) is dimension 0 of shape(); any additional
+     * dimensions follow. Data access uses the inherited getValuesInto()/setValuesFrom()
+     * hyperslab API.
      */
     class INetworkComponentDataItem : public virtual IComponentDataItem
     {
-
     public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
-
       /*!
        * \brief INetworkComponentDataItem destructor.
        */
       virtual ~INetworkComponentDataItem() = default;
 
       /*!
-       * \brief network associated with this INetworkComponentDataItem.
-       * \return The network associated with this INetworkComponentDataItem.
+       * \brief The INetwork this data item is associated with.
        */
-      virtual INetwork *network() const = 0;
+      [[nodiscard]] virtual INetwork *network() const = 0;
 
       /*!
-       * \brief Gets the type of network data object associated with the data.
-       * \return The NetworkDataObjectType that represents the artifact of the network associated with the data.
+       * \brief The kind of network object this data item's values describe.
        */
-      virtual NetworkDataObjectType networkDataObjectType() const = 0;
+      [[nodiscard]] virtual NetworkDataObjectType networkDataObjectType() const = 0;
 
       /*!
-       * \brief Gets the type of network data stored.
-       * \return The NetworkDataType stored in the network.
+       * \brief The mesh entity (edge or vertex) this data item's values are attached to.
        */
-      virtual NetworkDataType networkDataType() const = 0;
+      [[nodiscard]] virtual SpatialDataType networkDataType() const = 0;
 
       /*!
-       * \brief edgeDimension represents the dimension for the edges.
-       * \return The dimension for the edges.
+       * \brief The IDimension of the network edges.
        */
-      virtual IDimension *edgeDimension() const = 0;
+      [[nodiscard]] virtual IDimension *edgeDimension() const = 0;
 
       /*!
-       * \brief nodeDimension represents the dimension for the vertices.
-       * \return The dimension for the vertices.
+       * \brief The IDimension of the network vertices.
        */
-      virtual IDimension *vertexDimension() const = 0;
-
-      /*!
-       * \brief getValue for given edge dimension index and node dimension index.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
-       * \param[in] vertexDimensionIndex is the node dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       */
-      virtual void getValue(
-          hydrocouple_variant &data,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
-
-      /*!
-       * \brief getValues for given edge dimension index and node dimension index and size for a hyperslab.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
-       * \param[in] vertexDimensionIndex is the node dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for any additional dimensions for the data to be obtained.
-       * \param[in] edgeDimensionIndexLength is the length of the edge dimension for the data to be obtained.
-       * \param[in] vertexDimensionIndexLength is the length of the node dimension for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void getValues(
-          hydrocouple_variant *data,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int edgeDimensionIndexLength = 1,
-          int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
-
-      /*!
-       * \brief setValue for given edge dimension index and node dimension index and data.
-       * \param[in] data is a pointer data thata to is to be copied
-       * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
-       * \param[in] vertexDimensionIndex is the node dimension index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       */
-      virtual void setValue(
-          const hydrocouple_variant &data,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
-
-      /*!
-       * \brief setValues for given edge dimension index and node dimension index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied
-       * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
-       * \param[in] vertexDimensionIndex is the node dimension index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       * \param[in] edgeDimensionIndexLength is the length of the edge dimension for the data to be obtained.
-       * \param[in] vertexDimensionIndexLength is the length of the node dimension for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained.
-       */
-      virtual void setValues(
-          const hydrocouple_variant *data,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int edgeDimensionIndexLength = 1,
-          int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+      [[nodiscard]] virtual IDimension *vertexDimension() const = 0;
     };
 
     /*!
-     * \brief IPolyhedralSurfaceComponentItem represents IPolyhedralSurface IComponentItem.
+     * \brief IPolyhedralSurfaceComponentDataItem is an IComponentDataItem whose data
+     * is associated with the patches, edges, or vertices of an IPolyhedralSurface.
+     * \details Canonical dimension ordering: the entity dimension selected by
+     * meshDataType() (patch, edge, or vertex) is dimension 0 of shape(); any additional
+     * dimensions follow. Data access uses the inherited getValuesInto()/setValuesFrom()
+     * hyperslab API.
      */
     class IPolyhedralSurfaceComponentDataItem : public virtual IComponentDataItem
     {
-
     public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
-
       /*!
        * \brief IPolyhedralSurfaceComponentDataItem destructor.
        */
       virtual ~IPolyhedralSurfaceComponentDataItem() = default;
 
       /*!
-       * \brief Gets the type of mesh data object associated with this component data item.
-       * \return The MeshDataObjectType of the data.
+       * \brief The kind of mesh object this data item's values describe.
        */
-      virtual MeshDataObjectType meshDataObjectType() const = 0;
+      [[nodiscard]] virtual MeshDataObjectType meshDataObjectType() const = 0;
 
       /*!
-       * \brief Gets the type of mesh data stored.
-       * \return The MeshDataType of the data.
+       * \brief The mesh entity (patch, edge, or vertex) this data item's values are attached to.
        */
-      virtual MeshDataType meshDataType() const = 0;
+      [[nodiscard]] virtual SpatialDataType meshDataType() const = 0;
 
       /*!
-       * \returns The IPolyhedralSurface associated with this IPolyhedralSurfaceDimension.
+       * \brief The IPolyhedralSurface this data item is associated with.
        */
-      virtual IPolyhedralSurface *polyhedralSurface() const = 0;
+      [[nodiscard]] virtual IPolyhedralSurface *polyhedralSurface() const = 0;
 
       /*!
-       * \brief patchDimension represents the dimension for the patches associated with the IPolyhedralSurface.
-       * \returns The dimension for the patches.
+       * \brief The IDimension of the surface patches.
        */
-      virtual IDimension *patchDimension() const = 0;
+      [[nodiscard]] virtual IDimension *patchDimension() const = 0;
 
       /*!
-       * \brief edgeDimension represents the dimension for the edges of patches associated with the IPolyhedralSurface.`
-       * \return The dimension for the edges.
+       * \brief The IDimension of the surface edges.
        */
-      virtual IDimension *edgeDimension() const = 0;
+      [[nodiscard]] virtual IDimension *edgeDimension() const = 0;
 
       /*!
-       * \brief vertexDimension represents the dimension for the nodes of the edges of patches associated with the IPolyhedralSurface.
-       * \return The dimension for the vertices.
+       * \brief The IDimension of the surface vertices.
        */
-      virtual IDimension *vertexDimension() const = 0;
-
-      /*!
-       * \brief getValue for given cell dimension index, edge dimension index, and node dimension index.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] patchDimensionIndex is the cell dimension index from where to obtain the requested data.
-       * \param[in] edgeDimensionIndex is the edge dimension index from where to obtain the requested data.
-       * \param[in] vertexDimensionIndex is the node dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       */
-      virtual void getValue(
-          hydrocouple_variant &data,
-          int patchDimensionIndex,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
-
-      /*!
-       * \brief getValues for given cell dimension index, edge dimension index and node dimension index and size for a hyperslab.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] patchDimensionIndex are the cell dimension indexes from where to obtain the requested data.
-       * \param[in] edgeDimensionIndex are the edge dimension indexes from where to obtain the requested data. If user wants to
-       * only obtain cell data for MeshDataType::Cell, this vector should be empty.
-       * \param[in] vertexDimensionIndex are the node dimension indexes from where to obtain the requested data. If user wants to
-       * only obtain cell or edge data for MeshDataType::Cell or MeshDataType::Edge, this vector should be empty.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       * \param[in] patchDimensionIndexLength are the lengths of the cell dimensions for the data to be obtained.
-       * \param[in] edgeDimensionIndexLength are the lengths of the edge dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       * \param[in] vertexDimensionIndexLength are the lengths of the node dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void getValues(
-          hydrocouple_variant *data,
-          int patchDimensionIndex,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int patchDimensionIndexLength = 1,
-          int edgeDimensionIndexLength = 1,
-          int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
-
-      /*!
-       * \brief setValues for given cell dimension index, edge dimension index, and node dimension index.
-       * \param[in] data is a pointer data thata to is to be copied to the mesh.
-       * \param[in] patchDimensionIndex is the face dimension index from where to write data.
-       * \param[in] edgeDimensionIndex is the edge dimension index from where to write data.
-       * \param[in] vertexDimensionIndex is the edge dimension index from where to obtain the requested data. If user wants to
-       * only obtain cell data for MeshDataType::Cell, this vector should be empty.
-       * \param dimensionIndexes are the indexes for the data to be obtained.
-       */
-      virtual void setValue(
-          const hydrocouple_variant &data,
-          int patchDimensionIndex,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
-
-      /*!
-       * \brief setValues for given cell dimension index, edge dimension index, and node dimension index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied to the mesh.
-       * \param[in] patchDimensionIndex are the cell dimension indexes from where to write data.
-       * \param[in] edgeDimensionIndex are the edge dimension indexes from where to write data.
-       * \param[in] vertexDimensionIndex are the node dimension indexes from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       * \param[in] patchDimensionIndexLength are the lengths of the cell dimensions for the data to be obtained.
-       * \param[in] edgeDimensionIndexLength are the lengths of the edge dimensions for the data to be obtained.
-       * \param[in] vertexDimensionIndexLength are the lengths of the node dimensions for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the other dimensions for the data to be obtained.
-       */
-      virtual void setValues(
-          const hydrocouple_variant *data,
-          int patchDimensionIndex,
-          int edgeDimensionIndex,
-          int vertexDimensionIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int patchDimensionIndexLength = 1,
-          int edgeDimensionIndexLength = 1,
-          int vertexDimensionIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+      [[nodiscard]] virtual IDimension *vertexDimension() const = 0;
     };
 
     /*!
-     * \brief ITINComponentDataItem represents ITIN IComponentDataItem.
+     * \brief ITINComponentDataItem is an IPolyhedralSurfaceComponentDataItem whose
+     * surface is an ITIN.
      */
-    class ITINComponentDataItem : public virtual IComponentDataItem,
-                                  public virtual IPolyhedralSurfaceComponentDataItem
+    class ITINComponentDataItem : public virtual IPolyhedralSurfaceComponentDataItem
     {
-
     public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
-      using IPolyhedralSurfaceComponentDataItem::getValue;
-      using IPolyhedralSurfaceComponentDataItem::getValues;
-      using IPolyhedralSurfaceComponentDataItem::setValue;
-      using IPolyhedralSurfaceComponentDataItem::setValues;
-
       /*!
        * \brief ITINComponentDataItem destructor.
        */
       virtual ~ITINComponentDataItem() = default;
 
       /*!
-       * \returns The ITIN associated with this ITINComponentDataItem.
+       * \brief The ITIN this data item is associated with.
        */
-      virtual ITIN *TIN() const = 0;
+      [[nodiscard]] virtual ITIN *TIN() const = 0;
     };
 
     /*!
-     * \brief An IRasterComponentDataItem represents an IRaster IComponentItem.
+     * \brief IRasterComponentDataItem is an IComponentDataItem whose data is
+     * associated with an IRaster.
+     * \details Canonical dimension ordering: band is dimension 0, y (row) is
+     * dimension 1, x (column) is dimension 2 of shape(). Data access uses the
+     * inherited getValuesInto()/setValuesFrom() hyperslab API.
      */
     class IRasterComponentDataItem : public virtual IComponentDataItem
     {
-
     public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
-
       /*!
        * \brief IRasterComponentDataItem destructor.
        */
       virtual ~IRasterComponentDataItem() = default;
 
       /*!
-       * \brief IRaster associated with this IRasterComponentDataItem.
+       * \brief The IRaster this data item is associated with.
        */
-      virtual IRaster *raster() const = 0;
+      [[nodiscard]] virtual IRaster *raster() const = 0;
 
       /*!
-       * \brief IDimension for xDirection.
+       * \brief The IDimension of the raster columns (dimension 2 of shape()).
        */
-      virtual IDimension *xDimension() const = 0;
+      [[nodiscard]] virtual IDimension *xDimension() const = 0;
 
       /*!
-       * \brief IDimension for yDirection.
+       * \brief The IDimension of the raster rows (dimension 1 of shape()).
        */
-      virtual IDimension *yDimension() const = 0;
+      [[nodiscard]] virtual IDimension *yDimension() const = 0;
 
       /*!
-       * \brief IDimension for IRasterBands.
+       * \brief The IDimension of the raster bands (dimension 0 of shape()).
        */
-      virtual IDimension *bandDimension() const = 0;
-
-      /*!
-       * \brief getValue for given x dimension index, y dimension index, and band dimension index.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] xIndex is the x dimension index from where to obtain the requested data.
-       * \param[in] yIndex is the y dimension index from where to obtain the requested data.
-       * \param[in] bandIndex is the band dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       */
-      virtual void getValue(
-          hydrocouple_variant &data,
-          int xIndex,
-          int yIndex,
-          int bandIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
-
-      /*!
-       * \brief Gets a multi-dimensional array of values for given dimension for a hyperslab.
-       * \param[out] data is a multi dimensional array where data is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] xIndex is the x dimension index from where to obtain the requested data.
-       * \param[in] yIndex is the y dimension index from where to obtain the requested data.
-       * \param[in] bandIndex is the band dimension index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       * \param[in] xIndexLength is the length of the x dimension for the data to be obtained.
-       * \param[in] yIndexLength is the length of the y dimension for the data to be obtained.
-       * \param[in] bandIndexLength is the length of the band dimension for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the other dimensions for the data to be obtained.
-       */
-      virtual void getValues(
-          hydrocouple_variant *data,
-          int xIndex,
-          int yIndex,
-          int bandIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int xIndexLength = 1,
-          int yIndexLength = 1,
-          int bandIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
-
-      /*!
-       * \brief setValue for given x dimension index, y dimension index, and band dimension index.
-       * \param[in] data  is a pointer data thata to is to be copied
-       * \param[in] xIndex is the x dimension index from where to write data.
-       * \param[in] yIndex is the y dimension index from where to write data.
-       * \param[in] band  is the band dimension index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       */
-      virtual void setValue(
-          const hydrocouple_variant &data,
-          int xIndex,
-          int yIndex,
-          int band,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
-
-      /*!
-       * \brief Sets a multi-dimensional array of values for given dimension for a hyperslab.
-       * \param[in] data is the input array to be written.
-       * \param[in] xIndex is the x dimension index where to set data.
-       * \param[in] yIndex is the y dimension index where to set data.
-       * \param[in] bandIndex is the band dimension index where to set data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       * \param[in] xIndexLength is the x size for hyperslab where data is to be written.
-       * \param[in] yIndexLength is the y size for hyperslab where data is to be written.
-       * \param[in] bandIndexLength is the band size for hyperslab where data is to be written.
-       * \param[in] dimensionLengths are the lengths of the other dimensions for the data to be obtained.
-       */
-      virtual void setValues(
-          const hydrocouple_variant *data,
-          int xIndex,
-          int yIndex,
-          int bandIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int xIndexLength = 1,
-          int yIndexLength = 1,
-          int bandIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+      [[nodiscard]] virtual IDimension *bandDimension() const = 0;
     };
 
     /*!
-     * \brief An IRegularGrid2DComponentDataItem represents an IRegularGrid2D IComponentItem
+     * \brief IRegularGrid2DComponentDataItem is an IComponentDataItem whose data is
+     * associated with the cells of an IRegularGrid2D.
+     * \details Canonical dimension ordering: y-cell is dimension 0, x-cell is
+     * dimension 1 of shape(); the optional cell edge and cell vertex dimensions
+     * follow. Data access uses the inherited getValuesInto()/setValuesFrom()
+     * hyperslab API, so "one field over all cells" is a contiguous slab.
      */
     class IRegularGrid2DComponentDataItem : public virtual IComponentDataItem
     {
-
     public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
-
       /*!
        * \brief IRegularGrid2DComponentDataItem destructor.
        */
       virtual ~IRegularGrid2DComponentDataItem() = default;
 
       /*!
-       * \brief IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
-       * \return The IRegularGrid2D grid associated with this IRegularGrid2DComponentItem.
+       * \brief The IRegularGrid2D this data item is associated with.
        */
-      virtual IRegularGrid2D *grid() const = 0;
+      [[nodiscard]] virtual IRegularGrid2D *grid() const = 0;
 
       /*!
-       * \brief Gets the type of mesh data object stored in the grid.
-       * \return The MeshDataObjectType of the grid data.
+       * \brief The kind of mesh object this data item's values describe.
        */
-      virtual MeshDataObjectType meshDataObjectType() const = 0;
+      [[nodiscard]] virtual MeshDataObjectType meshDataObjectType() const = 0;
 
       /*!
-       * \brief Number of X cells IDimension.
-       * \return IDimension for the x cells.
+       * \brief The IDimension of the cells in the x direction (dimension 1 of shape()).
        */
-      virtual IDimension *xCellDimension() const = 0;
+      [[nodiscard]] virtual IDimension *xCellDimension() const = 0;
 
       /*!
-       * \brief Number of Y cells IDimension.
-       * \return IDimension for the y cells.
+       * \brief The IDimension of the cells in the y direction (dimension 0 of shape()).
        */
-      virtual IDimension *yCellDimension() const = 0;
+      [[nodiscard]] virtual IDimension *yCellDimension() const = 0;
 
       /*!
-       * \brief cellEdgeDimension. Edge indices start from the bottom and go in a counter clockwise order.
-       * \return IDimension for the cell edges.
+       * \brief The IDimension of the edges of a cell, when values are attached to cell edges.
        */
-      virtual IDimension *cellEdgeDimension() const = 0;
+      [[nodiscard]] virtual IDimension *cellEdgeDimension() const = 0;
 
       /*!
-       * \brief cellVertexDimension. Vertex indices start from the bottom left and go in a counter clockwise order.
-       * \return IDimension for the cell vertices.
+       * \brief The IDimension of the vertices of a cell, when values are attached to cell vertices.
        */
-      virtual IDimension *cellVertexDimension() const = 0;
-
-      /*!
-       * \brief getValue for given x cell index, y cell index, edge index, and node index.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
-       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
-       * \param[in] cellEdgeIndex is the cell edge index from where to obtain the requested data.
-       * \param[in] cellNodeIndex is the cell node index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.  If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       */
-      virtual void getValue(
-          hydrocouple_variant &data,
-          int xCellIndex,
-          int yCellIndex,
-          int cellEdgeIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
-
-      /*!
-       * \brief getValues for given x cell index, y cell index, edge index, and node index and size for a hyperslab.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
-       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
-       * \param[in] cellEdgeIndex is the cell edge index from where to obtain the requested data.
-       * \param[in] cellVertexIndex is the cell node index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
-       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
-       * \param[in] cellEdgeIndexLength is the length of the cell edge index for the data to be obtained.
-       * \param[in] cellVertexIndexLength is the length of the cell node index for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void getValues(
-          hydrocouple_variant *data,
-          int xCellIndex,
-          int yCellIndex,
-          int cellEdgeIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int xCellIndexLength = 1,
-          int yCellIndexLength = 1,
-          int cellEdgeIndexLength = 1,
-          int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
-
-      /*!
-       * \brief setValue for given x cell index, y cell index, edge index, and node index.
-       * \param[in] data is a pointer data thata to is to be copied to the mesh.
-       * \param[in] xCellIndex is the x cell index from where to write data.
-       * \param[in] yCellIndex is the y cell index from where to write data.
-       * \param[in] cellEdgeIndex is the cell edge index from where to write data.
-       * \param[in] cellVertexIndex is the cell node index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       */
-      virtual void setValue(
-          const hydrocouple_variant &data,
-          int xCellIndex,
-          int yCellIndex,
-          int cellEdgeIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
-
-      /*!
-       * \brief setValues for given x cell index, y cell index, edge index, and node index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied
-       * \param[in] xCellIndex is the x cell index from where to write data.
-       * \param[in] yCellIndex is the y cell index from where to write data.
-       * \param[in] cellEdgeIndex is the cell edge index from where to write data.
-       * \param[in] cellNodeIndex is the cell node index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
-       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
-       * \param[in] cellEdgeIndexLength is the length of the cell edge index for the data to be obtained.
-       * \param[in] cellNodeIndexLength is the length of the cell node index for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void setValues(
-          const hydrocouple_variant *data,
-          int xCellIndex,
-          int yCellIndex,
-          int cellEdgeIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int xCellIndexLength = 1,
-          int yCellIndexLength = 1,
-          int cellEdgeIndexLength = 1,
-          int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+      [[nodiscard]] virtual IDimension *cellVertexDimension() const = 0;
     };
 
     /*!
-     * \brief An IRegularGrid3DComponentItem represents an IRegularGrid3D IComponentItem
+     * \brief IRegularGrid3DComponentDataItem is an IComponentDataItem whose data is
+     * associated with the cells of an IRegularGrid3D.
+     * \details Canonical dimension ordering: z-cell is dimension 0, y-cell is
+     * dimension 1, x-cell is dimension 2 of shape(); the optional cell face and cell
+     * vertex dimensions follow. Data access uses the inherited
+     * getValuesInto()/setValuesFrom() hyperslab API.
      */
     class IRegularGrid3DComponentDataItem : public virtual IComponentDataItem
     {
-
     public:
-      using IComponentDataItem::getValue;
-      using IComponentDataItem::getValues;
-      using IComponentDataItem::setValue;
-      using IComponentDataItem::setValues;
-
       /*!
        * \brief IRegularGrid3DComponentDataItem destructor.
        */
       virtual ~IRegularGrid3DComponentDataItem() = default;
 
       /*!
-       * \brief  IRegularGrid3D grid associated with this IRegularGrid3DComponentItem.
+       * \brief The IRegularGrid3D this data item is associated with.
        */
-      virtual IRegularGrid3D *grid() const = 0;
+      [[nodiscard]] virtual IRegularGrid3D *grid() const = 0;
 
       /*!
-       * \brief Gets the type of mesh data object stored in the grid.
-       * \return The MeshDataObjectType of the grid data.
+       * \brief The kind of mesh object this data item's values describe.
        */
-      virtual MeshDataObjectType meshDataObjectType() const = 0;
+      [[nodiscard]] virtual MeshDataObjectType meshDataObjectType() const = 0;
 
       /*!
-       * \brief Number of X cells IDimension.
+       * \brief The IDimension of the cells in the x direction (dimension 2 of shape()).
        */
-      virtual IDimension *xCellDimension() const = 0;
+      [[nodiscard]] virtual IDimension *xCellDimension() const = 0;
 
       /*!
-       * \brief Number of Y cells IDimension.
+       * \brief The IDimension of the cells in the y direction (dimension 1 of shape()).
        */
-      virtual IDimension *yCellDimension() const = 0;
+      [[nodiscard]] virtual IDimension *yCellDimension() const = 0;
 
       /*!
-       * \brief Number of Z cells IDimension.
+       * \brief The IDimension of the cells in the z direction (dimension 0 of shape()).
        */
-      virtual IDimension *zCellDimension() const = 0;
+      [[nodiscard]] virtual IDimension *zCellDimension() const = 0;
 
       /*!
-       * \brief cellFaceDimension 0 = Top , 1 = Bottom, 2 = left , 3 = Right, Up = 4, Down = 5
-       * \return The dimension for the cell faces.
+       * \brief The IDimension of the faces of a cell, when values are attached to cell faces.
        */
-      virtual IDimension *cellFaceDimension() const = 0;
+      [[nodiscard]] virtual IDimension *cellFaceDimension() const = 0;
 
       /*!
-       * \brief cellVertexDimension Node indices start from the bottom left and go in a counter clockwise order.
-       * \return The dimension for the cell nodes.
+       * \brief The IDimension of the vertices of a cell, when values are attached to cell vertices.
        */
-      virtual IDimension *cellVertexDimension() const = 0;
-
-      /*!
-       * \brief getValue for given x cell index, y cell index, z cell index, face index, and node index.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
-       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
-       * \param[in] zCellIndex is the z cell index from where to obtain the requested data.
-       * \param[in] cellFaceIndex is the cell face index from where to obtain the requested data.
-       * \param[in] cellVertexIndex is the cell node index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       */
-      virtual void getValue(
-          hydrocouple_variant &data,
-          int xCellIndex,
-          int yCellIndex,
-          int zCellIndex,
-          int cellFaceIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) const = 0;
-
-      /*!
-       * \brief getValues for given x cell index, y cell index, z cell index, face index, and node index and size for a hyperslab.
-       * \param[out] data is a pointer to data that is to be written. Must be allocated beforehand with the correct data type.
-       * \param[in] xCellIndex is the x cell index from where to obtain the requested data.
-       * \param[in] yCellIndex is the y cell index from where to obtain the requested data.
-       * \param[in] zCellIndex is the z cell index from where to obtain the requested data.
-       * \param[in] cellFaceIndex is the cell face index from where to obtain the requested data.
-       * \param[in] cellVertexIndex is the cell node index from where to obtain the requested data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
-       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
-       * \param[in] zCellIndexLength is the length of the z cell index for the data to be obtained.
-       * \param[in] cellFaceIndexLength is the length of the cell face index for the data to be obtained.
-       * \param[in] cellVertexIndexLength is the length of the cell node index for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void getValues(
-          hydrocouple_variant *data,
-          int xCellIndex,
-          int yCellIndex,
-          int zCellIndex,
-          int cellFaceIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {},
-          int xCellIndexLength = 1,
-          int yCellIndexLength = 1,
-          int zCellIndexLength = 1,
-          int cellFaceIndexLength = 1,
-          int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) const = 0;
-
-      /*!
-       * \brief setValue for given x cell index, y cell index, z cell index, face index, and node index.
-       * \param[in] data is a pointer data thata to is to be copied
-       * \param[in] xCellIndex is the x cell index from where to write data.
-       * \param[in] yCellIndex is the y cell index from where to write data.
-       * \param[in] zCellIndex is the z cell index from where to write data.
-       * \param[in] cellFaceIndex is the cell face index from where to write data.
-       * \param[in] cellVertexIndex is the cell node index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained. If there are additional dimensions
-       * the length of the vector must be equal to the number of other dimensions
-       */
-      virtual void setValue(
-          const hydrocouple_variant &data,
-          int xCellIndex,
-          int yCellIndex,
-          int zCellIndex,
-          int cellFaceIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}) = 0;
-
-      /*!
-       * \brief setValues for given x cell index, y cell index, z cell index, face index, and node index and size for a hyperslab.
-       * \param[in] data is a pointer data thata to is to be copied
-       * \param[in] xCellIndex is the x cell index from where to write data.
-       * \param[in] yCellIndex is the y cell index from where to write data.
-       * \param[in] zCellIndex is the z cell index from where to write data.
-       * \param[in] cellFaceIndex is the cell face index from where to write data.
-       * \param[in] cellVertexIndex is the cell node index from where to write data.
-       * \param[in] dimensionIndexes are the indexes for the data to be obtained.
-       * \param[in] xCellIndexLength is the length of the x cell index for the data to be obtained.
-       * \param[in] yCellIndexLength is the length of the y cell index for the data to be obtained.
-       * \param[in] zCellIndexLength is the length of the z cell index for the data to be obtained.
-       * \param[in] cellFaceIndexLength is the length of the cell face index for the data to be obtained.
-       * \param[in] cellVertexIndexLength is the length of the cell node index for the data to be obtained.
-       * \param[in] dimensionLengths are the lengths of the dimensions for the data to be obtained. If empty a single value is returned,
-       * otherwise the length of the vector must be equal to the number of dimensions.
-       */
-      virtual void setValues(
-          const hydrocouple_variant *data,
-          int xCellIndex,
-          int yCellIndex,
-          int zCellIndex,
-          int cellFaceIndex,
-          int cellVertexIndex,
-          const initializer_list<int> &dimensionIndexes = {}, 
-          int xCellIndexLength  = 1,
-          int yCellIndexLength = 1,
-          int zCellIndexLength  = 1,
-          int cellFaceIndexLength = 1,
-          int cellVertexIndexLength = 1,
-          const initializer_list<int> &dimensionLengths = {}) = 0;
+      [[nodiscard]] virtual IDimension *cellVertexDimension() const = 0;
     };
-
   }
 }
 
