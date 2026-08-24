@@ -81,10 +81,12 @@ package version is single-sourced from the repository's
 ```bash
 cd python
 pip install .            # or: python setup.py build_ext --inplace
-python -m pytest         # 88 tests, including enum-parity checks that
+python -m pytest         # 100 tests, including enum-parity checks that
                          # parse the C++ headers so the bindings cannot
                          # silently drift from the standard
 ```
 
-See `examples/` for a runnable Python component and a script driving the
-typed data plane.
+See `examples/` for a runnable Python component (`sine_wave_component.py`),
+a script driving a compiled component through the typed data plane
+(`drive_cpp_component.py`), and two Python components coupled to each other
+with no C++ involved (`coupled_python_models.py`).
