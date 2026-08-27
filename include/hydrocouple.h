@@ -2419,6 +2419,50 @@ namespace HydroCouple
     [[nodiscard]] virtual float percentProgress() const = 0;
   };
 
+  /*!
+   * \brief How a value behaves when it is regridded or aggregated.
+   *
+   * Two components rarely share a mesh, so almost every exchange is resampled —
+   * and the right way to resample depends on what the number *is*. A temperature
+   * handed from a coarse cell to four fine ones is copied; a mass is divided; a
+   * flux is scaled by area. Nothing in `IValueDefinition` says which, so every
+   * adapted output has had to be told out of band, and being told out of band is
+   * how two sides end up disagreeing about what a number means.
+   */
+  enum class ValueKind : uint8_t
+  {
+    Unknown = 0,   //!< Not declared. Adapters must not guess; they should refuse or ask.
+    Intensive,     //!< Independent of extent — temperature, concentration, elevation. Averages.
+    Extensive,     //!< Proportional to extent — mass, volume, heat content. Sums.
+    Flux,          //!< Per unit area and time. Integrates over the area it crosses.
+    Density        //!< Per unit volume. Integrates over the volume it fills.
+  };
+
+  /*!
+   * \brief Declares how a value regrids and aggregates.
+   *
+   * A **separate** interface rather than methods on `IValueDefinition`, and
+   * deliberately so. These headers cross a plugin boundary: components are built
+   * separately and loaded at run time, so adding a virtual to an existing
+   * interface changes a vtable that already-compiled components were built
+   * against. An optional interface discovered by `dynamic_cast` costs nothing to
+   * anyone who does not implement it and breaks nothing that already exists.
+   *
+   * Implement it on an `IValueDefinition`, or on an `IComponentDataItem` where a
+   * single definition is shared by items that behave differently.
+   */
+  class IValueSemantics
+  {
+  public:
+    virtual ~IValueSemantics() = default;
+
+    /*!
+     * \brief How this value behaves under regridding and aggregation.
+     */
+    [[nodiscard]] virtual ValueKind valueKind() const = 0;
+  };
+
 }
 
 #endif // HYDROCOUPLE_H
+

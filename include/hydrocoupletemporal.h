@@ -20,6 +20,7 @@
 #ifndef HYDROCOUPLETEMPORAL_H
 #define HYDROCOUPLETEMPORAL_H
 
+#include <cstdint>
 #include "hydrocouple.h"
 
 
@@ -189,6 +190,58 @@ namespace HydroCouple
       [[nodiscard]] virtual IDimension *identifierDimension() const = 0;
     };
   }
+
+    /*!
+     * \brief What a value's time coordinate refers to.
+     *
+     * A time-series item carries times and values but does not say whether a
+     * value is a reading at that instant, a mean over the interval that ended
+     * there, or an accumulation. Those are three different numbers, and coupling
+     * a model that reports means to one that expects instants is wrong in a way
+     * that produces plausible output and no error.
+     *
+     * It is not a hypothetical failure. A daily report in this ecosystem drifted
+     * from noon to five in the afternoon over a simulated year, aliasing a
+     * diurnal cycle into a seasonal signal, and it was found by checking a figure
+     * caption against its own timestamps rather than by anything in the data
+     * saying what the timestamps meant.
+     */
+    enum class TimeKind : std::uint8_t
+    {
+      Unknown = 0,      //!< Not declared. Consumers must not assume Instantaneous.
+      Instantaneous,    //!< A reading at the time coordinate.
+      IntervalMean,     //!< Mean over the interval ending at the time coordinate.
+      IntervalMinimum,  //!< Minimum over that interval.
+      IntervalMaximum,  //!< Maximum over that interval.
+      Accumulated       //!< Total accumulated over that interval.
+    };
+
+    /*!
+     * \brief Declares what a time coordinate refers to, and over what interval.
+     *
+     * Optional and discovered by `dynamic_cast`, for the same binary-compatibility
+     * reason as `HydroCouple::IValueSemantics`: these headers cross a plugin
+     * boundary and existing components were compiled against the current vtables.
+     */
+    class ITemporalSemantics
+    {
+    public:
+      virtual ~ITemporalSemantics() = default;
+
+      /*!
+       * \brief What the time coordinate refers to.
+       */
+      [[nodiscard]] virtual TimeKind timeKind() const = 0;
+
+      /*!
+       * \brief Length of the averaging or accumulation interval (days).
+       *
+       * Zero for Instantaneous. Meaningless unless timeKind() names an interval,
+       * and a consumer that needs it should treat zero as "not declared" rather
+       * than as an instant.
+       */
+      [[nodiscard]] virtual double intervalLength() const = 0;
+    };
 }
 
 #endif // HYDROCOUPLETEMPORAL_H
