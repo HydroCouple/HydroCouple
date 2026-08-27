@@ -2022,6 +2022,33 @@ namespace HydroCouple
     };
 
     /*!
+     * \brief Values resolved into vertical layers, whatever the plan geometry.
+     *
+     * Mixed into the layered mesh and layered network items rather than declared
+     * twice, so that a consumer needing only "values by layer, with elevations I
+     * can trust" can `dynamic_cast` to this and stay indifferent to whether the
+     * producer is an unstructured mesh or a one-dimensional network.
+     */
+    class ILayering
+    {
+    public:
+      virtual ~ILayering() = default;
+
+      /*!
+       * \brief The IDimension of the layers (the last dimension of shape()).
+       */
+      [[nodiscard]] virtual IDimension *layerDimension() const = 0;
+
+      /*!
+       * \brief Where those layers are.
+       *
+       * Never null. A layered item without a vertical coordinate is an array
+       * whose meaning the consumer has to guess.
+       */
+      [[nodiscard]] virtual IVerticalCoordinate *verticalCoordinate() const = 0;
+    };
+
+    /*!
      * \brief A polyhedral surface whose values are resolved into vertical layers.
      *
      * The unstructured counterpart of \ref IRegularGrid3DComponentDataItem: a 2-D
@@ -2037,23 +2064,160 @@ namespace HydroCouple
      * last. Layer 0 is at the top.
      */
     class ILayeredMeshComponentDataItem
-        : public virtual IPolyhedralSurfaceComponentDataItem
+        : public virtual IPolyhedralSurfaceComponentDataItem,
+          public virtual ILayering
     {
     public:
       virtual ~ILayeredMeshComponentDataItem() = default;
+    };
+
+    /*!
+     * \brief How a cross-section's shape is held by whoever produced it.
+     */
+    enum class CrossSectionKind : uint8_t
+    {
+      Unknown = 0,       //!< Not declared. Consumers must not assume.
+      StationElevation,  //!< Surveyed points across the section (HEC-RAS, SWMM).
+      WidthElevation,    //!< Width as a function of elevation (CE-QUAL-W2).
+      Analytic           //!< A closed form: circular, trapezoidal, and the rest.
+    };
+
+    /*!
+     * \brief The shape of a channel at one place, as a function of stage.
+     *
+     * **Why this is not a list of survey points.** The three model families this
+     * has to serve do not store the same thing. HEC-RAS and SWMM hold station and
+     * elevation pairs across the section. CE-QUAL-W2 holds width as a step
+     * function of elevation and has no stations at all. A closed conduit has a
+     * formula and neither. An interface built around survey points would force
+     * two of the three to invent points they do not have, and every consumer to
+     * re-integrate them.
+     *
+     * So the contract is the *derived* quantities, which all three can answer
+     * exactly from what they actually hold. \ref stationCount() is offered for
+     * the producers that do have points, and returns zero for the ones that do
+     * not — a consumer must be able to work without them.
+     *
+     * **Flow area and storage area are separate on purpose.** They differ
+     * wherever part of the section holds water without conveying it: over a
+     * floodplain beyond the bank stations, behind a levee, in a backwater. A
+     * model that uses the storage area for momentum overstates conveyance in
+     * exactly the places where the distinction is largest. Splitting them here
+     * means a partner cannot collapse the two by accident, and has to say which
+     * one it means.
+     *
+     * **Conventions.** Elevations are positive up in the geometry's own datum,
+     * and `stage` throughout is a water-surface *elevation* in that datum, not a
+     * depth. Below \ref invertElevation() every quantity is zero rather than
+     * negative or an error, because a dry section is an ordinary state.
+     *
+     * *At exactly* \ref invertElevation(), the areas are zero but \ref topWidth()
+     * and \ref wettedPerimeter() take their limiting values from above — for a
+     * flat-bottomed section, the width of that bottom, not zero. The distinction
+     * looks like pedantry over a measure-zero case and is not: a wave celerity
+     * of `sqrt(g A / T)` and any wetted-perimeter friction law both divide by
+     * these at the moment a channel begins to fill, and a producer that returned
+     * zero would hand its partner an infinity exactly at the wet front. This
+     * paragraph exists because two independent implementations of this interface
+     * both chose the limiting value and the closed form checked against them did
+     * not, which is a question the specification should have already answered.
+     */
+    class ICrossSection
+    {
+    public:
+      virtual ~ICrossSection() = default;
 
       /*!
-       * \brief The IDimension of the layers (the last dimension of shape()).
+       * \brief How the producer holds this shape.
        */
-      [[nodiscard]] virtual IDimension *layerDimension() const = 0;
+      [[nodiscard]] virtual CrossSectionKind kind() const = 0;
 
       /*!
-       * \brief Where those layers are.
+       * \brief Lowest elevation in the section (m, positive up).
+       */
+      [[nodiscard]] virtual double invertElevation() const = 0;
+
+      /*!
+       * \brief Width of the water surface at \p stage (m).
+       */
+      [[nodiscard]] virtual double topWidth(double stage) const = 0;
+
+      /*!
+       * \brief Total wetted area at \p stage (m²) — everything holding water.
+       */
+      [[nodiscard]] virtual double storageArea(double stage) const = 0;
+
+      /*!
+       * \brief The conveying part of that area at \p stage (m²).
        *
-       * Never null. A layered item without a vertical coordinate is an array
-       * whose meaning the consumer has to guess.
+       * Never greater than \ref storageArea(). Equal to it for a section with no
+       * ineffective flow area, which is the common case and not the general one.
        */
-      [[nodiscard]] virtual IVerticalCoordinate *verticalCoordinate() const = 0;
+      [[nodiscard]] virtual double flowArea(double stage) const = 0;
+
+      /*!
+       * \brief Wetted perimeter of the conveying area at \p stage (m).
+       *
+       * Paired with \ref flowArea() rather than \ref storageArea(), so that
+       * their ratio is the hydraulic radius a friction law expects.
+       */
+      [[nodiscard]] virtual double wettedPerimeter(double stage) const = 0;
+
+      /*!
+       * \brief Number of survey points, or 0 when the producer holds no points.
+       */
+      [[nodiscard]] virtual int64_t stationCount() const = 0;
+
+      /*!
+       * \brief The survey points, ordered left bank to right bank.
+       *
+       * \param[out] stations   Buffer of at least stationCount() doubles (m).
+       * \param[out] elevations Buffer of at least stationCount() doubles (m).
+       *
+       * Does nothing when \ref stationCount() is 0. A consumer that needs a
+       * shape regardless must use the area and width accessors, which every
+       * producer answers.
+       */
+      virtual void stations(double *stations, double *elevations) const = 0;
+    };
+
+    /*!
+     * \brief A network carrying a vertical profile, and optionally a channel
+     *        shape, at each node or edge.
+     *
+     * The shape shared by CE-QUAL-W2, HEC-RAS and SWMM: a one-dimensional
+     * network in plan, resolved vertically at each station.
+     * `INetworkComponentDataItem` indexes values by a single entity dimension,
+     * which is enough for a depth-averaged network and not for a stratified one.
+     *
+     * **Shape.** Values are indexed `{entity, layer}` with the layer dimension
+     * last, the entity being whichever of node or edge
+     * `networkDataObjectType()` reports. Layer 0 is at the top.
+     *
+     * **Why it shares \ref ILayering with the mesh item.** A laterally-averaged
+     * network model and a fully three-dimensional mesh model have entirely
+     * different geometry and the same vertical structure, and exchanging heat
+     * between those two is the case this whole hierarchy exists to serve. A
+     * consumer that only needs values by layer, with elevations it can trust,
+     * can `dynamic_cast` to `ILayering` and never learn which it was handed.
+     */
+    class ILayeredNetworkComponentDataItem
+        : public virtual INetworkComponentDataItem,
+          public virtual ILayering
+    {
+    public:
+      virtual ~ILayeredNetworkComponentDataItem() = default;
+
+      /*!
+       * \brief The channel shape at one entity, or nullptr where there is none.
+       *
+       * Nullable because a stratified network model does not necessarily carry a
+       * surveyed section — it may know only its layer geometry. Returning null
+       * says so plainly; a zero-width section would not.
+       *
+       * \param[in] entityIndex Node or edge, per networkDataObjectType().
+       */
+      [[nodiscard]] virtual ICrossSection *crossSection(int64_t entityIndex) const = 0;
     };
   }
 }
