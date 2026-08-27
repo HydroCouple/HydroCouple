@@ -206,7 +206,7 @@ namespace HydroCouple
      * caption against its own timestamps rather than by anything in the data
      * saying what the timestamps meant.
      */
-    enum class TimeKind : std::uint8_t
+    enum class TimeKind : uint8_t
     {
       Unknown = 0,      //!< Not declared. Consumers must not assume Instantaneous.
       Instantaneous,    //!< A reading at the time coordinate.

@@ -1929,6 +1929,132 @@ namespace HydroCouple
        */
       [[nodiscard]] virtual IDimension *cellVertexDimension() const = 0;
     };
+
+    /*!
+     * \brief The family a vertical coordinate belongs to.
+     *
+     * Named so that two models can tell whether they agree about what a layer
+     * *is* before they exchange values on one. A sigma model and a z-level model
+     * both present values indexed by layer, and those indices mean entirely
+     * different things; matching shapes is not agreement.
+     */
+    enum class VerticalCoordinateKind : uint8_t
+    {
+      Unknown = 0,        //!< Not declared. Consumers must not assume.
+      Sigma,              //!< Terrain-following; layers stretch with the free surface.
+      ZLevel,             //!< Fixed elevations; the top layer thins as the surface falls.
+      ZStar,              //!< Fixed levels rescaled by total depth.
+      Hybrid,             //!< Sigma near the surface, z below a transition depth.
+      Isopycnal,          //!< Layers of constant density.
+      DepthBelowSurface   //!< Fixed depths measured down from the moving surface.
+    };
+
+    /*!
+     * \brief Where the layers of a layered or volumetric data item actually are.
+     *
+     * **The problem this solves.** A consumer handed temperature indexed by
+     * `{cell, layer}` cannot interpret it. Layer 7 of column 3 is at *some*
+     * elevation, and under a terrain-following coordinate that elevation moves
+     * every step as the free surface rises and falls. Values without their
+     * vertical coordinate are not data, they are an array.
+     *
+     * **Why elevations and not just formula terms.** CF describes a vertical
+     * coordinate by naming a standard formula and publishing its terms, which is
+     * right for a file: a reader can afford to implement a handful of formulae
+     * once. It is the wrong shape for a coupling framework, where it would oblige
+     * every consumer to implement every formula correctly, and where a consumer
+     * that got one subtly wrong would produce plausible output and no error. The
+     * producer already knows its own coordinate exactly, so it answers the
+     * question directly. \ref kind() is still published for consumers that want
+     * to do something smarter — a conservative remap, say — or that need to
+     * refuse an exchange between coordinates they cannot reconcile.
+     *
+     * **Conventions**, stated because several are in use and choosing silently is
+     * how a coupled model ends up upside down: elevations are **positive up**, in
+     * the geometry's own vertical datum. Interface 0 is the **top** of the
+     * column, increasing downward, so a column of `layerCount()` layers has
+     * `layerCount() + 1` interfaces.
+     */
+    class IVerticalCoordinate
+    {
+    public:
+      virtual ~IVerticalCoordinate() = default;
+
+      /*!
+       * \brief The coordinate family.
+       */
+      [[nodiscard]] virtual VerticalCoordinateKind kind() const = 0;
+
+      /*!
+       * \brief Number of layers in a column.
+       */
+      [[nodiscard]] virtual int layerCount() const = 0;
+
+      /*!
+       * \brief Whether interface elevations change from step to step.
+       *
+       * True for every coordinate that follows the free surface. A consumer that
+       * caches elevations must re-read them each exchange when this is true, and
+       * this is the flag that tells it so rather than leaving it to find out.
+       */
+      [[nodiscard]] virtual bool isTimeVarying() const = 0;
+
+      /*!
+       * \brief Elevation of one interface in one cell (m, positive up).
+       *
+       * \param[in] cellIndex      Cell in the parent geometry's own ordering.
+       * \param[in] interfaceIndex 0 at the top through layerCount() at the bed.
+       */
+      [[nodiscard]] virtual double interfaceElevation(int64_t cellIndex,
+                                                      int interfaceIndex) const = 0;
+
+      /*!
+       * \brief All interface elevations for one cell, top first.
+       *
+       * \param[in]  cellIndex Cell in the parent geometry's own ordering.
+       * \param[out] elevations Buffer of at least `layerCount() + 1` doubles.
+       *
+       * Provided because remapping a column needs the whole profile, and asking
+       * for it one virtual call at a time is the wrong shape for that.
+       */
+      virtual void interfaceElevations(int64_t cellIndex,
+                                       double *elevations) const = 0;
+    };
+
+    /*!
+     * \brief A polyhedral surface whose values are resolved into vertical layers.
+     *
+     * The unstructured counterpart of \ref IRegularGrid3DComponentDataItem: a 2-D
+     * mesh extruded downward. `IPolyhedralSurfaceComponentDataItem` indexes values
+     * by a single entity dimension, which cannot express a layered model, and the
+     * regular-grid item carries three dimensions but only for a structured grid.
+     *
+     * Extends the surface item rather than replacing it, so a partner that only
+     * understands surfaces can still discover the patch topology through the base
+     * interface and take a single layer from it.
+     *
+     * **Shape.** Values are indexed `{patch, layer}` with the layer dimension
+     * last. Layer 0 is at the top.
+     */
+    class ILayeredMeshComponentDataItem
+        : public virtual IPolyhedralSurfaceComponentDataItem
+    {
+    public:
+      virtual ~ILayeredMeshComponentDataItem() = default;
+
+      /*!
+       * \brief The IDimension of the layers (the last dimension of shape()).
+       */
+      [[nodiscard]] virtual IDimension *layerDimension() const = 0;
+
+      /*!
+       * \brief Where those layers are.
+       *
+       * Never null. A layered item without a vertical coordinate is an array
+       * whose meaning the consumer has to guess.
+       */
+      [[nodiscard]] virtual IVerticalCoordinate *verticalCoordinate() const = 0;
+    };
   }
 }
 
