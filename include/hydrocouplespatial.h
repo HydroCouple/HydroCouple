@@ -1293,7 +1293,7 @@ namespace HydroCouple
       /*!
        * \brief IRaster destructor.
        */
-      virtual ~IRaster() = 0;
+      virtual ~IRaster() = default;
 
       /*!
        * \brief Number of pixels in the x direction.
