@@ -54,6 +54,19 @@ enum class ByteOrder : uint8_t
  * \brief HydroCouple namespace contains the core interface specifications
  * for the HydroCouple component-based modeling framework interface specification.
  */
+/*!
+ * These interfaces cross shared-library boundaries by design — a component
+ * in one image hands its data items to an SDK or host living in another —
+ * and dynamic_cast across images only works when a class's type_info is one
+ * entity. Projects routinely build with -fvisibility=hidden, which would
+ * give every image its own private copy of these typeinfos and make such
+ * casts fail silently; forcing default visibility here keeps the RTTI
+ * shared regardless of the including project's flags.
+ */
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC visibility push(default)
+#endif
+
 namespace HydroCouple
 {
   //! ABI version for the HydroCouple interface.
@@ -2463,6 +2476,10 @@ namespace HydroCouple
   };
 
 }
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC visibility pop
+#endif
 
 #endif // HYDROCOUPLE_H
 

@@ -26,6 +26,19 @@
 
 #include "hydrocouple.h"
 
+/*!
+ * These interfaces cross shared-library boundaries by design — a component
+ * in one image hands its data items to an SDK or host living in another —
+ * and dynamic_cast across images only works when a class's type_info is one
+ * entity. Projects routinely build with -fvisibility=hidden, which would
+ * give every image its own private copy of these typeinfos and make such
+ * casts fail silently; forcing default visibility here keeps the RTTI
+ * shared regardless of the including project's flags.
+ */
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC visibility push(default)
+#endif
+
 namespace HydroCouple
 {
   //! Non-normative convenience helpers for the HydroCouple interface standard.
@@ -256,5 +269,9 @@ namespace HydroCouple
     }
   }
 }
+
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC visibility pop
+#endif
 
 #endif // HYDROCOUPLEHELPERS_H
