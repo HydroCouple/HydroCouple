@@ -2025,8 +2025,11 @@ namespace HydroCouple
 
     /*!
      * \brief New IAdaptedOutputFactoryComponent instance.
+     * \details The caller owns the returned instance, mirroring
+     * IModelComponentInfo::createComponentInstance(); a host must destroy it
+     * before unloading the library that produced it.
      */
-    [[nodiscard]] virtual IAdaptedOutputFactoryComponent *createComponentInstance() = 0;
+    [[nodiscard]] virtual std::unique_ptr<IAdaptedOutputFactoryComponent> createComponentInstance() = 0;
   };
 
   /*!
