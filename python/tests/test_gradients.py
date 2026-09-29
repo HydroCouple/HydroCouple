@@ -21,7 +21,7 @@ gradients for:
 * the first reservoir's initial storage -- which only reaches the loss
   *through time*, via the state cotangent.
 
-Falsifiers (``verification/g1/falsify_gradients.sh``) rebuild the fixture
+Falsifiers (``verification/g0g1/falsify.sh``) rebuild the fixture
 with a deliberate adjoint fault and require these gates to fail.
 """
 

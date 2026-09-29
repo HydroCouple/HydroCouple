@@ -28,7 +28,7 @@
  *     dS' = (1 - dt*k - 2*dt*c*S)*dS + dt*dI - dt*S*dk
  *     dQ  = dk*S' + k*dS'
  *
- * Falsifier hooks (compile-time, used by verification/g1/falsify_*.sh):
+ * Falsifier hooks (compile-time, used by verification/g0g1/falsify.sh):
  *     HC_FALSIFY_KB_SIGN       flip the sign of the S' term in kb
  *     HC_FALSIFY_DROP_STATE    forget Sb' (no gradient through time)
  *     HC_FALSIFY_STALE_POINT   linearize at the storage after the step
