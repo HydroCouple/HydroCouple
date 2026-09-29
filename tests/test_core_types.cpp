@@ -242,6 +242,18 @@ TEST(CapabilityTest, Values)
 // Differentiation contract (Phase G1)
 // ============================================================================
 
+TEST(CheckpointTest, SavedStatesCanBeReleased)
+{
+    // The third member of the checkpoint contract: a dropped checkpoint can
+    // be reclaimed (reverse-mode replay saves far more than it restores).
+    using Release = bool (ICheckpointableModelComponent::*)(const std::string &,
+                                                            std::string &);
+    Release release = &ICheckpointableModelComponent::releaseState;
+    EXPECT_NE(release, nullptr);
+    // Adding a pure virtual grew the vtable: the ABI version says so.
+    EXPECT_EQ(HYDROCOUPLE_ABI_VERSION, 3);
+}
+
 TEST(DifferentialTest, RoleValues)
 {
     EXPECT_EQ(static_cast<uint8_t>(DifferentialRole::Input), 0u);

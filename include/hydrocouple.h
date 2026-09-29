@@ -70,7 +70,8 @@ enum class ByteOrder : uint8_t
 namespace HydroCouple
 {
   //! ABI version for the HydroCouple interface.
-  constexpr int HYDROCOUPLE_ABI_VERSION = 2;
+  //! 3: ICheckpointableModelComponent gained releaseState() (its vtable grew).
+  constexpr int HYDROCOUPLE_ABI_VERSION = 3;
 
   //! Forward declarations
   template <typename... Args>
@@ -1048,6 +1049,23 @@ namespace HydroCouple
      * \returns True on success.
      */
     [[nodiscard]] virtual bool restoreState(const std::string &token, std::string &message) = 0;
+
+    /*!
+     * \brief Releases a state saved by saveState() that will not be restored.
+     * \details Whatever saveState() set aside for \p token -- a file under
+     * referenceDirectory(), a buffer, a remote object -- may be reclaimed. An
+     * orchestrator that keeps checkpoints for replay (reverse-mode
+     * differentiation among them) saves far more states than it ever restores
+     * and calls this for each one it drops, so a component whose token names
+     * storage must honour it or leak that storage for the length of the run.
+     * A component whose token IS the state has nothing to free and returns
+     * true. After this call the token is dead: restoring or releasing it again
+     * is an error the component may refuse.
+     * \param[in] token is an opaque identifier returned by saveState().
+     * \param[out] message describes the failure when the return value is false.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool releaseState(const std::string &token, std::string &message) = 0;
   };
 
   /*!

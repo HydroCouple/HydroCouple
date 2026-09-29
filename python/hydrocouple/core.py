@@ -722,6 +722,17 @@ class ICheckpointableModelComponent(IModelComponent):
         """
         raise NotImplementedError
 
+    @abstractmethod
+    def release_state(self, token: str) -> tuple[bool, str]:
+        """Release a state saved by :meth:`save_state` that will not be
+        restored, so whatever it set aside (a file, a buffer) can be
+        reclaimed. A component whose token is the state itself returns
+        ``(True, "")``. After this the token is dead.
+
+        :returns: ``(ok, message)``.
+        """
+        raise NotImplementedError
+
 
 class IDifferentiableModelComponent(IModelComponent):
     """A model component that can report the derivative of its most

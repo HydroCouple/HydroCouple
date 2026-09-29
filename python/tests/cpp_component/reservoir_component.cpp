@@ -41,6 +41,7 @@
 #include <cstdio>
 #include <cstring>
 #include <memory>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -262,6 +263,16 @@ public:
     explicit StorageState(IModelComponent *owner) : VectorItem(owner, "storage", 10.0) {}
 };
 
+//! Diagnostics: values[0] is the number of checkpoints saved and not yet
+//! released -- how a test sees a leak (or a double release) through the
+//! ordinary data plane.
+class LiveCheckpoints final : public VectorItem
+{
+public:
+    explicit LiveCheckpoints(IModelComponent *owner)
+        : VectorItem(owner, "live_checkpoints", 0.0) {}
+};
+
 class ReservoirInfo;
 
 // ---------------------------------------------------------------------------
@@ -283,6 +294,13 @@ class ReservoirComponent final : public virtual IDifferentiableModelComponent,
     std::unique_ptr<OutflowOutput> m_outflow;
     std::unique_ptr<RecessionArgument> m_k;
     std::unique_ptr<StorageState> m_storage;
+    std::unique_ptr<LiveCheckpoints> m_live;
+
+    // Checkpoint bookkeeping: every token carries a serial number; a
+    // released (or never issued) serial cannot be restored or released.
+    long m_nextSerial = 1;
+    std::set<long> m_liveSerials;
+    void publishLive() { m_live->values[0] = static_cast<double>(m_liveSerials.size()); }
 
     // The linearization point: what the most recent update() consumed and
     // produced.
@@ -296,6 +314,7 @@ public:
         m_outflow = std::make_unique<OutflowOutput>(this);
         m_k = std::make_unique<RecessionArgument>(this);
         m_storage = std::make_unique<StorageState>(this);
+        m_live = std::make_unique<LiveCheckpoints>(this);
     }
 
     [[nodiscard]] const std::string &caption() const override { return m_caption; }
@@ -311,7 +330,7 @@ public:
     [[nodiscard]] std::vector<IOutput *> outputs() const override { return {m_outflow.get()}; }
     [[nodiscard]] std::vector<IComponentDataItem *> results() const override
     {
-        return {m_storage.get()};
+        return {m_storage.get(), m_live.get()};
     }
 
     void initialize() override { m_status = ComponentStatus::Initialized; }
@@ -355,12 +374,16 @@ public:
     void setReferenceDirectory(const std::string &value) override { m_refDir = value; }
 
     // -- ICheckpointableModelComponent -----------------------------------------
-    // The token is the state itself, serialized: step, storage, outflow.
+    // The token is the state itself, serialized: serial, step, storage,
+    // outflow. The serial exists so the test can see releases.
     [[nodiscard]] bool saveState(std::string &token, std::string &) override
     {
+        const long serial = m_nextSerial++;
+        m_liveSerials.insert(serial);
+        publishLive();
         std::ostringstream out;
         out.precision(17);
-        out << m_step;
+        out << serial << ' ' << m_step;
         for (double v : m_storage->values)
             out << ' ' << v;
         for (double v : m_outflow->values)
@@ -372,6 +395,12 @@ public:
     [[nodiscard]] bool restoreState(const std::string &token, std::string &message) override
     {
         std::istringstream in(token);
+        long serial = 0;
+        if (!(in >> serial) || !m_liveSerials.count(serial))
+        {
+            message = "token was released or never issued";
+            return false;
+        }
         if (!(in >> m_step))
         {
             message = "bad token";
@@ -389,6 +418,19 @@ public:
         // A restored component has not taken the step it will next be asked
         // to differentiate.
         m_haveStep = false;
+        return true;
+    }
+
+    [[nodiscard]] bool releaseState(const std::string &token, std::string &message) override
+    {
+        std::istringstream in(token);
+        long serial = 0;
+        if (!(in >> serial) || m_liveSerials.erase(serial) != 1)
+        {
+            message = "token was already released or never issued";
+            return false;
+        }
+        publishLive();
         return true;
     }
 

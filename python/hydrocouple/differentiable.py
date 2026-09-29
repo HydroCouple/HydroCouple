@@ -27,11 +27,19 @@ frameworks do not:
 
 After a backward pass the component sits at whichever step was replayed
 last; restore a checkpoint (or ``prepare()`` again) before running forward.
+
+Checkpoints are released, not leaked: the token saved before a step is
+handed back through ``release_state()`` when the step's record is garbage
+collected -- when the framework drops the graph (PyTorch) or the backward
+pass has consumed it (JAX). A component whose tokens name files gets them
+back as soon as nothing can replay that step any more.
 """
 
 from __future__ import annotations
 
 import itertools
+import warnings
+import weakref
 from dataclasses import dataclass, field
 from typing import Any, Callable, Optional, Sequence
 
@@ -54,6 +62,17 @@ class StepRecord:
     inputs: tuple
     arguments: tuple
     extra: dict = field(default_factory=dict)
+
+
+def _release(component, token: str) -> None:
+    """Finalizer of a StepRecord: give the component its checkpoint back."""
+    try:
+        ok, msg = component.release_state(token)
+    except Exception as exc:  # a finalizer must never raise
+        ok, msg = False, str(exc)
+    if not ok:
+        warnings.warn(f"release_state refused a checkpoint token: {msg}",
+                      RuntimeWarning, stacklevel=2)
 
 
 class StepDriver:
@@ -135,6 +154,11 @@ class StepDriver:
         new_state = self._read(self.states, "state")
         rec = (StepRecord(self._clock, token, tuple(state), tuple(inputs),
                           tuple(arguments)) if record else None)
+        if rec is not None and token is not None:
+            release = weakref.finalize(rec, _release, self.component, token)
+            # Not at interpreter exit: the component's library may already be
+            # unloaded by then, and the process is taking the storage anyway.
+            release.atexit = False
         return outputs, new_state, rec
 
     def _linearize(self, rec: StepRecord) -> None:

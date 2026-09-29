@@ -228,6 +228,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     cdef cppclass ICheckpointableModelComponent(IModelComponent):
         bint saveState(string& token, string& message)
         bint restoreState(const string& token, string& message)
+        bint releaseState(const string& token, string& message)
 
     # ------------------------------------------------------------------
     # Differentiation contract (Phase G1)

@@ -1187,6 +1187,14 @@ cdef class CppModelComponentWrapper:
             token.encode("utf-8"), msg)
         return bool(ok), msg.decode("utf-8")
 
+    def release_state(self, str token):
+        """Release a saved state that will not be restored; returns
+        ``(ok, message)``."""
+        cdef string msg
+        cdef bint ok = self._checkpointable().releaseState(
+            token.encode("utf-8"), msg)
+        return bool(ok), msg.decode("utf-8")
+
     # -- Differentiation (IDifferentiableModelComponent) --------------------
 
     cdef cpp.IDifferentiableModelComponent* _differentiable(self) except NULL:

@@ -498,3 +498,63 @@ class TestTheChainTrainsInJax:
             np.testing.assert_allclose(np.asarray(jitted[name]),
                                        np.asarray(eager[name]), rtol=1e-10,
                                        atol=1e-15, err_msg=name)
+
+
+# ======================================================================
+# Checkpoints are released, never leaked (ICheckpointable::releaseState)
+# ======================================================================
+def live_checkpoints(component) -> int:
+    """The fixture's count of checkpoints saved and not yet released."""
+    item = [r for r in component.results if r.id == "live_checkpoints"][0]
+    out = np.empty(CELLS)
+    ok, msg = item.get_values_into(out, (0,), (CELLS,))
+    assert ok, msg
+    return int(out[0])
+
+
+class TestCheckpointsAreReleased:
+    def test_a_released_token_is_dead(self, reservoir_lib):
+        c = fresh(reservoir_lib)
+        ok, token, msg = c.save_state()
+        assert ok, msg
+        assert live_checkpoints(c) == 1
+        assert c.release_state(token) == (True, "")
+        assert live_checkpoints(c) == 0
+        ok, msg = c.restore_state(token)
+        assert not ok and "released" in msg
+        ok, msg = c.release_state(token)
+        assert not ok and "already released" in msg
+
+    def test_torch_releases_every_step_when_the_graph_goes(self, reservoir_lib):
+        import gc
+
+        loss, p, (A, B) = torch_chain(reservoir_lib)
+        a, b = A.driver.component, B.driver.component
+        assert live_checkpoints(a) == STEPS
+        assert live_checkpoints(b) == STEPS
+        loss.backward()
+        del loss, p, A, B
+        gc.collect()
+        assert live_checkpoints(a) == 0
+        assert live_checkpoints(b) == 0
+
+    def test_jax_releases_every_step_once_backward_has_run(self, reservoir_lib,
+                                                           jax_modules):
+        import gc
+        import hydrocouple.jax as hcj
+
+        jax, jnp = jax_modules
+        comp = fresh(reservoir_lib)
+        step = hcj.Step(comp)
+
+        def loss(k):
+            state = step.initial_state()
+            total = 0.0
+            for n in range(STEPS):
+                (q,), state = step(state, [jnp.full(CELLS, 1.0 + n)], [k])
+                total = total + jnp.sum(q ** 2)
+            return total
+
+        jax.grad(loss)(jnp.full(CELLS, 0.3))
+        gc.collect()
+        assert live_checkpoints(comp) == 0
