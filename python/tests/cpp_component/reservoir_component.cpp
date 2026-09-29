@@ -4,7 +4,7 @@
  * A native C++20 HydroCouple component with a HAND-WRITTEN ADJOINT: the
  * fixture that proves gradients cross the boundary between a C++ model and
  * a PyTorch / JAX model (Phases G1 and G3 of
- * plans/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md).
+ * plans/hydrocouple/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md).
  *
  * Physics: kCells independent nonlinear reservoirs, one step per update():
  *

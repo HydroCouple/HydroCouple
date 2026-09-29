@@ -1,7 +1,7 @@
 """
 The interface stays header-only and depends on the C++ standard library
 alone -- the invariant the differentiable-interface plan is built around
-(plans/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md, "Two
+(plans/hydrocouple/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md, "Two
 invariants"). DLPack, PyTorch, JAX and Python.h belong to the bindings
 and the SDK, never to include/.
 """

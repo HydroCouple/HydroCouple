@@ -2,7 +2,7 @@
  * dlpack_bridge.h
  *
  * DLPack <-> BufferDescriptor, for the Python bindings only (Phase G0 of
- * plans/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md).
+ * plans/hydrocouple/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md).
  *
  * A HydroCouple BufferDescriptor and a DLPack DLTensor describe the same
  * thing -- a typed, strided, possibly device-resident array that neither of

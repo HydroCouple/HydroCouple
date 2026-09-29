@@ -22,7 +22,7 @@ C++ model and out the other side, through time (the state), with nothing
 HydroCouple-specific in the training loop.
 
 This is the Python surface of Alt 6 / Alt 8b of
-``plans/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md``. The
+``plans/hydrocouple/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md``. The
 interface itself knows nothing of PyTorch.
 """
 

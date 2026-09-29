@@ -13,7 +13,7 @@ Device gates run everywhere by construction: a BufferView over a fake
 device address carries a Device descriptor through the binding into the
 probe, which records it and refuses it (host-only, per the interface)
 without ever touching the memory. The tests at the bottom that need a real
-accelerator skip unless one is present; see plans/G0_G1_HANDOFF_2026-09-28.md.
+accelerator skip unless one is present; see plans/hydrocouple/G0_G1_HANDOFF_2026-09-28.md.
 """
 
 import gc

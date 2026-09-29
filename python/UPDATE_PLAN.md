@@ -4,8 +4,8 @@
 **Date:** 2026-08-22
 
 > **2026-09-28:** the deferred device/DLPack phase is done — see Phase G0 of
-> `plans/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md` and
-> `plans/G0_G1_HANDOFF_2026-09-28.md`. The data-plane methods accept any
+> `plans/hydrocouple/DIFFERENTIABLE_INTERFACE_ALTERNATIVES_2026-09-28.md` and
+> `plans/hydrocouple/G0_G1_HANDOFF_2026-09-28.md`. The data-plane methods accept any
 > DLPack producer on any device; `hydrocouple.dlpack` holds the device
 > mapping; the vendored `dlpack.h` lives in `_hydrocouple/include/`, never
 > in the interface. The same round added the differentiation contract and
