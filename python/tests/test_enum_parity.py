@@ -70,6 +70,10 @@ class TestCoreEnumParity:
     def test_capability(self):
         _assert_parity(core.Capability, "hydrocouple.h", "Capability")
 
+    def test_differential_role(self):
+        _assert_parity(core.DifferentialRole, "hydrocouple.h",
+                       "DifferentialRole")
+
     def test_component_status(self):
         _assert_parity(core.ComponentStatus, "hydrocouple.h",
                        "ComponentStatus")

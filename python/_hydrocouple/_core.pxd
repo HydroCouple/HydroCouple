@@ -19,7 +19,14 @@ from libc.stdint cimport (
 # ---------------------------------------------------------------------------
 # std::span<const int64_t> — Cython has no built-in binding
 # ---------------------------------------------------------------------------
+cdef extern from "hydrocouple.h" namespace "HydroCouple":
+    cdef cppclass DifferentialEntry
+
 cdef extern from "<span>" namespace "std":
+    cdef cppclass DifferentialSet "std::span<const HydroCouple::DifferentialEntry>":
+        DifferentialSet()
+        DifferentialSet(const DifferentialEntry* ptr, size_t count)
+
     cdef cppclass const_int64_span "std::span<const int64_t>":
         const_int64_span()
         const_int64_span(const int64_t* ptr, size_t count)
@@ -73,6 +80,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         Cloneable
         UserInterface
         Licensing
+        Differentiable
 
     # ------------------------------------------------------------------
     # BufferDescriptor — plain aggregate
@@ -220,6 +228,32 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     cdef cppclass ICheckpointableModelComponent(IModelComponent):
         bint saveState(string& token, string& message)
         bint restoreState(const string& token, string& message)
+
+    # ------------------------------------------------------------------
+    # Differentiation contract (Phase G1)
+    # ------------------------------------------------------------------
+    cdef enum class DifferentialRole(uint8_t):
+        Input
+        Argument
+        Output
+        StateBefore
+        StateAfter
+
+    cdef cppclass DifferentialEntry:
+        DifferentialEntry()
+        const IComponentDataItem* item
+        DifferentialRole role
+        BufferDescriptor value
+
+    cdef cppclass IDifferentiableModelComponent(IModelComponent):
+        vector[IInput*] differentiableInputs() const
+        vector[IArgument*] differentiableArguments() const
+        vector[IOutput*] differentiableOutputs() const
+        vector[IComponentDataItem*] differentiableStates() const
+        bint vjp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
+        bint jvp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
 
     # ------------------------------------------------------------------
     # IValueDefinition
@@ -493,7 +527,19 @@ cdef class CppDimensionWrapper:
     cdef CppDimensionWrapper wrap(IDimension* ptr)
 
 
+cdef class CppComponentDataItemWrapper:
+    cdef IComponentDataItem* _ptr
+
+    @staticmethod
+    cdef CppComponentDataItemWrapper wrap(IComponentDataItem* ptr)
+
+
 cdef class PyComponentBridge:
     cdef PyModelComponentBridge* _bridge
 
     cdef IModelComponent* ptr(self)
+
+
+cdef extern from "differential_bridge.h" namespace "HydroCouple::Python":
+    IDifferentiableModelComponent* asDifferentiable(IModelComponent* component)
+    ICheckpointableModelComponent* asCheckpointable(IModelComponent* component)

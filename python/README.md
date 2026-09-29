@@ -44,6 +44,52 @@ destinations may be non-contiguous views — a pitched or transposed slice
 works without copies. Dimension orderings are canonical per data-item
 type (time is always dimension 0; see each ABC's docstring).
 
+## Tensors from any framework, on any device (DLPack)
+
+`get_values_into` / `set_values_from` accept not only ndarrays but any
+object implementing the DLPack protocol — a `torch.Tensor`, a CuPy array,
+a JAX array (as a source; JAX arrays are immutable, so never as a
+destination) — on the host or a device. The C++ item receives a
+`BufferDescriptor` over the tensor's own memory (`MemorySpace.Device` for
+a GPU tensor); nothing is staged through the host behind your back:
+
+```python
+t = torch.empty(output.shape, dtype=torch.float64, device="cuda")
+ok, msg = output.get_values_into(t, (0,) * t.ndim, t.shape)
+```
+
+In the other direction, a C++ engine calling a *Python* item with device
+memory hands it a `hydrocouple.dlpack.BufferView`; `torch.from_dlpack(view)`
+aliases the engine's buffer. See `hydrocouple.dlpack` for the device
+mapping (`set_accelerator` on ROCm/oneAPI/Metal). DLPack lives in the
+bindings only: the interface headers depend on the standard library alone.
+
+## Gradients across model boundaries (PyTorch, JAX)
+
+A component that declares `Capability.Differentiable` implements
+`IDifferentiableModelComponent` (`vjp` / `jvp` of its most recent step,
+with its state listed so gradients flow through time). The overlays turn
+it into a native operation of either framework:
+
+```python
+import hydrocouple.torch as hct
+
+reservoir = hct.Step(component)          # a C++ model with an adjoint
+state = reservoir.initial_state()
+loss = 0
+for x, observed in data:
+    (outflow,), state = reservoir(state, [net(x)], [k])
+    loss = loss + ((outflow - observed) ** 2).sum()
+loss.backward()     # reaches net.parameters(), k, and the initial state
+```
+
+`hydrocouple.jax.Step` is the same as a `jax.custom_vjp` function
+(`jax.grad`, `jax.value_and_grad`, `jax.jit`). Earlier steps are replayed
+from checkpoints during backward, so a multi-step component should also
+declare `Capability.Checkpointing`. `tests/test_gradients.py` proves the
+chain torch → C++ → C++ → torch against finite differences, and that
+PyTorch and JAX agree.
+
 ## Implementing a component in Python
 
 Subclass the ABCs, then hand the component to C++ through the bridge:

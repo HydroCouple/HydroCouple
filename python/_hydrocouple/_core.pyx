@@ -9,20 +9,25 @@ subclasses of the corresponding Python ABCs so that ``isinstance`` checks
 work transparently.
 
 Data plane: ``get_values_into`` / ``set_values_from`` convert NumPy arrays
-to C++ ``BufferDescriptor`` views **zero-copy** — the descriptor carries
-the array's data pointer, DataKind (from dtype), shape, and byte strides —
-and release the GIL around the C++ virtual call.
+— and, through the DLPack protocol, any array that implements
+``__dlpack__`` (PyTorch, JAX, CuPy, ...) on any device — to C++
+``BufferDescriptor`` views **zero-copy**: the descriptor carries the
+array's data pointer, DataKind (from dtype), shape, byte strides and memory
+space, and the GIL is released around the C++ virtual call.
 """
 
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp.set cimport set as cppset
 from libcpp.memory cimport shared_ptr
-from libc.stdint cimport int64_t
-from cpython.ref cimport PyObject
+from libc.stdint cimport int32_t, int64_t, uint64_t, uintptr_t
+from cpython.ref cimport PyObject, Py_DECREF
 
 cimport _hydrocouple._core as cpp
 cimport _hydrocouple._signal as bridge
+cimport _hydrocouple._dlpack as dl
+
+import sys
 
 import numpy as np
 cimport numpy as cnp
@@ -91,12 +96,94 @@ cdef inline cpp.const_int64_span _as_span(vector[int64_t]* buf):
     return cpp.const_int64_span(buf.data(), buf.size())
 
 
+# ---------------------------------------------------------------------------
+# DLPack producer -> BufferDescriptor (zero-copy, any device)
+# ---------------------------------------------------------------------------
+
+cdef object _dlpack_capsule_of(object producer, object stream):
+    """Ask a ``__dlpack__`` producer for a capsule, newest protocol first.
+
+    ``stream`` is the consumer stream handed to the producer (DLPack /
+    array-API semantics): ``None`` lets a CUDA/ROCm producer assume the
+    legacy default stream; a CPU producer always receives ``None``.
+    """
+    get_device = getattr(producer, "__dlpack_device__", None)
+    if get_device is not None:
+        device_type = int(get_device()[0])
+        if device_type == dl.kDLCPU:
+            stream = None
+    try:
+        return producer.__dlpack__(
+            stream=stream,
+            max_version=(dl.DLPACK_MAJOR_VERSION, dl.DLPACK_MINOR_VERSION))
+    except TypeError:
+        # A pre-1.0 producer: no max_version keyword, legacy capsule.
+        pass
+    if stream is None:
+        return producer.__dlpack__()
+    return producer.__dlpack__(stream=stream)
+
+
+cdef tuple _dlpack_data_plane(cpp.IComponentDataItem* ptr, object producer,
+                              object start, object count, bint writable,
+                              object stream):
+    """Run getValuesInto (writable) or setValuesFrom over a DLPack tensor.
+
+    The producer's tensor is borrowed for the duration of the C++ call and
+    its deleter runs when this function returns — exactly once.
+    """
+    capsule = _dlpack_capsule_of(producer, stream)
+    cdef dl.DLPackBorrow borrow
+    cdef cpp.BufferDescriptor d
+    cdef string msg
+    if not dl.borrowCapsule(<PyObject*>capsule, borrow, msg):
+        raise BufferError(msg.decode("utf-8"))
+    if not dl.descriptorFromBorrow(borrow, writable, d, msg):
+        raise ValueError(msg.decode("utf-8"))
+    cdef vector[int64_t] start_buf, count_buf
+    _fill_span_buf(start, &start_buf)
+    _fill_span_buf(count, &count_buf)
+    cdef bint ok
+    cdef cpp.const_int64_span s = _as_span(&start_buf)
+    cdef cpp.const_int64_span c = _as_span(&count_buf)
+    msg.clear()
+    if writable:
+        with nogil:
+            ok = ptr.getValuesInto(d, s, c, &msg)
+    else:
+        with nogil:
+            ok = ptr.setValuesFrom(d, s, c, &msg)
+    borrow.release()
+    return bool(ok), msg.decode("utf-8")
+
+
+cdef int _refuse_immutable_destination(object destination) except -1:
+    """Refuse destinations whose framework promises they never change.
+
+    A JAX array exports writable-looking DLPack capsules (no READ_ONLY
+    flag), but JAX treats every array as immutable and may share its
+    buffer between arrays; writing into one would silently change others.
+    """
+    jax = sys.modules.get("jax")
+    if jax is not None and isinstance(destination, jax.Array):
+        raise ValueError(
+            "JAX arrays are immutable and cannot receive values; read into "
+            "a NumPy array (or torch tensor) and pass it to jnp.asarray, or "
+            "use hydrocouple.jax")
+    return 0
+
+
 cdef tuple _get_values_into(cpp.IComponentDataItem* ptr, object destination,
-                            object start, object count):
+                            object start, object count, object stream=None):
     """Shared implementation of the typed hyperslab read."""
-    cdef cnp.ndarray arr = np.asarray(destination)
-    if arr is not destination:
-        raise TypeError("destination must be a numpy.ndarray")
+    if type(destination) is not np.ndarray:
+        _refuse_immutable_destination(destination)
+        if hasattr(destination, "__dlpack__"):
+            return _dlpack_data_plane(ptr, destination, start, count,
+                                      True, stream)
+        raise TypeError("destination must be a numpy.ndarray or implement "
+                        "the DLPack protocol (__dlpack__)")
+    cdef cnp.ndarray arr = destination
     cdef cpp.BufferDescriptor d
     cdef vector[int64_t] shape_buf, strides_buf, start_buf, count_buf
     _fill_descriptor(arr, &d, &shape_buf, &strides_buf, True)
@@ -112,8 +199,10 @@ cdef tuple _get_values_into(cpp.IComponentDataItem* ptr, object destination,
 
 
 cdef tuple _set_values_from(cpp.IComponentDataItem* ptr, object source,
-                            object start, object count):
+                            object start, object count, object stream=None):
     """Shared implementation of the typed hyperslab write."""
+    if type(source) is not np.ndarray and hasattr(source, "__dlpack__"):
+        return _dlpack_data_plane(ptr, source, start, count, False, stream)
     cdef cnp.ndarray arr = np.asarray(source)
     cdef cpp.BufferDescriptor d
     cdef vector[int64_t] shape_buf, strides_buf, start_buf, count_buf
@@ -127,6 +216,78 @@ cdef tuple _set_values_from(cpp.IComponentDataItem* ptr, object source,
     with nogil:
         ok = ptr.setValuesFrom(d, s, c, &msg)
     return bool(ok), msg.decode("utf-8")
+
+
+# ---------------------------------------------------------------------------
+# BufferDescriptor -> DLPack capsule (the producer side), and the mapping
+# primitives hydrocouple.dlpack re-exports. One implementation, in
+# dlpack_bridge.h; Python never re-derives a mapping.
+# ---------------------------------------------------------------------------
+
+def _make_capsule(uintptr_t address, int kind, shape, strides_bytes,
+                  int device_type, int device_id, bint read_only,
+                  bint versioned, uint64_t byte_offset=0):
+    """A DLPack capsule over foreign memory, without copying it.
+
+    ``strides_bytes`` may be ``None`` (C-contiguous). The memory is
+    borrowed: the caller guarantees it outlives every tensor made from the
+    capsule. Raises ``BufferError`` if the descriptor cannot be expressed.
+    """
+    cdef vector[int64_t] shape_buf, strides_buf
+    _fill_span_buf(shape, &shape_buf)
+    cdef cpp.BufferDescriptor d
+    d.data = <void*>address
+    d.kind = <cpp.DataKind>kind
+    d.rank = <int32_t>shape_buf.size()
+    d.shape = shape_buf.data() if shape_buf.size() > 0 else NULL
+    if strides_bytes is None:
+        d.stridesBytes = NULL
+    else:
+        _fill_span_buf(strides_bytes, &strides_buf)
+        if strides_buf.size() != shape_buf.size():
+            raise ValueError("strides_bytes and shape differ in length")
+        d.stridesBytes = strides_buf.data() if strides_buf.size() > 0 else NULL
+    cdef dl.DLDevice device
+    device.device_type = <dl.DLDeviceType>device_type
+    device.device_id = device_id
+    cdef string msg
+    cdef PyObject* capsule = dl.makeCapsule(d, device, read_only, versioned,
+                                            msg, byte_offset)
+    if capsule == NULL:
+        raise BufferError(msg.decode("utf-8"))
+    result = <object>capsule
+    Py_DECREF(result)
+    return result
+
+
+def _device_from_space(int space, int device_id) -> tuple:
+    """(DLDeviceType, device_id) for a MemorySpace under the accelerator."""
+    cdef dl.DLDevice device = dl.deviceFromSpace(<cpp.MemorySpace>space,
+                                                 device_id)
+    return int(device.device_type), int(device.device_id)
+
+
+def _space_from_device_type(int device_type):
+    """The MemorySpace value for a DLDeviceType, or ``None`` if unknown."""
+    cdef cpp.MemorySpace space = cpp.MemorySpace.Host
+    if not dl.spaceFromDeviceType(device_type, space):
+        return None
+    return int(<int>space)
+
+
+def _accelerator() -> int:
+    """The DLDeviceType that MemorySpace.Device exports as."""
+    return int(dl.accelerator())
+
+
+def _set_accelerator(int device_type) -> bool:
+    """Set the accelerator; False (unchanged) for a non-accelerator type."""
+    return bool(dl.setAccelerator(device_type))
+
+
+def _live_exports() -> int:
+    """Capsules this module produced whose deleter has not yet run."""
+    return int(dl.liveExports())
 
 
 # ---------------------------------------------------------------------------
@@ -345,7 +506,7 @@ cdef class CppComponentDataItemWrapper:
     ``BufferDescriptor`` views and release the GIL around the C++ call.
     """
 
-    cdef cpp.IComponentDataItem* _ptr
+    # _ptr is declared in _core.pxd (shared with the test extension).
 
     def __cinit__(self):
         self._ptr = NULL
@@ -396,23 +557,36 @@ cdef class CppComponentDataItemWrapper:
         """The value definition of the stored values."""
         return CppValueDefinitionWrapper.wrap(self._ptr.valueDefinition())
 
-    def get_values_into(self, destination, start, count):
+    def get_values_into(self, destination, start, count, *, stream=None):
         """Copy a hyperslab into ``destination`` (zero-copy descriptor).
 
-        :param destination: writable ndarray whose dtype corresponds to
-            :attr:`data_kind`; may be a non-contiguous view.
+        :param destination: a writable ndarray, or any object implementing
+            the DLPack protocol (``__dlpack__``: a ``torch.Tensor``, a CuPy
+            array, ...) on any device, whose element type corresponds to
+            :attr:`data_kind`; may be a non-contiguous view. The item writes
+            into the destination's own memory -- the binding makes no copy.
+            A device destination reaches the C++ item as a
+            ``MemorySpace.Device`` descriptor; an item that is host-only
+            refuses it with a message.
         :param start: first index of the selection per dimension.
         :param count: selection extent per dimension.
+        :param stream: DLPack consumer stream for a device destination
+            (array-API semantics; ``None`` = the legacy default stream).
+            Ignored for NumPy and CPU tensors. The C++ call is host
+            synchronous: when it returns, the values are in place.
         :returns: ``(ok, message)``.
         """
-        return _get_values_into(self._ptr, destination, start, count)
+        return _get_values_into(self._ptr, destination, start, count, stream)
 
-    def set_values_from(self, source, start, count):
+    def set_values_from(self, source, start, count, *, stream=None):
         """Copy values from ``source`` into a hyperslab of this item.
 
+        ``source`` is an ndarray, any DLPack producer (see
+        :meth:`get_values_into`), or anything ``numpy.asarray`` accepts.
+
         :returns: ``(ok, message)``.
         """
-        return _set_values_from(self._ptr, source, start, count)
+        return _set_values_from(self._ptr, source, start, count, stream)
 
     # -- Signal/slot -------------------------------------------------------
 
@@ -542,15 +716,15 @@ cdef class CppArgumentWrapper:
         from hydrocouple.core import DataKind
         return DataKind(<int>(<cpp.IComponentDataItem*>self._ptr).dataKind())
 
-    def get_values_into(self, destination, start, count):
+    def get_values_into(self, destination, start, count, *, stream=None):
         """Typed hyperslab read; returns ``(ok, message)``."""
         return _get_values_into(
-            <cpp.IComponentDataItem*>self._ptr, destination, start, count)
+            <cpp.IComponentDataItem*>self._ptr, destination, start, count, stream)
 
-    def set_values_from(self, source, start, count):
+    def set_values_from(self, source, start, count, *, stream=None):
         """Typed hyperslab write; returns ``(ok, message)``."""
         return _set_values_from(
-            <cpp.IComponentDataItem*>self._ptr, source, start, count)
+            <cpp.IComponentDataItem*>self._ptr, source, start, count, stream)
 
 
 # ---------------------------------------------------------------------------
@@ -616,15 +790,15 @@ cdef class CppInputWrapper:
         from hydrocouple.core import DataKind
         return DataKind(<int>(<cpp.IComponentDataItem*>self._ptr).dataKind())
 
-    def get_values_into(self, destination, start, count):
+    def get_values_into(self, destination, start, count, *, stream=None):
         """Typed hyperslab read; returns ``(ok, message)``."""
         return _get_values_into(
-            <cpp.IComponentDataItem*>self._ptr, destination, start, count)
+            <cpp.IComponentDataItem*>self._ptr, destination, start, count, stream)
 
-    def set_values_from(self, source, start, count):
+    def set_values_from(self, source, start, count, *, stream=None):
         """Typed hyperslab write; returns ``(ok, message)``."""
         return _set_values_from(
-            <cpp.IComponentDataItem*>self._ptr, source, start, count)
+            <cpp.IComponentDataItem*>self._ptr, source, start, count, stream)
 
 
 # ---------------------------------------------------------------------------
@@ -692,15 +866,15 @@ cdef class CppOutputWrapper:
         from hydrocouple.core import DataKind
         return DataKind(<int>(<cpp.IComponentDataItem*>self._ptr).dataKind())
 
-    def get_values_into(self, destination, start, count):
+    def get_values_into(self, destination, start, count, *, stream=None):
         """Typed hyperslab read; returns ``(ok, message)``."""
         return _get_values_into(
-            <cpp.IComponentDataItem*>self._ptr, destination, start, count)
+            <cpp.IComponentDataItem*>self._ptr, destination, start, count, stream)
 
-    def set_values_from(self, source, start, count):
+    def set_values_from(self, source, start, count, *, stream=None):
         """Typed hyperslab write; returns ``(ok, message)``."""
         return _set_values_from(
-            <cpp.IComponentDataItem*>self._ptr, source, start, count)
+            <cpp.IComponentDataItem*>self._ptr, source, start, count, stream)
 
 
 # ---------------------------------------------------------------------------
@@ -768,6 +942,109 @@ cdef class CppModelComponentInfoWrapper:
         cdef vector[string] docs = (
             <cpp.IComponentInfo*>self._ptr).documentation()
         return [docs[i].decode("utf-8") for i in range(docs.size())]
+
+
+# ---------------------------------------------------------------------------
+# Differentiation (Phase G1): buffers and items for DifferentialEntry
+# ---------------------------------------------------------------------------
+
+cdef class _BufferLease:
+    """One buffer lent to C++ as a BufferDescriptor for one call.
+
+    An ndarray is described in place; any other DLPack producer is borrowed
+    and its deleter runs when the lease is dropped.
+    """
+
+    cdef dl.DLPackBorrow* borrow
+    cdef vector[int64_t] shape_buf
+    cdef vector[int64_t] strides_buf
+    cdef cpp.BufferDescriptor d
+    cdef object keep
+
+    def __cinit__(self):
+        self.borrow = NULL
+
+    def __dealloc__(self):
+        if self.borrow != NULL:
+            del self.borrow
+            self.borrow = NULL
+
+
+cdef _BufferLease _lease(object buffer, bint writable, object stream):
+    cdef _BufferLease lease = _BufferLease.__new__(_BufferLease)
+    cdef string msg
+    if type(buffer) is np.ndarray:
+        lease.keep = buffer
+        _fill_descriptor(<cnp.ndarray>buffer, &lease.d, &lease.shape_buf,
+                         &lease.strides_buf, writable)
+        return lease
+    if writable:
+        _refuse_immutable_destination(buffer)
+    if not hasattr(buffer, "__dlpack__"):
+        raise TypeError("a derivative buffer must be a numpy.ndarray or "
+                        "implement the DLPack protocol (__dlpack__)")
+    capsule = _dlpack_capsule_of(buffer, stream)
+    lease.keep = buffer
+    lease.borrow = new dl.DLPackBorrow()
+    if not dl.borrowCapsule(<PyObject*>capsule, lease.borrow[0], msg):
+        raise BufferError(msg.decode("utf-8"))
+    if not dl.descriptorFromBorrow(lease.borrow[0], writable, lease.d, msg):
+        raise ValueError(msg.decode("utf-8"))
+    return lease
+
+
+cdef cpp.IComponentDataItem* _item_pointer(object item) except NULL:
+    """The IComponentDataItem* behind any C++ data-item wrapper."""
+    cdef cpp.IComponentDataItem* p = NULL
+    if isinstance(item, CppInputWrapper):
+        p = <cpp.IComponentDataItem*>(<CppInputWrapper>item)._ptr
+    elif isinstance(item, CppOutputWrapper):
+        p = <cpp.IComponentDataItem*>(<CppOutputWrapper>item)._ptr
+    elif isinstance(item, CppArgumentWrapper):
+        p = <cpp.IComponentDataItem*>(<CppArgumentWrapper>item)._ptr
+    elif isinstance(item, CppComponentDataItemWrapper):
+        p = (<CppComponentDataItemWrapper>item)._ptr
+    else:
+        raise TypeError(f"{type(item).__name__} is not a C++ data item "
+                        "wrapper of this component")
+    if p == NULL:
+        raise ValueError("data item wrapper holds a null pointer")
+    return p
+
+
+cdef tuple _differential_call(cpp.IDifferentiableModelComponent* comp,
+                              object seeds, object results, bint forward,
+                              object stream):
+    """Marshal (item, role, buffer) triples and call vjp or jvp."""
+    leases = []
+    cdef vector[cpp.DifferentialEntry] seed_entries, result_entries
+    cdef cpp.DifferentialEntry entry
+    cdef _BufferLease lease
+    for group, writable in ((seeds, False), (results, True)):
+        for item, role, buffer in group:
+            lease = _lease(buffer, writable, stream)
+            leases.append(lease)
+            entry.item = _item_pointer(item)
+            entry.role = <cpp.DifferentialRole><int>int(role)
+            entry.value = lease.d
+            if writable:
+                result_entries.push_back(entry)
+            else:
+                seed_entries.push_back(entry)
+    cdef cpp.DifferentialSet s = cpp.DifferentialSet(
+        seed_entries.data(), seed_entries.size())
+    cdef cpp.DifferentialSet r = cpp.DifferentialSet(
+        result_entries.data(), result_entries.size())
+    cdef string msg
+    cdef bint ok
+    if forward:
+        with nogil:
+            ok = comp.jvp(s, r, &msg)
+    else:
+        with nogil:
+            ok = comp.vjp(s, r, &msg)
+    del leases
+    return bool(ok), msg.decode("utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -886,6 +1163,82 @@ cdef class CppModelComponentWrapper:
         from hydrocouple.core import Capability
         cdef cppset[cpp.Capability] caps = self._ptr.capabilities()
         return {Capability(<int>c) for c in caps}
+
+    # -- Checkpointing (ICheckpointableModelComponent) ----------------------
+
+    cdef cpp.ICheckpointableModelComponent* _checkpointable(self) except NULL:
+        cdef cpp.ICheckpointableModelComponent* p = cpp.asCheckpointable(
+            self._ptr)
+        if p == NULL:
+            raise TypeError(f"component '{self.id}' does not implement "
+                            "ICheckpointableModelComponent")
+        return p
+
+    def save_state(self):
+        """Save the complete state; returns ``(ok, token, message)``."""
+        cdef string token, msg
+        cdef bint ok = self._checkpointable().saveState(token, msg)
+        return bool(ok), token.decode("utf-8"), msg.decode("utf-8")
+
+    def restore_state(self, str token):
+        """Restore a saved state; returns ``(ok, message)``."""
+        cdef string msg
+        cdef bint ok = self._checkpointable().restoreState(
+            token.encode("utf-8"), msg)
+        return bool(ok), msg.decode("utf-8")
+
+    # -- Differentiation (IDifferentiableModelComponent) --------------------
+
+    cdef cpp.IDifferentiableModelComponent* _differentiable(self) except NULL:
+        cdef cpp.IDifferentiableModelComponent* p = cpp.asDifferentiable(
+            self._ptr)
+        if p == NULL:
+            raise TypeError(f"component '{self.id}' does not implement "
+                            "IDifferentiableModelComponent")
+        return p
+
+    def differentiable_inputs(self) -> list:
+        """Inputs a derivative reaches."""
+        cdef vector[cpp.IInput*] v = self._differentiable().differentiableInputs()
+        return [CppInputWrapper.wrap(v[i]) for i in range(v.size())]
+
+    def differentiable_arguments(self) -> list:
+        """Arguments (parameters) a derivative reaches."""
+        cdef vector[cpp.IArgument*] v = (
+            self._differentiable().differentiableArguments())
+        return [CppArgumentWrapper.wrap(v[i]) for i in range(v.size())]
+
+    def differentiable_outputs(self) -> list:
+        """Outputs whose derivative the component reports."""
+        cdef vector[cpp.IOutput*] v = (
+            self._differentiable().differentiableOutputs())
+        return [CppOutputWrapper.wrap(v[i]) for i in range(v.size())]
+
+    def differentiable_states(self) -> list:
+        """Items that carry state from one step to the next."""
+        cdef vector[cpp.IComponentDataItem*] v = (
+            self._differentiable().differentiableStates())
+        return [CppComponentDataItemWrapper.wrap(v[i])
+                for i in range(v.size())]
+
+    def vjp(self, seeds, results, *, stream=None):
+        """Vector-Jacobian product of the most recent step.
+
+        ``seeds`` / ``results`` are sequences of ``(item, role, buffer)``
+        where ``item`` is a wrapper returned by the ``differentiable_*``
+        methods, ``role`` a :class:`~hydrocouple.core.DifferentialRole` and
+        ``buffer`` an ndarray or any DLPack tensor (device tensors
+        included). Result buffers are overwritten. GIL released.
+        :returns: ``(ok, message)``.
+        """
+        return _differential_call(self._differentiable(), seeds, results,
+                                  False, stream)
+
+    def jvp(self, seeds, results, *, stream=None):
+        """Jacobian-vector product of the most recent step; see :meth:`vjp`.
+        :returns: ``(ok, message)``."""
+        return _differential_call(self._differentiable(), seeds, results,
+                                  True, stream)
 
     def errors(self, clear_after_read=False) -> list:
         """Drain the component's diagnostic queue."""

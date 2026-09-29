@@ -235,6 +235,51 @@ TEST(CapabilityTest, Values)
     EXPECT_EQ(static_cast<uint32_t>(Capability::Cloneable), 4u);
     EXPECT_EQ(static_cast<uint32_t>(Capability::UserInterface), 5u);
     EXPECT_EQ(static_cast<uint32_t>(Capability::Licensing), 6u);
+    EXPECT_EQ(static_cast<uint32_t>(Capability::Differentiable), 7u);
+}
+
+// ============================================================================
+// Differentiation contract (Phase G1)
+// ============================================================================
+
+TEST(DifferentialTest, RoleValues)
+{
+    EXPECT_EQ(static_cast<uint8_t>(DifferentialRole::Input), 0u);
+    EXPECT_EQ(static_cast<uint8_t>(DifferentialRole::Argument), 1u);
+    EXPECT_EQ(static_cast<uint8_t>(DifferentialRole::Output), 2u);
+    EXPECT_EQ(static_cast<uint8_t>(DifferentialRole::StateBefore), 3u);
+    EXPECT_EQ(static_cast<uint8_t>(DifferentialRole::StateAfter), 4u);
+}
+
+TEST(DifferentialTest, EntryIsAPlainAggregateACAbiCanCarry)
+{
+    // Like BufferDescriptor: no constructors, no virtuals, no owned memory.
+    EXPECT_TRUE(std::is_aggregate_v<DifferentialEntry>);
+    EXPECT_TRUE(std::is_standard_layout_v<DifferentialEntry>);
+    EXPECT_TRUE(std::is_trivially_copyable_v<DifferentialEntry>);
+    EXPECT_TRUE(std::is_trivially_destructible_v<DifferentialEntry>);
+
+    DifferentialEntry e;
+    EXPECT_EQ(e.item, nullptr);
+    EXPECT_EQ(e.role, DifferentialRole::Input);
+    EXPECT_EQ(e.value.data, nullptr);
+}
+
+TEST(DifferentialTest, SetIsANonOwningSpan)
+{
+    DifferentialEntry entries[2];
+    entries[1].role = DifferentialRole::StateAfter;
+    DifferentialSet set(entries, 2);
+    EXPECT_EQ(set.size(), 2u);
+    EXPECT_EQ(set[1].role, DifferentialRole::StateAfter);
+    EXPECT_TRUE((std::is_same_v<DifferentialSet, std::span<const DifferentialEntry>>));
+}
+
+TEST(DifferentialTest, ComponentIsAnOptionalAbstractSideInterface)
+{
+    EXPECT_TRUE(std::is_abstract_v<IDifferentiableModelComponent>);
+    EXPECT_TRUE((std::is_base_of_v<IModelComponent, IDifferentiableModelComponent>));
+    EXPECT_TRUE(std::has_virtual_destructor_v<IDifferentiableModelComponent>);
 }
 
 TEST(ErrorEntryTest, Defaults)

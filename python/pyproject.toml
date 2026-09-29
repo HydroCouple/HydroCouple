@@ -29,6 +29,11 @@ classifiers = [
     "Typing :: Typed",
 ]
 
+[project.optional-dependencies]
+# The overlays; the core package and the interface never need either.
+torch = ["torch>=2.1"]
+jax = ["jax>=0.4.31"]
+
 [project.urls]
 Homepage = "https://github.com/HydroCouple/HydroCouple"
 

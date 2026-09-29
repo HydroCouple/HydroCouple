@@ -98,6 +98,21 @@ class Capability(IntEnum):
     Cloneable = 4
     UserInterface = 5
     Licensing = 6
+    Differentiable = 7
+
+
+class DifferentialRole(IntEnum):
+    """Which side of a component's step a derivative buffer belongs to.
+
+    Mirrors C++ ``HydroCouple::DifferentialRole``. A step maps
+    (StateBefore, Input, Argument) to (StateAfter, Output).
+    """
+
+    Input = 0
+    Argument = 1
+    Output = 2
+    StateBefore = 3
+    StateAfter = 4
 
 
 class ComponentStatus(IntEnum):
@@ -708,6 +723,75 @@ class ICheckpointableModelComponent(IModelComponent):
         raise NotImplementedError
 
 
+class IDifferentiableModelComponent(IModelComponent):
+    """A model component that can report the derivative of its most
+    recent step.
+
+    Mirrors C++ ``IDifferentiableModelComponent``; the owning component
+    advertises :attr:`Capability.Differentiable`. The step maps the state
+    before it, the inputs and the arguments to the state after it and the
+    outputs; state is listed by :meth:`differentiable_states` so that a
+    state cotangent can be carried to the previous step. The linearization
+    point is the most recent :meth:`update`; :meth:`vjp` and :meth:`jvp`
+    do not change the component's state.
+
+    Entries are ``(item, role, buffer)`` triples: ``item`` one of the
+    listed data items, ``role`` a :class:`DifferentialRole`, ``buffer`` an
+    array spanning the item's whole shape (an ndarray, or any DLPack
+    tensor). Results are *overwritten*, never accumulated; an absent seed
+    is zero.
+
+    A Python component written in PyTorch or JAX need not hand-write these:
+    see :mod:`hydrocouple.torch` and :mod:`hydrocouple.jax`, which also
+    drive C++ components that implement them.
+    """
+
+    @abstractmethod
+    def differentiable_inputs(self) -> list["IInput"]:
+        """Inputs a derivative reaches; the rest are constants."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def differentiable_arguments(self) -> list["IArgument"]:
+        """Arguments (parameters) a derivative reaches."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def differentiable_outputs(self) -> list["IOutput"]:
+        """Outputs whose derivative the component can report."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def differentiable_states(self) -> list["IComponentDataItem"]:
+        """Items that carry state from one step to the next."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def vjp(self, seeds: Sequence[tuple], results: Sequence[tuple]
+            ) -> tuple[bool, str]:
+        """Vector-Jacobian product of the most recent step.
+
+        :param seeds: cotangents of ``Output`` / ``StateAfter`` entries.
+        :param results: buffers to overwrite with cotangents of ``Input`` /
+            ``Argument`` / ``StateBefore`` entries.
+        :returns: ``(ok, message)``.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def jvp(self, seeds: Sequence[tuple], results: Sequence[tuple]
+            ) -> tuple[bool, str]:
+        """Jacobian-vector product of the most recent step.
+
+        :param seeds: tangents of ``Input`` / ``Argument`` /
+            ``StateBefore`` entries.
+        :param results: buffers to overwrite with tangents of ``Output`` /
+            ``StateAfter`` entries.
+        :returns: ``(ok, message)``.
+        """
+        raise NotImplementedError
+
+
 # ---------------------------------------------------------------------------
 # Value definitions, dimensions, units
 # ---------------------------------------------------------------------------
@@ -929,6 +1013,16 @@ class IComponentDataItem(IIdentity):
         correspond to :attr:`data_kind` (no implicit conversion) and
         ``destination.size`` must equal the product of ``count``.
         ``destination`` may be non-contiguous (strided views are honored).
+
+        When C++ drives a Python item, ``destination`` is an ndarray view
+        over the caller's memory if that memory is host accessible
+        (``MemorySpace.Host``, ``HostPinned``, ``Unified``). For
+        ``MemorySpace.Device`` it is a
+        :class:`hydrocouple.dlpack.BufferView`: an object with
+        ``shape``, ``data_kind`` and the DLPack protocol, so that
+        ``torch.from_dlpack(destination)`` (or CuPy's, or JAX's) yields a
+        tensor aliasing the caller's device memory. Either view is valid
+        only for the duration of the call.
 
         :returns: ``(ok, message)``.
         """

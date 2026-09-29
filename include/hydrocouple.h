@@ -167,7 +167,8 @@ namespace HydroCouple
     Checkpointing,        //!< Component implements ICheckpointableModelComponent.
     Cloneable,            //!< Component implements ICloneableModelComponent.
     UserInterface,        //!< Component implements IUIProvider.
-    Licensing             //!< Component implements ILicensedComponent.
+    Licensing,            //!< Component implements ILicensedComponent.
+    Differentiable        //!< Component implements IDifferentiableModelComponent.
   };
 
   /*!
@@ -1047,6 +1048,128 @@ namespace HydroCouple
      * \returns True on success.
      */
     [[nodiscard]] virtual bool restoreState(const std::string &token, std::string &message) = 0;
+  };
+
+  /*!
+   * \brief DifferentialRole says which side of a component's step a derivative buffer
+   * belongs to.
+   * \details A step maps (StateBefore, Input, Argument) to (StateAfter, Output). The
+   * same state item appears on both sides, which is why the role is carried explicitly
+   * rather than inferred from the item's type.
+   */
+  enum class DifferentialRole : uint8_t
+  {
+    Input = 0,   //!< An IInput of the component, as consumed by the step.
+    Argument,    //!< An IArgument of the component (a parameter of the step).
+    Output,      //!< An IOutput of the component, as produced by the step.
+    StateBefore, //!< A state item's value at the start of the step.
+    StateAfter   //!< The same state item's value at the end of the step.
+  };
+
+  /*!
+   * \brief DifferentialEntry pairs one data item, in one role, with a buffer holding its
+   * tangent (forward mode) or cotangent (reverse mode).
+   * \details A plain aggregate, like BufferDescriptor, so that a C-ABI shim can carry it.
+   * The buffer always spans the item's whole index space: value.shape equals the
+   * item's shape() and value.kind equals its dataKind(), which must be Float32 or
+   * Float64. The caller owns the memory; the memory-space rules are those of the data
+   * plane (a component that cannot service a space returns false with a message).
+   */
+  struct DifferentialEntry
+  {
+    const IComponentDataItem *item = nullptr; //!< The item this derivative belongs to.
+    DifferentialRole role = DifferentialRole::Input; //!< Which side of the step.
+    BufferDescriptor value;                   //!< The tangent or cotangent buffer.
+  };
+
+  /*!
+   * \brief DifferentialSet is a non-owning view of DifferentialEntry records.
+   */
+  using DifferentialSet = std::span<const DifferentialEntry>;
+
+  /*!
+   * \brief IDifferentiableModelComponent is a model component that can report the
+   * derivative of its most recent step.
+   *
+   * \details The contract, not the method. How a component obtains its derivative --
+   * a hand-written adjoint, an operator-overloading tool, source transformation, or a
+   * machine-learning framework's autograd -- is the component's business; the interface
+   * asks only for the products below, so that derivatives compose across components
+   * written in different languages, across shared-library and process boundaries, and
+   * under any orchestrator (a C++ engine, or a framework's own autograd driving the
+   * components from Python).
+   *
+   * \details The step. update() maps the state the component held before it, the values
+   * of its inputs and the values of its arguments to the state it holds after it and the
+   * values of its outputs. The items that make up the state are listed by
+   * differentiableStates(); they are ordinary data items (the data plane reads them), so
+   * a state cotangent has a shape and a kind like any other buffer and can be carried
+   * from one step to the previous one by whoever is composing the derivative. That is
+   * what lets a gradient flow through time inside a component.
+   *
+   * \details The linearization point is the most recent update(). vjp() and jvp()
+   * describe that step and do not change the component's state. To differentiate an
+   * earlier step, the orchestrator restores the state before it (e.g. through
+   * ICheckpointableModelComponent), re-supplies that step's inputs and arguments, and
+   * calls update() again.
+   *
+   * \details Buffers. Results are written, not accumulated: every buffer in `results`
+   * is overwritten in full. A seed that is absent is zero. An entry naming an item the
+   * component does not list as differentiable, or in a role that item does not have, is
+   * refused with a message.
+   *
+   * \details Declared through Capability::Differentiable.
+   */
+  class IDifferentiableModelComponent : public virtual IModelComponent
+  {
+  public:
+    /*!
+     * \brief ~IDifferentiableModelComponent destructor.
+     */
+    virtual ~IDifferentiableModelComponent() = default;
+
+    /*!
+     * \brief The inputs a derivative reaches. Inputs not listed are treated as constant.
+     */
+    [[nodiscard]] virtual std::vector<IInput *> differentiableInputs() const = 0;
+
+    /*!
+     * \brief The arguments (parameters) a derivative reaches.
+     */
+    [[nodiscard]] virtual std::vector<IArgument *> differentiableArguments() const = 0;
+
+    /*!
+     * \brief The outputs whose derivative the component can report.
+     */
+    [[nodiscard]] virtual std::vector<IOutput *> differentiableOutputs() const = 0;
+
+    /*!
+     * \brief The data items that make up the state carried from one step to the next.
+     * \details Empty for a component whose step does not depend on its past.
+     */
+    [[nodiscard]] virtual std::vector<IComponentDataItem *> differentiableStates() const = 0;
+
+    /*!
+     * \brief Vector-Jacobian product of the most recent step (reverse mode).
+     * \param[in] seeds holds cotangents of Output and StateAfter entries.
+     * \param[in] results holds the buffers to overwrite with cotangents of Input,
+     * Argument and StateBefore entries.
+     * \param[out] message optionally receives a failure description.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool vjp(DifferentialSet seeds, DifferentialSet results,
+                                   std::string *message = nullptr) = 0;
+
+    /*!
+     * \brief Jacobian-vector product of the most recent step (forward mode).
+     * \param[in] seeds holds tangents of Input, Argument and StateBefore entries.
+     * \param[in] results holds the buffers to overwrite with tangents of Output and
+     * StateAfter entries.
+     * \param[out] message optionally receives a failure description.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool jvp(DifferentialSet seeds, DifferentialSet results,
+                                   std::string *message = nullptr) = 0;
   };
 
   /*!

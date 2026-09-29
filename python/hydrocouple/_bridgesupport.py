@@ -1,9 +1,11 @@
 """
 Internal support for the C++ -> Python bridge.
 
-Constructs NumPy array views over raw memory described by a C++
-``BufferDescriptor`` so that a Python component's typed data plane can be
-driven from C++ with zero element copies. Not part of the public API.
+Constructs views over raw memory described by a C++ ``BufferDescriptor``
+so that a Python component's typed data plane can be driven from C++ with
+zero element copies: NumPy arrays for memory the host can address, and
+:class:`hydrocouple.dlpack.BufferView` (a DLPack producer) for device
+memory, which NumPy must never touch. Not part of the public API.
 """
 
 from __future__ import annotations
@@ -12,7 +14,7 @@ import ctypes
 
 import numpy as np
 
-from hydrocouple.core import DataKind
+from hydrocouple.core import DataKind, MemorySpace
 from hydrocouple.helpers import DATA_KIND_TO_DTYPE
 
 
@@ -52,3 +54,20 @@ def ndarray_over(address: int, kind: int, shape, strides_bytes, writable: bool):
         arr = arr.view()
         arr.flags.writeable = False
     return arr
+
+
+def buffer_over(address: int, kind: int, shape, strides_bytes,
+                writable: bool, space: int, device_id: int):
+    """The view a Python data item receives for a C++ descriptor.
+
+    Host-accessible memory (``Host``, ``HostPinned``, ``Unified``) becomes
+    an ndarray, as it always has. ``Device`` memory becomes a
+    :class:`~hydrocouple.dlpack.BufferView`: wrapping a device pointer in
+    an ndarray would hand NumPy an address it would fault on.
+    """
+    memory_space = MemorySpace(space)
+    if memory_space == MemorySpace.Device:
+        from hydrocouple.dlpack import BufferView
+        return BufferView(address, DataKind(kind), shape, strides_bytes,
+                          memory_space, device_id, writable)
+    return ndarray_over(address, kind, shape, strides_bytes, writable)

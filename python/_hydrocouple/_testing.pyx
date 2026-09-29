@@ -89,3 +89,142 @@ def cpp_write_result(PyComponentBridge bridge, int result_index,
         <const int64_t*>s.data, <const int64_t*>c.data,
         <int32_t>s.shape[0], <const double*>vals.data, msg)
     return bool(ok), msg.decode("utf-8")
+
+
+# ---------------------------------------------------------------------------
+# Phase G0: DLPack gates
+# ---------------------------------------------------------------------------
+
+from libcpp cimport bool as cbool
+from libc.stdint cimport uintptr_t, uint64_t
+from cpython.ref cimport PyObject
+
+from _hydrocouple._core cimport CppComponentDataItemWrapper
+cimport _hydrocouple._dlpack as dl
+
+
+cdef extern from "cpp_test_harness.h" namespace "HydroCouple::Python::Testing":
+    cdef cppclass ProbeRecord:
+        uintptr_t address
+        int kind
+        int32_t rank
+        vector[int64_t] shape
+        vector[int64_t] stridesBytes
+        cbool stridesNull
+        int space
+        int32_t deviceId
+        int calls
+
+    cdef cppclass ProbeDataItem(cpp.IComponentDataItem):
+        ProbeDataItem()
+        ProbeRecord last
+        double value(int64_t i, int64_t j) const
+
+    bint callResultWithDescriptor(
+        cpp.IModelComponent* component, int resultIndex, bint read,
+        uintptr_t address, int kind, const vector[int64_t]& shape,
+        const vector[int64_t]& stridesBytes, bint stridesNull, int space,
+        int32_t deviceId, const vector[int64_t]& start,
+        const vector[int64_t]& count, string& message) except +
+
+
+cdef class Probe:
+    """Owns a native ProbeDataItem; ``item`` is the ordinary C++ wrapper
+    Python code would get from a loaded component."""
+
+    cdef ProbeDataItem* _probe
+    cdef object _item
+
+    def __cinit__(self):
+        self._probe = new ProbeDataItem()
+        self._item = CppComponentDataItemWrapper.wrap(
+            <cpp.IComponentDataItem*>self._probe)
+
+    def __dealloc__(self):
+        del self._probe
+
+    @property
+    def item(self):
+        return self._item
+
+    @property
+    def last(self) -> dict:
+        """The descriptor the probe saw on its last data-plane call."""
+        cdef ProbeRecord* r = &self._probe.last
+        return {
+            "address": int(r.address),
+            "kind": int(r.kind),
+            "rank": int(r.rank),
+            "shape": tuple(r.shape[i] for i in range(r.shape.size())),
+            "strides_bytes": (None if r.stridesNull else tuple(
+                r.stridesBytes[i] for i in range(r.stridesBytes.size()))),
+            "space": int(r.space),
+            "device_id": int(r.deviceId),
+            "calls": int(r.calls),
+        }
+
+    def values(self):
+        """The probe's own storage, copied out through C++ (not the data
+        plane under test)."""
+        out = np.empty((3, 4), dtype=np.float64)
+        for i in range(3):
+            for j in range(4):
+                out[i, j] = self._probe.value(i, j)
+        return out
+
+
+def cpp_call_result(PyComponentBridge bridge, int result_index, bint read,
+                    uintptr_t address, int kind, shape, strides_bytes,
+                    int space, int device_id, start, count):
+    """Call a Python result item from C++ with a raw descriptor.
+
+    ``strides_bytes=None`` passes a null stride pointer. Nothing here
+    dereferences ``address``; only the Python item might.
+    :returns: ``(ok, message)``.
+    """
+    cdef vector[int64_t] sh, st, s0, c0
+    for v in shape:
+        sh.push_back(v)
+    if strides_bytes is not None:
+        for v in strides_bytes:
+            st.push_back(v)
+    for v in start:
+        s0.push_back(v)
+    for v in count:
+        c0.push_back(v)
+    cdef string msg
+    cdef bint ok = callResultWithDescriptor(
+        bridge.ptr(), result_index, read, address, kind, sh, st,
+        strides_bytes is None, space, device_id, s0, c0, msg)
+    return bool(ok), msg.decode("utf-8")
+
+
+def inspect_dlpack(producer, versioned=True) -> dict:
+    """Consume one capsule from ``producer`` and report its DLTensor.
+
+    Runs the producer's deleter before returning, as any consumer must.
+    """
+    if versioned:
+        capsule = producer.__dlpack__(max_version=(1, 3))
+    else:
+        capsule = producer.__dlpack__()
+    cdef dl.DLPackBorrow borrow
+    cdef string msg
+    if not dl.borrowCapsule(<PyObject*>capsule, borrow, msg):
+        raise BufferError(msg.decode("utf-8"))
+    cdef const dl.DLTensor* t = borrow.tensor()
+    info = {
+        "data": <uintptr_t>t.data,
+        "device": (int(t.device.device_type), int(t.device.device_id)),
+        "ndim": int(t.ndim),
+        "dtype": (int(t.dtype.code), int(t.dtype.bits), int(t.dtype.lanes)),
+        "shape": tuple(t.shape[i] for i in range(t.ndim)),
+        "strides": (None if t.strides == NULL
+                    else tuple(t.strides[i] for i in range(t.ndim))),
+        "byte_offset": int(t.byte_offset),
+        "flags": int(borrow.flags()),
+        "capsule": ("used_dltensor_versioned" if versioned
+                    else "used_dltensor"),
+    }
+    borrow.release()
+    return info

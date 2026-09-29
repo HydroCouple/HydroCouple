@@ -7,8 +7,9 @@
  *
  * The typed data plane crosses the boundary zero-copy: getValuesInto /
  * setValuesFrom wrap the C++ BufferDescriptor's memory as a NumPy array
- * view (via hydrocouple._bridgesupport.ndarray_over) and invoke the
- * Python get_values_into / set_values_from, so C++ workflows can exchange
+ * view -- or, for MemorySpace::Device, as a DLPack-producing BufferView --
+ * (via hydrocouple._bridgesupport.buffer_over) and invoke the Python
+ * get_values_into / set_values_from, so C++ workflows can exchange
  * hyperslabs with Python components without element copies.
  */
 #pragma once
@@ -108,12 +109,16 @@ class PyComponentDataItemBridge
                 Py_INCREF(Py_None);
             }
 
+            // Host-accessible memory arrives as an ndarray; Device memory
+            // as a DLPack BufferView (see _bridgesupport.buffer_over).
             PyObject *arr = PyObject_CallMethod(
-                support, "ndarray_over", "KiOOO",
+                support, "buffer_over", "KiOOOii",
                 static_cast<unsigned long long>(
                     reinterpret_cast<uintptr_t>(buffer.data)),
                 static_cast<int>(buffer.kind),
-                shape, strides, writable ? Py_True : Py_False);
+                shape, strides, writable ? Py_True : Py_False,
+                static_cast<int>(buffer.space),
+                static_cast<int>(buffer.deviceId));
             Py_DECREF(shape);
             Py_DECREF(strides);
 
@@ -147,6 +152,15 @@ class PyComponentDataItemBridge
                 Py_XDECREF(ret);
                 Py_DECREF(pyStart);
                 Py_DECREF(pyCount);
+
+                // A BufferView is lent for this call only: once it returns,
+                // the view refuses to export (a retained ndarray view cannot
+                // be revoked, but a DLPack producer can).
+                if (PyObject_HasAttrString(arr, "_invalidate"))
+                {
+                    PyObject *done = PyObject_CallMethod(arr, "_invalidate", nullptr);
+                    Py_XDECREF(done);
+                }
                 Py_DECREF(arr);
             }
             Py_DECREF(support);
