@@ -275,6 +275,15 @@ TEST(DifferentialTest, SetIsANonOwningSpan)
     EXPECT_TRUE((std::is_same_v<DifferentialSet, std::span<const DifferentialEntry>>));
 }
 
+TEST(DifferentialTest, AdaptedOutputIsAnOptionalAbstractSideInterface)
+{
+    EXPECT_TRUE(std::is_abstract_v<IDifferentiableAdaptedOutput>);
+    EXPECT_TRUE((std::is_base_of_v<IAdaptedOutput, IDifferentiableAdaptedOutput>));
+    EXPECT_TRUE(std::has_virtual_destructor_v<IDifferentiableAdaptedOutput>);
+    // An adapter is not a component: the two contracts are independent.
+    EXPECT_FALSE((std::is_base_of_v<IModelComponent, IDifferentiableAdaptedOutput>));
+}
+
 TEST(DifferentialTest, ComponentIsAnOptionalAbstractSideInterface)
 {
     EXPECT_TRUE(std::is_abstract_v<IDifferentiableModelComponent>);

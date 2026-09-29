@@ -67,6 +67,7 @@ def test_the_interface_compiles_with_nothing_but_itself(tmp_path):
 def test_the_differentiation_contract_is_in_the_interface():
     text = (INCLUDE_DIR / "hydrocouple.h").read_text()
     for name in ("class IDifferentiableModelComponent",
+                 "class IDifferentiableAdaptedOutput",
                  "struct DifferentialEntry",
                  "using DifferentialSet = std::span<const DifferentialEntry>",
                  "enum class DifferentialRole",

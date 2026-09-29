@@ -2088,6 +2088,66 @@ namespace HydroCouple
   };
 
   /*!
+   * \brief IDifferentiableAdaptedOutput is an adapted output that can report the
+   * derivative of its most recent refresh().
+   *
+   * \details The adapter's counterpart of IDifferentiableModelComponent, so that a
+   * derivative can cross an adapted connection (a unit conversion, a regridding, a
+   * rescaling) on its way from a consumer back to a provider. An adapter maps its
+   * adaptee's values and its own arguments to its own values. In a DifferentialEntry:
+   *  - the adapter itself appears in role Output;
+   *  - its adaptee() appears in role Input (the adapter's input side);
+   *  - its differentiableArguments() appear in role Argument.
+   *
+   * \details Buffers, seeds and results follow IDifferentiableModelComponent exactly:
+   * whole-item buffers, results written rather than accumulated, absent seeds zero,
+   * and the linearization point is the most recent refresh(). vjp() and jvp() do not
+   * change the adapter's values.
+   *
+   * \details Stateless adapters only. An adapter whose values depend on its previous
+   * refreshes (relaxation, interpolation over a recorded history) has a derivative that
+   * spans steps, which this contract cannot yet express; such an adapter must not
+   * implement this interface, and an orchestrator must treat a connection through it
+   * as non-differentiable rather than guess.
+   */
+  class IDifferentiableAdaptedOutput : public virtual IAdaptedOutput
+  {
+  public:
+    /*!
+     * \brief ~IDifferentiableAdaptedOutput destructor.
+     */
+    virtual ~IDifferentiableAdaptedOutput() = default;
+
+    /*!
+     * \brief The arguments of this adapter a derivative reaches (may be empty).
+     */
+    [[nodiscard]] virtual std::vector<IArgument *> differentiableArguments() const = 0;
+
+    /*!
+     * \brief Vector-Jacobian product of the most recent refresh().
+     * \param[in] seeds holds the cotangent of this adapter (role Output).
+     * \param[in] results holds buffers to overwrite with cotangents of the adaptee
+     * (role Input) and of arguments (role Argument).
+     * \param[out] message optionally receives a failure description.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool vjp(DifferentialSet seeds, DifferentialSet results,
+                                   std::string *message = nullptr) = 0;
+
+    /*!
+     * \brief Jacobian-vector product of the most recent refresh().
+     * \param[in] seeds holds tangents of the adaptee (role Input) and of arguments
+     * (role Argument).
+     * \param[in] results holds the buffer to overwrite with this adapter's tangent
+     * (role Output).
+     * \param[out] message optionally receives a failure description.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool jvp(DifferentialSet seeds, DifferentialSet results,
+                                   std::string *message = nullptr) = 0;
+  };
+
+  /*!
    * \brief IAdaptedOutputFactory is used to create instances of IAdaptedOutput.
    *
    * \details This class can be internal to an IModelComponent by calling

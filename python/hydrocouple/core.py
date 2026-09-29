@@ -1263,6 +1263,38 @@ class IAdaptedOutput(IOutput):
         raise NotImplementedError
 
 
+
+class IDifferentiableAdaptedOutput(IAdaptedOutput):
+    """An adapted output that can report the derivative of its most recent
+    refresh.
+
+    Mirrors C++ ``IDifferentiableAdaptedOutput``. In ``(item, role,
+    buffer)`` entries the adapter itself is ``DifferentialRole.Output``, its
+    :attr:`adaptee` is ``DifferentialRole.Input`` and its
+    :meth:`differentiable_arguments` are ``DifferentialRole.Argument``.
+    Buffer rules are those of :class:`IDifferentiableModelComponent`.
+    Stateless adapters only: one whose values depend on previous refreshes
+    must not implement this.
+    """
+
+    @abstractmethod
+    def differentiable_arguments(self) -> list["IArgument"]:
+        """Arguments of this adapter a derivative reaches."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def vjp(self, seeds: Sequence[tuple], results: Sequence[tuple]
+            ) -> tuple[bool, str]:
+        """Vector-Jacobian product of the most recent refresh."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def jvp(self, seeds: Sequence[tuple], results: Sequence[tuple]
+            ) -> tuple[bool, str]:
+        """Jacobian-vector product of the most recent refresh."""
+        raise NotImplementedError
+
+
 class IAdaptedOutputFactory(IIdentity):
     """Creates :class:`IAdaptedOutput` instances.
 
