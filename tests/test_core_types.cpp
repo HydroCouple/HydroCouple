@@ -250,8 +250,9 @@ TEST(CheckpointTest, SavedStatesCanBeReleased)
                                                             std::string &);
     Release release = &ICheckpointableModelComponent::releaseState;
     EXPECT_NE(release, nullptr);
-    // Adding a pure virtual grew the vtable: the ABI version says so.
-    EXPECT_EQ(HYDROCOUPLE_ABI_VERSION, 3);
+    // Adding a pure virtual grew the vtable: the ABI version says so
+    // (3 for releaseState(); 4 for the 2026-09-29 contract-consistency round).
+    EXPECT_GE(HYDROCOUPLE_ABI_VERSION, 3);
 }
 
 TEST(DifferentialTest, RoleValues)
@@ -378,6 +379,174 @@ TEST(StatusTransitionTest, TableIsConstexpr)
     static_assert(isValidComponentStatusTransition(CS::Created, CS::Initializing));
     static_assert(!isValidComponentStatusTransition(CS::Finished, CS::Created));
     SUCCEED();
+}
+
+// ----------------------------------------------------------------------------
+// The contradictions the 2026-09-29 review found are now legal or illegal by
+// the table, not only by the prose.
+// ----------------------------------------------------------------------------
+
+TEST(StatusTransitionTest, CheckpointingFromDoneReturnsToDone)
+{
+    // ICheckpointableModelComponent::saveState() is documented as legal from Done.
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Done, CS::Checkpointing));
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Checkpointing, CS::Done));
+    // restoreState() always lands in Updated, even from Done.
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Checkpointing, CS::Updated));
+    // It never lands anywhere earlier in the lifecycle.
+    EXPECT_FALSE(isValidComponentStatusTransition(CS::Checkpointing, CS::Initialized));
+    EXPECT_FALSE(isValidComponentStatusTransition(CS::Initialized, CS::Checkpointing));
+}
+
+TEST(StatusTransitionTest, CompositionCanBeTornDownFromAnyRestingState)
+{
+    // finish() must be reachable before prepare(): an Invalid composition, or one
+    // abandoned after validation, must not need its destructor to release resources.
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Initialized, CS::Finishing));
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Valid, CS::Finishing));
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Invalid, CS::Finishing));
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Updated, CS::Finishing));
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Done, CS::Finishing));
+    EXPECT_TRUE(isValidComponentStatusTransition(CS::Failed, CS::Finishing));
+    // ... but never from a transient state.
+    EXPECT_FALSE(isValidComponentStatusTransition(CS::Updating, CS::Finishing));
+    EXPECT_FALSE(isValidComponentStatusTransition(CS::Preparing, CS::Finishing));
+    EXPECT_FALSE(isValidComponentStatusTransition(CS::Created, CS::Finishing));
+}
+
+TEST(StatusTransitionTest, EveryStatusHasAtLeastOneExitExceptFinished)
+{
+    constexpr CS all[] = {CS::Created, CS::Initializing, CS::Initialized, CS::Validating,
+                          CS::Valid, CS::WaitingForData, CS::Invalid, CS::Preparing,
+                          CS::Updating, CS::Updated, CS::Checkpointing, CS::Done,
+                          CS::Finishing, CS::Finished, CS::Failed};
+    for (CS from : all)
+    {
+        int exits = 0;
+        for (CS to : all)
+            exits += isValidComponentStatusTransition(from, to) ? 1 : 0;
+        if (from == CS::Finished)
+            EXPECT_EQ(exits, 0);
+        else
+            EXPECT_GT(exits, 0) << "status " << static_cast<int>(from) << " is a trap";
+    }
+}
+
+using WS = IWorkflowComponent::WorkflowStatus;
+
+TEST(WorkflowTransitionTest, HappyPathIsLegal)
+{
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Created, WS::Initializing));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Initializing, WS::Initialized));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Initialized, WS::Validating));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Validating, WS::Validated));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Validated, WS::Preparing));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Preparing, WS::Prepared));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Prepared, WS::Updating));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Updating, WS::Updated));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Updated, WS::Updating));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Updating, WS::Done));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Done, WS::Finishing));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Finishing, WS::Finished));
+}
+
+TEST(WorkflowTransitionTest, PauseResumeAndStop)
+{
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Updating, WS::Paused));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Paused, WS::Updated));   // resume()
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Paused, WS::Finishing)); // abandon while paused
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Paused, WS::Updating)); // must resume() first
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Updated, WS::Paused));  // only at a sync point inside update()
+}
+
+TEST(WorkflowTransitionTest, IllegalAndTerminal)
+{
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Created, WS::Updating));
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Validated, WS::Updating));
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Finished, WS::Initializing));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Failed, WS::Initializing));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Failed, WS::Finishing));
+    static_assert(isValidWorkflowStatusTransition(WS::Created, WS::Initializing));
+}
+
+// ----------------------------------------------------------------------------
+// Element size is carried by the descriptor, so Opaque buffers have a byte extent.
+// ----------------------------------------------------------------------------
+
+TEST(BufferDescriptorTest, OpaqueBuffersHaveAByteExtent)
+{
+    struct Payload { double a; int32_t b; int32_t pad; };
+    Payload data[6]{};
+    const int64_t shape[] = {2, 3};
+    BufferDescriptor d = makeOpaqueContiguous(data, sizeof(Payload), shape);
+    EXPECT_EQ(d.kind, DataKind::Opaque);
+    EXPECT_TRUE(hasValidItemSize(d));
+    EXPECT_EQ(itemSize(d), static_cast<int64_t>(sizeof(Payload)));
+    EXPECT_EQ(contiguousByteSize(d), static_cast<int64_t>(6 * sizeof(Payload)));
+    EXPECT_TRUE(isContiguous(d));
+    const int64_t idx[] = {1, 2};
+    EXPECT_EQ(byteOffset(d, idx), static_cast<int64_t>(5 * sizeof(Payload)));
+}
+
+TEST(BufferDescriptorTest, OpaqueWithoutItemSizeIsInvalid)
+{
+    BufferDescriptor d;
+    d.kind = DataKind::Opaque;
+    EXPECT_FALSE(hasValidItemSize(d));
+    EXPECT_EQ(itemSize(d), 0);
+}
+
+TEST(BufferDescriptorTest, FixedKindsAcceptZeroOrNaturalItemSize)
+{
+    double x[4]{};
+    const int64_t shape[] = {4};
+    BufferDescriptor d = makeContiguous(x, DataKind::Float64, shape);
+    EXPECT_EQ(d.itemSizeBytes, 8);
+    EXPECT_TRUE(hasValidItemSize(d));
+    d.itemSizeBytes = 0;
+    EXPECT_TRUE(hasValidItemSize(d));
+    EXPECT_EQ(itemSize(d), 8);
+    d.itemSizeBytes = 4;
+    EXPECT_FALSE(hasValidItemSize(d));
+    BufferDescriptor u;
+    EXPECT_FALSE(hasValidItemSize(u)); // DataKind::Unknown
+}
+
+TEST(BufferDescriptorTest, DeviceAddressingFieldsDefaultToHost)
+{
+    BufferDescriptor d;
+    EXPECT_EQ(d.space, MemorySpace::Host);
+    EXPECT_EQ(d.backend, DeviceBackend::None);
+    EXPECT_EQ(d.deviceId, 0);
+    EXPECT_EQ(d.queue, nullptr);
+    EXPECT_TRUE(std::is_trivially_copyable_v<BufferDescriptor>);
+    EXPECT_TRUE(std::is_standard_layout_v<BufferDescriptor>);
+}
+
+TEST(CapabilityTest, VendorRangeIsReserved)
+{
+    EXPECT_EQ(static_cast<uint32_t>(Capability::VendorBase), 0x80000000u);
+    EXPECT_LT(static_cast<uint32_t>(Capability::LayeredData),
+              static_cast<uint32_t>(Capability::VendorBase));
+}
+
+TEST(SignalLookupTest, BothOverloadSetsAreVisibleOnMultiSignalInterfaces)
+{
+    // A component is an IPropertyChanged (ISignal<std::string>) and a status signal.
+    // Without using-declarations one set hides the other; both must resolve.
+    using StatusSlot = ISlot<const std::shared_ptr<IComponentStatusChangeEventArgs> &>;
+    using PropSlot = ISlot<std::string>;
+    struct Probe
+    {
+        static void call(IModelComponent &c, std::shared_ptr<StatusSlot> a, std::shared_ptr<PropSlot> b)
+        {
+            c.connect(a);
+            c.connect(b);
+            c.disconnect(a);
+            c.disconnect(b);
+        }
+    };
+    EXPECT_NE(&Probe::call, nullptr);
 }
 
 // ============================================================================

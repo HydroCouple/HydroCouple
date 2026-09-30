@@ -95,6 +95,10 @@ class DummyComponent(IModelComponent):
     def results(self):
         return []
 
+    @property
+    def states(self):
+        return []
+
     def initialize(self):
         self._status = ComponentStatus.Initializing
         self._lifecycle.append("initialize")
@@ -306,6 +310,10 @@ class ConcreteTimeSpan(ITimeSpan):
     @property
     def duration(self):
         return self._dur
+
+    @property
+    def end_julian_day(self):
+        return self._jd + self._dur
 
 
 # ======================================================================

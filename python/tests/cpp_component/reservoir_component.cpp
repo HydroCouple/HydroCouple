@@ -210,6 +210,7 @@ class RecessionArgument final : public virtual IArgument, public VectorItem
 {
 public:
     explicit RecessionArgument(IModelComponent *owner) : VectorItem(owner, "k", 0.3) {}
+    [[nodiscard]] IArgument::ArgumentRole role() const override { return IArgument::ArgumentRole::Parameter; }
     [[nodiscard]] bool isOptional() const override { return true; }
     [[nodiscard]] bool isReadOnly() const override { return false; }
     [[nodiscard]] std::string toString() const override
@@ -331,6 +332,12 @@ public:
     [[nodiscard]] std::vector<IComponentDataItem *> results() const override
     {
         return {m_storage.get(), m_live.get()};
+    }
+    // The reservoir's only prognostic variable; differentiableStates() is a
+    // subset of this (here, the same set).
+    [[nodiscard]] std::vector<IComponentDataItem *> states() const override
+    {
+        return {m_storage.get()};
     }
 
     void initialize() override { m_status = ComponentStatus::Initialized; }

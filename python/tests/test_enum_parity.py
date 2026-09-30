@@ -95,21 +95,31 @@ class TestCoreEnumParity:
     def test_distance_units(self):
         _assert_parity(core.DistanceUnits, "hydrocouple.h", "DistanceUnits")
 
-    def test_area_units(self):
-        _assert_parity(core.AreaUnits, "hydrocouple.h", "AreaUnits")
+    def test_device_backend(self):
+        # C++ ``None`` is spelled ``NoBackend`` in Python; compare by value.
+        cpp_values = _parse_cpp_enum("hydrocouple.h", "DeviceBackend")
+        py_values = {m.name: m.value for m in core.DeviceBackend}
+        py_values["None"] = py_values.pop("NoBackend")
+        assert py_values == cpp_values
 
-    def test_error_severity(self):
-        _assert_parity(core.ErrorEntry.Severity, "hydrocouple.h", "Severity")
+    def test_value_kind(self):
+        _assert_parity(core.ValueKind, "hydrocouple.h", "ValueKind")
+
+    def test_dimension_role(self):
+        _assert_parity(core.DimensionRole, "hydrocouple.h", "DimensionRole")
+
+    def test_argument_role(self):
+        _assert_parity(core.ArgumentRole, "hydrocouple.h", "ArgumentRole")
 
 
 class TestSpatialEnumParity:
-    def test_mesh_data_object_type(self):
-        _assert_parity(spatial.MeshDataObjectType, "hydrocouplespatial.h",
-                       "MeshDataObjectType")
+    def test_mesh_location(self):
+        _assert_parity(spatial.MeshLocation, "hydrocouplespatial.h",
+                       "MeshLocation")
 
-    def test_network_data_object_type(self):
-        _assert_parity(spatial.NetworkDataObjectType, "hydrocouplespatial.h",
-                       "NetworkDataObjectType")
+    def test_vector_basis(self):
+        _assert_parity(spatial.VectorBasis, "hydrocouplespatial.h",
+                       "VectorBasis")
 
     def test_spatial_data_type(self):
         _assert_parity(spatial.SpatialDataType, "hydrocouplespatial.h",

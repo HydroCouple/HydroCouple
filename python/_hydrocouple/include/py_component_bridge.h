@@ -340,17 +340,18 @@ public:
         return {};
     }
 
-    [[nodiscard]] std::vector<IComponentDataItem *> results() const override
+    [[nodiscard]] std::vector<IComponentDataItem *> bridgedItems(const char *attribute) const
     {
-        // Bridge each Python result data item to a real C++
-        // IComponentDataItem*. Bridges are cached by Python identity so
-        // pointers stay stable across calls.
+        // Bridge each Python data item in the named sequence attribute to a
+        // real C++ IComponentDataItem*. Bridges are cached by Python identity
+        // (one cache for results and states, which may overlap) so pointers
+        // stay stable across calls.
         PyGILState_STATE gs = PyGILState_Ensure();
         std::vector<IComponentDataItem *> out;
-        PyObject *val = PyObject_GetAttrString(m_pyobj, "results");
+        PyObject *val = PyObject_GetAttrString(m_pyobj, attribute);
         if (val)
         {
-            PyObject *seq = PySequence_Fast(val, "results must be a sequence");
+            PyObject *seq = PySequence_Fast(val, "data items must be a sequence");
             if (seq)
             {
                 Py_ssize_t n = PySequence_Fast_GET_SIZE(seq);
@@ -385,6 +386,19 @@ public:
             PyErr_Print();
         PyGILState_Release(gs);
         return out;
+    }
+
+    [[nodiscard]] std::vector<IComponentDataItem *> results() const override
+    {
+        return bridgedItems("results");
+    }
+
+    [[nodiscard]] std::vector<IComponentDataItem *> states() const override
+    {
+        // A Python component that predates states() reports none.
+        if (!PyObject_HasAttrString(m_pyobj, "states"))
+            return {};
+        return bridgedItems("states");
     }
 
     void initialize() override { pycall("initialize"); }

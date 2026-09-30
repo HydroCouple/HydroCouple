@@ -122,24 +122,29 @@ TEST(WorkflowStatusTest, IsEnumClass)
 
 using namespace HydroCouple::Spatial;
 
-TEST(MeshDataObjectTypeTest, IsEnumClass)
+TEST(MeshLocationTest, IsEnumClass)
 {
-    EXPECT_TRUE(std::is_enum_v<MeshDataObjectType>);
-    EXPECT_FALSE((std::is_convertible_v<MeshDataObjectType, int>));
+    EXPECT_TRUE(std::is_enum_v<MeshLocation>);
+    EXPECT_FALSE((std::is_convertible_v<MeshLocation, int>));
+    EXPECT_TRUE((std::is_same_v<std::underlying_type_t<MeshLocation>, uint8_t>));
 }
 
-TEST(MeshDataObjectTypeTest, Values)
+TEST(MeshLocationTest, ValuesFollowUGRIDLocations)
 {
-    EXPECT_EQ(static_cast<int>(MeshDataObjectType::Cell), 0);
-    EXPECT_EQ(static_cast<int>(MeshDataObjectType::Vertex), 1);
-    EXPECT_EQ(static_cast<int>(MeshDataObjectType::Edge), 2);
-    EXPECT_EQ(static_cast<int>(MeshDataObjectType::Face), 3);
+    EXPECT_EQ(static_cast<int>(MeshLocation::Node), 0);
+    EXPECT_EQ(static_cast<int>(MeshLocation::Edge), 1);
+    EXPECT_EQ(static_cast<int>(MeshLocation::Face), 2);
+    EXPECT_EQ(static_cast<int>(MeshLocation::Volume), 3);
 }
 
-TEST(NetworkDataObjectTypeTest, IsEnumClass)
+TEST(VectorBasisTest, Values)
 {
-    EXPECT_TRUE(std::is_enum_v<NetworkDataObjectType>);
-    EXPECT_FALSE((std::is_convertible_v<NetworkDataObjectType, int>));
+    EXPECT_TRUE(std::is_enum_v<VectorBasis>);
+    EXPECT_EQ(static_cast<int>(VectorBasis::Unknown), 0);
+    EXPECT_EQ(static_cast<int>(VectorBasis::Cartesian), 1);
+    EXPECT_EQ(static_cast<int>(VectorBasis::EastNorthUp), 2);
+    EXPECT_EQ(static_cast<int>(VectorBasis::NormalTangential), 3);
+    EXPECT_EQ(static_cast<int>(VectorBasis::AlongEntity), 4);
 }
 
 TEST(MeshDataTypeTest, IsEnumClass)
@@ -339,23 +344,6 @@ TEST(FundamentalUnitDimensionTest, IsEnumClass)
 }
 
 // ============================================================================
-// IUnit::DistanceUnitType enum tests
-// ============================================================================
-
-TEST(DistanceUnitTypeTest, EnumValues)
-{
-    EXPECT_EQ(static_cast<int>(IUnit::DistanceUnitType::Standard), 0);
-    EXPECT_EQ(static_cast<int>(IUnit::DistanceUnitType::Geographic), 1);
-    EXPECT_EQ(static_cast<int>(IUnit::DistanceUnitType::Unknown), 2);
-}
-
-TEST(DistanceUnitTypeTest, IsEnumClass)
-{
-    EXPECT_TRUE(std::is_enum_v<IUnit::DistanceUnitType>);
-    EXPECT_FALSE((std::is_convertible_v<IUnit::DistanceUnitType, int>));
-}
-
-// ============================================================================
 // IUnit::DistanceUnits enum tests
 // ============================================================================
 
@@ -381,31 +369,6 @@ TEST(DistanceUnitsTest, IsEnumClass)
 }
 
 // ============================================================================
-// IUnit::AreaUnits enum tests
-// ============================================================================
-
-TEST(AreaUnitsTest, EnumValues)
-{
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareMeters), 0);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareKilometers), 1);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareFeet), 2);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareYards), 3);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareMiles), 4);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::Hectares), 5);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::Acres), 6);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareNauticalMiles), 7);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareDegrees), 8);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareCentimeters), 9);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareMillimeters), 10);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::SquareInches), 11);
-    EXPECT_EQ(static_cast<int>(IUnit::AreaUnits::Unknown), 12);
-}
-
-TEST(AreaUnitsTest, IsEnumClass)
-{
-    EXPECT_TRUE(std::is_enum_v<IUnit::AreaUnits>);
-    EXPECT_FALSE((std::is_convertible_v<IUnit::AreaUnits, int>));
-}
 
 // ============================================================================
 // IGeometry::GeometryType Z/M/ZM variant enum tests
@@ -510,14 +473,6 @@ TEST(RegularGridTypeTest, IsEnumClass)
 }
 
 // ============================================================================
-// Spatial::NetworkDataObjectType enum tests
-// ============================================================================
-
-TEST(NetworkDataObjectTypeTest, Values)
-{
-    EXPECT_EQ(static_cast<int>(NetworkDataObjectType::Node), 0);
-    EXPECT_EQ(static_cast<int>(NetworkDataObjectType::Edge), 1);
-}
 
 // ============================================================================
 // IRaster::RasterDataType enum tests
@@ -561,7 +516,6 @@ TEST(InterfaceTest, AdditionalCoreInterfacesAreAbstract)
     EXPECT_TRUE(std::is_abstract_v<IUnitDimensions>);
     EXPECT_TRUE(std::is_abstract_v<IDimension>);
     EXPECT_TRUE(std::is_abstract_v<IComponentStatusChangeEventArgs>);
-    EXPECT_TRUE(std::is_abstract_v<IExchangeItemChangeEventArgs>);
     EXPECT_TRUE(std::is_abstract_v<IComponentDataItemValueChanged>);
     EXPECT_TRUE(std::is_abstract_v<ICloneableModelComponent>);
     EXPECT_TRUE(std::is_abstract_v<IAdaptedOutputFactory>);
@@ -587,7 +541,6 @@ TEST(InterfaceTest, AdditionalCoreInterfacesHaveVirtualDestructors)
     EXPECT_TRUE(std::has_virtual_destructor_v<IUnitDimensions>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IDimension>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IComponentStatusChangeEventArgs>);
-    EXPECT_TRUE(std::has_virtual_destructor_v<IExchangeItemChangeEventArgs>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IComponentDataItemValueChanged>);
     EXPECT_TRUE(std::has_virtual_destructor_v<ICloneableModelComponent>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IAdaptedOutputFactory>);

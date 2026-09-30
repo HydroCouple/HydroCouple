@@ -34,13 +34,6 @@ cdef extern from "<span>" namespace "std":
         size_t size() const
         bint empty() const
 
-# ---------------------------------------------------------------------------
-# std::type_info
-# ---------------------------------------------------------------------------
-cdef extern from "<typeinfo>" namespace "std":
-    cdef cppclass type_info:
-        const char* name() const
-
 cdef extern from "hydrocouple.h" namespace "HydroCouple":
 
     # ------------------------------------------------------------------
@@ -81,6 +74,24 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         UserInterface
         Licensing
         Differentiable
+        LayeredData
+        VendorBase
+
+    cdef enum class DeviceBackend(uint8_t):
+        NoBackend "HydroCouple::DeviceBackend::None"
+        CUDA
+        HIP
+        SYCL
+        LevelZero
+        OpenCL
+        Other
+
+    cdef enum class ValueKind(uint8_t):
+        Unknown
+        Intensive
+        Extensive
+        Flux
+        Density
 
     # ------------------------------------------------------------------
     # BufferDescriptor — plain aggregate
@@ -92,8 +103,11 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         int32_t rank
         const int64_t* shape
         const int64_t* stridesBytes
+        int64_t itemSizeBytes
         MemorySpace space
+        DeviceBackend backend
         int32_t deviceId
+        void* queue
 
     # ------------------------------------------------------------------
     # ErrorEntry
@@ -193,6 +207,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         vector[IInput*] inputs() const
         vector[IOutput*] outputs() const
         vector[IComponentDataItem*] results() const
+        vector[IComponentDataItem*] states() const
         void initialize() except +
         vector[string] validate() except +
         void prepare() except +
@@ -221,7 +236,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # ------------------------------------------------------------------
     cdef cppclass ICloneableModelComponent(IModelComponent):
         ICloneableModelComponent* parent() const
-        ICloneableModelComponent* clone(
+        unique_ptr[ICloneableModelComponent] clone(
             const unordered_map[string, string]& args)
         vector[ICloneableModelComponent*] clones() const
 
@@ -260,7 +275,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # IValueDefinition
     # ------------------------------------------------------------------
     cdef cppclass IValueDefinition(IDescription):
-        const type_info& type() const
+        ValueKind valueKind() const
         double missingValue() const
         double defaultValue() const
 
@@ -271,8 +286,22 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         Static
         Dynamic
 
+    cdef enum class IDimension_DimensionRole "HydroCouple::IDimension::DimensionRole" (uint8_t):
+        Unknown
+        Time
+        Entity
+        Layer
+        Band
+        Row
+        Column
+        Depth
+        Component
+        Realization
+        Other
+
     cdef cppclass IDimension(IIdentity):
         IDimension_LengthType lengthType() const
+        IDimension_DimensionRole role() const
 
     # ------------------------------------------------------------------
     # IQuality / IUnitDimensions / IUnit / IQuantity
@@ -292,14 +321,10 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         LuminousIntensity
         Currency
         Unitless
+        PlaneAngle
 
     cdef cppclass IUnitDimensions(IDescription):
-        double power(IUnitDimensions_FundamentalUnitDimension dimension)
-
-    cdef enum class IUnit_DistanceUnitType "HydroCouple::IUnit::DistanceUnitType":
-        Standard
-        Geographic
-        Unknown
+        double power(IUnitDimensions_FundamentalUnitDimension dimension) const
 
     cdef enum class IUnit_DistanceUnits "HydroCouple::IUnit::DistanceUnits":
         Meters
@@ -312,21 +337,6 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         Centimeters
         Millimeters
         Inches
-        Unknown
-
-    cdef enum class IUnit_AreaUnits "HydroCouple::IUnit::AreaUnits":
-        SquareMeters
-        SquareKilometers
-        SquareFeet
-        SquareYards
-        SquareMiles
-        Hectares
-        Acres
-        SquareNauticalMiles
-        SquareDegrees
-        SquareCentimeters
-        SquareMillimeters
-        SquareInches
         Unknown
 
     cdef cppclass IUnit(IDescription):
@@ -378,7 +388,15 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         URL
         MEMORY_OBJECT
 
+    cdef enum class IArgument_ArgumentRole "HydroCouple::IArgument::ArgumentRole" (uint8_t):
+        Configuration
+        Parameter
+        InitialCondition
+        Forcing
+        Geometry
+
     cdef cppclass IArgument(IComponentDataItem):
+        IArgument_ArgumentRole role() const
         bint isOptional() const
         bint isReadOnly() const
         string toString() const
@@ -394,12 +412,8 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
                        string& message) const
 
     # ------------------------------------------------------------------
-    # IExchangeItemChangeEventArgs / IExchangeItem
+    # IExchangeItem
     # ------------------------------------------------------------------
-    cdef cppclass IExchangeItemChangeEventArgs:
-        IExchangeItem* exchangeItem() const
-        string message() const
-
     cdef cppclass IExchangeItem(IComponentDataItem):
         pass
 
@@ -479,7 +493,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         Failed
 
     cdef cppclass IWorkflowComponentInfo(IComponentInfo):
-        IWorkflowComponent* createComponentInstance()
+        unique_ptr[IWorkflowComponent] createComponentInstance()
 
     cdef cppclass IWorkflowComponent(IIdentity):
         IWorkflowComponentInfo* componentInfo() const

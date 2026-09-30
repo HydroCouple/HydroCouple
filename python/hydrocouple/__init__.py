@@ -13,18 +13,20 @@ contracts.
 
 from hydrocouple.core import (
     # Enums
-    AreaUnits,
     ArgumentInputType,
+    ArgumentRole,
     ByteOrder,
     Capability,
     ComponentStatus,
     DataKind,
+    DeviceBackend,
     DifferentialRole,
+    DimensionRole,
     DistanceUnits,
-    DistanceUnitType,
     FundamentalUnitDimension,
     LengthType,
     MemorySpace,
+    ValueKind,
     WorkflowStatus,
     # Structs
     ErrorEntry,
@@ -48,7 +50,6 @@ from hydrocouple.core import (
     IDifferentiableModelComponent,
     IDimension,
     IExchangeItem,
-    IExchangeItemChangeEventArgs,
     IIdBasedComponentDataItem,
     IIdentity,
     IInput,
@@ -72,14 +73,16 @@ from hydrocouple.core import (
 __version__ = "2.0.0a1"
 
 __all__ = [
-    "AreaUnits",
     "ArgumentInputType",
+    "ArgumentRole",
     "ByteOrder",
     "Capability",
     "ComponentStatus",
     "DataKind",
+    "DeviceBackend",
+    "DimensionRole",
     "DistanceUnits",
-    "DistanceUnitType",
+    "ValueKind",
     "ErrorEntry",
     "FundamentalUnitDimension",
     "IAdaptedOutput",
@@ -99,7 +102,6 @@ __all__ = [
     "IDescription",
     "IDimension",
     "IExchangeItem",
-    "IExchangeItemChangeEventArgs",
     "IIdBasedComponentDataItem",
     "IIdentity",
     "IInput",

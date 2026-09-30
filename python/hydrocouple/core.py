@@ -99,6 +99,33 @@ class Capability(IntEnum):
     UserInterface = 5
     Licensing = 6
     Differentiable = 7
+    LayeredData = 8
+    VendorBase = 2147483648
+
+
+class DeviceBackend(IntEnum):
+    """Runtime owning a device-resident buffer; mirrors C++
+    ``HydroCouple::DeviceBackend``. Named ``NoBackend`` where C++ says
+    ``None`` because ``None`` is not a legal Python identifier."""
+
+    NoBackend = 0
+    CUDA = 1
+    HIP = 2
+    SYCL = 3
+    LevelZero = 4
+    OpenCL = 5
+    Other = 6
+
+
+class ValueKind(IntEnum):
+    """How a value behaves under regridding and aggregation; mirrors C++
+    ``HydroCouple::ValueKind``."""
+
+    Unknown = 0
+    Intensive = 1
+    Extensive = 2
+    Flux = 3
+    Density = 4
 
 
 class DifferentialRole(IntEnum):
@@ -147,6 +174,34 @@ class LengthType(IntEnum):
     Dynamic = 1
 
 
+class DimensionRole(IntEnum):
+    """What an axis of a data item's index space means; mirrors C++
+    ``IDimension::Role``."""
+
+    Unknown = 0
+    Time = 1
+    Entity = 2
+    Layer = 3
+    Band = 4
+    Row = 5
+    Column = 6
+    Depth = 7
+    Component = 8
+    Realization = 9
+    Other = 10
+
+
+class ArgumentRole(IntEnum):
+    """What an argument is to the model that owns it; mirrors C++
+    ``IArgument::Role``."""
+
+    Configuration = 0
+    Parameter = 1
+    InitialCondition = 2
+    Forcing = 3
+    Geometry = 4
+
+
 class FundamentalUnitDimension(IntEnum):
     """Fundamental unit dimensions mirroring C++
     ``IUnitDimensions::FundamentalUnitDimension``."""
@@ -160,14 +215,7 @@ class FundamentalUnitDimension(IntEnum):
     LuminousIntensity = 6
     Currency = 7
     Unitless = 8
-
-
-class DistanceUnitType(IntEnum):
-    """Distance unit type mirroring C++ ``IUnit::DistanceUnitType``."""
-
-    Standard = 0
-    Geographic = 1
-    Unknown = 2
+    PlaneAngle = 9
 
 
 class DistanceUnits(IntEnum):
@@ -184,24 +232,6 @@ class DistanceUnits(IntEnum):
     Millimeters = 8
     Inches = 9
     Unknown = 10
-
-
-class AreaUnits(IntEnum):
-    """Area units mirroring C++ ``IUnit::AreaUnits``."""
-
-    SquareMeters = 0
-    SquareKilometers = 1
-    SquareFeet = 2
-    SquareYards = 3
-    SquareMiles = 4
-    Hectares = 5
-    Acres = 6
-    SquareNauticalMiles = 7
-    SquareDegrees = 8
-    SquareCentimeters = 9
-    SquareMillimeters = 10
-    SquareInches = 11
-    Unknown = 12
 
 
 class ArgumentInputType(IntEnum):
@@ -556,6 +586,14 @@ class IModelComponent(IIdentity):
         """The model's output result data items."""
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def states(self) -> list["IComponentDataItem"]:
+        """The data items that make up the state carried from one update
+        to the next (prognostic variables). Empty for a component whose
+        update does not depend on its past."""
+        raise NotImplementedError
+
     @abstractmethod
     def initialize(self) -> None:
         """Initialize the component from its arguments."""
@@ -817,8 +855,10 @@ class IValueDefinition(IDescription):
 
     @property
     @abstractmethod
-    def type(self) -> type:
-        """The Python type of the values (mirror of C++ ``type_info``)."""
+    def value_kind(self) -> ValueKind:
+        """How values of this definition behave under regridding and
+        aggregation. ``ValueKind.Unknown`` is legal and means an adapter
+        that needs the distinction must refuse rather than assume."""
         raise NotImplementedError
 
     @property
@@ -848,6 +888,12 @@ class IDimension(IIdentity):
     @abstractmethod
     def length_type(self) -> LengthType:
         """Whether the dimension extent is static or dynamic."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def role(self) -> DimensionRole:
+        """What this axis means (time, entity, layer, ...)."""
         raise NotImplementedError
 
 
@@ -1091,6 +1137,13 @@ class IArgument(IComponentDataItem):
 
     @property
     @abstractmethod
+    def role(self) -> ArgumentRole:
+        """What this argument is to the model (configuration, parameter,
+        initial condition, forcing, geometry)."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def is_optional(self) -> bool:
         """Whether this argument is optional."""
         raise NotImplementedError
@@ -1164,25 +1217,6 @@ class IArgument(IComponentDataItem):
 # ---------------------------------------------------------------------------
 # Exchange items
 # ---------------------------------------------------------------------------
-
-
-class IExchangeItemChangeEventArgs(ABC):
-    """Payload of an exchange-item-changed signal.
-
-    Mirrors C++ ``IExchangeItemChangeEventArgs``.
-    """
-
-    @property
-    @abstractmethod
-    def exchange_item(self) -> "IExchangeItem":
-        """The exchange item that fired the signal."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def message(self) -> str:
-        """Message associated with the event."""
-        raise NotImplementedError
 
 
 class IExchangeItem(IComponentDataItem):

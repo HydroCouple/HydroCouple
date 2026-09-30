@@ -9,6 +9,7 @@ time-marching model components, and time-series component data items.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from enum import IntEnum
 from typing import TYPE_CHECKING
 
 from hydrocouple.core import (
@@ -20,6 +21,39 @@ from hydrocouple.core import (
 
 if TYPE_CHECKING:
     import numpy as np
+
+
+class TimeKind(IntEnum):
+    """What a value's time coordinate refers to; mirrors C++
+    ``Temporal::TimeKind``."""
+
+    Unknown = 0
+    Instantaneous = 1
+    IntervalMean = 2
+    IntervalMinimum = 3
+    IntervalMaximum = 4
+    Accumulated = 5
+
+
+class TimeInterpolation(IntEnum):
+    """How a provider produces a value between held instants; mirrors C++
+    ``Temporal::TimeInterpolation``."""
+
+    Unknown = 0
+    NoInterpolation = 1  # C++ ``None``; not a legal Python identifier
+    Previous = 2
+    Nearest = 3
+    Linear = 4
+
+
+class TimeExtrapolation(IntEnum):
+    """How a provider produces a value outside its held range; mirrors C++
+    ``Temporal::TimeExtrapolation``."""
+
+    Unknown = 0
+    Refuse = 1
+    HoldLast = 2
+    Linear = 3
 
 
 class IDateTime(IPropertyChanged):
@@ -62,6 +96,12 @@ class ITimeSpan(IDateTime):
         """Duration of the timespan in days."""
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def end_julian_day(self) -> float:
+        """End of the interval: ``julian_day + duration``."""
+        raise NotImplementedError
+
 
 class ITimeModelComponent(IModelComponent):
     """A model component that advances through time during simulation.
@@ -79,6 +119,13 @@ class ITimeModelComponent(IModelComponent):
     @abstractmethod
     def simulation_period(self) -> ITimeSpan:
         """The time horizon of the model."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def next_date_time_julian_day(self) -> float:
+        """The Julian day the next ``update()`` will advance
+        :attr:`current_date_time` to; never earlier than the current time."""
         raise NotImplementedError
 
 
@@ -127,6 +174,30 @@ class ITimeSeriesComponentDataItem(IComponentDataItem):
     @abstractmethod
     def time_dimension(self) -> IDimension:
         """The time dimension (dimension 0 of :attr:`shape`)."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def time_kind(self) -> TimeKind:
+        """What each value's time coordinate refers to."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def interval_length(self) -> float:
+        """Averaging/accumulation interval in days; 0 for instantaneous."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def time_interpolation(self) -> TimeInterpolation:
+        """What this item does (output) or accepts (input) between held instants."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def time_extrapolation(self) -> TimeExtrapolation:
+        """What this item does (output) or accepts (input) outside its held range."""
         raise NotImplementedError
 
 

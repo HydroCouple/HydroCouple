@@ -32,15 +32,18 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
     # ------------------------------------------------------------------
     # Enums
     # ------------------------------------------------------------------
-    cdef enum class MeshDataObjectType:
-        Cell
-        Vertex
-        Edge
-        Face
-
-    cdef enum class NetworkDataObjectType:
+    cdef enum class MeshLocation(uint8_t):
         Node
         Edge
+        Face
+        Volume
+
+    cdef enum class VectorBasis(uint8_t):
+        Unknown
+        Cartesian
+        EastNorthUp
+        NormalTangential
+        AlongEntity
 
     cdef enum class SpatialDataType:
         Scalar
@@ -86,6 +89,9 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
         int authSRID() const
         const string& authName() const
         const string& srText() const
+        const string& verticalAuthName() const
+        int verticalAuthSRID() const
+        const string& verticalSrText() const
 
     cdef cppclass IEnvelope:
         double minX() const
@@ -100,7 +106,7 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
     # ------------------------------------------------------------------
     cdef cppclass IGeometry:
         const string& id() const
-        unsigned int index() const
+        int64_t index() const
         int dimension() const
         int coordinateDimension() const
         IGeometry_GeometryType geometryType() const
@@ -122,23 +128,23 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
 
     cdef cppclass ILineString(IGeometry):
         double length() const
-        int pointCount() const
-        IPoint* point(int index) const
+        int64_t pointCount() const
+        IPoint* point(int64_t index) const
         bint isClosed() const
 
     cdef cppclass IPolygon(IGeometry):
         double area() const
         ILineString* exteriorRing() const
-        int interiorRingCount() const
+        int64_t interiorRingCount() const
 
     cdef cppclass ITriangle(IPolygon):
         IVertex* vertex1() const
         IVertex* vertex2() const
         IVertex* vertex3() const
-        IVertex* vertex(int index) const
+        IVertex* vertex(int64_t index) const
 
     cdef cppclass IEdge:
-        unsigned int index() const
+        int64_t index() const
         IVertex* orig() const
         IVertex* dest() const
         IPolygon* left() const
@@ -160,6 +166,15 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
         span_const_int64 faceNodeOffsets() const
         span_const_int64 faceNodes() const
         span_const_int64 edgeNodes() const
+        span_const_int64 faceEdgeOffsets() const
+        span_const_int64 faceEdges() const
+        span_const_int64 edgeFaces() const
+        span_const_double faceX() const
+        span_const_double faceY() const
+        span_const_double faceAreas() const
+        span_const_double edgeLengths() const
+        span_const_double edgeNormalX() const
+        span_const_double edgeNormalY() const
 
     # ------------------------------------------------------------------
     # Network / polyhedral surface / TIN
@@ -186,15 +201,15 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
     # Raster
     # ------------------------------------------------------------------
     cdef cppclass IRaster(cpp.IIdentity):
-        int xSize() const
-        int ySize() const
-        int rasterBandCount() const
+        int64_t xSize() const
+        int64_t ySize() const
+        int64_t rasterBandCount() const
         ISpatialReferenceSystem* spatialReferenceSystem() const
-        IRasterBand* getRasterBand(int bandIndex) const
+        IRasterBand* getRasterBand(int64_t bandIndex) const
 
     cdef cppclass IRasterBand(cpp.IIdentity):
-        int xSize() const
-        int ySize() const
+        int64_t xSize() const
+        int64_t ySize() const
         IRaster* raster() const
         IRaster_RasterDataType dataType() const
         double noData() const
@@ -205,28 +220,28 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
     cdef cppclass IRegularGrid2D(cpp.IIdentity):
         ISpatialReferenceSystem* spatialReferenceSystem() const
         RegularGridType gridType() const
-        int numXNodes() const
-        int numYNodes() const
-        double xNodeLocation(int xNodeIndex, int yNodeIndex) const
-        double yNodeLocation(int xNodeIndex, int yNodeIndex) const
+        int64_t numXNodes() const
+        int64_t numYNodes() const
+        double xNodeLocation(int64_t xNodeIndex, int64_t yNodeIndex) const
+        double yNodeLocation(int64_t xNodeIndex, int64_t yNodeIndex) const
         span_const_double nodeXs() const
         span_const_double nodeYs() const
-        bint isActive(int xCellIndex, int yCellIndex) const
+        bint isActive(int64_t xCellIndex, int64_t yCellIndex) const
         span_const_uint8 activeCells() const
 
     cdef cppclass IRegularGrid3D(cpp.IIdentity):
         ISpatialReferenceSystem* spatialReferenceSystem() const
         RegularGridType gridType() const
-        int numXNodes() const
-        int numYNodes() const
-        int numZNodes() const
-        double xNodeLocation(int xNodeIndex, int yNodeIndex) const
-        double yNodeLocation(int xNodeIndex, int yNodeIndex) const
-        double zNodeLocation(int xNodeIndex, int yNodeIndex, int zNodeIndex) const
+        int64_t numXNodes() const
+        int64_t numYNodes() const
+        int64_t numZNodes() const
+        double xNodeLocation(int64_t xNodeIndex, int64_t yNodeIndex) const
+        double yNodeLocation(int64_t xNodeIndex, int64_t yNodeIndex) const
+        double zNodeLocation(int64_t xNodeIndex, int64_t yNodeIndex, int64_t zNodeIndex) const
         span_const_double nodeXs() const
         span_const_double nodeYs() const
         span_const_double nodeZs() const
-        bint isActive(int xCellIndex, int yCellIndex, int zCellIndex) const
+        bint isActive(int64_t xCellIndex, int64_t yCellIndex, int64_t zCellIndex) const
         span_const_uint8 activeCells() const
 
     # ------------------------------------------------------------------
@@ -241,18 +256,17 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
 
     cdef cppclass INetworkComponentDataItem(cpp.IComponentDataItem):
         INetwork* network() const
-        NetworkDataObjectType networkDataObjectType() const
+        MeshLocation location() const
         SpatialDataType networkDataType() const
-        cpp.IDimension* edgeDimension() const
-        cpp.IDimension* vertexDimension() const
+        VectorBasis vectorBasis() const
+        cpp.IDimension* entityDimension() const
 
     cdef cppclass IPolyhedralSurfaceComponentDataItem(cpp.IComponentDataItem):
-        MeshDataObjectType meshDataObjectType() const
+        MeshLocation location() const
         SpatialDataType meshDataType() const
+        VectorBasis vectorBasis() const
         IPolyhedralSurface* polyhedralSurface() const
-        cpp.IDimension* patchDimension() const
-        cpp.IDimension* edgeDimension() const
-        cpp.IDimension* vertexDimension() const
+        cpp.IDimension* entityDimension() const
 
     cdef cppclass ITINComponentDataItem(IPolyhedralSurfaceComponentDataItem):
         ITIN* TIN() const
@@ -265,7 +279,7 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
 
     cdef cppclass IRegularGrid2DComponentDataItem(cpp.IComponentDataItem):
         IRegularGrid2D* grid() const
-        MeshDataObjectType meshDataObjectType() const
+        MeshLocation location() const
         cpp.IDimension* xCellDimension() const
         cpp.IDimension* yCellDimension() const
         cpp.IDimension* cellEdgeDimension() const
@@ -273,7 +287,7 @@ cdef extern from "hydrocouplespatial.h" namespace "HydroCouple::Spatial":
 
     cdef cppclass IRegularGrid3DComponentDataItem(cpp.IComponentDataItem):
         IRegularGrid3D* grid() const
-        MeshDataObjectType meshDataObjectType() const
+        MeshLocation location() const
         cpp.IDimension* xCellDimension() const
         cpp.IDimension* yCellDimension() const
         cpp.IDimension* zCellDimension() const

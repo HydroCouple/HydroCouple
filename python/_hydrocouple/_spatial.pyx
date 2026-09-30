@@ -473,6 +473,51 @@ cdef class CppMeshViewWrapper:
         """Node index pairs of all edges (int64, ``2 * edge_count``)."""
         return _i64_view(self._ptr.edgeNodes())
 
+    @property
+    def face_edge_offsets(self):
+        """CSR row offsets into :attr:`face_edges` (int64)."""
+        return _i64_view(self._ptr.faceEdgeOffsets())
+
+    @property
+    def face_edges(self):
+        """Concatenated edge indexes of all faces (int64)."""
+        return _i64_view(self._ptr.faceEdges())
+
+    @property
+    def edge_faces(self):
+        """Left/right face of every edge (int64, ``2 * edge_count``); -1 marks the outside."""
+        return _i64_view(self._ptr.edgeFaces())
+
+    @property
+    def face_x(self):
+        """x of every face's representative point; empty if the producer holds none."""
+        return _f64_view(self._ptr.faceX())
+
+    @property
+    def face_y(self):
+        """y of every face's representative point; empty if the producer holds none."""
+        return _f64_view(self._ptr.faceY())
+
+    @property
+    def face_areas(self):
+        """Plan area of every face; empty if the producer holds none."""
+        return _f64_view(self._ptr.faceAreas())
+
+    @property
+    def edge_lengths(self):
+        """Length of every edge; empty if the producer holds none."""
+        return _f64_view(self._ptr.edgeLengths())
+
+    @property
+    def edge_normal_x(self):
+        """x of every edge's unit normal (left face to right face); empty if not held."""
+        return _f64_view(self._ptr.edgeNormalX())
+
+    @property
+    def edge_normal_y(self):
+        """y of every edge's unit normal; empty if not held."""
+        return _f64_view(self._ptr.edgeNormalY())
+
 
 # ---------------------------------------------------------------------------
 # Network / polyhedral surface / TIN
@@ -867,14 +912,27 @@ cdef class CppNetworkComponentDataItemWrapper:
         return CppNetworkWrapper.wrap(self._ptr.network())
 
     @property
-    def edge_dimension(self):
-        """The network edge dimension."""
-        return CppDimensionWrapper.wrap(self._ptr.edgeDimension())
+    def location(self):
+        """Which network entity (Node or Edge) the values are attached to."""
+        from hydrocouple.spatial import MeshLocation
+        return MeshLocation(<int>self._ptr.location())
 
     @property
-    def vertex_dimension(self):
-        """The network vertex dimension."""
-        return CppDimensionWrapper.wrap(self._ptr.vertexDimension())
+    def network_data_type(self):
+        """Scalar, MultiScalar, Vector or Tensor."""
+        from hydrocouple.spatial import SpatialDataType
+        return SpatialDataType(<int>self._ptr.networkDataType())
+
+    @property
+    def vector_basis(self):
+        """The frame of vector/tensor values."""
+        from hydrocouple.spatial import VectorBasis
+        return VectorBasis(<int>self._ptr.vectorBasis())
+
+    @property
+    def entity_dimension(self):
+        """The entity dimension (dimension 0 of shape)."""
+        return CppDimensionWrapper.wrap(self._ptr.entityDimension())
 
 
 cdef class CppPolyhedralSurfaceComponentDataItemWrapper:
@@ -906,9 +964,27 @@ cdef class CppPolyhedralSurfaceComponentDataItemWrapper:
             self._ptr.polyhedralSurface())
 
     @property
-    def patch_dimension(self):
-        """The surface patch dimension."""
-        return CppDimensionWrapper.wrap(self._ptr.patchDimension())
+    def location(self):
+        """Which mesh entity (Node, Edge, Face or Volume) the values are attached to."""
+        from hydrocouple.spatial import MeshLocation
+        return MeshLocation(<int>self._ptr.location())
+
+    @property
+    def mesh_data_type(self):
+        """Scalar, MultiScalar, Vector or Tensor."""
+        from hydrocouple.spatial import SpatialDataType
+        return SpatialDataType(<int>self._ptr.meshDataType())
+
+    @property
+    def vector_basis(self):
+        """The frame of vector/tensor values."""
+        from hydrocouple.spatial import VectorBasis
+        return VectorBasis(<int>self._ptr.vectorBasis())
+
+    @property
+    def entity_dimension(self):
+        """The entity dimension (dimension 0 of shape)."""
+        return CppDimensionWrapper.wrap(self._ptr.entityDimension())
 
 
 cdef class CppTINComponentDataItemWrapper(

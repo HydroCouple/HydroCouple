@@ -173,6 +173,8 @@ public:
     {
         return {m_field.get()};
     }
+    // The sine field is recomputed from scratch each update: not state.
+    [[nodiscard]] std::vector<IComponentDataItem *> states() const override { return {}; }
 
     void initialize() override
     {

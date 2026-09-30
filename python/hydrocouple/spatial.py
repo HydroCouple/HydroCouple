@@ -34,26 +34,29 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 
-class MeshDataObjectType(IntEnum):
-    """Part of a mesh's geometry that data corresponds to.
+class MeshLocation(IntEnum):
+    """Which mesh or network entity a data item's values are attached to.
 
-    Mirrors C++ ``Spatial::MeshDataObjectType``.
-    """
-
-    Cell = 0
-    Vertex = 1
-    Edge = 2
-    Face = 3
-
-
-class NetworkDataObjectType(IntEnum):
-    """Part of a network that data corresponds to.
-
-    Mirrors C++ ``Spatial::NetworkDataObjectType``.
+    Mirrors C++ ``Spatial::MeshLocation``; named after UGRID's ``location``.
     """
 
     Node = 0
     Edge = 1
+    Face = 2
+    Volume = 3
+
+
+class VectorBasis(IntEnum):
+    """The frame a vector or tensor value is expressed in.
+
+    Mirrors C++ ``Spatial::VectorBasis``.
+    """
+
+    Unknown = 0
+    Cartesian = 1
+    EastNorthUp = 2
+    NormalTangential = 3
+    AlongEntity = 4
 
 
 class SpatialDataType(IntEnum):
@@ -210,7 +213,31 @@ class ISpatialReferenceSystem(ABC):
     @property
     @abstractmethod
     def distance_units(self) -> DistanceUnits:
-        """The measurement distance units of the SRS."""
+        """The measurement distance units of the horizontal axes."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def vertical_auth_name(self) -> str:
+        """Authority of the vertical reference system, or ``""`` if undeclared."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def vertical_auth_srid(self) -> int:
+        """Authority id of the vertical reference system, or 0 if undeclared."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def vertical_sr_text(self) -> str:
+        """WKT of the vertical reference system, or ``""`` if undeclared."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def vertical_distance_units(self) -> DistanceUnits:
+        """The measurement distance units of the vertical axis."""
         raise NotImplementedError
 
 
@@ -393,8 +420,8 @@ class IGeometry(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def relate(self, geom: "IGeometry") -> bool:
-        """DE-9IM relation test."""
+    def relate(self, geom: "IGeometry", intersection_pattern_matrix: str) -> bool:
+        """DE-9IM relation test against a 9-character pattern."""
         raise NotImplementedError
 
     # -- Measures and constructive operations --------------------------------
@@ -904,6 +931,60 @@ class IMeshView(ABC):
         edge ``e`` connects ``edge_nodes[2*e]`` and ``edge_nodes[2*e+1]``."""
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def face_edge_offsets(self) -> "np.ndarray":
+        """CSR row offsets into :attr:`face_edges` (int64, ``face_count + 1``)."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def face_edges(self) -> "np.ndarray":
+        """Concatenated edge indexes of all faces (int64)."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def edge_faces(self) -> "np.ndarray":
+        """Left/right face of every edge (int64, ``2 * edge_count``); -1 marks the outside."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def face_x(self) -> "np.ndarray":
+        """x of every face's representative point, or empty if not held."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def face_y(self) -> "np.ndarray":
+        """y of every face's representative point, or empty if not held."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def face_areas(self) -> "np.ndarray":
+        """Plan area of every face, or empty if not held."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def edge_lengths(self) -> "np.ndarray":
+        """Length of every edge, or empty if not held."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def edge_normal_x(self) -> "np.ndarray":
+        """x of every edge's unit normal (left face to right face), or empty if not held."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def edge_normal_y(self) -> "np.ndarray":
+        """y of every edge's unit normal, or empty if not held."""
+        raise NotImplementedError
+
 
 # ---------------------------------------------------------------------------
 # Network / polyhedral surface / TIN
@@ -1089,13 +1170,15 @@ class IRasterBand(IIdentity):
 
     @abstractmethod
     def read(self, x_offset: int, y_offset: int,
-             x_size: int, y_size: int) -> "np.ndarray":
-        """Read a block as a ``[y_size, x_size]`` array."""
+             x_size: int, y_size: int, destination: "np.ndarray") -> tuple[bool, str]:
+        """Read a window into ``destination`` (a ``[y_size, x_size]`` array of
+        the band's dtype); the same data plane as ``get_values_into``."""
         raise NotImplementedError
 
     @abstractmethod
-    def write(self, x_offset: int, y_offset: int, image: "np.ndarray") -> None:
-        """Write a ``[y_size, x_size]`` block."""
+    def write(self, x_offset: int, y_offset: int,
+              x_size: int, y_size: int, source: "np.ndarray") -> tuple[bool, str]:
+        """Write a ``[y_size, x_size]`` window from ``source``."""
         raise NotImplementedError
 
     @property
@@ -1322,26 +1405,26 @@ class INetworkComponentDataItem(IComponentDataItem):
 
     @property
     @abstractmethod
-    def network_data_object_type(self) -> NetworkDataObjectType:
-        """The kind of network object the values describe."""
+    def location(self) -> MeshLocation:
+        """Which network entity (Node or Edge) the values are attached to."""
         raise NotImplementedError
 
     @property
     @abstractmethod
     def network_data_type(self) -> SpatialDataType:
-        """The mesh entity the values are attached to."""
+        """Scalar, MultiScalar, Vector or Tensor."""
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def edge_dimension(self) -> IDimension:
-        """The network edge dimension."""
+    def vector_basis(self) -> VectorBasis:
+        """The frame of vector/tensor values."""
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def vertex_dimension(self) -> IDimension:
-        """The network vertex dimension."""
+    def entity_dimension(self) -> IDimension:
+        """The entity dimension (dimension 0 of :attr:`shape`)."""
         raise NotImplementedError
 
 
@@ -1351,19 +1434,25 @@ class IPolyhedralSurfaceComponentDataItem(IComponentDataItem):
 
     Mirrors C++ ``Spatial::IPolyhedralSurfaceComponentDataItem``. Canonical
     dimension ordering: the entity dimension selected by
-    :attr:`mesh_data_type` is dimension 0 of :attr:`shape`.
+    :attr:`location` is dimension 0 of :attr:`shape`.
     """
 
     @property
     @abstractmethod
-    def mesh_data_object_type(self) -> MeshDataObjectType:
-        """The kind of mesh object the values describe."""
+    def location(self) -> MeshLocation:
+        """Which mesh entity (Node, Edge, Face, Volume) the values are attached to."""
         raise NotImplementedError
 
     @property
     @abstractmethod
     def mesh_data_type(self) -> SpatialDataType:
-        """The mesh entity the values are attached to."""
+        """Scalar, MultiScalar, Vector or Tensor."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def vector_basis(self) -> VectorBasis:
+        """The frame of vector/tensor values."""
         raise NotImplementedError
 
     @property
@@ -1374,20 +1463,8 @@ class IPolyhedralSurfaceComponentDataItem(IComponentDataItem):
 
     @property
     @abstractmethod
-    def patch_dimension(self) -> IDimension:
-        """The surface patch dimension."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def edge_dimension(self) -> IDimension:
-        """The surface edge dimension."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def vertex_dimension(self) -> IDimension:
-        """The surface vertex dimension."""
+    def entity_dimension(self) -> IDimension:
+        """The entity dimension (dimension 0 of :attr:`shape`)."""
         raise NotImplementedError
 
 
@@ -1453,8 +1530,8 @@ class IRegularGrid2DComponentDataItem(IComponentDataItem):
 
     @property
     @abstractmethod
-    def mesh_data_object_type(self) -> MeshDataObjectType:
-        """The kind of mesh object the values describe."""
+    def location(self) -> MeshLocation:
+        """Which grid entity the values are attached to."""
         raise NotImplementedError
 
     @property
@@ -1500,8 +1577,8 @@ class IRegularGrid3DComponentDataItem(IComponentDataItem):
 
     @property
     @abstractmethod
-    def mesh_data_object_type(self) -> MeshDataObjectType:
-        """The kind of mesh object the values describe."""
+    def location(self) -> MeshLocation:
+        """Which grid entity the values are attached to."""
         raise NotImplementedError
 
     @property

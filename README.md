@@ -56,9 +56,9 @@ All interfaces use pure-virtual destructors and are designed to be implemented b
 - **Header-only, implementation-free** — zero compiled artifacts and no executable code in the interface headers; link with `HydroCouple::HydroCouple` as a CMake INTERFACE target.
 - **Typed hyperslab data plane** — all field exchange goes through `getValuesInto`/`setValuesFrom` over `BufferDescriptor` (dtype, `int64_t` shape, byte strides, memory space): zero-copy, `memcpy`-able, strided-view aware, and GPU/MPI/HDF5/NumPy compatible.
 - **Distributed-execution contracts** — `ITransport` (MPI-neutral tagged messaging), remote-component proxies with normative failure semantics, and `IPartitionedComponentDataItem` with local virtual (ghost/halo) entity representation and epoch-stamped asynchronous halo synchronization.
-- **Normative lifecycle** — 15-state component state machine with the legal transitions encoded in `Helpers::isValidComponentStatusTransition()`; `capabilities()` discovery and `errors()` diagnostic queues that cross process/ABI/language boundaries.
+- **Normative lifecycle** — 15-state component state machine and 14-state workflow state machine with the legal transitions encoded in `Helpers::isValidComponentStatusTransition()` / `isValidWorkflowStatusTransition()`; `capabilities()` discovery and `errors()` diagnostic queues that cross process/ABI/language boundaries; one stated ownership rule and one stated error channel for every interface.
 - **C++20** — `std::span`, `std::unique_ptr`, `constexpr`, and `[[nodiscard]]` throughout.
-- **ABI-versioned** — `HydroCouple::HYDROCOUPLE_ABI_VERSION = 2`.
+- **ABI-versioned** — `HydroCouple::HYDROCOUPLE_ABI_VERSION = 4`.
 - **Signal/Slot** — lightweight, type-safe observer pattern (`ISignal<Args...>` / `ISlot<Args...>`) built into the interface hierarchy, with no Qt or OpenMI dependencies.
 - **OGC + UGRID friendly** — geometry hierarchy follows the OGC Simple Features Access (SFA) specification; WKB structures match ISO 19125 binary encoding; `IMeshView` exposes UGRID-congruent structure-of-arrays mesh access.
 - **Python bindings** — a 1:1 ABC mirror of the standard plus a zero-copy Cython bridge in both directions: load compiled C++ components from Python, or hand Python components to C++ workflows (see [`python/`](python/README.md)).
@@ -278,14 +278,14 @@ The [`python/`](python/README.md) package (`hydrocouple`, PEP 440 version `2.0.0
 ```bash
 cd python
 pip install .
-python -m pytest   # 98 tests, incl. header-parsing enum-parity and interop proof
+python -m pytest   # 114 tests, incl. header-parsing enum-parity and interop proof
 ```
 
 ---
 
 ## Testing
 
-Unit tests are built when `HYDROCOUPLE_BUILD_TESTS=ON`. The test executable is `hydrocouple_tests` (140 Google Tests), linked against the `HydroCouple`, `GTest::gtest`, and `GTest::gtest_main` targets, and uses `gtest_discover_tests()` for CTest integration.
+Unit tests are built when `HYDROCOUPLE_BUILD_TESTS=ON`. The test executable is `hydrocouple_tests` (153 Google Tests), linked against the `HydroCouple`, `GTest::gtest`, and `GTest::gtest_main` targets, and uses `gtest_discover_tests()` for CTest integration.
 
 **Test file `test_core_types.cpp`** covers:
 - `DataKind` element sizes and the `DataKindOf<T>` trait mapping
@@ -312,7 +312,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-The Python bindings carry their own pytest suite (98 tests) including enum-parity checks that parse these headers directly and an end-to-end C++/Python interop proof; see [`python/README.md`](python/README.md).
+The Python bindings carry their own pytest suite (114 tests) including enum-parity checks that parse these headers directly and an end-to-end C++/Python interop proof; see [`python/README.md`](python/README.md).
 
 ---
 

@@ -173,6 +173,10 @@ class PyInteropComponent(IModelComponent):
     def results(self):
         return [self.field]
 
+    @property
+    def states(self):
+        return [self.field]
+
     def initialize(self):
         self._status = ComponentStatus.Initialized
 

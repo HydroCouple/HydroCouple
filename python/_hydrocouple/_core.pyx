@@ -454,6 +454,12 @@ cdef class CppDimensionWrapper:
         from hydrocouple.core import LengthType
         return LengthType(<int>self._ptr.lengthType())
 
+    @property
+    def role(self):
+        """What this axis means (time, entity, layer, ...)."""
+        from hydrocouple.core import DimensionRole
+        return DimensionRole(<int>self._ptr.role())
+
 
 # ---------------------------------------------------------------------------
 # CppValueDefinitionWrapper
@@ -482,6 +488,12 @@ cdef class CppValueDefinitionWrapper:
     def description(self) -> str:
         """Detailed description of this value definition."""
         return self._ptr.description().decode("utf-8")
+
+    @property
+    def value_kind(self):
+        """How values behave under regridding and aggregation."""
+        from hydrocouple.core import ValueKind
+        return ValueKind(<int>self._ptr.valueKind())
 
     @property
     def missing_value(self) -> float:
@@ -1134,6 +1146,13 @@ cdef class CppModelComponentWrapper:
         cdef vector[cpp.IComponentDataItem*] res = self._ptr.results()
         return [CppComponentDataItemWrapper.wrap(res[i])
                 for i in range(res.size())]
+
+    @property
+    def states(self) -> list:
+        """The data items that make up the state carried between updates."""
+        cdef vector[cpp.IComponentDataItem*] st = self._ptr.states()
+        return [CppComponentDataItemWrapper.wrap(st[i])
+                for i in range(st.size())]
 
     def initialize(self):
         """Initialize the component, reading arguments and setting up state."""

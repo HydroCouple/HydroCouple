@@ -71,7 +71,55 @@ namespace HydroCouple
 {
   //! ABI version for the HydroCouple interface.
   //! 3: ICheckpointableModelComponent gained releaseState() (its vtable grew).
-  constexpr int HYDROCOUPLE_ABI_VERSION = 3;
+  //! 4: contract-consistency round (2026-09-29): BufferDescriptor gained
+  //!    itemSizeBytes/backend/queue; IDimension::role(); IValueDefinition
+  //!    gained valueKind() and lost type(); IModelComponent::states();
+  //!    IArgument::role(); temporal/spatial vtables changed (see CHANGELOG).
+  constexpr int HYDROCOUPLE_ABI_VERSION = 4;
+
+  /*!
+   * \page hc_conventions Normative conventions that apply to every interface
+   *
+   * **Ownership.** A method that *returns an existing object* — an accessor,
+   * a lookup, a parent/child navigation — returns a non-owning raw pointer or
+   * reference that stays valid for the lifetime of the object it was obtained
+   * from (or until that object's documented invalidation event, e.g. "until
+   * the mesh topology changes"). A method that *creates an object* returns
+   * `std::unique_ptr` and the caller owns the result. No interface method
+   * returns a raw pointer the caller must delete. Containers of pointers
+   * (`std::vector<IInput*>`) are snapshots of non-owning observers.
+   *
+   * **Error channel.** The `errors()` diagnostic queue is the normative
+   * failure channel: it is the only one that crosses process, C-ABI and
+   * language boundaries. Every method that reports failure does so in one of
+   * two shapes, and both feed the queue:
+   *  - lifecycle methods (`initialize()`, `validate()`, `prepare()`,
+   *    `update()`, `finish()`) set `status()` to `Failed`, queue a
+   *    `Severity::Fatal` entry, and *may additionally* throw locally;
+   *    `validate()`'s returned messages are also queued (`Error` when the
+   *    component is `Invalid`, `Warning` otherwise);
+   *  - every `bool` + `message` method queues an `Error` entry whenever it
+   *    returns false.
+   * A consumer that reads only the queue therefore misses nothing.
+   *
+   * **Toolchain.** STL types (`std::string`, `std::vector`, `std::set`,
+   * `std::shared_ptr`, ...) cross the plugin boundary by value. A host and the
+   * components it loads must therefore be built with the same compiler,
+   * standard library and runtime; the standard does not define a C ABI.
+   * Cross-process and cross-language use goes through a transport
+   * (hydrocoupledistributed.h) or the Python bridge, never through a
+   * foreign-toolchain vtable. The visibility pragma below is GCC/Clang only;
+   * MSVC compares RTTI by name and needs nothing.
+   *
+   * **Threading.** `status()` on every component and workflow is safe to call
+   * from any thread at any time (implementations keep it atomic). All other
+   * thread-safety guarantees are stated on the interface that gives them.
+   *
+   * **Signals.** Classes that inherit two `ISignal<>` instantiations (a
+   * component is both an `IPropertyChanged` and a status signal) bring both
+   * `connect`/`disconnect`/`blockSignals` overload sets into scope with
+   * using-declarations, so callers never need to qualify.
+   */
 
   //! Forward declarations
   template <typename... Args>
@@ -93,9 +141,20 @@ namespace HydroCouple
 
   /*!
    * \brief DataKind identifies the element type of a typed data buffer.
-   * \details This is the type vocabulary of the data-exchange plane. String and Opaque
-   * are host-only kinds: String buffers point to arrays of std::string, Opaque buffers
-   * carry implementation-defined bytes whose meaning both endpoints must agree on.
+   * \details This is the type vocabulary of the data-exchange plane. The numeric and
+   * Boolean kinds have a fixed element size (see Helpers::dataKindSize()) and are the
+   * kinds a transport or a device can carry.
+   *
+   * \details String is a **host-only metadata kind**: a String buffer points to an array
+   * of std::string objects, whose layout is not stable across toolchains, cannot live in
+   * device memory, and cannot be serialized by an ITransport. Items may use it for
+   * labels and arguments; a transport or a device-space request presented a String
+   * buffer must refuse it with a message rather than attempt to move it.
+   *
+   * \details Opaque carries implementation-defined bytes whose *meaning* both endpoints
+   * agree on out of band. Its *size* is not out of band: an Opaque descriptor must
+   * carry BufferDescriptor::itemSizeBytes > 0, so that transports, halo exchangers and
+   * helpers can compute byte extents without knowing the meaning.
    */
   enum class DataKind : uint8_t
   {
@@ -130,6 +189,24 @@ namespace HydroCouple
   };
 
   /*!
+   * \brief DeviceBackend identifies the runtime that owns a device-resident buffer.
+   * \details Vendor-neutral in the sense that matters — no vendor *types* appear in the
+   * standard — but a device ordinal alone is ambiguous on a node that carries more
+   * than one runtime (a CUDA device 0 and a Level Zero device 0 are different memory).
+   * The backend and BufferDescriptor::deviceId together name one address space.
+   */
+  enum class DeviceBackend : uint8_t
+  {
+    None = 0,  //!< Host memory; no device runtime involved.
+    CUDA,      //!< NVIDIA CUDA runtime.
+    HIP,       //!< AMD HIP/ROCm runtime.
+    SYCL,      //!< SYCL (any implementation).
+    LevelZero, //!< Intel oneAPI Level Zero.
+    OpenCL,    //!< OpenCL.
+    Other      //!< An implementation-defined runtime both endpoints agree on.
+  };
+
+  /*!
    * \brief BufferDescriptor describes a typed, possibly strided, possibly device-resident
    * multi-dimensional array. It is the sole currency of field data exchange.
    *
@@ -139,6 +216,21 @@ namespace HydroCouple
    * its memory or its shape/stride arrays; the caller guarantees they outlive the call.
    * Dimension *semantics* (which axis is time, entity, layer, ...) are supplied by the
    * owning IComponentDataItem's dimensions() metadata, not by this struct.
+   *
+   * \details Element size. itemSizeBytes is the size of one element. For every kind
+   * with a fixed size it must equal Helpers::dataKindSize(kind) (a value of 0 is
+   * accepted as shorthand for "the kind's natural size" so that fixed-size buffers can
+   * be described without repeating it); for DataKind::Opaque it is mandatory and
+   * positive; for DataKind::String it is sizeof(std::string). Every byte-extent
+   * computation in the standard uses this field, never the kind alone.
+   *
+   * \details Device buffers. space, backend and deviceId together name the address
+   * space; queue is an opaque, backend-specific stream/queue handle (a cudaStream_t,
+   * hipStream_t or sycl::queue*) on which an implementation may enqueue the copy
+   * instead of synchronizing the device. A null queue means the default stream and a
+   * synchronous transfer. Ownership of the queue stays with the caller. A device
+   * buffer's pointer must remain valid and stable between the owning component's
+   * prepare() and finish() so that kernels may operate on it directly.
    *
    * \details This is a plain aggregate: the interface standard carries no executable
    * code. Non-normative helper functions for descriptors (element counts, contiguity
@@ -151,25 +243,37 @@ namespace HydroCouple
     int32_t        rank = 0;               //!< Number of dimensions; 0 denotes a scalar.
     const int64_t *shape = nullptr;        //!< Extent per dimension; length == rank.
     const int64_t *stridesBytes = nullptr; //!< Byte step per dimension; nullptr => C-contiguous.
+    int64_t        itemSizeBytes = 0;      //!< Size of one element; 0 => the kind's natural size (illegal for Opaque).
     MemorySpace    space = MemorySpace::Host; //!< Memory space holding the bytes.
-    int32_t        deviceId = 0;           //!< Device ordinal when space is Device/Unified.
+    DeviceBackend  backend = DeviceBackend::None; //!< Runtime owning the device memory when space is Device/Unified.
+    int32_t        deviceId = 0;           //!< Device ordinal within the backend when space is Device/Unified.
+    void          *queue = nullptr;        //!< Opaque backend stream/queue for asynchronous transfers; nullptr => default stream, synchronous.
   };
 
   /*!
    * \brief Capability identifies an optional behavior a component may support.
-   * \details Orchestrators query IModelComponent::capabilities() and branch on the
-   * result instead of chains of dynamic_cast probes.
+   * \details Orchestrators query IModelComponent::capabilities() to learn which
+   * optional *component* interfaces and data-item mixins a component offers, and
+   * dynamic_cast only to interfaces the set advertises. The set is the discovery
+   * mechanism; the cast is the access mechanism. A component must advertise every
+   * capability whose interface it (or any of its data items) implements.
+   *
+   * \details Values at or above VendorBase are reserved for vendor- or
+   * project-specific capabilities: a vendor picks values in that range, casts them to
+   * Capability, and documents them; the standard never assigns values there.
    */
   enum class Capability : uint32_t
   {
     DeviceBuffers = 0,    //!< Data items can produce/accept Device/Unified BufferDescriptors.
-    PartitionedData,      //!< Component exposes partitioned data items (see hydrocoupledistributed.h).
+    PartitionedData,      //!< Component exposes IPartitionedComponentDataItem items (see hydrocoupledistributed.h).
     DistributedExecution, //!< Component implements IDistributedModelComponent.
     Checkpointing,        //!< Component implements ICheckpointableModelComponent.
     Cloneable,            //!< Component implements ICloneableModelComponent.
     UserInterface,        //!< Component implements IUIProvider.
     Licensing,            //!< Component implements ILicensedComponent.
-    Differentiable        //!< Component implements IDifferentiableModelComponent.
+    Differentiable,       //!< Component implements IDifferentiableModelComponent.
+    LayeredData,          //!< Component exposes data items implementing Spatial::ILayering.
+    VendorBase = 2147483648 //!< First value of the vendor-reserved range (0x80000000).
   };
 
   /*!
@@ -611,7 +715,7 @@ namespace HydroCouple
 
       /*!
        * \brief The IModelComponent is preparing itself for the first
-       * IComponentDataItem::getValue() call.
+       * update() and the first IComponentDataItem::getValuesInto() call.
        * This HydroCouple::Preparing state will end in a status change
        * to HydroCouple::Updated or HydroCouple::Failed.
        *
@@ -681,12 +785,30 @@ namespace HydroCouple
     // The legal lifecycle transitions form a normative state machine. The
     // non-normative constexpr helper isValidComponentStatusTransition() in
     // hydrocouplehelpers.h encodes the transition table; implementations must not
-    // perform transitions that table rejects.
+    // perform transitions that table rejects. In summary:
+    //
+    //   Created ─► Initializing ─► Initialized ─► Validating ─► Valid ─► Preparing ─► Updated
+    //   Updated ⇄ Updating ─► Done            Updating ⇄ WaitingForData
+    //   Updated | Done ⇄ Checkpointing         (returns to the state it was entered from;
+    //                                           a successful restoreState() lands in Updated)
+    //   Initialized | Valid | Invalid | Updated | Done | Failed ─► Finishing ─► Finished | Created
+    //   Initializing | Preparing | Updating | WaitingForData | Checkpointing ─► Failed
+    //   Failed ─► Initializing            Invalid ─► Validating          Valid ─► Validating
+    //
+    // There is no separate "Prepared" status: Updated immediately after prepare()
+    // means "ready to update, nothing computed yet".
 
     /*!
      * \brief IModelComponent::~IModelComponent destructor
      */
     virtual ~IModelComponent() = default;
+
+    using IPropertyChanged::connect;
+    using IPropertyChanged::disconnect;
+    using IPropertyChanged::blockSignals;
+    using ISignal<const std::shared_ptr<IComponentStatusChangeEventArgs> &>::connect;
+    using ISignal<const std::shared_ptr<IComponentStatusChangeEventArgs> &>::disconnect;
+    using ISignal<const std::shared_ptr<IComponentStatusChangeEventArgs> &>::blockSignals;
 
     /*!
      * \brief Contains the metadata about this IModelComponent instance.
@@ -700,6 +822,9 @@ namespace HydroCouple
      * \details The first status that a component sets is ComponentStatus::Created,
      * as soon after it has been created. In this status,
      * arguments() is the only property that may be accessed.
+     * \details Thread-safety: safe to call from any thread at any time; implementations
+     * keep the status atomic. A proxy for a remote component updates it from the
+     * peer's notifications on whatever thread services the transport.
      * \returns The current ComponentStatus of this component.
      */
     [[nodiscard]] virtual ComponentStatus status() const = 0;
@@ -721,39 +846,33 @@ namespace HydroCouple
     [[nodiscard]] virtual std::vector<IArgument *> arguments() const = 0;
 
     /*!
-     * \brief The list of consumer items for which a component can recieve values.
+     * \brief The list of consumer items for which a component can receive values.
      *
-     * \details This property must be accessible after the initialize() method has been
-     * invoked and until the validate() method has been invoked. If this property
-     * is accessed before the initialize() method has been invoked or after the
-     * validate() method has been invoked and the IModelComponent cannot handle
-     * this an exception must be thrown.
+     * \details Available from the moment initialize() succeeds until finish() is
+     * called: orchestrators wire connections between Initialized and Validating, and
+     * providers read their consumers' inputs during every update(). Accessing the
+     * list before initialize() is an error (see the error-channel convention).
+     * The set of inputs is fixed after initialize(); their *values* change.
      *
-     * \returns This method basically returns references to IInputs items.
-     * There is no guarantee that the list of objects is not altered by other components
-     * after it has been returned. It is the responsibility of the IModelComponent
-     * to make sure that such possible alterations do not subsequently corrupt the IModelComponent.
+     * \returns Non-owning observers of this component's IInput items (see the
+     * ownership convention). The vector is a snapshot; the items stay valid until
+     * finish().
      */
     [[nodiscard]] virtual std::vector<IInput *> inputs() const = 0;
 
     /*!
      * \brief The list of IOutputs for which a component can produce results.
      *
-     * \details This property must be accessible after the initialize() method has been
-     * invoked and until the validate() method has been invoked. If this property
-     * is accessed before the initialize() method has been invoked or after the
-     * validate() method has been invoked and the IModelComponent cannot handle
-     * this an exception must be thrown.
+     * \details Available from the moment initialize() succeeds until finish() is
+     * called, under the same rules as inputs().
      *
      * \details The list only contains the core IOutput items of the IModelComponent, not
      * the IAdaptedOutput items derived from each IOutput. To get a complete
      * list of outputs, traverse the chain of IAdaptedOutput items that start with the
      * IOutput items returned in the list.
      *
-     * \returns This method basically returns references to IOutputs.
-     * There is no guarantee that the list of objects is not altered by other components
-     * after it has been returned. It is the responsibility of the IModelComponents
-     * to make sure that such possible alterations do not subsequently corrupt the IModelComponents.
+     * \returns Non-owning observers of this component's IOutput items; a snapshot,
+     * valid until finish().
      */
     [[nodiscard]] virtual std::vector<IOutput *> outputs() const = 0;
 
@@ -764,22 +883,37 @@ namespace HydroCouple
     [[nodiscard]] virtual std::vector<IComponentDataItem *> results() const = 0;
 
     /*!
-     * \brief Initializes the  current IModelComponent
+     * \brief The data items that make up the state carried from one update() to the next.
+     *
+     * \details The prognostic variables — what a checkpoint must capture, what a
+     * data-assimilation driver perturbs, what an ensemble generator copies, and what
+     * IDifferentiableModelComponent::differentiableStates() is a subset of. Diagnostic
+     * quantities that update() recomputes from scratch are *not* state and belong in
+     * results() or outputs(). A component whose update() does not depend on its past
+     * returns an empty vector. Items may appear here and in outputs() at once.
+     *
+     * \details Available under the same rules as inputs(): from initialize() to
+     * finish(); non-owning observers.
+     * \returns The state items, in a stable order.
+     */
+    [[nodiscard]] virtual std::vector<IComponentDataItem *> states() const = 0;
+
+    /*!
+     * \brief Initializes the current IModelComponent.
      *
      * \details The initialize() method must be invoked before any other
      * method or property in the IModelComponent interface is invoked or accessed, except
-     * for the Arguments property.
+     * for arguments(), status(), capabilities(), errors() and componentInfo().
      *
-     * \details Immediately after the method is invoked, it changes the IModelComponent's status to HydroCouple::Initializing.
-     * When the method is executed and an error occurs, the status of the component will change to HydroCouple::Failed,
-     * and an exception will be thrown. If the component initializes succesfully, the  status is changed to HydroCouple::Initialized.
+     * \details Immediately after the method is invoked, it changes the IModelComponent's
+     * status to HydroCouple::Initializing. On success the status becomes
+     * HydroCouple::Initialized and id(), caption(), description(), inputs(), outputs()
+     * and states() are populated. On failure the status becomes HydroCouple::Failed and
+     * a Severity::Fatal entry is queued (see the error-channel convention); an
+     * exception may additionally be thrown.
      *
-     * \details When the initialize() method has been finished and the status is HydroCouple::Initialized,
-     * the properties Id, Caption, Description, Inputs, Outputs, have been set,
-     * and the method validate() can be called.
-     *
-     * \details The initialize() method can be invoked as long as a component is either HydroCouple::Created
-     * HydroCouple::Failed, or HydroCouple::Initialized
+     * \details Legal from HydroCouple::Created, HydroCouple::Failed and
+     * HydroCouple::Initialized (re-initialization).
      *
      * \remarks The method will typically populate the component based on the
      * values specified in its arguments, which can be retrieved with
@@ -791,70 +925,64 @@ namespace HydroCouple
     /*!
      * \brief Validates the populated instance of the IModelComponent.
      *
-     * \details This method must be accessible after the initialize() method has been
-     * invoked and until the finish() method has been invoked. If this property
-     * is accessed before the initialize() method has been invoked or after the
-     * Finish method has been invoked and the IModelComponent cannot handle
-     * this an exception must be thrown.
-     *
-     * \details The method will and must be invoked after the various provider/consumer
-     * relations between this component's exchange items and the exchange
-     * items of other components present in the composition.
+     * \details Legal from HydroCouple::Initialized, HydroCouple::Valid and
+     * HydroCouple::Invalid — i.e. after initialize() and after the provider/consumer
+     * relations between this component's exchange items and those of other components
+     * in the composition have been established; it may be repeated after connections
+     * change.
      *
      * \details Immediately after the method is invoked, it changes the IModelComponent's
-     * status to HydroCouple::Validating.
+     * status to HydroCouple::Validating; when it has finished the status is either
+     * HydroCouple::Valid or HydroCouple::Invalid.
      *
-     * \details When the validate() method has finished, the status of the IModelComponent
-     * has changed to either Valid or HydroCouple::Invalid.
-     *
-     * \returns Returns an array of strings of length 0 if there are no messages at all.
-     * If there are messages while the component's status is ComponentStatus::Valid, the messages are purely informative.
-     * If there are messages while the component's status is ComponentStatus::Invalid,
-     * at least one of the messages indicates a fatal error.
+     * \returns An empty vector if there are no messages. Messages returned while the
+     * status is Valid are informative; while the status is Invalid at least one names
+     * a fatal problem. Every returned message is also queued on errors() —
+     * Severity::Error when Invalid, Severity::Warning when Valid — so that a proxy
+     * forwarding a remote validate() loses nothing.
      */
     [[nodiscard]] virtual std::vector<std::string> validate() = 0;
 
     /*!
-     * \brief Prepares the IModelComponent for calls to the Update method.
+     * \brief Prepares the IModelComponent for calls to the update() method.
      *
-     * \details Before prepare() is called, the IModelComponent are not required to honor
-     * any type of action that retrieves values from the IModelComponent.
-     * After prepare() is called, the IModelComponent must be ready for providing values.
+     * \details Before prepare() is called, the IModelComponent is not required to honor
+     * any request that retrieves values from it. After prepare() has succeeded it must be
+     * ready to provide values, and any device-resident buffers it exports must keep a
+     * stable address until finish().
      *
-     * \details This method must be accessible after the initialize() method has been
-     * invoked and until the finish() method has been invoked. If this property
-     * is accessed before the initialize() method has been invoked or after the
-     * finish() method has been invoked and the IModelComponent cannot handle
-     * this an exception must be thrown.
+     * \details Legal from HydroCouple::Valid only. Immediately after the method is
+     * invoked the status becomes HydroCouple::Preparing; on success it becomes
+     * HydroCouple::Updated (meaning "ready to update, nothing computed yet" — there is
+     * no separate Prepared status), on failure HydroCouple::Failed with a queued
+     * Severity::Fatal entry.
      *
-     * \details Immediately after the method is invoked, it changes the IModelComponent's status to HydroCouple::Preparing.
-     *
-     * \details When the method has finished, the status of the IModelComponent has changed to either HydroCouple::Updated or HydroCouple::Failed.
-     *
-     * \details It is only required that the prepare() method can be invoked once.
-     * If the prepare() method is invoked more that once and the IModelComponent
-     * cannot handle this an exception must be thrown.
+     * \details prepare() is invoked at most once per initialize()/finish() cycle.
      */
     virtual void prepare() = 0;
 
     /*!
      * \brief This method is called to let the component update itself, thus reaching its next state.
      *
-     * \details Immediately after this method is invoked, it changes the component's status() to HydroCouple::Updating.
+     * \details Legal from HydroCouple::Updated. Immediately after this method is invoked,
+     * it changes the component's status() to HydroCouple::Updating.
      *
-     * \details The type of actions a component takes during the Update method depends
+     * \details The type of actions a component takes during update() depends
      * on the type of component. A numerical model that progresses in time will typically
      * compute a time step. A database would typically look at the consumers of its output items,
      * and perform one or more queries to be able to provide the values that the consumers require.
-     * A GIS system would typically re-evaluate the values in a grid coverage, so that its output
+     * A GIS system would typically re-evaluate the values in a grid coverage, so that its
      * output items can provide up-to-date values.
      *
-     * \details If the Update method is performed successfully, the component sets its state to
-     * HydroCouple::Updated, unless after this update() action the
-     * component is at the end of its computation, in which case it will be set its State
-     * to HydroCouple::Done.
-     * If during the update() method a problem arises, the component sets its state to
-     * HydroCouple::Failed, and throws an exception.
+     * \details On success the component sets its status to HydroCouple::Updated, or to
+     * HydroCouple::Done when this update was the final one. A component that cannot
+     * proceed because a provider has not yet produced the values it needs may set
+     * HydroCouple::WaitingForData and return; the orchestrator is then responsible for
+     * updating the provider and calling update() again. An orchestrator that finds every
+     * component of a cycle WaitingForData must declare the composition deadlocked and
+     * fail it — no component retries on its own. On failure the status becomes
+     * HydroCouple::Failed with a queued Severity::Fatal entry; an exception may
+     * additionally be thrown.
      *
      * \param[in] requiredOutputs is an optional parameter lets the caller specify the specific
      * producer items that should be updated. If the length is 0, the component
@@ -864,16 +992,19 @@ namespace HydroCouple
     virtual void update(const std::vector<IOutput *> &requiredOutputs = {}) = 0;
 
     /*!
-     * \brief The finish() must be invoked as the last of any methods in the IModelComponent interface.
+     * \brief finish() must be invoked as the last of any methods in the IModelComponent interface.
      *
-     * \details This method must be accessible after the prepare() method has been invoked.
-     * If this method is invoked before the prepare() method has been invoked an
-     * exception must be thrown by the IModelComponent.
+     * \details Legal from HydroCouple::Initialized, HydroCouple::Valid,
+     * HydroCouple::Invalid, HydroCouple::Updated, HydroCouple::Done and
+     * HydroCouple::Failed, so that a composition can be torn down cleanly from any
+     * resting state — including one that never validated or was abandoned before
+     * prepare(). A component that has nothing to release in the earlier states simply
+     * transitions.
      *
-     * \details Immediately after the method is invoked, it changes the IModelComponent's status() to HydroCouple::Finishing.
-     * Once the finishing is completed, the component changes its status() to
-     * HydroCouple::Finished if it can not be restarted,
-     * or HydroCouple::Created if it can.
+     * \details Immediately after the method is invoked, it changes the IModelComponent's
+     * status() to HydroCouple::Finishing. Once finishing is complete, the status becomes
+     * HydroCouple::Finished if the component cannot be restarted, or HydroCouple::Created
+     * if it can.
      */
     virtual void finish() = 0;
 
@@ -891,19 +1022,25 @@ namespace HydroCouple
 
     /*!
      * \brief The set of optional capabilities this component supports.
-     * \details Orchestrators must branch on this set rather than probing with
-     * dynamic_cast chains. Components with no optional capabilities return an empty set.
+     * \details This is the discovery mechanism for every optional interface in the
+     * standard (see Capability): an orchestrator consults the set and then
+     * dynamic_casts only to what is advertised. A component must list every
+     * capability it or its data items implement. Components with no optional
+     * capabilities return an empty set. Available in every status, including Created.
      * \returns The set of supported Capability values.
      */
     [[nodiscard]] virtual std::set<Capability> capabilities() const = 0;
 
     /*!
      * \brief Drains this component's diagnostic queue.
-     * \details The error queue is the normative failure channel: implementations must
-     * queue an ErrorEntry for every Warning-or-worse condition, and must queue a
-     * Severity::Fatal entry whenever status() transitions to HydroCouple::Failed.
+     * \details The error queue is the normative failure channel (see the error-channel
+     * convention): implementations must queue an ErrorEntry for every Warning-or-worse
+     * condition, must queue a Severity::Fatal entry whenever status() transitions to
+     * HydroCouple::Failed, must queue every message validate() returns, and must queue
+     * a Severity::Error entry whenever a bool-returning method returns false.
      * Exceptions may additionally be thrown locally but do not replace the queue,
      * because they cannot cross process, C-ABI, or language boundaries.
+     * Available in every status, including Created.
      * \param[in] clearAfterRead indicates whether the queue is cleared after being read.
      * \returns The queued diagnostics in insertion order.
      */
@@ -990,7 +1127,9 @@ namespace HydroCouple
 
     /*!
      * \brief Parent ICloneableModelComponent object from which current component was cloned from.
-     * \returns The parent ICloneableModelComponent from which the current component was created.
+     * \returns Non-owning pointer to the parent, or nullptr for an original. A clone
+     * may outlive its parent; implementations must then return nullptr rather than a
+     * dangling pointer.
      */
     [[nodiscard]] virtual ICloneableModelComponent *parent() const = 0;
 
@@ -999,15 +1138,19 @@ namespace HydroCouple
      * \param[in] clone_optional_arguments are optional arguments that can be passed to the clone method. These arguments are used to
      * pass additional information to the clone method. The arguments are specific to the component being cloned;
      * values are string-encoded (numeric values in decimal form).
-     * \returns A deep clone of the current component. Configuration files and output files
+     * \returns A deep clone of the current component, owned by the caller (see the
+     * ownership convention). Configuration files and output files
      * must be written to a different location than those of the parent. Cloning can only occur after the parent component has been
-     * initialized successfully. Cloned components must also be initialized.
+     * initialized successfully. Cloned components must also be initialized. Returns
+     * nullptr, with a Severity::Error entry queued, when cloning is not possible.
      */
-    [[nodiscard]] virtual ICloneableModelComponent *clone(const std::unordered_map<std::string, std::string> &clone_optional_arguments = std::unordered_map<std::string, std::string>()) = 0;
+    [[nodiscard]] virtual std::unique_ptr<ICloneableModelComponent> clone(const std::unordered_map<std::string, std::string> &clone_optional_arguments = std::unordered_map<std::string, std::string>()) = 0;
 
     /*!
-     * \brief A vector ICloneableModelComponent instances cloned from this IModelComponent instance.
-     * \returns A vector of child components created from the current component.
+     * \brief The ICloneableModelComponent instances cloned from this instance that are still alive.
+     * \details Non-owning observers: a clone registers with its parent on creation and
+     * deregisters in its destructor, so the vector never holds a dangling pointer.
+     * \returns A snapshot of the live clones.
      */
     [[nodiscard]] virtual std::vector<ICloneableModelComponent *> clones() const = 0;
   };
@@ -1019,6 +1162,17 @@ namespace HydroCouple
    * walltime-limited HPC runs. During saveState()/restoreState() the component's
    * status is HydroCouple::Checkpointing. Components supporting this interface
    * advertise Capability::Checkpointing.
+   *
+   * \details Lifecycle. Both saveState() and restoreState() are legal when status()
+   * is HydroCouple::Updated or HydroCouple::Done. saveState() returns the component
+   * to the status it was entered from. A successful restoreState() always lands in
+   * HydroCouple::Updated — even from Done — because the restored state is, in general,
+   * not the final one. A failed call lands in HydroCouple::Failed. A restart in a fresh
+   * process therefore runs initialize(), validate(), prepare() and then restoreState():
+   * the checkpoint replaces the prepared state, it does not replace preparation.
+   *
+   * \details What a checkpoint captures is at least every item in
+   * IModelComponent::states() plus whatever private solver state update() depends on.
    */
   class ICheckpointableModelComponent : public virtual IModelComponent
   {
@@ -1033,7 +1187,8 @@ namespace HydroCouple
      * \details The component persists its state to storage of its choosing (typically
      * under referenceDirectory()) and returns an opaque token with which the state can
      * be restored later, possibly by a different process on a different machine.
-     * Callable only when status() is HydroCouple::Updated or HydroCouple::Done.
+     * Legal when status() is HydroCouple::Updated or HydroCouple::Done; on return the
+     * status is what it was before the call (or Failed).
      * \param[out] token is an opaque identifier for the saved state.
      * \param[out] message describes the failure when the return value is false.
      * \returns True on success.
@@ -1042,7 +1197,8 @@ namespace HydroCouple
 
     /*!
      * \brief Restores state previously saved by saveState().
-     * \details Callable after initialize(); on success the component behaves as if it
+     * \details Legal when status() is HydroCouple::Updated or HydroCouple::Done; on
+     * success the status is HydroCouple::Updated and the component behaves as if it
      * had computed its way to the checkpointed simulation state.
      * \param[in] token is the opaque identifier returned by saveState().
      * \param[out] message describes the failure when the return value is false.
@@ -1191,12 +1347,32 @@ namespace HydroCouple
   };
 
   /*!
+   * \brief How a value behaves when it is regridded or aggregated.
+   *
+   * Two components rarely share a mesh, so almost every exchange is resampled —
+   * and the right way to resample depends on what the number *is*. A temperature
+   * handed from a coarse cell to four fine ones is copied; a mass is divided; a
+   * flux is scaled by area. Every IValueDefinition therefore declares its kind, so
+   * that an adapter never has to be told out of band — being told out of band is
+   * how two sides end up disagreeing about what a number means.
+   */
+  enum class ValueKind : uint8_t
+  {
+    Unknown = 0,   //!< Not declared. Adapters must not guess; they should refuse or ask.
+    Intensive,     //!< Independent of extent — temperature, concentration, elevation. Averages.
+    Extensive,     //!< Proportional to extent — mass, volume, heat content. Sums.
+    Flux,          //!< Per unit area and time. Integrates over the area it crosses.
+    Density        //!< Per unit volume. Integrates over the volume it fills.
+  };
+
+  /*!
    * \brief IValueDefinition describes the type and properties of values
-   * returned by IComponentDataItem::getValue() and related methods.
+   * held by an IComponentDataItem.
    *
    * \details This interface is not meant to be implemented directly.
    * Instead, implement either IQuality or IQuantity or a
-   * custom derived value definition interface.
+   * custom derived value definition interface. The element type of the values is
+   * reported by the owning item's IComponentDataItem::dataKind(), not here.
    */
   class IValueDefinition : public virtual IDescription
   {
@@ -1207,12 +1383,11 @@ namespace HydroCouple
     virtual ~IValueDefinition() = default;
 
     /*!
-     * \brief Gets the object types of value that will be available
-     * and is returned by the GetValues function.
-     *
-     * \returns A const reference to the type_info associated with this IValueDefinition.
+     * \brief How values of this definition behave under regridding and aggregation.
+     * \details Returning ValueKind::Unknown is legal and means an adapter that needs
+     * the distinction must refuse the exchange rather than assume.
      */
-    [[nodiscard]] virtual const std::type_info &type() const = 0;
+    [[nodiscard]] virtual ValueKind valueKind() const = 0;
 
     /*!
      * \brief The value representing that data is missing.
@@ -1230,7 +1405,13 @@ namespace HydroCouple
   };
 
   /*!
-   * \brief IDimension provides the properties of the dimensions of a variable.
+   * \brief IDimension provides the properties of one axis of a data item's index space.
+   *
+   * \details Every specialization of IComponentDataItem documents a canonical dimension
+   * ordering ("time is dimension 0, the entity dimension is dimension 1, ..."). That
+   * prose is for readers; role() is the same information for programs. A generic
+   * consumer — a NetCDF writer, a partitioner, an autograd driver — asks each
+   * dimension for its role instead of knowing which specialization it holds.
    */
   class IDimension : public virtual IIdentity
   {
@@ -1252,6 +1433,24 @@ namespace HydroCouple
     };
 
     /*!
+     * \brief What an axis of the index space means.
+     */
+    enum class DimensionRole : uint8_t
+    {
+      Unknown = 0,  //!< Not declared.
+      Time,         //!< Time steps (Temporal::ITimeSeriesComponentDataItem::times()).
+      Entity,       //!< Spatial entities: geometries, mesh nodes/edges/faces, network nodes/edges, or the identifiers of an id-based item.
+      Layer,        //!< Vertical layers (Spatial::ILayering), top first.
+      Band,         //!< Raster bands.
+      Row,          //!< Raster rows / structured-grid y index.
+      Column,       //!< Raster columns / structured-grid x index.
+      Depth,        //!< Structured-grid z index (IRegularGrid3D).
+      Component,    //!< Vector or tensor components (Spatial::SpatialDataType).
+      Realization,  //!< Ensemble members.
+      Other         //!< Declared but none of the above.
+    };
+
+    /*!
      * \brief ~IDimension destructor
      */
     virtual ~IDimension() = default;
@@ -1260,6 +1459,14 @@ namespace HydroCouple
      * \brief Gets the length type of the dimension.
      */
     [[nodiscard]] virtual LengthType lengthType() const = 0;
+
+    /*!
+     * \brief What this axis means.
+     * \details Must agree with the canonical ordering documented by the owning item's
+     * specialization; an item with two axes of the same role (a matrix of
+     * entity × entity, say) reports DimensionRole::Other for the second.
+     */
+    [[nodiscard]] virtual DimensionRole role() const = 0;
   };
 
   /*!
@@ -1291,7 +1498,9 @@ namespace HydroCouple
      * \details If the quality is not ordered the vector contains the categories in an
      * unspecified order. When it is ordered the vector contains the categories in
      * their defined sequence. Category values stored in the data item are indexes
-     * into this vector.
+     * into this vector, so an item whose valueDefinition() is an IQuality must report
+     * an integer DataKind (Int8..UInt64); valueKind() is ValueKind::Intensive
+     * (categories do not sum) unless the implementation declares Unknown.
      * \returns The category labels.
      */
     [[nodiscard]] virtual std::vector<std::string> categories() const = 0;
@@ -1354,9 +1563,19 @@ namespace HydroCouple
       Currency,
 
       /*!
-       * \brief Fundamental dimension for unitless quantities.
+       * \brief Fundamental dimension for unitless quantities (all powers zero).
+       * \details Kept as a named member so that a unit can say it is dimensionless
+       * explicitly; it is not a basis dimension and power(Unitless) is always 0.
        */
       Unitless,
+
+      /*!
+       * \brief Fundamental dimension for plane angle (radian).
+       * \details Dimensionally pure in SI but carried as a basis so that angular
+       * quantities (degrees, radians, geographic coordinates) do not silently
+       * convert to unitless numbers.
+       */
+      PlaneAngle,
     };
 
     /*!
@@ -1389,7 +1608,7 @@ namespace HydroCouple
      *  * getPower( FundamentalUnitDimension::Time )
      * \returns -1
      */
-    [[nodiscard]] virtual double power(HydroCouple::IUnitDimensions::FundamentalUnitDimension dimension) = 0;
+    [[nodiscard]] virtual double power(HydroCouple::IUnitDimensions::FundamentalUnitDimension dimension) const = 0;
   };
 
   /*!
@@ -1398,16 +1617,6 @@ namespace HydroCouple
   class IUnit : public virtual IDescription
   {
   public:
-    /*!
-     * \brief HydroCouple::DistanceUnitType are the types of units that can be used to measure distance.
-     */
-    enum class DistanceUnitType
-    {
-      Standard,
-      Geographic,
-      Unknown
-    };
-
     /*!
      * \brief HydroCouple::DistanceUnits are the types of units that can be used to measure distance.
      */
@@ -1445,7 +1654,7 @@ namespace HydroCouple
       Miles,
 
       /*!
-       * \brief Degrees
+       * \brief Degrees (angular; only meaningful for geographic reference systems).
        */
       Degrees,
 
@@ -1463,78 +1672,6 @@ namespace HydroCouple
        * \brief Inches
        */
       Inches,
-
-      /*!
-       * \brief Unknown
-       */
-      Unknown
-    };
-
-    /*!
-     * \brief HydroCouple::AreaUnits are the types of units that can be used to measure area.
-     */
-    enum class AreaUnits
-    {
-
-      /*!
-       * \brief SquareMeters
-       */
-      SquareMeters,
-
-      /*!
-       * \brief SquareKilometers
-       */
-      SquareKilometers,
-
-      /*!
-       * \brief Square Feet
-       */
-      SquareFeet,
-
-      /*!
-       * \brief Square Yards
-       */
-      SquareYards,
-
-      /*!
-       * \brief Square Miles
-       */
-      SquareMiles,
-
-      /*!
-       * \brief Hectares
-       */
-      Hectares,
-
-      /*!
-       * \brief Acres
-       */
-      Acres,
-
-      /*!
-       * \brief Square Nautical Miles
-       */
-      SquareNauticalMiles,
-
-      /*!
-       * \brief Square Degrees
-       */
-      SquareDegrees,
-
-      /*!
-       * \brief Square Centimeters
-       */
-      SquareCentimeters,
-
-      /*!
-       * \brief Square Millimeters
-       */
-      SquareMillimeters,
-
-      /*!
-       * \brief Square Inches
-       */
-      SquareInches,
 
       /*!
        * \brief Unknown
@@ -1624,6 +1761,13 @@ namespace HydroCouple
      */
     virtual ~IComponentDataItem() = default;
 
+    using IPropertyChanged::connect;
+    using IPropertyChanged::disconnect;
+    using IPropertyChanged::blockSignals;
+    using ISignal<const std::shared_ptr<IComponentDataItemValueChanged> &>::connect;
+    using ISignal<const std::shared_ptr<IComponentDataItemValueChanged> &>::disconnect;
+    using ISignal<const std::shared_ptr<IComponentDataItemValueChanged> &>::blockSignals;
+
     /*!
      * \brief Gets the owner IModelComponent of this IComponentItem.
      * For an IOutput component item this is the component
@@ -1636,10 +1780,13 @@ namespace HydroCouple
     [[nodiscard]] virtual IModelComponent *modelComponent() const = 0;
 
     /*!
-     * \brief provides purely descriptive information of the dimensions associated with this IComponentItem
+     * \brief The axes of this item's index space, in storage order.
+     *
+     * \details Parallel to shape(). Each IDimension::role() names what its axis means,
+     * and the sequence must match the canonical ordering documented by this item's
+     * specialization. Non-owning observers valid for the lifetime of the item.
      *
      * \return A list of IDimension objects.
-     *
      */
     [[nodiscard]] virtual std::vector<IDimension *> dimensions() const = 0;
 
@@ -1667,12 +1814,16 @@ namespace HydroCouple
      * \brief Copies a hyperslab of this item's values into a caller-described buffer.
      * \details The selection is the box [start[k], start[k] + count[k]) in each
      * dimension k of shape(). destination.kind must equal dataKind() (no implicit
-     * conversion) and destination's element count must equal the product of count.
-     * Items that cannot service the destination's memory space return false with a
-     * message (host-only items accept MemorySpace::Host; device support is advertised
-     * component-wide via Capability::DeviceBuffers). When destination is C-contiguous
-     * and the selection is contiguous in this item's storage, implementations should
-     * degenerate to memcpy.
+     * conversion), destination.itemSizeBytes must be 0 or the kind's size (and, for
+     * Opaque, must match what this item stores), and destination's element count must
+     * equal the product of count. Items that cannot service the destination's memory
+     * space return false with a message (host-only items accept MemorySpace::Host;
+     * device support is advertised component-wide via Capability::DeviceBuffers). A
+     * non-null destination.queue lets a device-capable item enqueue the copy on that
+     * stream and return before it completes; the caller then synchronizes the stream.
+     * When destination is C-contiguous and the selection is contiguous in this item's
+     * storage, implementations should degenerate to memcpy. A false return also
+     * queues a Severity::Error entry on the owning component (error-channel convention).
      * \param[in] destination describes the buffer receiving the values.
      * \param[in] start is the first index of the selection in each dimension; its length must equal the rank of shape().
      * \param[in] count is the selection extent in each dimension; its length must equal the rank of shape().
@@ -1787,9 +1938,29 @@ namespace HydroCouple
     };
 
     /*!
+     * \brief What kind of thing an argument is to the model that owns it.
+     * \details A calibration driver perturbs Parameters and leaves Configuration alone;
+     * a data-assimilation driver perturbs InitialConditions; a scenario generator swaps
+     * Forcings. Without this distinction each of those tools invents its own tag.
+     */
+    enum class ArgumentRole : uint8_t
+    {
+      Configuration = 0, //!< How the model runs: paths, options, solver settings, output selection.
+      Parameter,         //!< A coefficient of the process equations (roughness, conductivity, rate constants).
+      InitialCondition,  //!< The state at the start of the simulation.
+      Forcing,           //!< A prescribed time-varying input that is not supplied through an IInput (a boundary time series read from file).
+      Geometry           //!< The spatial discretization itself (a mesh, a network, a raster grid).
+    };
+
+    /*!
      * \brief IArgument::~IArgument is a virtual destructor.
      */
     virtual ~IArgument() = default;
+
+    /*!
+     * \brief What this argument is to the model.
+     */
+    [[nodiscard]] virtual ArgumentRole role() const = 0;
 
     /*!
      * \brief Specifies whether the argument is optional or not.
@@ -1833,9 +2004,9 @@ namespace HydroCouple
     [[nodiscard]] virtual std::vector<const std::type_info *> validComponentDataItemTypes() const = 0;
 
     /*!
-     * \brief Boolean indicating whether this IArgument copy its values from a string.
-     * \param argType is the type of input to be read.
-     * \returns True if the argument is read from a string otherwise false.
+     * \brief Whether this argument can be initialized from, and serialized to, the given representation.
+     * \param argType is the representation to query.
+     * \returns True if initialize(value, argType, ...) and serialize(argType, ...) are supported.
      */
     [[nodiscard]] virtual bool isValidArgType(ArgumentInputType argType) const = 0;
 
@@ -1846,11 +2017,12 @@ namespace HydroCouple
     [[nodiscard]] virtual ArgumentInputType currentArgumentInputType() const = 0;
 
     /*!
-     * \brief Reads values from a JSON string.
-     * \param[in] value is a string representing values in JSON format.
-     * \param[in] argType is the type of input to be read.
-     * \param[out] message message returned from file read operation.
-     * \return boolean indicating whether file/string reading was successful
+     * \brief Reads values from a string in the given representation (a JSON/YAML/XML
+     * document, a file path, a URL, ...).
+     * \param[in] value is the string to read; for File and URL it names the source.
+     * \param[in] argType is the representation of value.
+     * \param[out] message describes the failure when the return value is false.
+     * \return True on success.
      */
     [[nodiscard]] virtual bool initialize(const std::string &value, ArgumentInputType argType, std::string &message) = 0;
 
@@ -1879,33 +2051,6 @@ namespace HydroCouple
      * \returns True on success; false if argType is unsupported (see isValidArgType()) or serialization failed.
      */
     [[nodiscard]] virtual bool serialize(ArgumentInputType argType, std::string &value, std::string &message) const = 0;
-  };
-
-  /*!
-   * \brief The IExchangeItemChangeEventArgs contains the information that will
-   * be passed when the IComponentItem fires the componentItemChanged signal.
-   *
-   * \details Sending exchange item events is optional, so it should
-   * not be used as a mechanism to build critical functionality upon.
-   *
-   */
-  class IExchangeItemChangeEventArgs
-  {
-  public:
-    /*!
-     * \brief Standard destructor.
-     */
-    virtual ~IExchangeItemChangeEventArgs() = default;
-
-    /*!
-     * \brief IExchangeItem which fired the signal.
-     */
-    [[nodiscard]] virtual IExchangeItem *exchangeItem() const = 0;
-
-    /*!
-     * \brief Gets message associated with the event.
-     */
-    [[nodiscard]] virtual std::string message() const = 0;
   };
 
   /*!
@@ -1956,13 +2101,13 @@ namespace HydroCouple
      * \brief Add a consumer to this output item. Every input item that wants to call
      *  the IOutput::updateValues() method needs to add itself as a consumer first.
      *
-     * \details If a consumer is added that can not be handled, or that is incompatible with the already
-     *  added consumers, an exception will be thrown.
+     * \details This is the single entry point for wiring a connection. The output
+     * checks consumer->canConsume(this, message); on success it records the consumer
+     * and calls consumer->setProvider(this) so both ends agree; on failure it queues a
+     * Severity::Error entry on its owning component and may throw. Orchestrators call
+     * addConsumer()/removeConsumer() only, never IInput::setProvider() directly.
      *
-     * \details The addConsumer() method must and will automatically set the consumer's
-     *  provider (see IInput::provider())
-     *
-     * \param[in] consumer that has to be added
+     * \param[in] consumer that has to be added (non-owning; the consumer's component owns it)
      *
      */
     virtual void addConsumer(IInput *consumer) = 0;
@@ -1972,9 +2117,10 @@ namespace HydroCouple
      *
      * \details If an input item is not interested any longer in calling the
      *  IOutput::updateValues() method, it should remove itself by calling removeConsumer().
+     *  On success the output calls consumer->setProvider(nullptr).
      *
      * \param[in] consumer that has to be removed
-     *
+     * \returns True if the consumer was registered and has been removed.
      */
     [[nodiscard]] virtual bool removeConsumer(IInput *consumer) = 0;
 
@@ -1995,8 +2141,14 @@ namespace HydroCouple
      * \details Every adaptedOutput that uses data from this output item,
      * needs to add itself as a consumer first.
      *
+     * \details Registration is non-owning: whoever holds the std::unique_ptr returned
+     * by IAdaptedOutputFactory::createAdaptedOutput() owns the adapter, and an
+     * adapter's destructor must call adaptee()->removeAdaptedOutput(this) so that
+     * this list never dangles.
+     *
      * \details If a adaptedOutput is added that can not be handled, or that is
-     * incompatible with the already added adaptedOutputs, an exception will be thrown
+     * incompatible with the already added adaptedOutputs, a Severity::Error entry is
+     * queued and an exception may be thrown.
      *
      * \param[in] adaptedOutput is consumer that has to be added
      *
@@ -2015,18 +2167,30 @@ namespace HydroCouple
     [[nodiscard]] virtual bool removeAdaptedOutput(IAdaptedOutput *adaptedOutput) = 0;
 
     /*!
-     * \brief Provides the values matching the value definition specified by the
-     * querySpecifier. Extensions can overwrite this base version to include
-     * more details in the query, e.g. time and space.
+     * \brief Brings this output's values up to what the querySpecifier requires.
      *
-     * \details One might expect the querySpecifier to be of the type IInput, because every input item that calls
-     * the updateValues() method needs to add itself as a consumer first.
+     * \details The query is the input itself. What it asks for is read from the
+     * input's own metadata, by the specialization the two sides share:
+     *  - **time**: if the input is a Temporal::ITimeSeriesComponentDataItem, its
+     *    times() are the instants the consumer needs values for, and its
+     *    timeInterpolation()/timeExtrapolation() say what the provider may do to
+     *    produce them; the provider (or the adapted output between them) advances
+     *    its owning component through update() until it can serve the last of them,
+     *    or sets WaitingForData when it cannot yet;
+     *  - **space**: if the input is a spatial item, its geometry/mesh/grid is the
+     *    target the values must be resolved on; a mismatch with this output's
+     *    geometry is an adapted output's job, and an unadapted mismatch fails
+     *    canConsume() at wiring time rather than here;
+     *  - **values**: the input's valueDefinition() (unit, valueKind()) is what the
+     *    values must be expressed in.
+     * A base IInput with none of these carries no query beyond "your current values".
      *
-     * \details However, the IExchangeItem suffices to specify what is required. Therefore,
-     * to have the flexibility to loosen the "always register as consumer" approach, it is chosen to provide
-     * an IExchangeItem as an argument.
+     * \details Synchronous: on return the values the consumer asked for are readable
+     * through this output's getValuesInto(). Asynchronous exchange exists only at the
+     * distributed layer (hydrocoupledistributed.h).
      *
-     * \param[in] querySpecifier The IInput specifying the required values.
+     * \param[in] querySpecifier The IInput specifying the required values. Must be a
+     * registered consumer of this output.
      */
     virtual void updateValues(const IInput *querySpecifier) = 0;
   };
@@ -2199,11 +2363,16 @@ namespace HydroCouple
      *
      * \details The adaptedProviderId used must be one of the IIdentity instances
      * returned by the getAvailableAdaptedOutputIds() method. The returned IAdaptedOutput
-     * will already be registered with the provider.
+     * is already registered with the provider (IOutput::addAdaptedOutput()); the caller
+     * owns it and must keep it alive for as long as the connection exists, and the
+     * adapter deregisters itself from its adaptee when destroyed (see
+     * IOutput::addAdaptedOutput()). Returns nullptr, with a Severity::Error entry
+     * queued on the factory's component, when the id is unknown or the adaptation is
+     * impossible.
      * \param adaptedProviderId is an identifier of the IAdaptedOutput to create.
      * \param provider IOutput to adapt.
      * \param consumer IInput to adapt the adaptee to.
-     * \returns An IAdaptedOutput.
+     * \returns An IAdaptedOutput owned by the caller, or nullptr.
      */
     [[nodiscard]] virtual std::unique_ptr<IAdaptedOutput> createAdaptedOutput(IIdentity *adaptedProviderId, IOutput *provider, IInput *consumer = nullptr) = 0;
   };
@@ -2271,9 +2440,16 @@ namespace HydroCouple
     [[nodiscard]] virtual IOutput *provider() const = 0;
 
     /*!
-     * \brief Sets the producer this consumer should get its values from.
+     * \brief Records the producer this consumer gets its values from.
      *
-     * \param provider is the IOutput that supplies the data to this IInput.
+     * \details Called by IOutput::addConsumer() (with the output) and
+     * IOutput::removeConsumer() (with nullptr) — the output is the single entry point
+     * for wiring, and orchestrators must not call this directly. An implementation
+     * may still refuse (returning false) if it holds a different provider; the output
+     * then treats the wiring as failed.
+     *
+     * \param provider is the IOutput that supplies the data to this IInput, or nullptr.
+     * \returns True if the provider was recorded.
      */
     [[nodiscard]] virtual bool setProvider(IOutput *provider) = 0;
 
@@ -2296,6 +2472,9 @@ namespace HydroCouple
      * \brief IMultiInput::~IMultiInput is a virtual destructor.
      */
     virtual ~IMultiInput() = default;
+
+    //! The two-argument overload from IInput stays visible beside the role-qualified one below.
+    using IInput::canConsume;
 
     /*!
      * \return vector of identifiers for the provides that a required by this consumer if any.
@@ -2384,10 +2563,12 @@ namespace HydroCouple
     virtual ~IWorkflowComponentInfo() = default;
 
     /*!
-     * \brief Creates a new IModelComponent instance.
-     * \returns A new instance of an IModelComponent.
+     * \brief Creates a new IWorkflowComponent instance.
+     * \returns A new instance owned by the caller, mirroring
+     * IModelComponentInfo::createComponentInstance(); a host must destroy it before
+     * unloading the library that produced it.
      */
-    [[nodiscard]] virtual IWorkflowComponent *createComponentInstance() = 0;
+    [[nodiscard]] virtual std::unique_ptr<IWorkflowComponent> createComponentInstance() = 0;
   };
 
   /*!
@@ -2436,10 +2617,25 @@ namespace HydroCouple
       Failed
     };
 
+    // The legal workflow transitions are encoded in the non-normative helper
+    // isValidWorkflowStatusTransition() in hydrocouplehelpers.h:
+    //
+    //   Created ─► Initializing ─► Initialized ─► Validating ─► Validated ─► Preparing ─► Prepared
+    //   Prepared | Updated ─► Updating ─► Updated | Paused | Done      Paused ─► Updated (resume)
+    //   Initialized | Validated | Prepared | Updated | Paused | Done | Failed ─► Finishing ─► Finished
+    //   Initializing | Validating | Preparing | Updating ─► Failed        Failed ─► Initializing
+
     /*!
      * \brief ~IWorkflowComponent destructor for IWorkflowComponent class.
      */
     virtual ~IWorkflowComponent() = default;
+
+    using IPropertyChanged::connect;
+    using IPropertyChanged::disconnect;
+    using IPropertyChanged::blockSignals;
+    using ISignal<const std::shared_ptr<IWorkflowComponentStatusChangeEventArgs> &>::connect;
+    using ISignal<const std::shared_ptr<IWorkflowComponentStatusChangeEventArgs> &>::disconnect;
+    using ISignal<const std::shared_ptr<IWorkflowComponentStatusChangeEventArgs> &>::blockSignals;
 
     /*!
      * \brief Gets the metadata information about this workflow component.
@@ -2518,8 +2714,11 @@ namespace HydroCouple
      *
      * \details The workflow completes the in-flight orchestration step, then
      * transitions to WorkflowStatus::Done instead of starting another step, so
-     * that finish() can produce a consistent final state. Safe to call from a
-     * signal handler thread; takes effect at the next synchronization point.
+     * that finish() can produce a consistent final state. Thread-safe: may be
+     * called from any thread while update() runs on another (it only sets a flag);
+     * it is not async-signal-safe, so a POSIX signal handler should set its own flag
+     * and let the driving thread call this. Takes effect at the next
+     * synchronization point.
      */
     virtual void requestStop() = 0;
 
@@ -2530,7 +2729,8 @@ namespace HydroCouple
      * transitions to WorkflowStatus::Paused instead of starting another step.
      * A paused composition is at a consistent synchronization point — the
      * natural moment to checkpoint components that implement
-     * ICheckpointableModelComponent. Resume with resume().
+     * ICheckpointableModelComponent. Resume with resume(). Same threading
+     * contract as requestStop().
      */
     virtual void requestPause() = 0;
 
@@ -2634,49 +2834,6 @@ namespace HydroCouple
      * \returns A number between 0 and 100 indicating the progress made by the workflow component.
      */
     [[nodiscard]] virtual float percentProgress() const = 0;
-  };
-
-  /*!
-   * \brief How a value behaves when it is regridded or aggregated.
-   *
-   * Two components rarely share a mesh, so almost every exchange is resampled —
-   * and the right way to resample depends on what the number *is*. A temperature
-   * handed from a coarse cell to four fine ones is copied; a mass is divided; a
-   * flux is scaled by area. Nothing in `IValueDefinition` says which, so every
-   * adapted output has had to be told out of band, and being told out of band is
-   * how two sides end up disagreeing about what a number means.
-   */
-  enum class ValueKind : uint8_t
-  {
-    Unknown = 0,   //!< Not declared. Adapters must not guess; they should refuse or ask.
-    Intensive,     //!< Independent of extent — temperature, concentration, elevation. Averages.
-    Extensive,     //!< Proportional to extent — mass, volume, heat content. Sums.
-    Flux,          //!< Per unit area and time. Integrates over the area it crosses.
-    Density        //!< Per unit volume. Integrates over the volume it fills.
-  };
-
-  /*!
-   * \brief Declares how a value regrids and aggregates.
-   *
-   * A **separate** interface rather than methods on `IValueDefinition`, and
-   * deliberately so. These headers cross a plugin boundary: components are built
-   * separately and loaded at run time, so adding a virtual to an existing
-   * interface changes a vtable that already-compiled components were built
-   * against. An optional interface discovered by `dynamic_cast` costs nothing to
-   * anyone who does not implement it and breaks nothing that already exists.
-   *
-   * Implement it on an `IValueDefinition`, or on an `IComponentDataItem` where a
-   * single definition is shared by items that behave differently.
-   */
-  class IValueSemantics
-  {
-  public:
-    virtual ~IValueSemantics() = default;
-
-    /*!
-     * \brief How this value behaves under regridding and aggregation.
-     */
-    [[nodiscard]] virtual ValueKind valueKind() const = 0;
   };
 
 }

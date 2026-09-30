@@ -43,6 +43,12 @@ class IExchangeRequest(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def cancel(self) -> bool:
+        """Ask to abandon the operation; True if it is now complete, False if
+        this transport cannot cancel and the caller must still :meth:`wait`."""
+        raise NotImplementedError
+
+    @abstractmethod
     def failed(self) -> tuple[bool, str]:
         """Whether the operation failed; returns ``(failed, message)``."""
         raise NotImplementedError
@@ -162,9 +168,8 @@ class IProxyModelComponent(IDistributedModelComponent):
 
         :returns: ``(ok, message)``.
 
-        .. note:: named ``connect_remote`` to avoid clashing with the
-           inherited signal method ``connect(slot)``; mirrors C++
-           ``connect()``.
+        Mirrors C++ ``connectToPeer()`` (renamed there for the same reason
+        this is not called ``connect``: the inherited signal method).
         """
         raise NotImplementedError
 
@@ -201,14 +206,20 @@ class IPartitionedComponentDataItem(IComponentDataItem):
     """A data item whose entity dimension is decomposed across partitions,
     with local virtual (ghost/halo) representation of remote entities.
 
-    Mirrors C++ ``Distributed::IPartitionedComponentDataItem``. The entity
-    dimension indexes locally resident entities: first the locally owned
+    Mirrors C++ ``Distributed::IPartitionedComponentDataItem``. The axis
+    :attr:`partitioned_dimension` indexes locally resident entities: first the locally owned
     entities, then the virtual entities mirrored from other partitions.
     Virtual entities carry no degrees of freedom — they are read-only
     mirrors overwritten by synchronization, never solved locally.
     Components exposing partitioned items advertise
     :attr:`~hydrocouple.core.Capability.PartitionedData`.
     """
+
+    @property
+    @abstractmethod
+    def partitioned_dimension(self) -> int:
+        """Index into :attr:`shape` of the decomposed (entity) axis."""
+        raise NotImplementedError
 
     @property
     @abstractmethod

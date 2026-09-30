@@ -54,10 +54,21 @@ namespace HydroCouple
     public:
       /*!
        * \brief IExchangeRequest::~IExchangeRequest is a virtual destructor.
-       * Destroying an incomplete request cancels it if the implementation supports
-       * cancellation, otherwise blocks until completion.
+       * \details Destroying an incomplete request always blocks until it completes —
+       * one behaviour, so that a caller who lets a request go out of scope can rely
+       * on its buffers being free afterwards. A caller that wants the other
+       * behaviour asks for it with cancel() first.
        */
       virtual ~IExchangeRequest() = default;
+
+      /*!
+       * \brief Asks the implementation to abandon the operation.
+       * \details Returns true if the request is now complete (cancelled, or it had
+       * already finished) and its buffers may be reused; false if this transport
+       * cannot cancel an in-flight operation, in which case the request is still
+       * pending and the caller must wait() as usual. Never blocks.
+       */
+      [[nodiscard]] virtual bool cancel() = 0;
 
       /*!
        * \brief Non-blocking completion test.
@@ -90,6 +101,12 @@ namespace HydroCouple
      * \details Threading contract: send/receive and their asynchronous variants are
      * safe to call from multiple threads; message ordering is guaranteed only between
      * a fixed (sender, receiver, tag) triple.
+     *
+     * \details Payload rules: a payload whose kind is DataKind::String is refused with
+     * a message (it has no wire layout); a DataKind::Opaque payload must carry
+     * itemSizeBytes. Collective operations (barrier, reductions) are deliberately not
+     * part of this interface until a composition in the ecosystem needs them from
+     * the standard rather than from its transport's native API.
      */
     class ITransport : public virtual IIdentity
     {
@@ -207,6 +224,9 @@ namespace HydroCouple
      * \details Failure semantics: if the peer dies or a request exceeds the configured
      * timeout, the proxy transitions to HydroCouple::ComponentStatus::Failed, queues a
      * Severity::Fatal ErrorEntry describing the loss, and fires its status-changed signal.
+     * The status is updated, and the signal fired, on whatever thread services the
+     * transport; status() is atomic per the threading convention, and a slot connected
+     * to the proxy must be prepared to run off the orchestrator's thread.
      */
     class IProxyModelComponent : public virtual IDistributedModelComponent
     {
@@ -231,15 +251,18 @@ namespace HydroCouple
 
       /*!
        * \brief Establishes the connection to the remote component.
+       * \details Named to stay clear of the inherited signal methods
+       * ISignal::connect()/disconnect(), which a proxy also has: a proxy is a
+       * component, and a component's status signal must remain subscribable.
        * \param[out] message describes the failure when the return value is false.
        * \returns True on success.
        */
-      [[nodiscard]] virtual bool connect(std::string &message) = 0;
+      [[nodiscard]] virtual bool connectToPeer(std::string &message) = 0;
 
       /*!
        * \brief Closes the connection to the remote component.
        */
-      virtual void disconnect() = 0;
+      virtual void disconnectFromPeer() = 0;
 
       /*!
        * \brief Checks whether the proxy currently holds a live connection.
@@ -272,9 +295,12 @@ namespace HydroCouple
      * dimension is decomposed across partitions, with local virtual (ghost/halo)
      * representation of remotely owned entities.
      *
-     * \details The item's entity dimension indexes locally *resident* entities: first
-     * the locally owned entities, then the virtual entities mirrored from other
-     * partitions. Virtual entities carry no degrees of freedom of their own — they are
+     * \details The partitioned dimension — partitionedDimension() of shape(), which is
+     * the item's DimensionRole::Entity axis (0 for a plain spatial item, 1 for a
+     * spatiotemporal one whose axis 0 is time) — indexes locally *resident* entities:
+     * first the locally owned entities, then the virtual entities mirrored from other
+     * partitions, so shape()[partitionedDimension()] == ownedGlobalIndexes().size() +
+     * virtualGlobalIndexes().size(). Virtual entities carry no degrees of freedom of their own — they are
      * read-only mirrors whose values are overwritten by synchronization, never solved
      * locally, so decomposed quantities are not double-counted. Exchanged payloads are
      * not limited to a single state scalar: coupling that requires implicit stability
@@ -293,6 +319,12 @@ namespace HydroCouple
        * \brief ~IPartitionedComponentDataItem destructor.
        */
       virtual ~IPartitionedComponentDataItem() = default;
+
+      /*!
+       * \brief Which axis of shape() is decomposed across partitions.
+       * \returns The index into shape()/dimensions() of the partitioned (entity) axis.
+       */
+      [[nodiscard]] virtual int32_t partitionedDimension() const = 0;
 
       /*!
        * \brief The global entity count across all partitions.

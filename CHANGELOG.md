@@ -2,6 +2,120 @@
 
 ## Unreleased
 
+### Contract-consistency round (breaking; ABI 4) — 2026-09-29
+
+Follows the review in `plans/hydrocouple/INTERFACE_REVIEW_2026-09-29.md`
+(§3 robustness, §4 comprehensiveness). Ontology items (§2, §5 items 5 and 13)
+are deliberately not part of this round. Every change below is one of:
+two normative statements that disagreed, a rule stated in prose but not in
+the type, or a principle the standard proclaims that a newer addition
+violated.
+
+**Conventions stated once (hydrocouple.h, `\page hc_conventions`).**
+Ownership (accessors return non-owning observers; creators return
+`std::unique_ptr`), the error channel (`errors()` is normative; lifecycle
+methods set `Failed` + queue `Fatal` and *may* throw; `validate()` messages
+are queued; every `bool`+`message` failure queues `Error`), the
+same-toolchain rule for STL types across the plugin boundary, `status()`
+thread-safety, and signal name lookup.
+
+**Lifecycle.** The component transition table now agrees with
+`ICheckpointableModelComponent`: `Checkpointing` is entered from `Updated`
+*or* `Done` and returns to the state it came from; a successful
+`restoreState()` lands in `Updated` (restore is post-`prepare()`, replacing
+the prepared state). `finish()` is legal from `Initialized`, `Valid`,
+`Invalid`, `Updated`, `Done` and `Failed`, so an `Invalid` composition can be
+torn down through the lifecycle. `WaitingForData` has iterative-coupling
+semantics (the orchestrator retries; a full cycle of waiting components is a
+deadlock). A normative workflow table, `isValidWorkflowStatusTransition()`,
+joins the component one.
+
+**Data plane.** `BufferDescriptor` gains `itemSizeBytes` (mandatory for
+`Opaque`, so transports and halo exchangers can compute byte extents),
+`backend` (`DeviceBackend`: CUDA/HIP/SYCL/LevelZero/OpenCL) and an opaque
+`queue` for asynchronous device copies. `DataKind::String` is host-only
+metadata that transports and device requests must refuse. Helpers gain
+`itemSize()`, `hasValidItemSize()`, `makeOpaqueContiguous()`; the contiguity
+and offset arithmetic use the item size.
+
+**Semantics moved onto the types they describe.** `ValueKind` is now
+`IValueDefinition::valueKind()` (the `IValueSemantics` side interface is
+gone); `TimeKind`/`intervalLength()` are on
+`ITimeSeriesComponentDataItem` together with new `timeInterpolation()` /
+`timeExtrapolation()` policies (`ITemporalSemantics` is gone, and the enums
+now live in `HydroCouple::Temporal`). `IDimension::role()` (`DimensionRole`:
+Time, Entity, Layer, Band, Row, Column, Depth, Component, Realization) makes
+the prose canonical orderings machine-checkable. `IValueDefinition::type()`
+(`std::type_info`) is removed — the element type is the item's `dataKind()`.
+
+**Entities.** One UGRID-named `Spatial::MeshLocation` (Node, Edge, Face,
+Volume) replaces `MeshDataObjectType` (which had both `Cell` and `Face`) and
+`NetworkDataObjectType`; network, polyhedral-surface and regular-grid items
+expose `location()`. `patchDimension()/edgeDimension()/vertexDimension()`
+collapse to `entityDimension()`. `SpatialDataType` Vector/Tensor items
+declare a `VectorBasis` (Cartesian, EastNorthUp, NormalTangential,
+AlongEntity), and the docs of `networkDataType()/meshDataType()` no longer
+claim to name an entity. `IPartitionedComponentDataItem::partitionedDimension()`
+says which axis is decomposed.
+
+**Components.** `IModelComponent::states()` lists the prognostic items
+(what a checkpoint captures; a superset of `differentiableStates()`).
+`IArgument::role()` (`ArgumentRole`: Configuration, Parameter,
+InitialCondition, Forcing, Geometry). `Capability` gains `LayeredData` and a
+vendor-reserved range (`VendorBase`). `IOutput::addConsumer()` is the single
+wiring entry point (it calls `IInput::setProvider()`); adapters returned by
+`createAdaptedOutput()` are caller-owned and deregister from their adaptee in
+their destructor. `ICloneableModelComponent::clone()` and
+`IWorkflowComponentInfo::createComponentInstance()` return `std::unique_ptr`.
+`IMultiInput` no longer hides `IInput::canConsume()`. Components and
+workflows carry using-declarations so both `ISignal` overload sets resolve.
+
+**Time.** `ITimeModelComponent::nextDateTimeJulianDay()`;
+`ITimeSpan::endJulianDay()`; `serialDate()` names its epoch (MATLAB
+`datenum`); `IOutput::updateValues()` documents what the query specifier
+carries (times, geometry, value definition). New
+`SpatioTemporal::ITimeLayeredMeshComponentDataItem` and
+`ITimeLayeredNetworkComponentDataItem`.
+
+**Space.** `ISpatialReferenceSystem` gains a vertical reference
+(`verticalAuthName()/verticalAuthSRID()/verticalSrText()/verticalDistanceUnits()`);
+`IVerticalCoordinate` and `ICrossSection` no longer hardcode metres and
+refer to it. `IMeshView` gains face→edge and edge→face connectivity (with
+boundary markers) and optional metrics (face centres/areas, edge
+lengths/normals). `IVerticalCoordinate` gains `columnCount()`,
+`geometryEpoch()` and a bulk `interfaceElevations()` span. `ICrossSection`
+gains a bulk `evaluate()`. `IGeometry::relate()` takes its DE-9IM pattern;
+every geometry-constructing method returns `std::unique_ptr`. `IRasterBand`
+reads/writes through `BufferDescriptor`; `RasterDataType` documents its
+`DataKind` mapping. Index widths are `int64_t` throughout the spatial header
+(`IGeometry::index()`, collections, rings, rasters, grids, layer counts).
+
+**Distribution.** `IExchangeRequest::cancel()`; the destructor always
+waits. `IProxyModelComponent::connect()/disconnect()` are renamed
+`connectToPeer()/disconnectFromPeer()` — they hid the inherited signal
+`connect(slot)/disconnect(slot)`, so a proxy's status signal was
+unsubscribable (the Python mirror had already worked around this).
+`ITransport` documents payload rules and that collectives are out of scope
+until a composition needs them from the standard.
+
+**Removed.** `IExchangeItemChangeEventArgs` (nothing emitted it),
+`IUnit::AreaUnits`, `IUnit::DistanceUnitType` (nothing used them),
+`IValueSemantics`, `ITemporalSemantics`. `FundamentalUnitDimension` gains
+`PlaneAngle`; `IUnitDimensions::power()` is `const`. Stale OpenMI/Qt prose
+(`getValue()`, `inputs()` "until validate()", `QImage`) is gone.
+
+**Deferred with reasons.** Transport collectives, boundary-condition roles
+on inputs and a conservation report were identified in the review but no
+composition in the ecosystem consumes them yet; per the standard's own
+no-speculative-abstraction rule they wait for a consumer.
+
+**Tests.** 153 Google Tests (was 146): the reconciled transitions, the
+workflow table, opaque byte extents, device addressing defaults, the vendor
+range, and two-signal name lookup. 114 pytest (was 98).
+
+**SDK.** HydroCoupleSDK is updated in lockstep (compile-checked against the
+new headers; see its CHANGELOG).
+
 ### `IWorkflowComponent` advanced for orchestrated execution (breaking)
 
 `validate()` and `prepare()` become explicit lifecycle phases mirroring the

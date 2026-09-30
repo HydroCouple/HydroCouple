@@ -43,6 +43,54 @@ namespace HydroCouple
   namespace Temporal
   {
     /*!
+     * \brief What a value's time coordinate refers to.
+     *
+     * A time-series item carries times and values but does not say whether a
+     * value is a reading at that instant, a mean over the interval that ended
+     * there, or an accumulation. Those are three different numbers, and coupling
+     * a model that reports means to one that expects instants is wrong in a way
+     * that produces plausible output and no error.
+     *
+     * It is not a hypothetical failure. A daily report in this ecosystem drifted
+     * from noon to five in the afternoon over a simulated year, aliasing a
+     * diurnal cycle into a seasonal signal, and it was found by checking a figure
+     * caption against its own timestamps rather than by anything in the data
+     * saying what the timestamps meant.
+     */
+    enum class TimeKind : uint8_t
+    {
+      Unknown = 0,      //!< Not declared. Consumers must not assume Instantaneous.
+      Instantaneous,    //!< A reading at the time coordinate.
+      IntervalMean,     //!< Mean over the interval ending at the time coordinate.
+      IntervalMinimum,  //!< Minimum over that interval.
+      IntervalMaximum,  //!< Maximum over that interval.
+      Accumulated       //!< Total accumulated over that interval.
+    };
+
+    /*!
+     * \brief How a provider produces a value at an instant that is between two it holds.
+     */
+    enum class TimeInterpolation : uint8_t
+    {
+      Unknown = 0, //!< Not declared. validate() must treat a connection whose two ends both say Unknown as an error.
+      None,        //!< Exact match required; a query at an instant not held is refused.
+      Previous,    //!< Hold the most recent earlier value (step function).
+      Nearest,     //!< The nearer of the two neighbours.
+      Linear       //!< Linear in time between neighbours.
+    };
+
+    /*!
+     * \brief How a provider produces a value at an instant beyond the last (or before the first) it holds.
+     */
+    enum class TimeExtrapolation : uint8_t
+    {
+      Unknown = 0, //!< Not declared. validate() must treat a connection whose two ends both say Unknown as an error.
+      Refuse,      //!< A query outside the held range is refused; the provider must be advanced first.
+      HoldLast,    //!< Repeat the boundary value.
+      Linear       //!< Extend the last two values linearly.
+    };
+
+    /*!
      * \brief IDateTime interface based on a Julian day
      * \details The normative convention is the astronomical Julian day number in the
      * proleptic Gregorian ("standard") calendar, UTC. Persistence layers writing CF
@@ -58,23 +106,28 @@ namespace HydroCouple
       virtual ~IDateTime() = default;
 
       /*!
-       * \brief Date and time as a julian day value.
+       * \brief Date and time as a Julian day value (days since 4713 BC January 1, 12:00 UTC).
        */
       [[nodiscard]] virtual double julianDay() const = 0;
 
       /*!
-       * \brief Modified Julian day value.
+       * \brief Modified Julian day value: julianDay() - 2400000.5 (days since 1858-11-17 00:00 UTC).
        */
       [[nodiscard]] virtual double modifiedJulianDay() const = 0;
 
       /*!
-       * \brief Serial date number.
+       * \brief Serial date number in the MATLAB `datenum` convention: days since
+       * 0000-01-00 in the proleptic Gregorian calendar, i.e. julianDay() - 1721058.5.
+       * (Excel's 1900 serial differs from this by 693960 days and is not what is meant.)
        */
       [[nodiscard]] virtual double serialDate() const = 0;
     };
 
     /*!
-     * \brief ITimeSpan specifies a time duration.
+     * \brief ITimeSpan specifies an interval of time.
+     * \details Inherits IDateTime deliberately: the inherited instant is the *start*
+     * of the interval, so a span can be handed to anything that wants an instant and
+     * it reads as "when this begins". The end is start + duration().
      */
     class ITimeSpan : public virtual IDateTime
     {
@@ -86,10 +139,15 @@ namespace HydroCouple
       virtual ~ITimeSpan() = default;
 
       /*!
-       * \brief Duration of the timespan in days.
+       * \brief Duration of the timespan in days; non-negative.
        * \return double value of the duration.
        */
       [[nodiscard]] virtual double duration() const = 0;
+
+      /*!
+       * \brief End of the interval as a Julian day: julianDay() + duration().
+       */
+      [[nodiscard]] virtual double endJulianDay() const = 0;
     };
 
     /*!
@@ -115,6 +173,18 @@ namespace HydroCouple
        * \return ITimeSpan pointer. The time horizon of the model.
        */
       [[nodiscard]] virtual ITimeSpan *simulationPeriod() const = 0;
+
+      /*!
+       * \brief The time (Julian day) the next update() will advance currentDateTime() to.
+       *
+       * \details What a time-stepped orchestrator needs to build a schedule and what a
+       * provider needs to answer "can I serve this instant yet". For a fixed-step model
+       * it is current + the step; for an adaptive-step model it is the model's own
+       * estimate and may be revised by the update that follows, but must never be
+       * earlier than currentDateTime(). Equals currentDateTime() when the model is
+       * Done or before prepare().
+       */
+      [[nodiscard]] virtual double nextDateTimeJulianDay() const = 0;
     };
 
     /*!
@@ -166,12 +236,48 @@ namespace HydroCouple
       /*!
        * \brief Gets the IDimension of the times.
        * \details Canonical dimension ordering: the time dimension is dimension 0 of
-       * shape(); any additional dimensions follow. Data access uses the inherited
-       * getValuesInto()/setValuesFrom() hyperslab API with the time index as start[0],
-       * so "current time step, all entities" is a contiguous slab.
+       * shape() and reports IDimension::DimensionRole::Time; any additional dimensions follow.
+       * Data access uses the inherited getValuesInto()/setValuesFrom() hyperslab API
+       * with the time index as start[0], so "current time step, all entities" is a
+       * contiguous slab.
        * \return A pointer to the IDimension.
        */
       [[nodiscard]] virtual IDimension *timeDimension() const = 0;
+
+      /*!
+       * \brief What each value's time coordinate refers to.
+       * \details Declared on the item rather than discovered through a side interface:
+       * a time series without this is an array whose timestamps mean something the
+       * consumer has to guess. Returning TimeKind::Unknown is legal; a consumer that
+       * needs the distinction must then refuse rather than assume Instantaneous.
+       */
+      [[nodiscard]] virtual TimeKind timeKind() const = 0;
+
+      /*!
+       * \brief Length of the averaging or accumulation interval (days).
+       * \details Zero for Instantaneous. Meaningless unless timeKind() names an
+       * interval, and a consumer that needs it should treat zero as "not declared"
+       * rather than as an instant.
+       */
+      [[nodiscard]] virtual double intervalLength() const = 0;
+
+      /*!
+       * \brief What this item does — or, for an input, accepts — between held instants.
+       * \details On an output or adapted output: what the provider will do when a
+       * consumer's times() fall between this item's times(). On an input: the least
+       * the consumer will accept (a consumer declaring Linear accepts Linear or None;
+       * one declaring None accepts only exact matches). IWorkflowComponent::validate()
+       * compares the two ends of every temporal connection.
+       */
+      [[nodiscard]] virtual TimeInterpolation timeInterpolation() const = 0;
+
+      /*!
+       * \brief What this item does — or, for an input, accepts — outside its held range.
+       * \details Same provider/consumer reading as timeInterpolation(). A provider that
+       * answers Refuse must set its owning component to WaitingForData (or advance it)
+       * rather than fabricate a value.
+       */
+      [[nodiscard]] virtual TimeExtrapolation timeExtrapolation() const = 0;
     };
 
     /*!
@@ -195,66 +301,16 @@ namespace HydroCouple
 
       /*!
        * \brief identifierDimension associated with this data item.
-       * \details Canonical dimension ordering: time is dimension 0, the identifier
-       * dimension is dimension 1; any additional dimensions follow. Data access uses
-       * the inherited getValuesInto()/setValuesFrom() hyperslab API.
+       * \details Canonical dimension ordering: time is dimension 0 (DimensionRole::Time), the
+       * identifier dimension is dimension 1 (DimensionRole::Entity); any additional dimensions
+       * follow. Data access uses the inherited getValuesInto()/setValuesFrom()
+       * hyperslab API.
        * \return IDimension of the identifiers associated with this data item.
        */
       [[nodiscard]] virtual IDimension *identifierDimension() const = 0;
     };
+
   }
-
-    /*!
-     * \brief What a value's time coordinate refers to.
-     *
-     * A time-series item carries times and values but does not say whether a
-     * value is a reading at that instant, a mean over the interval that ended
-     * there, or an accumulation. Those are three different numbers, and coupling
-     * a model that reports means to one that expects instants is wrong in a way
-     * that produces plausible output and no error.
-     *
-     * It is not a hypothetical failure. A daily report in this ecosystem drifted
-     * from noon to five in the afternoon over a simulated year, aliasing a
-     * diurnal cycle into a seasonal signal, and it was found by checking a figure
-     * caption against its own timestamps rather than by anything in the data
-     * saying what the timestamps meant.
-     */
-    enum class TimeKind : uint8_t
-    {
-      Unknown = 0,      //!< Not declared. Consumers must not assume Instantaneous.
-      Instantaneous,    //!< A reading at the time coordinate.
-      IntervalMean,     //!< Mean over the interval ending at the time coordinate.
-      IntervalMinimum,  //!< Minimum over that interval.
-      IntervalMaximum,  //!< Maximum over that interval.
-      Accumulated       //!< Total accumulated over that interval.
-    };
-
-    /*!
-     * \brief Declares what a time coordinate refers to, and over what interval.
-     *
-     * Optional and discovered by `dynamic_cast`, for the same binary-compatibility
-     * reason as `HydroCouple::IValueSemantics`: these headers cross a plugin
-     * boundary and existing components were compiled against the current vtables.
-     */
-    class ITemporalSemantics
-    {
-    public:
-      virtual ~ITemporalSemantics() = default;
-
-      /*!
-       * \brief What the time coordinate refers to.
-       */
-      [[nodiscard]] virtual TimeKind timeKind() const = 0;
-
-      /*!
-       * \brief Length of the averaging or accumulation interval (days).
-       *
-       * Zero for Instantaneous. Meaningless unless timeKind() names an interval,
-       * and a consumer that needs it should treat zero as "not declared" rather
-       * than as an instant.
-       */
-      [[nodiscard]] virtual double intervalLength() const = 0;
-    };
 }
 
 #if defined(__GNUC__) || defined(__clang__)

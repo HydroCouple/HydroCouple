@@ -71,5 +71,5 @@ def test_the_differentiation_contract_is_in_the_interface():
                  "struct DifferentialEntry",
                  "using DifferentialSet = std::span<const DifferentialEntry>",
                  "enum class DifferentialRole",
-                 "Differentiable        //!<"):
+                 "Differentiable,       //!<"):
         assert name in text, name

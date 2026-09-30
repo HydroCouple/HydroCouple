@@ -63,9 +63,9 @@ namespace HydroCouple
      * \brief ITimeNetworkComponentDataItem is a network component data item whose
      * values also vary in time.
      * \details Canonical dimension ordering: time is dimension 0, the entity dimension
-     * selected by networkDataType() is dimension 1 of shape(); any additional
-     * dimensions follow. Data access uses the inherited getValuesInto()/setValuesFrom()
-     * hyperslab API.
+     * selected by location() is dimension 1 of shape(); a Component dimension follows
+     * when networkDataType() is not Scalar. Data access uses the inherited
+     * getValuesInto()/setValuesFrom() hyperslab API.
      */
     class ITimeNetworkComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem,
                                           public virtual HydroCouple::Spatial::INetworkComponentDataItem
@@ -81,9 +81,9 @@ namespace HydroCouple
      * \brief ITimeSeriesPolyhedralSurfaceComponentDataItem is a polyhedral surface
      * component data item whose values also vary in time.
      * \details Canonical dimension ordering: time is dimension 0, the entity dimension
-     * selected by meshDataType() is dimension 1 of shape(); any additional dimensions
-     * follow. Data access uses the inherited getValuesInto()/setValuesFrom()
-     * hyperslab API.
+     * selected by location() is dimension 1 of shape(); a Component dimension follows
+     * when meshDataType() is not Scalar. Data access uses the inherited
+     * getValuesInto()/setValuesFrom() hyperslab API.
      */
     class ITimeSeriesPolyhedralSurfaceComponentDataItem : public virtual HydroCouple::Temporal::ITimeSeriesComponentDataItem,
                                                           public virtual HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem
@@ -111,6 +111,42 @@ namespace HydroCouple
        * \brief The ITIN this data item is associated with.
        */
       [[nodiscard]] virtual HydroCouple::Spatial::ITIN *TIN() const = 0;
+    };
+
+    /*!
+     * \brief A layered mesh item whose values also vary in time.
+     * \details Canonical dimension ordering: time is dimension 0, the entity (face or
+     * volume) dimension is dimension 1, the layer dimension is dimension 2 of
+     * shape(); a Component dimension follows when meshDataType() is not Scalar. The
+     * vertical coordinate's geometryEpoch() tells a consumer whether the elevations it
+     * cached still describe the current time step. Data access uses the inherited
+     * getValuesInto()/setValuesFrom() hyperslab API.
+     */
+    class ITimeLayeredMeshComponentDataItem : public virtual ITimeSeriesPolyhedralSurfaceComponentDataItem,
+                                              public virtual HydroCouple::Spatial::ILayeredMeshComponentDataItem
+    {
+    public:
+      /*!
+       * \brief ~ITimeLayeredMeshComponentDataItem destructor.
+       */
+      virtual ~ITimeLayeredMeshComponentDataItem() = default;
+    };
+
+    /*!
+     * \brief A layered network item whose values also vary in time.
+     * \details Canonical dimension ordering: time is dimension 0, the entity (node or
+     * edge) dimension is dimension 1, the layer dimension is dimension 2 of shape();
+     * a Component dimension follows when networkDataType() is not Scalar. Data access
+     * uses the inherited getValuesInto()/setValuesFrom() hyperslab API.
+     */
+    class ITimeLayeredNetworkComponentDataItem : public virtual ITimeNetworkComponentDataItem,
+                                                 public virtual HydroCouple::Spatial::ILayeredNetworkComponentDataItem
+    {
+    public:
+      /*!
+       * \brief ~ITimeLayeredNetworkComponentDataItem destructor.
+       */
+      virtual ~ITimeLayeredNetworkComponentDataItem() = default;
     };
 
     /*!
