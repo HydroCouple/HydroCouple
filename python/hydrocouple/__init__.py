@@ -39,6 +39,7 @@ from hydrocouple.core import (
     IAdaptedOutputFactoryComponent,
     IAdaptedOutputFactoryComponentInfo,
     IArgument,
+    ICheckpointableAdaptedOutput,
     ICheckpointableModelComponent,
     ICloneableModelComponent,
     IComponentDataItem,
@@ -69,8 +70,8 @@ from hydrocouple.core import (
     IWorkflowComponentStatusChangeEventArgs,
 )
 
-# PEP 440 form of the C++ release designation 2.0.0-alpha.1
-__version__ = "2.0.0a1"
+# PEP 440 form of the C++ release designation 2.0.0-alpha.2
+__version__ = "2.0.0a2"
 
 __all__ = [
     "ArgumentInputType",
@@ -90,6 +91,7 @@ __all__ = [
     "IAdaptedOutputFactoryComponent",
     "IAdaptedOutputFactoryComponentInfo",
     "IArgument",
+    "ICheckpointableAdaptedOutput",
     "ICheckpointableModelComponent",
     "IDifferentiableModelComponent",
     "IDifferentiableAdaptedOutput",

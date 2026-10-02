@@ -1307,6 +1307,19 @@ class IAdaptedOutput(IOutput):
         child adapted outputs."""
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def states(self) -> list["IComponentDataItem"]:
+        """Items carrying state from one refresh to the next.
+
+        Empty for an adapter whose values depend only on its adaptee's
+        current values and its arguments (the common case). An adapter
+        whose values also depend on its previous refreshes (relaxation,
+        a recorded history) lists that state -- possibly itself -- so an
+        orchestrator knows it must be restored with the components; see
+        :class:`ICheckpointableAdaptedOutput`.
+        """
+        raise NotImplementedError
 
 
 class IDifferentiableAdaptedOutput(IAdaptedOutput):
@@ -1315,16 +1328,24 @@ class IDifferentiableAdaptedOutput(IAdaptedOutput):
 
     Mirrors C++ ``IDifferentiableAdaptedOutput``. In ``(item, role,
     buffer)`` entries the adapter itself is ``DifferentialRole.Output``, its
-    :attr:`adaptee` is ``DifferentialRole.Input`` and its
-    :meth:`differentiable_arguments` are ``DifferentialRole.Argument``.
-    Buffer rules are those of :class:`IDifferentiableModelComponent`.
-    Stateless adapters only: one whose values depend on previous refreshes
-    must not implement this.
+    :attr:`adaptee` is ``DifferentialRole.Input``, its
+    :meth:`differentiable_arguments` are ``DifferentialRole.Argument`` and
+    its :meth:`differentiable_states` are ``DifferentialRole.StateBefore``
+    / ``DifferentialRole.StateAfter``. Buffer rules are those of
+    :class:`IDifferentiableModelComponent`. A stateful one should also be an
+    :class:`ICheckpointableAdaptedOutput`, so an orchestrator can replay
+    the refreshes before the latest.
     """
 
     @abstractmethod
     def differentiable_arguments(self) -> list["IArgument"]:
         """Arguments of this adapter a derivative reaches."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def differentiable_states(self) -> list["IComponentDataItem"]:
+        """State items the derivative follows; a subset of :attr:`states`
+        (empty for a stateless adapter)."""
         raise NotImplementedError
 
     @abstractmethod
@@ -1337,6 +1358,44 @@ class IDifferentiableAdaptedOutput(IAdaptedOutput):
     def jvp(self, seeds: Sequence[tuple], results: Sequence[tuple]
             ) -> tuple[bool, str]:
         """Jacobian-vector product of the most recent refresh."""
+        raise NotImplementedError
+
+
+class ICheckpointableAdaptedOutput(IAdaptedOutput):
+    """An adapted output that can save and restore the state it carries
+    between refreshes.
+
+    Mirrors C++ ``ICheckpointableAdaptedOutput``, with the semantics of
+    :class:`ICheckpointableModelComponent`: a restored adapter behaves as
+    if it had refreshed its way to the saved state (its child adapters are
+    restored in their own right), and a released token is dead. Adapters
+    have no status, so all three are legal any time after
+    :meth:`IAdaptedOutput.initialize`.
+    """
+
+    @abstractmethod
+    def save_state(self) -> tuple[bool, str, str]:
+        """Save the adapter's complete state.
+
+        :returns: ``(ok, token, message)``.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def restore_state(self, token: str) -> tuple[bool, str]:
+        """Restore a state saved by :meth:`save_state`.
+
+        :returns: ``(ok, message)``.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def release_state(self, token: str) -> tuple[bool, str]:
+        """Release a saved state that will not be restored; the token is
+        dead afterwards.
+
+        :returns: ``(ok, message)``.
+        """
         raise NotImplementedError
 
 
@@ -1496,6 +1555,21 @@ class IWorkflowComponent(IIdentity):
         raise NotImplementedError
 
     @abstractmethod
+    def validate(self) -> list[str]:
+        """Validate the composition: required roles filled, every component
+        valid, every link's two ends compatible.
+
+        An empty list means valid; otherwise one message per problem, and
+        the workflow is ``Failed``.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def prepare(self) -> None:
+        """Prepare every managed component and build the execution plan."""
+        raise NotImplementedError
+
+    @abstractmethod
     def update(self) -> None:
         """Update the workflow for the current step."""
         raise NotImplementedError
@@ -1503,6 +1577,26 @@ class IWorkflowComponent(IIdentity):
     @abstractmethod
     def finish(self) -> None:
         """Finalize the workflow and release resources."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def request_stop(self) -> None:
+        """Cooperative stop: takes effect after the step in flight."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def request_pause(self) -> None:
+        """Cooperative pause: takes effect after the step in flight."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def resume(self) -> None:
+        """Resume a ``Paused`` workflow; a no-op otherwise."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def errors(self, clear_after_read: bool = False) -> list[ErrorEntry]:
+        """The workflow's diagnostic queue (the normative failure channel)."""
         raise NotImplementedError
 
     @property

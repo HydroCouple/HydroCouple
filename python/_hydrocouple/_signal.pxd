@@ -79,3 +79,12 @@ cdef extern from "signal_bridge.h" namespace "HydroCouple::Python":
     void disconnect_workflow_status_slot(
         cpp.IWorkflowComponent* comp,
         const shared_ptr[WorkflowStatusSlotBridge]& slot)
+
+    # -- Any IPropertyChanged -------------------------------------------------
+    void connect_property_slot_any(
+        cpp.IPropertyChanged* obj,
+        const shared_ptr[PropertySlotBridge]& slot)
+    void disconnect_property_slot_any(
+        cpp.IPropertyChanged* obj,
+        const shared_ptr[PropertySlotBridge]& slot)
+    void block_signals_any(cpp.IPropertyChanged* obj, bint block)

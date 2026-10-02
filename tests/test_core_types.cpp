@@ -297,6 +297,40 @@ TEST(DifferentialTest, AdaptedOutputIsAnOptionalAbstractSideInterface)
     EXPECT_FALSE((std::is_base_of_v<IModelComponent, IDifferentiableAdaptedOutput>));
 }
 
+TEST(DifferentialTest, AnAdapterDeclaresTheStateItCarries)
+{
+    // Stateful adapters (G2.4): every adapter says whether its values depend
+    // on its past, and a differentiable one says which of that state its
+    // derivative follows -- the same pair a component has.
+    using States = std::vector<IComponentDataItem *> (IAdaptedOutput::*)() const;
+    States states = &IAdaptedOutput::states;
+    EXPECT_NE(states, nullptr);
+    using DifferentiableStates =
+        std::vector<IComponentDataItem *> (IDifferentiableAdaptedOutput::*)() const;
+    DifferentiableStates differentiable = &IDifferentiableAdaptedOutput::differentiableStates;
+    EXPECT_NE(differentiable, nullptr);
+}
+
+TEST(CheckpointTest, AnAdapterCanBeCheckpointed)
+{
+    EXPECT_TRUE(std::is_abstract_v<ICheckpointableAdaptedOutput>);
+    EXPECT_TRUE((std::is_base_of_v<IAdaptedOutput, ICheckpointableAdaptedOutput>));
+    EXPECT_TRUE(std::has_virtual_destructor_v<ICheckpointableAdaptedOutput>);
+    // Independent of the component contract, and of differentiation.
+    EXPECT_FALSE((std::is_base_of_v<IModelComponent, ICheckpointableAdaptedOutput>));
+    EXPECT_FALSE((std::is_base_of_v<IDifferentiableAdaptedOutput, ICheckpointableAdaptedOutput>));
+
+    // The same three members, with the same signatures, as the component's.
+    using Save = bool (ICheckpointableAdaptedOutput::*)(std::string &, std::string &);
+    using Restore = bool (ICheckpointableAdaptedOutput::*)(const std::string &, std::string &);
+    Save save = &ICheckpointableAdaptedOutput::saveState;
+    Restore restore = &ICheckpointableAdaptedOutput::restoreState;
+    Restore release = &ICheckpointableAdaptedOutput::releaseState;
+    EXPECT_NE(save, nullptr);
+    EXPECT_NE(restore, nullptr);
+    EXPECT_NE(release, nullptr);
+}
+
 TEST(DifferentialTest, ComponentIsAnOptionalAbstractSideInterface)
 {
     EXPECT_TRUE(std::is_abstract_v<IDifferentiableModelComponent>);
@@ -398,6 +432,21 @@ TEST(StatusTransitionTest, CheckpointingFromDoneReturnsToDone)
     EXPECT_FALSE(isValidComponentStatusTransition(CS::Initialized, CS::Checkpointing));
 }
 
+TEST(StatusTransitionTest, FailedIsReachableFromEveryStatusButFinished)
+{
+    // IProxyModelComponent: "if the peer dies ... the proxy transitions to
+    // Failed" -- and a peer can die while the proxy rests at Updated or Done.
+    constexpr CS all[] = {CS::Created, CS::Initializing, CS::Initialized, CS::Validating,
+                          CS::Valid, CS::WaitingForData, CS::Invalid, CS::Preparing,
+                          CS::Updating, CS::Updated, CS::Checkpointing, CS::Done,
+                          CS::Finishing};
+    for (CS from : all)
+        EXPECT_TRUE(isValidComponentStatusTransition(from, CS::Failed))
+            << "status " << static_cast<int>(from);
+    EXPECT_FALSE(isValidComponentStatusTransition(CS::Finished, CS::Failed));
+    EXPECT_FALSE(isValidComponentStatusTransition(CS::Failed, CS::Failed));
+}
+
 TEST(StatusTransitionTest, CompositionCanBeTornDownFromAnyRestingState)
 {
     // finish() must be reachable before prepare(): an Invalid composition, or one
@@ -457,6 +506,17 @@ TEST(WorkflowTransitionTest, PauseResumeAndStop)
     EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Paused, WS::Finishing)); // abandon while paused
     EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Paused, WS::Updating)); // must resume() first
     EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Updated, WS::Paused));  // only at a sync point inside update()
+}
+
+TEST(WorkflowTransitionTest, FailedIsReachableFromEveryStatusButFinished)
+{
+    constexpr WS all[] = {WS::Created, WS::Initializing, WS::Initialized, WS::Validating,
+                          WS::Validated, WS::Preparing, WS::Prepared, WS::Updating,
+                          WS::Updated, WS::Paused, WS::Done, WS::Finishing};
+    for (WS from : all)
+        EXPECT_TRUE(isValidWorkflowStatusTransition(from, WS::Failed))
+            << "status " << static_cast<int>(from);
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Finished, WS::Failed));
 }
 
 TEST(WorkflowTransitionTest, IllegalAndTerminal)

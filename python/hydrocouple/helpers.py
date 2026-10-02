@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Optional, Sequence
 
 import numpy as np
 
-from hydrocouple.core import ComponentStatus, DataKind
+from hydrocouple.core import ComponentStatus, DataKind, WorkflowStatus
 
 if TYPE_CHECKING:
     from hydrocouple.core import IComponentDataItem
@@ -31,6 +31,7 @@ __all__ = [
     "data_kind_of",
     "dtype_of",
     "is_valid_component_status_transition",
+    "is_valid_workflow_status_transition",
     "get_value",
     "set_value",
     "get_values",
@@ -114,19 +115,24 @@ def dtype_of(kind: DataKind) -> np.dtype:
 
 _CS = ComponentStatus
 
+# Kept identical to Helpers::isValidComponentStatusTransition() in
+# hydrocouplehelpers.h; tests/test_transition_parity.py compiles the C++
+# table and compares every pair, because this copy drifted once already.
 _VALID_TRANSITIONS: dict[ComponentStatus, frozenset[ComponentStatus]] = {
     _CS.Created: frozenset({_CS.Initializing}),
-    _CS.Initializing: frozenset({_CS.Initialized, _CS.Failed}),
-    _CS.Initialized: frozenset({_CS.Validating, _CS.Initializing}),
+    _CS.Initializing: frozenset({_CS.Initialized}),
+    _CS.Initialized: frozenset({_CS.Validating, _CS.Initializing, _CS.Finishing}),
     _CS.Validating: frozenset({_CS.Valid, _CS.Invalid}),
-    _CS.Valid: frozenset({_CS.Preparing, _CS.Validating}),
-    _CS.Invalid: frozenset({_CS.Validating}),
-    _CS.Preparing: frozenset({_CS.Updated, _CS.Failed}),
-    _CS.Updating: frozenset({_CS.Updated, _CS.Done, _CS.WaitingForData, _CS.Failed}),
-    _CS.WaitingForData: frozenset({_CS.Updating, _CS.Failed}),
+    _CS.Valid: frozenset({_CS.Preparing, _CS.Validating, _CS.Finishing}),
+    _CS.Invalid: frozenset({_CS.Validating, _CS.Finishing}),
+    _CS.Preparing: frozenset({_CS.Updated}),
+    _CS.Updating: frozenset({_CS.Updated, _CS.Done, _CS.WaitingForData}),
+    _CS.WaitingForData: frozenset({_CS.Updating}),
     _CS.Updated: frozenset({_CS.Updating, _CS.Checkpointing, _CS.Finishing}),
-    _CS.Checkpointing: frozenset({_CS.Updated, _CS.Failed}),
-    _CS.Done: frozenset({_CS.Finishing}),
+    # Checkpointing returns to the state it was entered from (Updated or
+    # Done); a successful restoreState() always lands in Updated.
+    _CS.Checkpointing: frozenset({_CS.Updated, _CS.Done}),
+    _CS.Done: frozenset({_CS.Checkpointing, _CS.Finishing}),
     _CS.Finishing: frozenset({_CS.Finished, _CS.Created}),
     _CS.Finished: frozenset(),
     _CS.Failed: frozenset({_CS.Initializing, _CS.Finishing}),
@@ -140,8 +146,45 @@ def is_valid_component_status_transition(from_status: ComponentStatus,
     Mirrors ``Helpers::isValidComponentStatusTransition`` — the normative
     statement of the component lifecycle state machine. Implementations
     must not perform transitions for which this returns ``False``.
+
+    Failed is reachable from every status except Finished: a failure can be
+    detected while a component rests (a proxy whose peer dies while it is
+    Updated).
     """
+    if to_status == _CS.Failed:
+        return from_status not in (_CS.Finished, _CS.Failed)
     return to_status in _VALID_TRANSITIONS[from_status]
+
+
+_WS = WorkflowStatus
+
+_VALID_WORKFLOW_TRANSITIONS: dict[WorkflowStatus, frozenset[WorkflowStatus]] = {
+    _WS.Created: frozenset({_WS.Initializing}),
+    _WS.Initializing: frozenset({_WS.Initialized}),
+    _WS.Initialized: frozenset({_WS.Validating, _WS.Initializing, _WS.Finishing}),
+    _WS.Validating: frozenset({_WS.Validated}),
+    _WS.Validated: frozenset({_WS.Preparing, _WS.Validating, _WS.Finishing}),
+    _WS.Preparing: frozenset({_WS.Prepared}),
+    _WS.Prepared: frozenset({_WS.Updating, _WS.Finishing}),
+    _WS.Updating: frozenset({_WS.Updated, _WS.Paused, _WS.Done}),
+    _WS.Updated: frozenset({_WS.Updating, _WS.Finishing}),
+    _WS.Paused: frozenset({_WS.Updated, _WS.Finishing}),
+    _WS.Done: frozenset({_WS.Finishing}),
+    _WS.Finishing: frozenset({_WS.Finished}),
+    _WS.Finished: frozenset(),
+    _WS.Failed: frozenset({_WS.Initializing, _WS.Finishing}),
+}
+
+
+def is_valid_workflow_status_transition(from_status: WorkflowStatus,
+                                        to_status: WorkflowStatus) -> bool:
+    """Whether a workflow status transition is legal.
+
+    Mirrors ``Helpers::isValidWorkflowStatusTransition``.
+    """
+    if to_status == _WS.Failed:
+        return from_status not in (_WS.Finished, _WS.Failed)
+    return to_status in _VALID_WORKFLOW_TRANSITIONS[from_status]
 
 
 # ---------------------------------------------------------------------------

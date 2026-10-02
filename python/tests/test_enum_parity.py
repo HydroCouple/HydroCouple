@@ -137,6 +137,14 @@ class TestSpatialEnumParity:
         _assert_parity(spatial.RasterDataType, "hydrocouplespatial.h",
                        "RasterDataType")
 
+    def test_vertical_coordinate_kind(self):
+        _assert_parity(spatial.VerticalCoordinateKind, "hydrocouplespatial.h",
+                       "VerticalCoordinateKind")
+
+    def test_cross_section_kind(self):
+        _assert_parity(spatial.CrossSectionKind, "hydrocouplespatial.h",
+                       "CrossSectionKind")
+
 
 # ---------------------------------------------------------------------------
 # Cython declaration parity

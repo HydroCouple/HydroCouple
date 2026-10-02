@@ -11,6 +11,7 @@ from libcpp.memory cimport shared_ptr, unique_ptr
 from libcpp.set cimport set as cppset
 from libcpp.unordered_map cimport unordered_map
 from cpython.ref cimport PyObject
+from libcpp.typeinfo cimport type_info
 from libc.stdint cimport (
     int8_t, int16_t, int32_t, int64_t,
     uint8_t, uint16_t, uint32_t, uint64_t,
@@ -177,7 +178,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         cppset[string] tags() const
 
     cdef cppclass IModelComponentInfo(IComponentInfo):
-        unique_ptr[IModelComponent] createComponentInstance()
+        unique_ptr[IModelComponent] createComponentInstance() except +
         vector[IAdaptedOutputFactory*] adaptedOutputFactories() const
 
     # ------------------------------------------------------------------
@@ -214,7 +215,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         void update(const vector[IOutput*]& requiredOutputs) except + nogil
         void finish() except +
         const IWorkflowComponent* workflow() const
-        void setWorkflow(const IWorkflowComponent* workflow)
+        void setWorkflow(const IWorkflowComponent* workflow) except +
         cppset[Capability] capabilities() const
         vector[ErrorEntry] errors(bint clearAfterRead)
         string referenceDirectory() const
@@ -397,16 +398,19 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
 
     cdef cppclass IArgument(IComponentDataItem):
         IArgument_ArgumentRole role() const
+        vector[const type_info*] validComponentDataItemTypes() const
         bint isOptional() const
         bint isReadOnly() const
         string toString() const
-        void saveData()
+        void saveData() except +
         vector[string] fileFilters() const
         bint isValidArgType(IArgument_ArgumentInputType argType) const
         IArgument_ArgumentInputType currentArgumentInputType() const
         bint initialize(const string& value,
                         IArgument_ArgumentInputType argType,
-                        string& message)
+                        string& message) except +
+        bint initialize(const IComponentDataItem& componentDataItem,
+                        string& message) except +
         bint serialize(IArgument_ArgumentInputType argType,
                        string& value,
                        string& message) const
@@ -422,11 +426,11 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # ------------------------------------------------------------------
     cdef cppclass IOutput(IExchangeItem):
         vector[IInput*] consumers() const
-        void addConsumer(IInput* consumer)
-        bint removeConsumer(IInput* consumer)
+        void addConsumer(IInput* consumer) except +
+        bint removeConsumer(IInput* consumer) except +
         vector[IAdaptedOutput*] adaptedOutputs() const
-        void addAdaptedOutput(IAdaptedOutput* adaptedOutput)
-        bint removeAdaptedOutput(IAdaptedOutput* adaptedOutput)
+        void addAdaptedOutput(IAdaptedOutput* adaptedOutput) except +
+        bint removeAdaptedOutput(IAdaptedOutput* adaptedOutput) except +
         void updateValues(const IInput* querySpecifier) except + nogil
 
     cdef cppclass IAdaptedOutput(IOutput):
@@ -435,13 +439,27 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         void initialize() except +
         IOutput* adaptee() const
         void refresh() except +
+        vector[IComponentDataItem*] states() const
+
+    cdef cppclass IDifferentiableAdaptedOutput(IAdaptedOutput):
+        vector[IArgument*] differentiableArguments() const
+        vector[IComponentDataItem*] differentiableStates() const
+        bint vjp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
+        bint jvp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
+
+    cdef cppclass ICheckpointableAdaptedOutput(IAdaptedOutput):
+        bint saveState(string& token, string& message) except +
+        bint restoreState(const string& token, string& message) except +
+        bint releaseState(const string& token, string& message) except +
 
     cdef cppclass IAdaptedOutputFactory(IIdentity):
         vector[IIdentity*] getAvailableAdaptedOutputIds(
-            const IOutput* provider, const IInput* consumer)
+            const IOutput* provider, const IInput* consumer) except +
         unique_ptr[IAdaptedOutput] createAdaptedOutput(
             IIdentity* adaptedProviderId,
-            IOutput* provider, IInput* consumer)
+            IOutput* provider, IInput* consumer) except +
 
     cdef cppclass IAdaptedOutputFactoryComponentInfo(IComponentInfo):
         IAdaptedOutputFactoryComponent* createComponentInstance()
@@ -454,16 +472,16 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # ------------------------------------------------------------------
     cdef cppclass IInput(IExchangeItem):
         IOutput* provider() const
-        bint setProvider(IOutput* provider)
-        bint canConsume(IOutput* provider, string& message) const
+        bint setProvider(IOutput* provider) except +
+        bint canConsume(IOutput* provider, string& message) except + nogil const
 
     cdef cppclass IMultiInput(IInput):
         vector[IIdentity*] providerLabels() const
         bint isRequiredProvider(const IIdentity* providerLabel) const
         vector[IOutput*] providers() const
         bint addProvider(IOutput* provider,
-                         const IIdentity* providerRoleIdentifier)
-        bint removeProvider(IOutput* provider)
+                         const IIdentity* providerRoleIdentifier) except +
+        bint removeProvider(IOutput* provider) except +
 
     # ------------------------------------------------------------------
     # IIdBasedComponentDataItem
@@ -493,20 +511,27 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         Failed
 
     cdef cppclass IWorkflowComponentInfo(IComponentInfo):
-        unique_ptr[IWorkflowComponent] createComponentInstance()
+        unique_ptr[IWorkflowComponent] createComponentInstance() except +
 
     cdef cppclass IWorkflowComponent(IIdentity):
         IWorkflowComponentInfo* componentInfo() const
         vector[IIdentity*] modelComponentLabels() const
         bint isRequiredModelComponent(const IIdentity* label) const
         void initialize() except +
+        vector[string] validate() except +
+        void prepare() except +
         void update() except + nogil
         void finish() except +
+        void requestStop() except +
+        void requestPause() except +
+        void resume() except +
+        vector[ErrorEntry] errors(bint clearAfterRead)
         IWorkflowComponent_WorkflowStatus status() const
         vector[IModelComponent*] modelComponents() const
         bint addModelComponent(IModelComponent* component,
-                               const IIdentity* modelRoleIdentifier)
-        bint removeModelComponent(IModelComponent* component)
+                               const IIdentity* modelRoleIdentifier,
+                               string* message) except +
+        bint removeModelComponent(IModelComponent* component) except +
 
     cdef cppclass IWorkflowComponentStatusChangeEventArgs:
         IWorkflowComponent* workflowComponent() const
@@ -531,28 +556,96 @@ cdef extern from "py_component_bridge.h" namespace "HydroCouple::Python":
     PyModelComponentBridge* make_py_component_bridge(PyObject* pyobj)
 
 
+cdef extern from "interface_casts.h" namespace "HydroCouple::Python":
+    IQuantity* asQuantity(IValueDefinition* value)
+    IQuality* asQuality(IValueDefinition* value)
+    IMultiInput* asMultiInput(IInput* input)
+    IAdaptedOutput* asAdaptedOutput(IOutput* output)
+    IDifferentiableAdaptedOutput* asDifferentiableAdapter(IAdaptedOutput* adapted)
+    ICheckpointableAdaptedOutput* asCheckpointableAdapter(IAdaptedOutput* adapted)
+    IArgument* asArgument(IComponentDataItem* item)
+    IInput* asInput(IComponentDataItem* item)
+    IOutput* asOutput(IComponentDataItem* item)
+    string typeName(const type_info* type)
+
+
 # ---------------------------------------------------------------------------
 # Shared cdef classes (implemented in _core.pyx, cimportable by the
-# temporal/spatial/spatiotemporal extension modules)
+# temporal/spatial/spatiotemporal extension modules).
+#
+# Every wrapper of an IPropertyChanged object derives from
+# CppPropertyChangedWrapper, so connect()/disconnect()/block_signals() and
+# caption/description/id are written once. Each class keeps the pointer to
+# its own interface in an attribute of its own; the bind_* helpers set the
+# base pointers. _owner keeps alive whatever owns the C++ object (a wrapper
+# that holds a unique_ptr, a loaded library, a parent geometry).
 # ---------------------------------------------------------------------------
-cdef class CppDimensionWrapper:
+cdef class CppPropertyChangedWrapper:
+    cdef IPropertyChanged* _signal
+    cdef object _owner
+
+
+cdef class CppDescriptionWrapper(CppPropertyChangedWrapper):
+    cdef IDescription* _description
+
+
+cdef class CppIdentityWrapper(CppDescriptionWrapper):
+    cdef IIdentity* _identity
+
+    @staticmethod
+    cdef CppIdentityWrapper wrap_identity(IIdentity* ptr)
+
+
+cdef class CppDimensionWrapper(CppIdentityWrapper):
     cdef IDimension* _ptr
 
     @staticmethod
     cdef CppDimensionWrapper wrap(IDimension* ptr)
 
 
-cdef class CppComponentDataItemWrapper:
+cdef class CppComponentDataItemWrapper(CppIdentityWrapper):
     cdef IComponentDataItem* _ptr
 
     @staticmethod
     cdef CppComponentDataItemWrapper wrap(IComponentDataItem* ptr)
 
 
+cdef class CppModelComponentWrapper(CppIdentityWrapper):
+    cdef IModelComponent* _ptr
+    cdef unique_ptr[IModelComponent] _owned
+
+    @staticmethod
+    cdef CppModelComponentWrapper wrap(IModelComponent* ptr)
+    cdef ICheckpointableModelComponent* _checkpointable(self) except NULL
+    cdef IDifferentiableModelComponent* _differentiable(self) except NULL
+
+
 cdef class PyComponentBridge:
     cdef PyModelComponentBridge* _bridge
 
     cdef IModelComponent* ptr(self)
+
+
+# Pointer binding and None-safe wrapping, for the other binding modules.
+cdef void bind_signal(CppPropertyChangedWrapper wrapper, IPropertyChanged* ptr)
+cdef void bind_description(CppDescriptionWrapper wrapper, IDescription* ptr)
+cdef void bind_identity(CppIdentityWrapper wrapper, IIdentity* ptr)
+cdef object wrap_dimension(IDimension* ptr)
+cdef object wrap_value_definition(IValueDefinition* ptr)
+cdef object wrap_data_item(IComponentDataItem* ptr)
+cdef object wrap_model_component(IModelComponent* ptr)
+cdef object wrap_model_component_info(IModelComponentInfo* ptr)
+cdef object wrap_workflow(IWorkflowComponent* ptr)
+cdef void bind_data_item(CppComponentDataItemWrapper wrapper,
+                         IComponentDataItem* ptr)
+cdef object owned_by(object child, object owner)
+
+# A host BufferDescriptor over an ndarray (zero-copy); the vectors own the
+# shape/stride storage and must outlive the descriptor's use.
+cdef int fill_host_descriptor(object array, BufferDescriptor* descriptor,
+                              vector[int64_t]* shape_buf,
+                              vector[int64_t]* strides_buf,
+                              bint writable) except -1
 
 
 cdef extern from "differential_bridge.h" namespace "HydroCouple::Python":

@@ -48,6 +48,7 @@ from hydrocouple.core import (
     IOutput,
     IQuantity,
     IUnit,
+    ValueKind,
 )
 
 # Catchment areas in m2, one per catchment/reach. The unit conversion below
@@ -137,17 +138,21 @@ class Unit(_Described, IUnit):
 class Quantity(_Described, IQuantity):
     """A float64 quantity carrying a unit."""
 
-    def __init__(self, id_: str, caption: str, unit: Unit):
+    def __init__(self, id_: str, caption: str, unit: Unit,
+                 value_kind: ValueKind):
         _Described.__init__(self, id_, caption)
         self._unit = unit
+        self._value_kind = value_kind
 
     @property
     def unit(self):
         return self._unit
 
     @property
-    def type(self):
-        return DataKind.Float64
+    def value_kind(self):
+        """How the values regrid: a depth rate averages over area, a flow
+        sums. The adapter between them is exactly this difference."""
+        return self._value_kind
 
     @property
     def missing_value(self):
@@ -168,11 +173,13 @@ class Quantity(_Described, IQuantity):
 
 RUNOFF_DEPTH = Quantity(
     "runoff-depth", "Runoff depth",
-    Unit("mm/hr", "millimetre per hour", MM_PER_HR_TO_M_PER_S))
+    Unit("mm/hr", "millimetre per hour", MM_PER_HR_TO_M_PER_S),
+    ValueKind.Intensive)
 
 VOLUMETRIC_FLOW = Quantity(
     "volumetric-flow", "Volumetric flow rate",
-    Unit("m3/s", "cubic metre per second", 1.0))
+    Unit("m3/s", "cubic metre per second", 1.0),
+    ValueKind.Flux)
 
 
 # ---------------------------------------------------------------------------
@@ -369,6 +376,12 @@ class AreaWeightedFlowAdapter(Field1D, IAdaptedOutput):
     def initialize(self):
         pass
 
+    @property
+    def states(self):
+        # The flow depends on the current depth alone: nothing is carried
+        # from one refresh to the next.
+        return []
+
     def refresh(self):
         """Re-read the adaptee and convert. Cascades to child adapters."""
         depth = helpers.get_values_or_raise(
@@ -446,6 +459,12 @@ class _Component(_Described, IModelComponent):
 
     @property
     def results(self):
+        return []
+
+    @property
+    def states(self):
+        # Both models are stateless between steps in this example: runoff is
+        # a function of this step's rainfall, routing of this step's inflow.
         return []
 
     @property

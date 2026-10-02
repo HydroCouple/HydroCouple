@@ -29,7 +29,7 @@ project(
 # Pre-release designation. CMake's project(VERSION) only accepts numeric
 # components, so the suffix is carried separately and composed into the
 # full version used for version.h, packaging, and docs.
-set(HYDROCOUPLE_VERSION_SUFFIX "-alpha.1")
+set(HYDROCOUPLE_VERSION_SUFFIX "-alpha.2")
 set(HYDROCOUPLE_FULL_VERSION "${PROJECT_VERSION}${HYDROCOUPLE_VERSION_SUFFIX}")
 
 include(GNUInstallDirs)
@@ -38,6 +38,7 @@ include(GNUInstallDirs)
 
 add_library(${PROJECT_NAME} INTERFACE
     include/hydrocouple.h
+    include/hydrocouplecomponentabi.h
     include/hydrocoupledistributed.h
     include/hydrocouplehelpers.h
     include/hydrocouplespatial.h
@@ -152,6 +153,7 @@ install(
 install(
     FILES
     include/hydrocouple.h
+    include/hydrocouplecomponentabi.h
     include/hydrocoupledistributed.h
     include/hydrocouplehelpers.h
     include/hydrocouplespatial.h

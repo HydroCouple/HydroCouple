@@ -63,7 +63,7 @@ def _read_version() -> str:
                 return _semver_to_pep440(match.group(1))
     except OSError:
         pass
-    return "2.0.0a1"
+    return "2.0.0a2"
 
 
 # ---------------------------------------------------------------------------

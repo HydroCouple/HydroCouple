@@ -2,6 +2,176 @@
 
 ## Unreleased
 
+## 2.0.0-alpha.2 — 2026-10-02
+
+Second pre-release of the 2.0 interface, and the release that fixes ABI 4.
+It carries the contract-consistency round, the adapter members that let a
+derivative cross a stateful adapter, the lifecycle correction, the
+component-loading convention, and a Python mirror held to the C++ headers by
+tests. The ontology items of the 2026-09-29 review (standard names, concept
+URIs, unit symbols, a generated vocabulary) are deliberately not in it.
+
+### Stateful adapters (inside ABI 4)
+
+An adapter whose values depend on its previous refreshes -- under-relaxation,
+interpolation over a recorded history -- was invisible as such: nothing
+said it carried state, so an orchestrator returning a composition to an
+earlier step (reverse-mode replay, a training loop's rewind, a restart)
+could not know it had to return the adapter too, and the differentiation
+contract was "stateless adapters only". Three additions close that, in the
+same unreleased ABI 4 so there is one breaking change, not two:
+
+- **`IAdaptedOutput::states()`** (pure virtual): the items carrying state
+  from one refresh to the next, empty for the usual stateless adapter --
+  the adapter's counterpart of `IModelComponent::states()`. An item may be
+  the adapter itself, when its own previous values are the state.
+  **Every `IAdaptedOutput` implementation must add it.**
+- **`IDifferentiableAdaptedOutput::differentiableStates()`**: the state the
+  derivative follows, a subset of `states()`, in roles `StateBefore` /
+  `StateAfter` exactly as for a component; the "stateless adapters only"
+  paragraph is replaced. A state item keeps its shape across a refresh.
+- **`ICheckpointableAdaptedOutput`**: `saveState()` / `restoreState()` /
+  `releaseState()` with the component interface's semantics; adapters have
+  no status, so all three are legal after `initialize()`. A restore is not a
+  refresh: a differentiable adapter has nothing to differentiate until its
+  next one.
+- Two conventions made explicit: adapters have no capability set, so their
+  optional interfaces are discovered by casting the adapter (`Capability`);
+  and an adapter, having no error queue, reports `bool` + `message`
+  failures through the message alone (the error-channel convention).
+- Python mirror: `IAdaptedOutput.states`, `IDifferentiableAdaptedOutput.
+  differentiable_states()`, the new `ICheckpointableAdaptedOutput` ABC; the
+  adapter wrapper gains `states` and, when the C++ adapter implements them,
+  `differentiable_arguments` / `differentiable_states` / `vjp` / `jvp` and
+  `save_state` / `restore_state` / `release_state`. Checkpoint tokens now
+  cross the bindings losslessly (component and adapter wrappers alike): a
+  token that is not UTF-8 comes back as a `str` that `restore_state()` and
+  `release_state()` turn back into the same bytes.
+- Tests: member signatures and traits of the three additions (C++); the
+  parity test covers the new ABC; a native stateful fixture adapter drives
+  every new wrapper member.
+
+The SDK implements them (HydroCoupleSDK 2.0.0-alpha.2): the relaxation
+adapter becomes differentiable and checkpointable, and the reverse engine
+differentiates through it.
+
+### Lifecycle: `Failed` is reachable from every status but `Finished`
+
+`isValidComponentStatusTransition()` and `isValidWorkflowStatusTransition()`
+admitted `Failed` only from the in-flight statuses. That contradicted
+`IProxyModelComponent`, whose peer can die while the proxy rests at
+`Updated` or `Initialized`, and every orchestrator that fails a resting
+component on a partner's behalf. A component or workflow may now enter
+`Failed` from any status except `Finished` (`Failed` → `Failed` is not a
+transition). The SDK now enforces these tables, which is how the
+contradiction surfaced. New tests pin the rule for both tables.
+
+### Python mirror
+
+- **Transition tables were stale since ABI 2.** `helpers.py`'s
+  `is_valid_status_transition()` still encoded the ABI-2 component table, and
+  there was no workflow table at all. Both are now the ABI-4 tables
+  (`is_valid_workflow_status_transition()` is new), and
+  `tests/test_transition_parity.py` compiles the C++ helpers and compares
+  every (from, to) pair, so the two cannot drift again.
+- **Vertical structure.** `IVerticalCoordinate`, `ILayering`,
+  `ICrossSection`, `ILayeredMeshComponentDataItem`,
+  `ILayeredNetworkComponentDataItem` and the `VerticalCoordinateKind` /
+  `CrossSectionKind` enums in `hydrocouple.spatial`;
+  `ITimeLayeredMeshComponentDataItem` / `ITimeLayeredNetworkComponentDataItem`
+  in `hydrocouple.spatiotemporal`. `interface_elevations` is shaped
+  `(column_count, layer_count + 1)`; `ICrossSection.evaluate()` keeps the C++
+  out-parameter form (each output `None` or an array filled in place);
+  `stations()` returns `(stations, elevations)`.
+- **Reading them off C++ components.** Cython wrappers for all of the above,
+  and `_hydrocouple._spatial.as_layered(item)` /
+  `_hydrocouple._spatiotemporal.as_time_layered(item)`, which take what the
+  core bindings hand out for a component's items (a `CppOutputWrapper`,
+  `CppInputWrapper` or `CppComponentDataItemWrapper`) and cross-cast to the
+  layered interfaces. Interface elevations come back as a read-only NumPy
+  view of the producer's own profile; `evaluate()` lends the caller's arrays
+  to C++ as spans and releases the GIL, refusing an output it could only
+  fill by copying. Argument, input and output wrappers gained `data_item`.
+- Tests: the ABCs are checked member-for-member against
+  `hydrocouplespatial.h`; native C++ fixtures (a sigma coordinate whose
+  surface the test moves, a surveyed trapezoid and an analytic rectangle
+  checked against closed forms, a layered network, a time-layered mesh) are
+  driven through the bindings; enum parity covers the two new enums.
+
+### Python bindings: every wrapper implements the ABC it is registered as
+
+The Cython wrappers are registered with `ABC.register()` as the interfaces
+they wrap, so `isinstance(output, IOutput)` holds and code written against
+the ABCs accepts them. Registration checks nothing, and an audit found every
+one of the 47 registered wrappers short of its ABC: the time-series wrapper
+had no `time_kind` or `time_interpolation`, the workflow wrapper none of
+`validate`/`prepare`/`request_stop`/`request_pause`/`resume`/`errors`, the
+spatial wrappers lacked identity, navigation and raster I/O, and no wrapper
+had the `connect`/`disconnect` the ABCs declare. Each failed at the first
+attribute access, far from the cause.
+
+- **Tests that hold the mirror to the standard.**
+  `tests/test_wrapper_conformance.py` (71) checks each of the 70
+  registrations: every abstract member of the ABC present, and a property
+  where the ABC declares a property. `tests/test_abc_parity.py` (94) compares
+  every ABC member for member with the pure virtuals its C++ class declares,
+  with the deliberate differences listed and explained.
+  `tests/test_wrapper_behaviour.py` (34) drives the wrappers against native
+  fixtures (`include/binding_test_fixtures.h`, `_testing.BindingFixture`).
+  `tests/test_examples.py` (3) runs the examples as scripts.
+- **The `IWorkflowComponent` ABC** gains `validate`, `prepare`,
+  `request_stop`, `request_pause`, `resume` and `errors`, which the C++
+  interface gained in ABI 4 and the mirror missed. The parity test found it.
+- **Wrappers restructured on shared bases.** `CppPropertyChangedWrapper` →
+  `CppDescriptionWrapper` → `CppIdentityWrapper` → `CppComponentDataItemWrapper`
+  carry signals, caption/description, id and the data plane once; each
+  subclass binds its own typed pointer by `dynamic_cast`
+  (`include/interface_casts.h`), since the interfaces use virtual bases.
+  New wrappers cover the remaining interfaces: quantity/quality, multi-input,
+  adapted output and its factory, component and workflow info, time-model
+  component, time-ID-based items, surfaces, geometry collections and multi-
+  geometries.
+- **Views.** `_spatial.as_spatial`, `_temporal.as_time_series`,
+  `_temporal.as_time_model_component` and `_spatiotemporal.as_spatiotemporal`
+  return the most specific wrapper the C++ object implements, or `None`,
+  beside the existing `as_layered`/`as_time_layered`.
+- **Equality, ownership, signals.** Two wrappers are equal when they wrap
+  the same C++ object. A child wrapper keeps its parent alive; an object C++
+  creates for the caller (a geometry operation's result, a component
+  instance, an adapted output) is owned by its wrapper and destroyed with it.
+  `connect(slot)` reaches the signal the ABC documents and passes the
+  event-arguments object it promises; connecting a slot twice connects it
+  once. One `_SlotHandle` replaces the six per-signal handle classes.
+- **C++ exceptions** from mutators (`add_consumer`, `set_provider`,
+  `create_adapted_output`, ...) now arrive as Python exceptions instead of
+  terminating the interpreter.
+
+Fixed along the way:
+
+- `CppModelComponentWrapper.update(required_outputs)` ignored its argument
+  and always passed an empty list.
+- `CppWorkflowComponentWrapper.add_model_component(component, role)` ignored
+  the role.
+- Both pure-Python examples had stopped instantiating at ABI 4 (no
+  `value_kind` on their quantities, no `states`); nothing ran them.
+
+### Component-loading convention upstreamed (`hydrocouplecomponentabi.h`)
+
+The convention by which a shared library publishes a component — two
+`extern "C"` entry points and an ABI stamp a host compares before calling
+anything that crosses a vtable — moves into the interface package from
+HydroCoupleComposer's `include/plugins/componentabi.h`, so every host and
+component includes one copy instead of three. One line could not move
+unchanged: the stamp's interface version was hardcoded to `2` while the
+interfaces were at ABI 4, so every ABI-3/4 component stamped itself `iface=2`
+and a host would have admitted an ABI-2 component beside an ABI-4 one. The
+version is now a macro `static_assert`ed against `HYDROCOUPLE_ABI_VERSION`,
+so bumping the interface without bumping the stamp is a compile error. The
+"Toolchain" convention in `hydrocouple.h` now points at it: the interfaces are
+a C++ ABI; the door a library is loaded through is the one piece defined in C.
+The legacy unstamped `CreateComponentInfo` factory (used by the Python
+loader) remains accepted and is reported as unstamped.
+
 ### Contract-consistency round (breaking; ABI 4) — 2026-09-29
 
 Follows the review in `plans/hydrocouple/INTERFACE_REVIEW_2026-09-29.md`

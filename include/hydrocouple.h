@@ -1,7 +1,7 @@
 /*!
  * \file hydrocouple.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0-alpha.1
+ * \version 2.0.0-alpha.2
  * \brief Core interface definitions for the HydroCouple component-based modeling framework.
  * \details This header file contains the core interface definitions for the
  * HydroCouple component-based modeling framework. It defines the fundamental
@@ -74,7 +74,10 @@ namespace HydroCouple
   //! 4: contract-consistency round (2026-09-29): BufferDescriptor gained
   //!    itemSizeBytes/backend/queue; IDimension::role(); IValueDefinition
   //!    gained valueKind() and lost type(); IModelComponent::states();
-  //!    IArgument::role(); temporal/spatial vtables changed (see CHANGELOG).
+  //!    IArgument::role(); temporal/spatial vtables changed (see CHANGELOG);
+  //!    IAdaptedOutput::states(), IDifferentiableAdaptedOutput::
+  //!    differentiableStates() and ICheckpointableAdaptedOutput (stateful
+  //!    adapters, 2026-10-02 -- the same, still unreleased, ABI 4).
   constexpr int HYDROCOUPLE_ABI_VERSION = 4;
 
   /*!
@@ -100,16 +103,27 @@ namespace HydroCouple
    *    component is `Invalid`, `Warning` otherwise);
    *  - every `bool` + `message` method queues an `Error` entry whenever it
    *    returns false.
-   * A consumer that reads only the queue therefore misses nothing.
+   * A consumer that reads only the queue therefore misses nothing. The one
+   * object with no queue of its own is an adapted output (its factory may
+   * belong to no component): an adapter's `bool` + `message` methods report
+   * through the message alone, and the orchestrator calling them queues it
+   * where it belongs.
    *
    * **Toolchain.** STL types (`std::string`, `std::vector`, `std::set`,
    * `std::shared_ptr`, ...) cross the plugin boundary by value. A host and the
    * components it loads must therefore be built with the same compiler,
-   * standard library and runtime; the standard does not define a C ABI.
-   * Cross-process and cross-language use goes through a transport
-   * (hydrocoupledistributed.h) or the Python bridge, never through a
-   * foreign-toolchain vtable. The visibility pragma below is GCC/Clang only;
-   * MSVC compares RTTI by name and needs nothing.
+   * standard library and runtime: the interfaces themselves are a C++ ABI,
+   * not a C one. What the standard does define in C is the narrow door a
+   * library is loaded through — hydrocouplecomponentabi.h: two `extern "C"`
+   * entry points, the first of which returns a toolchain-and-interface stamp
+   * a host compares *before* calling anything that crosses a vtable. The stamp
+   * turns this paragraph's "must be built with the same toolchain" from a
+   * requirement a host trusts into one it checks, and is tied to
+   * HYDROCOUPLE_ABI_VERSION by a static_assert. Cross-process and
+   * cross-language use goes through a transport (hydrocoupledistributed.h) or
+   * the Python bridge, never through a foreign-toolchain vtable. The
+   * visibility pragma below is GCC/Clang only; MSVC compares RTTI by name and
+   * needs nothing.
    *
    * **Threading.** `status()` on every component and workflow is safe to call
    * from any thread at any time (implementations keep it atomic). All other
@@ -257,6 +271,11 @@ namespace HydroCouple
    * dynamic_cast only to interfaces the set advertises. The set is the discovery
    * mechanism; the cast is the access mechanism. A component must advertise every
    * capability whose interface it (or any of its data items) implements.
+   *
+   * \details Adapted outputs are the one exception. An IAdaptedOutput is made by a
+   * factory, not owned by the component whose output it adapts, and has no capability
+   * set of its own; its optional interfaces (IDifferentiableAdaptedOutput,
+   * ICheckpointableAdaptedOutput) are discovered by casting the adapter itself.
    *
    * \details Values at or above VendorBase are reserved for vendor- or
    * project-specific capabilities: a vendor picks values in that range, casts them to
@@ -776,6 +795,8 @@ namespace HydroCouple
 
       /*!
        * \brief The IModelComponent has encountered an unrecoverable error.
+       * Reachable from every status except Finished: a failure can be detected
+       * while the component rests (a proxy whose peer dies while it is Updated).
        * Diagnostics describing the failure must be available from IModelComponent::errors().
        * From this state the component may be re-initialized by calling initialize()
        * if it supports re-initialization, or finished and disposed via finish(). */
@@ -792,7 +813,8 @@ namespace HydroCouple
     //   Updated | Done ⇄ Checkpointing         (returns to the state it was entered from;
     //                                           a successful restoreState() lands in Updated)
     //   Initialized | Valid | Invalid | Updated | Done | Failed ─► Finishing ─► Finished | Created
-    //   Initializing | Preparing | Updating | WaitingForData | Checkpointing ─► Failed
+    //   every status except Finished ─► Failed   (a failure can be detected while resting:
+    //                                             a proxy's peer can die while it is Updated)
     //   Failed ─► Initializing            Invalid ─► Validating          Valid ─► Validating
     //
     // There is no separate "Prepared" status: Updated immediately after prepare()
@@ -2267,6 +2289,25 @@ namespace HydroCouple
      *
      */
     virtual void refresh() = 0;
+
+    /*!
+     * \brief The data items that make up the state carried from one refresh() to the next.
+     *
+     * \details The adapter's counterpart of IModelComponent::states(). Most adapters
+     * (a unit conversion, a regridding) compute their values from the adaptee's
+     * current values and their arguments alone, and return an empty vector. An
+     * adapter whose values also depend on its previous refreshes -- under-relaxation,
+     * interpolation over a recorded history -- lists the items holding that past, so
+     * an orchestrator can tell it apart: a composition containing it can be returned
+     * to an earlier step only if the adapter can be returned too (see
+     * ICheckpointableAdaptedOutput), and IDifferentiableAdaptedOutput::differentiableStates()
+     * is a subset of it. An item may be the adapter itself, when its own previous
+     * values are the state.
+     *
+     * \details Available from initialize(); non-owning observers.
+     * \returns The state items, in a stable order.
+     */
+    [[nodiscard]] virtual std::vector<IComponentDataItem *> states() const = 0;
   };
 
   /*!
@@ -2276,21 +2317,32 @@ namespace HydroCouple
    * \details The adapter's counterpart of IDifferentiableModelComponent, so that a
    * derivative can cross an adapted connection (a unit conversion, a regridding, a
    * rescaling) on its way from a consumer back to a provider. An adapter maps its
-   * adaptee's values and its own arguments to its own values. In a DifferentialEntry:
+   * adaptee's values, its own arguments and -- when it has one -- the state it held
+   * before the refresh to its own values and the state it holds after it. In a
+   * DifferentialEntry:
    *  - the adapter itself appears in role Output;
    *  - its adaptee() appears in role Input (the adapter's input side);
-   *  - its differentiableArguments() appear in role Argument.
+   *  - its differentiableArguments() appear in role Argument;
+   *  - its differentiableStates() appear in roles StateBefore and StateAfter.
    *
    * \details Buffers, seeds and results follow IDifferentiableModelComponent exactly:
    * whole-item buffers, results written rather than accumulated, absent seeds zero,
    * and the linearization point is the most recent refresh(). vjp() and jvp() do not
-   * change the adapter's values.
+   * change the adapter's values or its state.
    *
-   * \details Stateless adapters only. An adapter whose values depend on its previous
-   * refreshes (relaxation, interpolation over a recorded history) has a derivative that
-   * spans steps, which this contract cannot yet express; such an adapter must not
-   * implement this interface, and an orchestrator must treat a connection through it
-   * as non-differentiable rather than guess.
+   * \details State. An adapter whose values depend on its previous refreshes
+   * (under-relaxation, say) lists the items carrying that dependence in
+   * differentiableStates(), exactly as a component does, so a state cotangent can be
+   * carried from one refresh to the previous one by whoever composes the derivative.
+   * A state item keeps its shape across a refresh; an adapter that must change it
+   * (its adaptee changed shape, say) starts its state afresh, and that refresh's
+   * derivative reaches nothing before it. An orchestrator that must
+   * differentiate more than one refresh restores the earlier ones through
+   * ICheckpointableAdaptedOutput, which a stateful differentiable adapter should
+   * therefore also implement. An adapter whose state the derivative cannot follow
+   * (one whose state changes shape as it grows) must not implement this interface,
+   * and an orchestrator treats a connection through it as non-differentiable
+   * rather than guess.
    */
   class IDifferentiableAdaptedOutput : public virtual IAdaptedOutput
   {
@@ -2306,10 +2358,20 @@ namespace HydroCouple
     [[nodiscard]] virtual std::vector<IArgument *> differentiableArguments() const = 0;
 
     /*!
+     * \brief The data items that carry state from one refresh() to the next and that
+     * the derivative follows; a subset of states().
+     * \details Empty for an adapter whose values depend only on its adaptee's current
+     * values and its arguments (the common case).
+     */
+    [[nodiscard]] virtual std::vector<IComponentDataItem *> differentiableStates() const = 0;
+
+    /*!
      * \brief Vector-Jacobian product of the most recent refresh().
-     * \param[in] seeds holds the cotangent of this adapter (role Output).
+     * \param[in] seeds holds cotangents of this adapter (role Output) and of its
+     * states after the refresh (role StateAfter).
      * \param[in] results holds buffers to overwrite with cotangents of the adaptee
-     * (role Input) and of arguments (role Argument).
+     * (role Input), of arguments (role Argument) and of states before the refresh
+     * (role StateBefore).
      * \param[out] message optionally receives a failure description.
      * \returns True on success.
      */
@@ -2318,15 +2380,76 @@ namespace HydroCouple
 
     /*!
      * \brief Jacobian-vector product of the most recent refresh().
-     * \param[in] seeds holds tangents of the adaptee (role Input) and of arguments
-     * (role Argument).
-     * \param[in] results holds the buffer to overwrite with this adapter's tangent
-     * (role Output).
+     * \param[in] seeds holds tangents of the adaptee (role Input), of arguments
+     * (role Argument) and of states before the refresh (role StateBefore).
+     * \param[in] results holds buffers to overwrite with this adapter's tangent
+     * (role Output) and the tangents of its states after the refresh (role
+     * StateAfter).
      * \param[out] message optionally receives a failure description.
      * \returns True on success.
      */
     [[nodiscard]] virtual bool jvp(DifferentialSet seeds, DifferentialSet results,
                                    std::string *message = nullptr) = 0;
+  };
+
+  /*!
+   * \brief ICheckpointableAdaptedOutput is an adapted output that can save and restore
+   * the state it carries between refreshes.
+   *
+   * \details The adapter's counterpart of ICheckpointableModelComponent. An
+   * orchestrator that returns a composition to an earlier step -- to replay it for
+   * reverse-mode differentiation, to rewind a training loop, to restart a run --
+   * restores every component, and every adapter whose states() is not empty, to the
+   * same moment. An adapter with state that cannot be restored makes that impossible,
+   * and the orchestrator must refuse rather than replay through it.
+   *
+   * \details Semantics are those of ICheckpointableModelComponent: saveState() returns
+   * an opaque token, possibly usable by a different process; restoreState() makes the
+   * adapter behave as if it had refreshed its way to the checkpointed state (it does
+   * not refresh its children, which an orchestrator restores in their own right);
+   * releaseState() frees whatever the token names, after which the token is dead.
+   * A restore is not a refresh: an adapter that is also an IDifferentiableAdaptedOutput
+   * has nothing to differentiate until its next refresh().
+   * Adapters have no status, so all three are legal at any time after initialize().
+   * What a checkpoint captures is at least every item in states() plus whatever
+   * private state refresh() depends on.
+   */
+  class ICheckpointableAdaptedOutput : public virtual IAdaptedOutput
+  {
+  public:
+    /*!
+     * \brief ~ICheckpointableAdaptedOutput destructor.
+     */
+    virtual ~ICheckpointableAdaptedOutput() = default;
+
+    /*!
+     * \brief Saves the adapter's complete state.
+     * \param[out] token is an opaque identifier for the saved state.
+     * \param[out] message describes the failure when the return value is false.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool saveState(std::string &token, std::string &message) = 0;
+
+    /*!
+     * \brief Restores state previously saved by saveState().
+     * \details On success the adapter's values and state are those it held when the
+     * token was saved.
+     * \param[in] token is the opaque identifier returned by saveState().
+     * \param[out] message describes the failure when the return value is false.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool restoreState(const std::string &token, std::string &message) = 0;
+
+    /*!
+     * \brief Releases a state saved by saveState() that will not be restored.
+     * \details An adapter whose token IS the state has nothing to free and returns
+     * true. After this call the token is dead: restoring or releasing it again is an
+     * error the adapter may refuse.
+     * \param[in] token is an opaque identifier returned by saveState().
+     * \param[out] message describes the failure when the return value is false.
+     * \returns True on success.
+     */
+    [[nodiscard]] virtual bool releaseState(const std::string &token, std::string &message) = 0;
   };
 
   /*!
@@ -2623,7 +2746,7 @@ namespace HydroCouple
     //   Created ─► Initializing ─► Initialized ─► Validating ─► Validated ─► Preparing ─► Prepared
     //   Prepared | Updated ─► Updating ─► Updated | Paused | Done      Paused ─► Updated (resume)
     //   Initialized | Validated | Prepared | Updated | Paused | Done | Failed ─► Finishing ─► Finished
-    //   Initializing | Validating | Preparing | Updating ─► Failed        Failed ─► Initializing
+    //   every status except Finished ─► Failed                          Failed ─► Initializing
 
     /*!
      * \brief ~IWorkflowComponent destructor for IWorkflowComponent class.

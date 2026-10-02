@@ -90,6 +90,52 @@ declare `Capability.Checkpointing`. `tests/test_gradients.py` proves the
 chain torch → C++ → C++ → torch against finite differences, and that
 PyTorch and JAX agree.
 
+## Working with compiled objects: wrappers and views
+
+Every C++ object the bindings hand out is wrapped in a class registered as
+the ABC it implements, so `isinstance(output, IOutput)` holds and code
+written against the ABCs runs unchanged on a compiled component.
+`tests/test_wrapper_conformance.py` holds each registration to its ABC:
+every abstract member present, a property where the ABC declares a
+property, a method where it declares a method (`ABC.register()` itself
+checks none of this).
+
+A wrapper starts as the general interface (`component.outputs` yields
+`CppOutputWrapper`s). Ask for a more specific interface with a view
+function; each returns `None` when the C++ object does not implement it:
+
+```python
+from _hydrocouple._spatial import as_layered, as_spatial
+from _hydrocouple._spatiotemporal import as_spatiotemporal, as_time_layered
+from _hydrocouple._temporal import as_time_model_component, as_time_series
+
+series = as_time_series(output)          # ITimeSeriesComponentDataItem
+print(series.time_kind, series.time_interpolation)
+grid = as_spatial(output)                # the most specific spatial item
+mesh = as_layered(output)                # ILayeredMeshComponentDataItem, ...
+timed = as_spatiotemporal(output)        # e.g. ITimeSeriesRasterComponentDataItem
+clock = as_time_model_component(component)
+```
+
+Wrappers follow three rules:
+
+- **Equality is identity of the C++ object.** Two wrappers are equal (and
+  hash alike) when they wrap the same object, so a view equals the wrapper
+  it came from and items can key a dict.
+- **A child keeps its parent alive.** A view, an item, a geometry or a
+  band holds a reference to the wrapper it came from, which holds the
+  component, the component info and the loaded library. Objects C++ creates
+  for the caller — a buffered geometry, a new component instance, a new
+  adapted output — are owned by their wrapper and destroyed with it.
+- **`connect(slot)` reaches the signal the ABC documents.** On a component
+  the slot receives an `IComponentStatusChangeEventArgs`; on a workflow an
+  `IWorkflowComponentStatusChangeEventArgs`; on a data item an
+  `IComponentDataItemValueChanged`; on anything else the property name.
+  Connecting the same slot twice connects it once, and `disconnect(slot)`
+  works from any wrapper of the same object. The `on_status_changed`,
+  `on_value_changed` and `on_property_changed` methods return a handle to
+  disconnect instead, with the raw signal arguments.
+
 ## Implementing a component in Python
 
 Subclass the ABCs, then hand the component to C++ through the bridge:
@@ -127,9 +173,10 @@ package version is single-sourced from the repository's
 ```bash
 cd python
 pip install .            # or: python setup.py build_ext --inplace
-python -m pytest         # 100 tests, including enum-parity checks that
-                         # parse the C++ headers so the bindings cannot
-                         # silently drift from the standard
+python -m pytest         # includes parity checks that parse the C++
+                         # headers (enums, transition tables, every ABC's
+                         # members) so the mirror cannot silently drift
+                         # from the standard, and runs the examples
 ```
 
 See `examples/` for a runnable Python component (`sine_wave_component.py`),

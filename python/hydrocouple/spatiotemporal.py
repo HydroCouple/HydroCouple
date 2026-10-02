@@ -14,6 +14,8 @@ from abc import abstractmethod
 
 from hydrocouple.spatial import (
     IGeometryComponentDataItem,
+    ILayeredMeshComponentDataItem,
+    ILayeredNetworkComponentDataItem,
     INetworkComponentDataItem,
     IPolyhedralSurfaceComponentDataItem,
     IRasterComponentDataItem,
@@ -95,4 +97,28 @@ class ITimeRegularGrid3DComponentDataItem(ITimeSeriesComponentDataItem,
     Mirrors C++ ``SpatioTemporal::ITimeRegularGrid3DComponentDataItem``.
     Canonical dimension ordering: time 0, z-cell 1, y-cell 2, x-cell 3;
     optional cell face and cell vertex dimensions follow.
+    """
+
+
+class ITimeLayeredMeshComponentDataItem(
+        ITimeSeriesPolyhedralSurfaceComponentDataItem,
+        ILayeredMeshComponentDataItem):
+    """A layered mesh item whose values also vary in time.
+
+    Mirrors C++ ``SpatioTemporal::ITimeLayeredMeshComponentDataItem``.
+    Canonical dimension ordering: time 0, entity (face or volume) 1, layer
+    2; a Component dimension follows when ``mesh_data_type`` is not Scalar.
+    The vertical coordinate's ``geometry_epoch`` tells a consumer whether
+    the elevations it cached still describe the current time step.
+    """
+
+
+class ITimeLayeredNetworkComponentDataItem(
+        ITimeNetworkComponentDataItem,
+        ILayeredNetworkComponentDataItem):
+    """A layered network item whose values also vary in time.
+
+    Mirrors C++ ``SpatioTemporal::ITimeLayeredNetworkComponentDataItem``.
+    Canonical dimension ordering: time 0, entity (node or edge) 1, layer 2;
+    a Component dimension follows when ``network_data_type`` is not Scalar.
     """

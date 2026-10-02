@@ -175,6 +175,11 @@ class SineWaveComponent(IModelComponent):
     def results(self):
         return [self._field]
 
+    @property
+    def states(self):
+        # A sine of time carries nothing from one step to the next.
+        return []
+
     def initialize(self):
         self._transition(ComponentStatus.Initializing)
         self._transition(ComponentStatus.Initialized)

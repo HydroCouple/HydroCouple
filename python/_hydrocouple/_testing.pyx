@@ -228,3 +228,171 @@ def inspect_dlpack(producer, versioned=True) -> dict:
     }
     borrow.release()
     return info
+
+
+# ---------------------------------------------------------------------------
+# Native layered items (layered_test_fixtures.h)
+# ---------------------------------------------------------------------------
+
+cdef extern from "layered_test_fixtures.h" namespace "HydroCouple::Python::Testing":
+    cdef cppclass LayeredFixtures:
+        LayeredFixtures() except +
+        cpp.IComponentDataItem* network()
+        cpp.IComponentDataItem* timeMesh()
+        cpp.IComponentDataItem* plain()
+        void setStage(double stage)
+
+
+cdef class LayeredFixture:
+    """Owns native layered items and hands them out as the plain
+    ``CppComponentDataItemWrapper`` a loaded component's items arrive as.
+
+    ``network``: three nodes x four sigma layers (bed -10, stage 2); a
+    surveyed trapezoid at node 0 (invert 1, bottom 4, 1:1 sides, banks 2
+    up, a quarter of its area ineffective), no section at node 1, an
+    analytic 5-wide rectangle at node 2. ``time_mesh``: the same coordinate
+    under a time-varying layered mesh with two instants. ``plain``: not
+    layered at all. Keep this object alive while its items are in use.
+    """
+
+    cdef LayeredFixtures* _fixtures
+
+    def __cinit__(self):
+        self._fixtures = new LayeredFixtures()
+
+    def __dealloc__(self):
+        del self._fixtures
+
+    @property
+    def network(self):
+        return CppComponentDataItemWrapper.wrap(self._fixtures.network())
+
+    @property
+    def time_mesh(self):
+        return CppComponentDataItemWrapper.wrap(self._fixtures.timeMesh())
+
+    @property
+    def plain(self):
+        return CppComponentDataItemWrapper.wrap(self._fixtures.plain())
+
+    def set_stage(self, double stage):
+        """Move the free surface; rewrites the profile in place and bumps
+        the geometry epoch."""
+        self._fixtures.setStage(stage)
+
+
+# ---------------------------------------------------------------------------
+# Native objects for the wrapper tests (binding_test_fixtures.h)
+# ---------------------------------------------------------------------------
+
+from _hydrocouple._core cimport (
+    wrap_data_item,
+    wrap_model_component,
+    wrap_model_component_info,
+    wrap_workflow,
+)
+
+cdef extern from "binding_test_fixtures.h" namespace "HydroCouple::Python::Testing":
+    int& liveComponents()
+    int& liveGeometries()
+    int& liveAdaptedOutputs()
+
+    cdef cppclass BindingFixtures:
+        BindingFixtures() except +
+        cpp.IModelComponentInfo* infoPointer()
+        cpp.IModelComponent* componentPointer()
+        cpp.IWorkflowComponent* workflowPointer()
+        cpp.IComponentDataItem* geometryItem()
+        cpp.IComponentDataItem* rasterItem()
+        cpp.IComponentDataItem* refusedOutput()
+        int dischargeUpdates()
+        bint dischargeQueriedBy(cpp.IComponentDataItem* input)
+        size_t lastRequired()
+        bint stopRequested()
+        bint pauseRequested()
+        bint resumed()
+        bint workflowRoleWasDriver()
+        double bandValue(int64_t row, int64_t column)
+
+
+def live_components() -> int:
+    """Fixture components alive right now."""
+    return liveComponents()
+
+
+def live_geometries() -> int:
+    """Fixture geometries alive right now."""
+    return liveGeometries()
+
+
+def live_adapted_outputs() -> int:
+    """Fixture adapted outputs alive right now."""
+    return liveAdaptedOutputs()
+
+
+cdef class BindingFixture:
+    """Owns one of every native fixture; hands each out through the
+    ordinary wrappers. Keep this object alive while its wrappers are used."""
+
+    cdef BindingFixtures* _fixtures
+
+    def __cinit__(self):
+        self._fixtures = new BindingFixtures()
+
+    def __dealloc__(self):
+        del self._fixtures
+
+    @property
+    def info(self):
+        return wrap_model_component_info(self._fixtures.infoPointer())
+
+    @property
+    def component(self):
+        return wrap_model_component(self._fixtures.componentPointer())
+
+    @property
+    def workflow(self):
+        return wrap_workflow(self._fixtures.workflowPointer())
+
+    @property
+    def geometry_item(self):
+        return wrap_data_item(self._fixtures.geometryItem())
+
+    @property
+    def raster_item(self):
+        return wrap_data_item(self._fixtures.rasterItem())
+
+    @property
+    def refused_output(self):
+        return wrap_data_item(self._fixtures.refusedOutput())
+
+    @property
+    def discharge_updates(self) -> int:
+        return self._fixtures.dischargeUpdates()
+
+    def discharge_queried_by(self, item) -> bool:
+        cdef cpp.IComponentDataItem* p = (<CppComponentDataItemWrapper>item)._ptr
+        return self._fixtures.dischargeQueriedBy(p)
+
+    @property
+    def last_required(self) -> int:
+        return self._fixtures.lastRequired()
+
+    @property
+    def stop_requested(self) -> bool:
+        return self._fixtures.stopRequested()
+
+    @property
+    def pause_requested(self) -> bool:
+        return self._fixtures.pauseRequested()
+
+    @property
+    def resumed(self) -> bool:
+        return self._fixtures.resumed()
+
+    @property
+    def workflow_role_was_driver(self) -> bool:
+        return self._fixtures.workflowRoleWasDriver()
+
+    def band_value(self, int64_t row, int64_t column) -> float:
+        return self._fixtures.bandValue(row, column)

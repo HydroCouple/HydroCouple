@@ -7,26 +7,11 @@ attributes, and that wrapper types expose signal connection methods.
 
 
 class TestSignalSlotHandles:
-    def test_handle_types_importable(self):
-        from _hydrocouple._core import (
-            _StatusSlotHandle,
-            _ValueChangedSlotHandle,
-            _PropertySlotHandleComp,
-            _PropertySlotHandleItem,
-            _PropertySlotHandleWorkflow,
-            _WorkflowStatusSlotHandle,
-        )
+    def test_handle_type_importable(self):
+        from _hydrocouple._core import _SlotHandle
 
-        for cls in [
-            _StatusSlotHandle,
-            _ValueChangedSlotHandle,
-            _PropertySlotHandleComp,
-            _PropertySlotHandleItem,
-            _PropertySlotHandleWorkflow,
-            _WorkflowStatusSlotHandle,
-        ]:
-            assert hasattr(cls, "disconnect")
-            assert hasattr(cls, "connected")
+        assert hasattr(_SlotHandle, "disconnect")
+        assert hasattr(_SlotHandle, "connected")
 
     def test_wrapper_has_signal_methods(self):
         from _hydrocouple._core import (

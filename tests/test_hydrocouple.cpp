@@ -525,6 +525,7 @@ TEST(InterfaceTest, AdditionalCoreInterfacesAreAbstract)
     EXPECT_TRUE(std::is_abstract_v<ILicensedComponent>);
     EXPECT_TRUE(std::is_abstract_v<IUIProvider>);
     EXPECT_TRUE(std::is_abstract_v<ICheckpointableModelComponent>);
+    EXPECT_TRUE(std::is_abstract_v<ICheckpointableAdaptedOutput>);
     EXPECT_TRUE(std::is_abstract_v<IWorkflowComponent>);
     EXPECT_TRUE(std::is_abstract_v<IWorkflowComponentInfo>);
     EXPECT_TRUE(std::is_abstract_v<IWorkflowComponentStatusChangeEventArgs>);
@@ -550,6 +551,7 @@ TEST(InterfaceTest, AdditionalCoreInterfacesHaveVirtualDestructors)
     EXPECT_TRUE(std::has_virtual_destructor_v<ILicensedComponent>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IUIProvider>);
     EXPECT_TRUE(std::has_virtual_destructor_v<ICheckpointableModelComponent>);
+    EXPECT_TRUE(std::has_virtual_destructor_v<ICheckpointableAdaptedOutput>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IWorkflowComponentInfo>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IWorkflowComponentStatusChangeEventArgs>);
     EXPECT_TRUE(std::has_virtual_destructor_v<IModelComponentInfo>);
@@ -677,6 +679,7 @@ TEST(InheritanceTest, DataItemChain)
 
     // IOutput -> IAdaptedOutput
     EXPECT_TRUE((std::is_base_of_v<IOutput, IAdaptedOutput>));
+    EXPECT_TRUE((std::is_base_of_v<IAdaptedOutput, ICheckpointableAdaptedOutput>));
 
     // IInput -> IMultiInput
     EXPECT_TRUE((std::is_base_of_v<IInput, IMultiInput>));

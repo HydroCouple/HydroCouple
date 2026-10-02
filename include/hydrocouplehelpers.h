@@ -1,7 +1,7 @@
 /*!
  * \file hydrocouplehelpers.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0-alpha.1
+ * \version 2.0.0-alpha.2
  * \brief Non-normative convenience helpers for the HydroCouple interface standard.
  * \details This header is the single deliberate exception to the standard's
  * no-implementation rule: the interface headers (hydrocouple.h and companions)
@@ -226,6 +226,15 @@ namespace HydroCouple
                                                                   IModelComponent::ComponentStatus to)
     {
       using CS = IModelComponent::ComponentStatus;
+
+      // An unrecoverable error can be detected in any state but the terminal
+      // one -- most visibly by a proxy whose peer dies while it rests at
+      // Updated or Done (IProxyModelComponent's failure semantics), or by a
+      // component whose arguments cannot even be read. Failed is therefore
+      // reachable from everything except Finished (and itself).
+      if (to == CS::Failed)
+        return from != CS::Finished && from != CS::Failed;
+
       switch (from)
       {
         case CS::Created:        return to == CS::Initializing;
@@ -265,6 +274,12 @@ namespace HydroCouple
                                                                  IWorkflowComponent::WorkflowStatus to)
     {
       using WS = IWorkflowComponent::WorkflowStatus;
+
+      // As for components: a workflow can learn of an unrecoverable failure
+      // (a managed component's, a transport's) in any non-terminal state.
+      if (to == WS::Failed)
+        return from != WS::Finished && from != WS::Failed;
+
       switch (from)
       {
         case WS::Created:      return to == WS::Initializing;

@@ -380,5 +380,29 @@ inline void disconnect_workflow_status_slot(
     static_cast<WorkflowStatusSignal *>(comp)->disconnect(slot);
 }
 
+// -- Any IPropertyChanged ----------------------------------------------------
+// Every wrapper's connect()/disconnect()/block_signals() for the
+// property-changed signal goes through these, whatever the object is.
+inline void connect_property_slot_any(
+    IPropertyChanged *object,
+    const std::shared_ptr<PropertySlotBridge> &slot)
+{
+    static_cast<PropertySignal *>(object)->connect(slot);
+}
+
+inline void disconnect_property_slot_any(
+    IPropertyChanged *object,
+    const std::shared_ptr<PropertySlotBridge> &slot)
+{
+    static_cast<PropertySignal *>(object)->disconnect(slot);
+}
+
+/// blockSignals() is declared once per ISignal base; implementations
+/// override it once, for every signal the object emits.
+inline void block_signals_any(IPropertyChanged *object, bool block)
+{
+    static_cast<PropertySignal *>(object)->blockSignals(block);
+}
+
 } // namespace Python
 } // namespace HydroCouple

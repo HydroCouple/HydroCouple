@@ -181,6 +181,36 @@ class RasterDataType(IntEnum):
     ARGB32_Premultiplied = 13
 
 
+class VerticalCoordinateKind(IntEnum):
+    """The family a vertical coordinate belongs to.
+
+    Mirrors C++ ``Spatial::VerticalCoordinateKind``. Named so two models can
+    tell whether they agree about what a layer *is* before exchanging values
+    on one: a sigma model and a z-level model both index values by layer,
+    and those indices mean different things.
+    """
+
+    Unknown = 0
+    Sigma = 1
+    ZLevel = 2
+    ZStar = 3
+    Hybrid = 4
+    Isopycnal = 5
+    DepthBelowSurface = 6
+
+
+class CrossSectionKind(IntEnum):
+    """How a cross-section's shape is held by whoever produced it.
+
+    Mirrors C++ ``Spatial::CrossSectionKind``.
+    """
+
+    Unknown = 0
+    StationElevation = 1
+    WidthElevation = 2
+    Analytic = 3
+
+
 # ---------------------------------------------------------------------------
 # Spatial reference system and envelope
 # ---------------------------------------------------------------------------
@@ -1610,4 +1640,229 @@ class IRegularGrid3DComponentDataItem(IComponentDataItem):
     def cell_vertex_dimension(self) -> IDimension:
         """The per-cell vertex dimension, when values attach to cell
         vertices."""
+        raise NotImplementedError
+
+
+# ---------------------------------------------------------------------------
+# Vertical structure: coordinates, layering, cross-sections
+# ---------------------------------------------------------------------------
+
+
+class IVerticalCoordinate(ABC):
+    """Where the layers of a layered or volumetric data item actually are.
+
+    Mirrors C++ ``Spatial::IVerticalCoordinate``. Values indexed by
+    ``{cell, layer}`` cannot be interpreted without this: under a
+    terrain-following coordinate the elevation of layer ``k`` moves every
+    step with the free surface.
+
+    Conventions, as in the standard: elevations are **positive up**, in the
+    vertical datum and units the parent geometry's
+    :class:`ISpatialReferenceSystem` declares. Interface 0 is the **top** of
+    the column, so a column of :attr:`layer_count` layers has
+    ``layer_count + 1`` interfaces.
+    """
+
+    @property
+    @abstractmethod
+    def kind(self) -> VerticalCoordinateKind:
+        """The coordinate family."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def layer_count(self) -> int:
+        """Number of layers in a column."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def column_count(self) -> int:
+        """Number of columns (plan entities); the parent item's entity count."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def is_time_varying(self) -> bool:
+        """Whether interface elevations change from step to step.
+
+        True for every coordinate that follows the free surface; a consumer
+        caching elevations must then re-read them each exchange.
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def geometry_epoch(self) -> int:
+        """Counter incremented every time the elevations change.
+
+        A consumer records it with the profile it cached and compares,
+        rather than re-reading every column to learn nothing moved.
+        Constant when :attr:`is_time_varying` is false.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def interface_elevation(self, cell_index: int, interface_index: int) -> float:
+        """Elevation of one interface in one cell (spot queries).
+
+        ``interface_index`` runs from 0 at the top to :attr:`layer_count`
+        at the bed. Bulk consumers use :attr:`interface_elevations`.
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def interface_elevations(self) -> "np.ndarray":
+        """All interface elevations of all columns.
+
+        A float64 array of shape ``(column_count, layer_count + 1)``, top
+        interface first within a column -- the C++ row-major
+        ``[column][interface]`` span, shaped. Valid until
+        :attr:`geometry_epoch` changes; the accessor a remap uses.
+        """
+        raise NotImplementedError
+
+
+class ILayering(ABC):
+    """Values resolved into vertical layers, whatever the plan geometry.
+
+    Mirrors C++ ``Spatial::ILayering``. Mixed into the layered mesh and
+    layered network items, so a consumer that needs only "values by layer,
+    with elevations I can trust" can test for this and stay indifferent to
+    whether the producer is a mesh or a network.
+    """
+
+    @property
+    @abstractmethod
+    def layer_dimension(self) -> IDimension:
+        """The layer dimension (role ``DimensionRole.Layer``).
+
+        Immediately after the entity dimension in :attr:`shape` -- dimension
+        1 on a plain layered item, 2 on a time-varying one -- and before any
+        Component dimension. Layer 0 is at the top.
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def vertical_coordinate(self) -> IVerticalCoordinate:
+        """Where those layers are. Never ``None``."""
+        raise NotImplementedError
+
+
+class ILayeredMeshComponentDataItem(IPolyhedralSurfaceComponentDataItem, ILayering):
+    """A polyhedral surface whose values are resolved into vertical layers.
+
+    Mirrors C++ ``Spatial::ILayeredMeshComponentDataItem``. Values are
+    indexed ``{face, layer}`` (then a Component dimension if any);
+    :attr:`location` is ``MeshLocation.Volume`` for cell values and
+    ``Face`` for values on each face's layer interfaces.
+    """
+
+
+class ICrossSection(ABC):
+    """The shape of a channel at one place, as a function of stage.
+
+    Mirrors C++ ``Spatial::ICrossSection``. The contract is the *derived*
+    quantities, which station-elevation (HEC-RAS, SWMM), width-elevation
+    (CE-QUAL-W2) and analytic producers can all answer exactly;
+    :attr:`station_count` is 0 for producers that hold no survey points.
+
+    Conventions, as in the standard: ``stage`` is a water-surface
+    *elevation*, positive up, in the parent geometry's vertical datum;
+    every length is in its vertical distance units and areas in their
+    square. Below :attr:`invert_elevation` every quantity is zero. *At*
+    the invert the areas are zero but :meth:`top_width` and
+    :meth:`wetted_perimeter` take their limiting values from above (the
+    bottom width of a flat-bottomed section), so nothing divides by zero
+    at a wet front. Flow area and storage area differ wherever part of the
+    section stores water without conveying it.
+    """
+
+    @property
+    @abstractmethod
+    def kind(self) -> CrossSectionKind:
+        """How the producer holds this shape."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def invert_elevation(self) -> float:
+        """Lowest elevation in the section."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def top_width(self, stage: float) -> float:
+        """Width of the water surface at ``stage``."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def storage_area(self, stage: float) -> float:
+        """Total wetted area at ``stage`` -- everything holding water."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def flow_area(self, stage: float) -> float:
+        """The conveying part of that area; never above :meth:`storage_area`."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def wetted_perimeter(self, stage: float) -> float:
+        """Wetted perimeter of the conveying area at ``stage``.
+
+        Paired with :meth:`flow_area`, so their ratio is the hydraulic
+        radius a friction law expects.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def evaluate(self, stages: "np.ndarray",
+                 top_widths: Optional["np.ndarray"] = None,
+                 storage_areas: Optional["np.ndarray"] = None,
+                 flow_areas: Optional["np.ndarray"] = None,
+                 wetted_perimeters: Optional["np.ndarray"] = None) -> None:
+        """Evaluate the section at many stages in one call.
+
+        Mirrors the C++ out-parameter form so a caller can tabulate into
+        arrays it already holds: each output is ``None`` (not wanted) or a
+        writable float64 array of ``len(stages)`` that is filled in place.
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def station_count(self) -> int:
+        """Number of survey points, or 0 when the producer holds none."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def stations(self) -> "tuple[np.ndarray, np.ndarray]":
+        """The survey points, left bank to right bank.
+
+        Returns ``(stations, elevations)``, two float64 arrays of
+        :attr:`station_count` elements (empty when there are none). A
+        consumer that needs a shape regardless uses the area and width
+        accessors, which every producer answers.
+        """
+        raise NotImplementedError
+
+
+class ILayeredNetworkComponentDataItem(INetworkComponentDataItem, ILayering):
+    """A network carrying a vertical profile, and optionally a channel
+    shape, at each node or edge.
+
+    Mirrors C++ ``Spatial::ILayeredNetworkComponentDataItem`` -- the shape
+    shared by CE-QUAL-W2, HEC-RAS and SWMM. Values are indexed
+    ``{entity, layer}`` (then a Component dimension if any), the entity
+    being whichever of node or edge :attr:`location` reports.
+    """
+
+    @abstractmethod
+    def cross_section(self, entity_index: int) -> Optional[ICrossSection]:
+        """The channel shape at one entity, or ``None`` where there is none.
+
+        ``None`` says plainly that a stratified network carries no surveyed
+        section there; a zero-width section would not.
+        """
         raise NotImplementedError
