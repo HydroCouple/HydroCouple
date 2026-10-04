@@ -252,3 +252,6 @@ CMakeLists.txt.user
 install.sh
 .DS_Store
 include/version.h
+
+# Local verification runs and records (kept out of the repository)
+verification/
