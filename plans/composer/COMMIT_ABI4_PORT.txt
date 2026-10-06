@@ -1,0 +1,28 @@
+port: build against interface ABI 4
+
+The Composer application (not only its test stubs) used the API the
+contract-consistency round removed. Ported to HydroCouple 98bfbaa /
+HydroCoupleSDK 2b960aa.
+
+- layers/dataitemlayer: the entity axis is entityDimension() for network
+  and surface items alike; which entity the values sit on comes from
+  location() (MeshLocation::Node/Edge/Face) instead of
+  networkDataObjectType()/meshDataObjectType(). Same drawing behaviour.
+- gis/spatialreference: implements the vertical-datum accessors. A compound
+  CRS answers from GDAL's VERT_CS node (EPSG:5498 -> EPSG:5703, metres); a
+  horizontal-only CRS answers "undeclared" (empty, 0, Unknown).
+- layers/meshlayer, layers/rasterdataitemlayer: grid and raster extents are
+  int64_t in the interface; widened / narrowed explicitly.
+- tests/gui/spatialstubs.h, test_dataitemlayers: stubs brought to ABI 4
+  (location, entityDimension, vectorBasis, temporal semantics, typed raster
+  read/write, vertical CRS, int64_t widths).
+- test_dataitemlayers AnEdgeItemOnASurfaceWithNoEdgesIsRefused: the SDK now
+  derives edges from face loops, so "a surface with no edges" must also have
+  no faces; the fixture clears them (the variable was already "faceless").
+
+Verified on macOS (verification/MAC_VERIFICATION_ABI4_2026-09-30.md):
+424/424 built, test_dataitemlayers 31/31, test_difference 13/13, suite
+64/65 -- test_viewhandoff fails identically at ABI 2 (pre-existing).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_019zLCZkHWVpHMaDUHoTNRDa

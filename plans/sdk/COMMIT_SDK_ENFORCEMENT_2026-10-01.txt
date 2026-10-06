@@ -1,0 +1,76 @@
+feat: gradients through stateful adapters (G2.4); enforce ABI-4 declarations; 2.0.0-alpha.2
+
+Stateful adapters (G2.4), on the interface's new adapter members.
+- RelaxationAdaptedOutput is differentiable and checkpointable; its state
+  is its own previous values. Adjoint with t = ybar_out + ybar_state:
+  xbar = lambda t, ybar_prev = (1 - lambda) t, lambdabar = sum t (x - y_prev).
+  The token is the state. Lambda is read at every refresh, not latched.
+- DifferentiableWorkflow routes cotangents per output (root or adapted) and
+  reverses the adapter trees on a component's outputs, leaves first, before
+  its vjp: each adapter's vjp once per step with its consumers' sum and its
+  carried state. Checkpoints carry adapter tokens; a restore refuses up
+  front if a stateful adapter would be left out; a stateful adapter that is
+  not checkpointable is refused for multi-step backward, on or off the
+  differentiated path. StateGradient gained owner/adapter; findState() takes
+  any owner.
+- LinearTransformAdaptedOutput reads its coefficients at every refresh, and
+  TorchComposition initializes no adapter (initialize() refreshed everything
+  below it and moved a stateful adapter off its rewound state).
+- After a restore the engine refreshes stateless adapters, then restores
+  stateful ones. Refused by name: a lagged self-coupling, a stateful adapter
+  fed from outside the workflow, a seed on a non-differentiable adapter.
+  Adapters fed from outside the workflow are differentiated again.
+- Relaxation tokens hold each value's bit pattern and are validated.
+- AbstractAdaptedOutput::states() defaults to none;
+  TemporalInterpolationAdaptedOutput lists its sample record.
+- Gates: 17 new differentiation tests (+2 rewritten), 2 Torch tests;
+  falsifier rows S1-S20, L4; E1/E4/E5/E8/T11 rewritten.
+
+Release 2.0.0-alpha.2 (lockstep with the interface): CMake suffix,
+vcpkg.json, README; CHANGELOG "[Unreleased] -- 2.1.0" becomes
+"[2.0.0-alpha.2] -- 2026-10-02".
+
+ABI-4 enforcement (2026-10-01):
+
+ABI 4 let items and components declare what their numbers mean and which
+status transitions are lawful; nothing in the SDK read the declarations.
+
+- setStatus() on AbstractModelComponent and AbstractWorkflowComponent checks
+  each transition against the normative tables. An illegal one is performed
+  (refusing Done would hang an orchestrator) and reported on errors() as an
+  Error with Diagnostic::IllegalStatusTransition (1001), once per (from, to)
+  pair per object. Status is held in a std::atomic. Codes are named in the
+  new core/diagnosticcodes.h.
+- validateConnection(provider, consumer) compares the two ends of a link:
+  element type, value definition (quantity/quality, categories, ValueKind,
+  unit dimension and scale), TimeKind and interval, interpolation and
+  extrapolation policy, horizontal and vertical reference systems, mesh
+  location, vector structure and basis, layering, dimension roles. Error
+  when both ends declare and contradict, Warning when one is silent.
+  AbstractWorkflowComponent::validate() runs it over every wired link via
+  the new virtual validateConnections(); Errors fail the workflow.
+- ComponentWorker stamps its component's status into every reply
+  (kFlagStatusPresent | status); ProxyModelComponent mirrors it, so a remote
+  that reaches Done is seen as Done, and walks the lawful intermediate
+  states. A rejected validate leaves the proxy Invalid, not Failed.
+- TimeSeriesOutput/TimeSeriesInput declare TimeInterpolation::None and
+  TimeExtrapolation::Refuse, which is what they do.
+
+Fixed:
+- UnitDimensions stored 9 powers for 10 dimensions: PlaneAngle was read
+  and written one past the end, and copy() dropped it. Sized from the enum
+  now. Found by the validator printing rad^6.9e-310.
+- LayeredMeshInput/LayeredMeshOutput still declared the pre-ABI-4
+  patch/edge/vertexDimension() and lacked vectorBasis(); nothing
+  instantiated them, so nothing noticed. Brought up to the interface;
+  test_templatecompleteness asserts every shipped class template is
+  concrete.
+- Test fixtures make only lawful transitions and validate() before
+  prepare().
+
+Tests: test_connectionvalidator (every check as Error and as Warning, the
+workflow integration, lifecycle reporting), the template completeness
+check, a UnitDimensions round trip, and a proxy that mirrors a remote Done.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_019zLCZkHWVpHMaDUHoTNRDa

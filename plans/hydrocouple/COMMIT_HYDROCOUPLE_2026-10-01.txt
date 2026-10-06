@@ -1,0 +1,87 @@
+feat(interface): stateful adapters in ABI 4; 2.0.0-alpha.2
+
+Stateful adapters (same unreleased ABI 4, so one breaking change). An
+adapter whose values depend on its past was invisible as such: an
+orchestrator returning a composition to an earlier step could not know to
+return the adapter too, and differentiation was "stateless adapters only".
+- IAdaptedOutput::states() (pure virtual, empty when stateless) -- every
+  IAdaptedOutput implementation must add it.
+- IDifferentiableAdaptedOutput::differentiableStates(), in roles
+  StateBefore/StateAfter as for components.
+- ICheckpointableAdaptedOutput: saveState/restoreState/releaseState with
+  the component semantics; legal any time after initialize().
+- Stated: adapters' optional interfaces are discovered by casting the
+  adapter (they have no capability set), and an adapter reports bool+message
+  failures through the message alone (it has no error queue).
+- Python: IAdaptedOutput.states, IDifferentiableAdaptedOutput.
+  differentiable_states, ICheckpointableAdaptedOutput; the adapter wrapper
+  gains states and the differentiation/checkpoint members.
+- Tests: signatures and traits (C++), parity of the new ABC, a stateful
+  native fixture adapter driven through the bindings.
+
+Release 2.0.0-alpha.2: CMake suffix, vcpkg.json, CITATION.cff, Doxyfile,
+header \version tags, README, Python __version__ (2.0.0a2); CHANGELOG
+"Unreleased" becomes "2.0.0-alpha.2 -- 2026-10-02".
+
+Lifecycle. isValidComponentStatusTransition() and
+isValidWorkflowStatusTransition() admitted Failed only from the in-flight
+statuses, which contradicted IProxyModelComponent (a peer can die while the
+proxy rests at Updated) and every orchestrator that fails a resting
+component on a partner's behalf. Failed is now reachable from every status
+but Finished, for components and workflows. The SDK enforces these tables
+from this release, which is how the contradiction surfaced.
+
+Component-loading convention upstreamed. hydrocouplecomponentabi.h moves in
+from HydroCoupleComposer's include/plugins/componentabi.h, so hosts and
+components include one copy. Its stamp's interface version was hardcoded to
+"2" while the interfaces are at ABI 4; it is now a macro static_asserted
+against HYDROCOUPLE_ABI_VERSION. hydrocouple.h's "Toolchain" convention now
+says the interfaces are a C++ ABI and the door a library is loaded through
+is the one piece defined in C. README lists the header.
+
+Python mirror.
+- helpers.py's transition table had been the ABI-2 one since ABI 2, and
+  there was no workflow table. Both are now ABI 4
+  (is_valid_workflow_status_transition() is new); test_transition_parity.py
+  compiles the C++ helpers and compares every (from, to) pair.
+- IVerticalCoordinate, ILayering, ICrossSection, the layered mesh/network
+  items, their time-varying forms and the VerticalCoordinateKind /
+  CrossSectionKind enums, with Cython wrappers. as_layered() /
+  as_time_layered() cross-cast a component's items to them; elevations are
+  a read-only zero-copy view of the producer's profile, and
+  ICrossSection.evaluate() lends the caller's arrays to C++ with the GIL
+  released. Argument/input/output wrappers gain data_item.
+- test_layering.py checks the ABCs member-for-member against
+  hydrocouplespatial.h and drives native C++ fixtures through the bindings.
+
+Python bindings: every wrapper implements the ABC it is registered as.
+ABC.register() checks nothing, and all 47 registered Cython wrappers fell
+short of their ABCs (no time_kind on time series, none of validate/prepare/
+request_stop/... on workflows, no connect/disconnect anywhere), failing at
+first attribute access.
+- test_wrapper_conformance.py holds each of the 70 registrations to its ABC
+  (member present, property vs method); test_abc_parity.py compares every
+  ABC with the pure virtuals of its C++ class; test_wrapper_behaviour.py
+  drives the wrappers against native fixtures (binding_test_fixtures.h);
+  test_examples.py runs the examples.
+- The IWorkflowComponent ABC gains validate, prepare, request_stop,
+  request_pause, resume and errors (ABI 4 added them; the mirror missed it).
+- Wrappers restructured on shared bases (property-changed -> description ->
+  identity -> data item), typed pointers bound by dynamic_cast
+  (interface_casts.h); new wrappers for the remaining interfaces.
+- as_spatial, as_time_series, as_time_model_component and as_spatiotemporal
+  views; equality is identity of the C++ object; children keep parents
+  alive and C++-created objects are owned by their wrappers; connect()
+  reaches the documented signal with its event-arguments object; one
+  _SlotHandle replaces six handle classes; mutators translate C++
+  exceptions.
+- Fixed: update(required_outputs) and add_model_component(..., role)
+  ignored their arguments; both pure-Python examples had stopped
+  instantiating at ABI 4.
+
+Also: python/environment.yml takes numpy from pip (conda-forge's OpenMP
+OpenBLAS loaded a second libomp beside torch's), and the ABI-4 Mac
+verification record.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_019zLCZkHWVpHMaDUHoTNRDa
