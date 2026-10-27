@@ -255,3 +255,6 @@ include/version.h
 
 # Local verification runs and records (kept out of the repository)
 verification/
+
+# Local development plans
+/plans/
