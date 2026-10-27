@@ -1,0 +1,653 @@
+# distutils: language = c++
+# cython: language_level = 3
+"""
+Cython declarations for the C++ v2.0.0 interfaces in ``hydrocouple.h``.
+"""
+
+from libcpp cimport bool as bint
+from libcpp.vector cimport vector
+from libcpp.string cimport string
+from libcpp.memory cimport shared_ptr, unique_ptr
+from libcpp.set cimport set as cppset
+from libcpp.unordered_map cimport unordered_map
+from cpython.ref cimport PyObject
+from libcpp.typeinfo cimport type_info
+from libc.stdint cimport (
+    int8_t, int16_t, int32_t, int64_t,
+    uint8_t, uint16_t, uint32_t, uint64_t,
+)
+
+# ---------------------------------------------------------------------------
+# std::span<const int64_t> — Cython has no built-in binding
+# ---------------------------------------------------------------------------
+cdef extern from "hydrocouple.h" namespace "HydroCouple":
+    cdef cppclass DifferentialEntry
+
+cdef extern from "<span>" namespace "std":
+    cdef cppclass DifferentialSet "std::span<const HydroCouple::DifferentialEntry>":
+        DifferentialSet()
+        DifferentialSet(const DifferentialEntry* ptr, size_t count)
+
+    cdef cppclass const_int64_span "std::span<const int64_t>":
+        const_int64_span()
+        const_int64_span(const int64_t* ptr, size_t count)
+        const int64_t* data() const
+        size_t size() const
+        bint empty() const
+
+cdef extern from "hydrocouple.h" namespace "HydroCouple":
+
+    # ------------------------------------------------------------------
+    # Top-level enums
+    # ------------------------------------------------------------------
+    cdef enum class ByteOrder(uint8_t):
+        BigEndian
+        LittleEndian
+
+    cdef enum class DataKind(uint8_t):
+        Unknown
+        Int8
+        UInt8
+        Int16
+        UInt16
+        Int32
+        UInt32
+        Int64
+        UInt64
+        Float32
+        Float64
+        Boolean
+        String
+        Opaque
+
+    cdef enum class MemorySpace(uint8_t):
+        Host
+        HostPinned
+        Device
+        Unified
+
+    cdef enum class Capability(uint32_t):
+        DeviceBuffers
+        PartitionedData
+        DistributedExecution
+        Checkpointing
+        Cloneable
+        UserInterface
+        Licensing
+        Differentiable
+        LayeredData
+        VendorBase
+
+    cdef enum class DeviceBackend(uint8_t):
+        NoBackend "HydroCouple::DeviceBackend::None"
+        CUDA
+        HIP
+        SYCL
+        LevelZero
+        OpenCL
+        Other
+
+    cdef enum class ValueKind(uint8_t):
+        Unknown
+        Intensive
+        Extensive
+        Flux
+        Density
+
+    # ------------------------------------------------------------------
+    # BufferDescriptor — plain aggregate
+    # ------------------------------------------------------------------
+    cdef cppclass BufferDescriptor:
+        BufferDescriptor()
+        void* data
+        DataKind kind
+        int32_t rank
+        const int64_t* shape
+        const int64_t* stridesBytes
+        int64_t itemSizeBytes
+        MemorySpace space
+        DeviceBackend backend
+        int32_t deviceId
+        void* queue
+
+    # ------------------------------------------------------------------
+    # ErrorEntry
+    # ------------------------------------------------------------------
+    cdef enum class ErrorEntry_Severity "HydroCouple::ErrorEntry::Severity" (uint8_t):
+        Information
+        Warning
+        Error
+        Fatal
+
+    cdef cppclass ErrorEntry:
+        ErrorEntry()
+        ErrorEntry_Severity severity
+        int32_t code
+        string source
+        string message
+
+    # ------------------------------------------------------------------
+    # Forward declarations
+    # ------------------------------------------------------------------
+    cdef cppclass IModelComponent
+    cdef cppclass IInput
+    cdef cppclass IOutput
+    cdef cppclass IAdaptedOutput
+    cdef cppclass IAdaptedOutputFactory
+    cdef cppclass IAdaptedOutputFactoryComponent
+    cdef cppclass IComponentDataItem
+    cdef cppclass IComponentDataItemValueChanged
+    cdef cppclass IComponentStatusChangeEventArgs
+    cdef cppclass IWorkflowComponent
+    cdef cppclass IWorkflowComponentStatusChangeEventArgs
+    cdef cppclass IArgument
+    cdef cppclass IExchangeItem
+
+    # ------------------------------------------------------------------
+    # IPropertyChanged  (flattened ISignal<string> template)
+    # ------------------------------------------------------------------
+    cdef cppclass IPropertyChanged:
+        pass
+
+    # ------------------------------------------------------------------
+    # IDescription / IIdentity
+    # ------------------------------------------------------------------
+    cdef cppclass IDescription(IPropertyChanged):
+        const string& caption() const
+        void setCaption(const string& caption)
+        const string& description() const
+        void setDescription(const string& description)
+
+    cdef cppclass IIdentity(IDescription):
+        const string& id() const
+
+    # ------------------------------------------------------------------
+    # IComponentInfo (licensing moved to ILicensedComponent side interface)
+    # ------------------------------------------------------------------
+    cdef cppclass IComponentInfo(IIdentity):
+        string libraryFilePath() const
+        void setLibraryFilePath(const string& filePath)
+        string iconFilePath() const
+        string developer() const
+        vector[string] documentation() const
+        string license() const
+        string copyright() const
+        string url() const
+        string email() const
+        string version() const
+        cppset[string] tags() const
+
+    cdef cppclass IModelComponentInfo(IComponentInfo):
+        unique_ptr[IModelComponent] createComponentInstance() except +
+        vector[IAdaptedOutputFactory*] adaptedOutputFactories() const
+
+    # ------------------------------------------------------------------
+    # IModelComponent — nested enum + methods
+    # ------------------------------------------------------------------
+    cdef enum class IModelComponent_ComponentStatus "HydroCouple::IModelComponent::ComponentStatus":
+        Created
+        Initializing
+        Initialized
+        Validating
+        Valid
+        WaitingForData
+        Invalid
+        Preparing
+        Updating
+        Updated
+        Checkpointing
+        Done
+        Finishing
+        Finished
+        Failed
+
+    cdef cppclass IModelComponent(IIdentity):
+        IModelComponentInfo* componentInfo() const
+        IModelComponent_ComponentStatus status() const
+        vector[IArgument*] arguments() const
+        vector[IInput*] inputs() const
+        vector[IOutput*] outputs() const
+        vector[IComponentDataItem*] results() const
+        vector[IComponentDataItem*] states() const
+        void initialize() except +
+        vector[string] validate() except +
+        void prepare() except +
+        void update(const vector[IOutput*]& requiredOutputs) except + nogil
+        void finish() except +
+        const IWorkflowComponent* workflow() const
+        void setWorkflow(const IWorkflowComponent* workflow) except +
+        cppset[Capability] capabilities() const
+        vector[ErrorEntry] errors(bint clearAfterRead)
+        string referenceDirectory() const
+        void setReferenceDirectory(const string& referenceDirectory)
+
+    # ------------------------------------------------------------------
+    # IComponentStatusChangeEventArgs
+    # ------------------------------------------------------------------
+    cdef cppclass IComponentStatusChangeEventArgs:
+        IModelComponent* component() const
+        IModelComponent_ComponentStatus previousStatus() const
+        IModelComponent_ComponentStatus status() const
+        string message() const
+        bint hasProgressMonitor() const
+        float percentProgress() const
+
+    # ------------------------------------------------------------------
+    # ICloneableModelComponent / ICheckpointableModelComponent
+    # ------------------------------------------------------------------
+    cdef cppclass ICloneableModelComponent(IModelComponent):
+        ICloneableModelComponent* parent() const
+        unique_ptr[ICloneableModelComponent] clone(
+            const unordered_map[string, string]& args)
+        vector[ICloneableModelComponent*] clones() const
+
+    cdef cppclass ICheckpointableModelComponent(IModelComponent):
+        bint saveState(string& token, string& message)
+        bint restoreState(const string& token, string& message)
+        bint releaseState(const string& token, string& message)
+
+    # ------------------------------------------------------------------
+    # Differentiation contract (Phase G1)
+    # ------------------------------------------------------------------
+    cdef enum class DifferentialRole(uint8_t):
+        Input
+        Argument
+        Output
+        StateBefore
+        StateAfter
+
+    cdef cppclass DifferentialEntry:
+        DifferentialEntry()
+        const IComponentDataItem* item
+        DifferentialRole role
+        BufferDescriptor value
+
+    cdef cppclass IDifferentiableModelComponent(IModelComponent):
+        vector[IInput*] differentiableInputs() const
+        vector[IArgument*] differentiableArguments() const
+        vector[IOutput*] differentiableOutputs() const
+        vector[IComponentDataItem*] differentiableStates() const
+        bint vjp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
+        bint jvp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
+
+    # ------------------------------------------------------------------
+    # IValueDefinition
+    # ------------------------------------------------------------------
+    cdef cppclass IValueDefinition(IDescription):
+        ValueKind valueKind() const
+        double missingValue() const
+        double defaultValue() const
+
+    # ------------------------------------------------------------------
+    # IDimension — nested enum
+    # ------------------------------------------------------------------
+    cdef enum class IDimension_LengthType "HydroCouple::IDimension::LengthType":
+        Static
+        Dynamic
+
+    cdef enum class IDimension_DimensionRole "HydroCouple::IDimension::DimensionRole" (uint8_t):
+        Unknown
+        Time
+        Entity
+        Layer
+        Band
+        Row
+        Column
+        Depth
+        Component
+        Realization
+        Other
+
+    cdef cppclass IDimension(IIdentity):
+        IDimension_LengthType lengthType() const
+        IDimension_DimensionRole role() const
+
+    # ------------------------------------------------------------------
+    # IQuality / IUnitDimensions / IUnit / IQuantity
+    # ------------------------------------------------------------------
+    cdef cppclass IQuality(IValueDefinition):
+        vector[string] categories() const
+        bint isOrdered() const
+
+    cdef enum class IUnitDimensions_FundamentalUnitDimension \
+            "HydroCouple::IUnitDimensions::FundamentalUnitDimension":
+        Length
+        Mass
+        Time
+        ElectricCurrent
+        Temperature
+        AmountOfSubstance
+        LuminousIntensity
+        Currency
+        Unitless
+        PlaneAngle
+
+    cdef cppclass IUnitDimensions(IDescription):
+        double power(IUnitDimensions_FundamentalUnitDimension dimension) const
+
+    cdef enum class IUnit_DistanceUnits "HydroCouple::IUnit::DistanceUnits":
+        Meters
+        Kilometers
+        Feet
+        NauticalMiles
+        Yards
+        Miles
+        Degrees
+        Centimeters
+        Millimeters
+        Inches
+        Unknown
+
+    cdef cppclass IUnit(IDescription):
+        IUnitDimensions* dimensions() const
+        double conversionFactorToSI() const
+        double offsetToSI() const
+
+    cdef cppclass IQuantity(IValueDefinition):
+        IUnit* unit() const
+        double minValue() const
+        double maxValue() const
+
+    # ------------------------------------------------------------------
+    # IComponentDataItemValueChanged
+    # ------------------------------------------------------------------
+    cdef cppclass IComponentDataItemValueChanged:
+        IComponentDataItem* componentDataItem() const
+        vector[int64_t] start() const
+        vector[int64_t] count() const
+
+    # ------------------------------------------------------------------
+    # IComponentDataItem — the typed hyperslab data plane
+    # ------------------------------------------------------------------
+    cdef cppclass IComponentDataItem(IIdentity):
+        IModelComponent* modelComponent() const
+        vector[IDimension*] dimensions() const
+        vector[int64_t] shape() const
+        DataKind dataKind() const
+        IValueDefinition* valueDefinition() const
+        bint getValuesInto(const BufferDescriptor& destination,
+                           const_int64_span start,
+                           const_int64_span count,
+                           string* message) except + nogil
+        bint setValuesFrom(const BufferDescriptor& source,
+                           const_int64_span start,
+                           const_int64_span count,
+                           string* message) except + nogil
+
+    # ------------------------------------------------------------------
+    # IArgument — nested enum
+    # ------------------------------------------------------------------
+    cdef enum class IArgument_ArgumentInputType \
+            "HydroCouple::IArgument::ArgumentInputType":
+        String
+        File
+        JSON
+        YAML
+        XML
+        URL
+        MEMORY_OBJECT
+
+    cdef enum class IArgument_ArgumentRole "HydroCouple::IArgument::ArgumentRole" (uint8_t):
+        Configuration
+        Parameter
+        InitialCondition
+        Forcing
+        Geometry
+
+    cdef cppclass IArgument(IComponentDataItem):
+        IArgument_ArgumentRole role() const
+        vector[const type_info*] validComponentDataItemTypes() const
+        bint isOptional() const
+        bint isReadOnly() const
+        string toString() const
+        void saveData() except +
+        vector[string] fileFilters() const
+        bint isValidArgType(IArgument_ArgumentInputType argType) const
+        IArgument_ArgumentInputType currentArgumentInputType() const
+        bint initialize(const string& value,
+                        IArgument_ArgumentInputType argType,
+                        string& message) except +
+        bint initialize(const IComponentDataItem& componentDataItem,
+                        string& message) except +
+        bint serialize(IArgument_ArgumentInputType argType,
+                       string& value,
+                       string& message) const
+
+    # ------------------------------------------------------------------
+    # IExchangeItem
+    # ------------------------------------------------------------------
+    cdef cppclass IExchangeItem(IComponentDataItem):
+        pass
+
+    # ------------------------------------------------------------------
+    # IOutput / IAdaptedOutput / factories
+    # ------------------------------------------------------------------
+    cdef cppclass IOutput(IExchangeItem):
+        vector[IInput*] consumers() const
+        void addConsumer(IInput* consumer) except +
+        bint removeConsumer(IInput* consumer) except +
+        vector[IAdaptedOutput*] adaptedOutputs() const
+        void addAdaptedOutput(IAdaptedOutput* adaptedOutput) except +
+        bint removeAdaptedOutput(IAdaptedOutput* adaptedOutput) except +
+        void updateValues(const IInput* querySpecifier) except + nogil
+
+    cdef cppclass IAdaptedOutput(IOutput):
+        IAdaptedOutputFactory* adaptedOutputFactory() const
+        vector[IArgument*] arguments() const
+        void initialize() except +
+        IOutput* adaptee() const
+        void refresh() except +
+        vector[IComponentDataItem*] states() const
+
+    cdef cppclass IDifferentiableAdaptedOutput(IAdaptedOutput):
+        vector[IArgument*] differentiableArguments() const
+        vector[IComponentDataItem*] differentiableStates() const
+        bint vjp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
+        bint jvp(DifferentialSet seeds, DifferentialSet results,
+                 string* message) except + nogil
+
+    cdef cppclass ICheckpointableAdaptedOutput(IAdaptedOutput):
+        bint saveState(string& token, string& message) except +
+        bint restoreState(const string& token, string& message) except +
+        bint releaseState(const string& token, string& message) except +
+
+    cdef cppclass IAdaptedOutputFactory(IIdentity):
+        vector[IIdentity*] getAvailableAdaptedOutputIds(
+            const IOutput* provider, const IInput* consumer) except +
+        unique_ptr[IAdaptedOutput] createAdaptedOutput(
+            IIdentity* adaptedProviderId,
+            IOutput* provider, IInput* consumer) except +
+
+    cdef cppclass IAdaptedOutputFactoryComponentInfo(IComponentInfo):
+        IAdaptedOutputFactoryComponent* createComponentInstance()
+
+    cdef cppclass IAdaptedOutputFactoryComponent(IAdaptedOutputFactory):
+        IAdaptedOutputFactoryComponentInfo* componentInfo() const
+
+    # ------------------------------------------------------------------
+    # IInput / IMultiInput
+    # ------------------------------------------------------------------
+    cdef cppclass IInput(IExchangeItem):
+        IOutput* provider() const
+        bint setProvider(IOutput* provider) except +
+        bint canConsume(IOutput* provider, string& message) except + nogil const
+
+    cdef cppclass IMultiInput(IInput):
+        vector[IIdentity*] providerLabels() const
+        bint isRequiredProvider(const IIdentity* providerLabel) const
+        vector[IOutput*] providers() const
+        bint addProvider(IOutput* provider,
+                         const IIdentity* providerRoleIdentifier) except +
+        bint removeProvider(IOutput* provider) except +
+
+    # ------------------------------------------------------------------
+    # IIdBasedComponentDataItem
+    # ------------------------------------------------------------------
+    cdef cppclass IIdBasedComponentDataItem(IComponentDataItem):
+        vector[string] identifiers() const
+        IDimension* identifierDimension() const
+
+    # ------------------------------------------------------------------
+    # IWorkflowComponent — nested enum
+    # ------------------------------------------------------------------
+    cdef enum class IWorkflowComponent_WorkflowStatus \
+            "HydroCouple::IWorkflowComponent::WorkflowStatus":
+        Created
+        Initializing
+        Initialized
+        Validating
+        Validated
+        Preparing
+        Prepared
+        Updating
+        Updated
+        Paused
+        Done
+        Finishing
+        Finished
+        Failed
+
+    cdef cppclass IWorkflowComponentInfo(IComponentInfo):
+        unique_ptr[IWorkflowComponent] createComponentInstance() except +
+
+    cdef cppclass IWorkflowComponent(IIdentity):
+        IWorkflowComponentInfo* componentInfo() const
+        vector[IIdentity*] modelComponentLabels() const
+        bint isRequiredModelComponent(const IIdentity* label) const
+        void initialize() except +
+        vector[string] validate() except +
+        void prepare() except +
+        void update() except + nogil
+        void finish() except +
+        void requestStop() except +
+        void requestPause() except +
+        void resume() except +
+        vector[ErrorEntry] errors(bint clearAfterRead)
+        IWorkflowComponent_WorkflowStatus status() const
+        vector[IModelComponent*] modelComponents() const
+        bint addModelComponent(IModelComponent* component,
+                               const IIdentity* modelRoleIdentifier,
+                               string* message) except +
+        bint removeModelComponent(IModelComponent* component) except +
+
+    cdef cppclass IWorkflowComponentStatusChangeEventArgs:
+        IWorkflowComponent* workflowComponent() const
+        IWorkflowComponent_WorkflowStatus previousStatus() const
+        IWorkflowComponent_WorkflowStatus status() const
+        string message() const
+        bint hasProgressMonitor() const
+        float percentProgress() const
+
+
+# ---------------------------------------------------------------------------
+# PyModelComponentBridge — reverse bridge (Python -> C++)
+# ---------------------------------------------------------------------------
+cdef extern from "py_component_bridge.h" namespace "HydroCouple::Python":
+    cdef cppclass PyModelComponentBridge:
+        PyModelComponentBridge(PyObject* obj)
+        PyObject* pyObject() const
+        void emitPropertyChanged(const string& propertyName)
+        void emitStatusChanged(
+            const shared_ptr[IComponentStatusChangeEventArgs]& args)
+
+    PyModelComponentBridge* make_py_component_bridge(PyObject* pyobj)
+
+
+cdef extern from "interface_casts.h" namespace "HydroCouple::Python":
+    IQuantity* asQuantity(IValueDefinition* value)
+    IQuality* asQuality(IValueDefinition* value)
+    IMultiInput* asMultiInput(IInput* input)
+    IAdaptedOutput* asAdaptedOutput(IOutput* output)
+    IDifferentiableAdaptedOutput* asDifferentiableAdapter(IAdaptedOutput* adapted)
+    ICheckpointableAdaptedOutput* asCheckpointableAdapter(IAdaptedOutput* adapted)
+    IArgument* asArgument(IComponentDataItem* item)
+    IInput* asInput(IComponentDataItem* item)
+    IOutput* asOutput(IComponentDataItem* item)
+    string typeName(const type_info* type)
+
+
+# ---------------------------------------------------------------------------
+# Shared cdef classes (implemented in _core.pyx, cimportable by the
+# temporal/spatial/spatiotemporal extension modules).
+#
+# Every wrapper of an IPropertyChanged object derives from
+# CppPropertyChangedWrapper, so connect()/disconnect()/block_signals() and
+# caption/description/id are written once. Each class keeps the pointer to
+# its own interface in an attribute of its own; the bind_* helpers set the
+# base pointers. _owner keeps alive whatever owns the C++ object (a wrapper
+# that holds a unique_ptr, a loaded library, a parent geometry).
+# ---------------------------------------------------------------------------
+cdef class CppPropertyChangedWrapper:
+    cdef IPropertyChanged* _signal
+    cdef object _owner
+
+
+cdef class CppDescriptionWrapper(CppPropertyChangedWrapper):
+    cdef IDescription* _description
+
+
+cdef class CppIdentityWrapper(CppDescriptionWrapper):
+    cdef IIdentity* _identity
+
+    @staticmethod
+    cdef CppIdentityWrapper wrap_identity(IIdentity* ptr)
+
+
+cdef class CppDimensionWrapper(CppIdentityWrapper):
+    cdef IDimension* _ptr
+
+    @staticmethod
+    cdef CppDimensionWrapper wrap(IDimension* ptr)
+
+
+cdef class CppComponentDataItemWrapper(CppIdentityWrapper):
+    cdef IComponentDataItem* _ptr
+
+    @staticmethod
+    cdef CppComponentDataItemWrapper wrap(IComponentDataItem* ptr)
+
+
+cdef class CppModelComponentWrapper(CppIdentityWrapper):
+    cdef IModelComponent* _ptr
+    cdef unique_ptr[IModelComponent] _owned
+
+    @staticmethod
+    cdef CppModelComponentWrapper wrap(IModelComponent* ptr)
+    cdef ICheckpointableModelComponent* _checkpointable(self) except NULL
+    cdef IDifferentiableModelComponent* _differentiable(self) except NULL
+
+
+cdef class PyComponentBridge:
+    cdef PyModelComponentBridge* _bridge
+
+    cdef IModelComponent* ptr(self)
+
+
+# Pointer binding and None-safe wrapping, for the other binding modules.
+cdef void bind_signal(CppPropertyChangedWrapper wrapper, IPropertyChanged* ptr)
+cdef void bind_description(CppDescriptionWrapper wrapper, IDescription* ptr)
+cdef void bind_identity(CppIdentityWrapper wrapper, IIdentity* ptr)
+cdef object wrap_dimension(IDimension* ptr)
+cdef object wrap_value_definition(IValueDefinition* ptr)
+cdef object wrap_data_item(IComponentDataItem* ptr)
+cdef object wrap_model_component(IModelComponent* ptr)
+cdef object wrap_model_component_info(IModelComponentInfo* ptr)
+cdef object wrap_workflow(IWorkflowComponent* ptr)
+cdef void bind_data_item(CppComponentDataItemWrapper wrapper,
+                         IComponentDataItem* ptr)
+cdef object owned_by(object child, object owner)
+
+# A host BufferDescriptor over an ndarray (zero-copy); the vectors own the
+# shape/stride storage and must outlive the descriptor's use.
+cdef int fill_host_descriptor(object array, BufferDescriptor* descriptor,
+                              vector[int64_t]* shape_buf,
+                              vector[int64_t]* strides_buf,
+                              bint writable) except -1
+
+
+cdef extern from "differential_bridge.h" namespace "HydroCouple::Python":
+    IDifferentiableModelComponent* asDifferentiable(IModelComponent* component)
+    ICheckpointableModelComponent* asCheckpointable(IModelComponent* component)
