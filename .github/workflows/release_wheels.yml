@@ -24,7 +24,7 @@ jobs:
       matrix:
         # Native runners for each architecture; macOS builds x86_64 and arm64
         # (see [tool.cibuildwheel] in python/pyproject.toml).
-        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-14, windows-latest ]
+        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repository
