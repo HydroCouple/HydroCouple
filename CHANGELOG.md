@@ -144,6 +144,12 @@ Turtle and JSON-LD are the same graph). The headers remain normative.
   the Python README are pages of the site).
 - `docs/INTERFACE_REVIEW.md` is marked as the historical August 2026 review.
 - The vcpkg port's version follows the release.
+- **Python wheels on release.** A `v*` tag runs `release_wheels.yml`:
+  cibuildwheel builds `hydrocouple` for CPython 3.10–3.13 on Linux
+  (x86_64, aarch64), macOS (x86_64, arm64) and Windows (x86_64), tests each
+  wheel with the full suite, and publishes the wheels and an sdist to PyPI by
+  trusted publishing. The sdist now carries the interface headers and the
+  version, so it builds a wheel without the repository around it.
 
 ## 2.0.0-alpha.2 — 2026-10-02
 

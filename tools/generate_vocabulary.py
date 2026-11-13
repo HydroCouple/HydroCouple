@@ -699,8 +699,18 @@ def project_version() -> tuple[str, int]:
 
 
 def lifecycle_transitions() -> dict[str, list[tuple[str, str]]]:
-    sys.path.insert(0, str(ROOT / "python"))
-    from hydrocouple import core, helpers  # noqa: E402  (the parity-tested mirror)
+    # The parity-tested mirror: the installed package if there is one, else the
+    # checkout's python/ — added only for this import, so it never shadows an
+    # installed (compiled) _hydrocouple for whoever imported this module.
+    try:
+        from hydrocouple import core, helpers
+    except ImportError:
+        source = str(ROOT / "python")
+        sys.path.insert(0, source)
+        try:
+            from hydrocouple import core, helpers
+        finally:
+            sys.path.remove(source)
 
     tables = {
         "ComponentStatus": (core.ComponentStatus,

@@ -4,20 +4,33 @@ Build script for the HydroCouple Python bindings.
 Compiles the Cython extension modules in ``_hydrocouple/`` that bridge
 the C++ v2.0.0 header-only HydroCouple interfaces to Python. The package
 version is single-sourced from the repository's ``CMakeLists.txt``.
+
+In the repository the interface headers are read from ``../include``. An sdist
+carries its own copy in ``_hcinclude/`` (with the version in
+``_hcinclude/hydrocouple_version.txt``), written by the ``sdist`` command below,
+so a wheel can be built from the sdist alone. (Not ``VERSION``: in an include
+directory on a case-insensitive filesystem that file would shadow ``<version>``.)
 """
 
+import glob
 import os
 import re
+import shutil
 
 import numpy as np
 from Cython.Build import cythonize
 from setuptools import Extension, setup
+from setuptools.command.sdist import sdist as _sdist
 
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
 HERE = os.path.dirname(os.path.abspath(__file__))
-HYDROCOUPLE_INCLUDE = os.path.normpath(os.path.join(HERE, "..", "include"))
+REPOSITORY_INCLUDE = os.path.normpath(os.path.join(HERE, "..", "include"))
+VENDORED_INCLUDE = os.path.join(HERE, "_hcinclude")
+HYDROCOUPLE_INCLUDE = (REPOSITORY_INCLUDE
+                       if os.path.exists(os.path.join(REPOSITORY_INCLUDE, "hydrocouple.h"))
+                       else VENDORED_INCLUDE)
 CYTHON_INCLUDE = os.path.join(HERE, "_hydrocouple", "include")
 
 INCLUDE_DIRS = [
@@ -53,17 +66,31 @@ def _read_version() -> str:
                 base.group(1) + (suffix.group(1) if suffix else ""))
     except OSError:
         pass
-    # Fallback for sdist layouts without the repository root.
-    version_h = os.path.join(HYDROCOUPLE_INCLUDE, "hydrocoupleversion.h")
+    # An sdist has no repository root: its sdist step recorded the version.
     try:
-        with open(version_h, encoding="utf-8") as fh:
-            match = re.search(r'#define\s+HYDROCOUPLE_VERSION\s+"([^"@]+)"',
-                              fh.read())
-            if match:
-                return _semver_to_pep440(match.group(1))
+        with open(os.path.join(VENDORED_INCLUDE, "hydrocouple_version.txt"),
+                  encoding="utf-8") as fh:
+            return fh.read().strip()
     except OSError:
         pass
-    return "2.0.0b1"
+    raise RuntimeError("cannot determine the HydroCouple version: neither "
+                       "../CMakeLists.txt nor _hcinclude/hydrocouple_version.txt is present")
+
+
+class sdist(_sdist):
+    """Vendor the interface headers and the version, so the sdist builds alone."""
+
+    def run(self):
+        if os.path.exists(os.path.join(REPOSITORY_INCLUDE, "hydrocouple.h")):
+            shutil.rmtree(VENDORED_INCLUDE, ignore_errors=True)
+            os.makedirs(VENDORED_INCLUDE)
+            # The interface headers only (a stale generated header may sit beside them).
+            for header in glob.glob(os.path.join(REPOSITORY_INCLUDE, "hydrocouple*.h")):
+                shutil.copy2(header, VENDORED_INCLUDE)
+            with open(os.path.join(VENDORED_INCLUDE, "hydrocouple_version.txt"), "w",
+                      encoding="utf-8") as fh:
+                fh.write(_read_version() + "\n")
+        super().run()
 
 
 # ---------------------------------------------------------------------------
@@ -105,6 +132,7 @@ EXTENSIONS = [
 
 setup(
     version=_read_version(),
+    cmdclass={"sdist": sdist},
     ext_modules=cythonize(
         EXTENSIONS,
         language_level=3,

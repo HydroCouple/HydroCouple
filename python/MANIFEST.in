@@ -1,0 +1,7 @@
+# The sdist must build a wheel on its own: Cython sources and declarations,
+# the bridge headers, and the interface headers vendored by setup.py's sdist step.
+include README.md
+include _hydrocouple/*.pyx _hydrocouple/*.pxd
+include _hydrocouple/include/*.h
+include _hcinclude/*.h _hcinclude/hydrocouple_version.txt
+global-exclude *.so *.pyd *.pyc

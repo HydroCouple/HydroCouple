@@ -15,15 +15,22 @@ from pathlib import Path
 
 import pytest
 
+import hydrocouple
+
 PYTHON_DIR = Path(__file__).resolve().parent.parent
 EXAMPLES = PYTHON_DIR / "examples"
 INCLUDE_DIR = PYTHON_DIR.parent / "include"
 
+#: Whether the package under test is the source tree (an in-place build) rather
+#: than an installed wheel, whose compiled modules the source tree must not shadow.
+IN_TREE = Path(hydrocouple.__file__).resolve().parent.parent == PYTHON_DIR
+
 
 def _run(script, *args):
     env = dict(os.environ)
-    env["PYTHONPATH"] = os.pathsep.join(
-        [str(PYTHON_DIR)] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
+    if IN_TREE:
+        env["PYTHONPATH"] = os.pathsep.join(
+            [str(PYTHON_DIR)] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
     return subprocess.run([sys.executable, str(EXAMPLES / script), *args],
                           capture_output=True, text=True, timeout=120, env=env)
 

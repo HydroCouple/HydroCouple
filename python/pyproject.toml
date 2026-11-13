@@ -40,6 +40,27 @@ Homepage = "https://github.com/HydroCouple/HydroCouple"
 [tool.setuptools.packages.find]
 include = ["hydrocouple*", "_hydrocouple*"]
 
+[tool.cibuildwheel]
+# CPython 3.10-3.13 on 64-bit Linux (glibc), macOS and Windows. manylinux_2_28
+# carries a C++20-capable GCC.
+build = "cp310-* cp311-* cp312-* cp313-*"
+skip = "*-musllinux_* *-win32 *_i686"
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+test-requires = ["pytest"]
+# The suite runs against the installed wheel, so nothing may put the source tree
+# (which has no compiled modules) ahead of it: importlib mode keeps pytest from
+# inserting python/ on sys.path, and the ini's pythonpath "." is narrowed to
+# tests/. Tests that compile C++ skip where no compiler is on PATH.
+test-command = "pytest {package}/tests -q -p no:cacheprovider --import-mode=importlib -o pythonpath={package}/tests"
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64"]
+environment = { MACOSX_DEPLOYMENT_TARGET = "11.0" }
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [".", "tests"]

@@ -164,6 +164,20 @@ convention. `hydrocouple.distributed` mirrors `hydrocoupledistributed.h`
 (transports, proxies, partitioned data items with virtual/halo entities);
 transport implementations are SDK territory.
 
+## Installing
+
+Released versions are published to PyPI as wheels for CPython 3.10–3.13 on
+Linux (x86_64, aarch64), macOS (x86_64, arm64) and Windows (x86_64):
+
+```bash
+pip install hydrocouple
+```
+
+A C++ component loaded through the bindings must be built with the same
+toolchain as the wheel's extension (GCC/libstdc++ on Linux, Apple Clang/libc++
+on macOS, MSVC on Windows): the loader compares the component's ABI stamp and
+refuses a mismatch.
+
 ## Building
 
 Requires a C++20 compiler, Python ≥ 3.10, NumPy, and Cython ≥ 3.0. The

@@ -9,4 +9,5 @@ __pycache__/
 .pytest_cache/
 .coverage
 wheelhouse/
+_hcinclude/
 docs/_build/
