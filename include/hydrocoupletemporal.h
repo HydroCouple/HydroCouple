@@ -1,13 +1,13 @@
 /*!
  * \file   hydrocoupletemporal.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version   2.0.0-alpha.2
+ * \version   2.0.0-beta.1
  * \brief Temporal interface definitions for the HydroCouple component-based modeling framework.
  * \details This header file contains the temporal interface definitions for the
  * HydroCouple component-based modeling framework. It defines interfaces for
  * date/time representation, time spans, time-marching model components,
  * and time-series component data items.
- * \license
+ * \par License
  * This file and its associated files and libraries are free software.
  * You can redistribute them and/or modify them under the terms of the
  * MIT License. They are distributed in the hope that they will be useful,
@@ -43,6 +43,30 @@ namespace HydroCouple
   namespace Temporal
   {
     /*!
+     * \brief Two instants are the same instant when their Julian days differ by no
+     * more than this (1e-8 days, about 0.86 ms).
+     *
+     * \details Time coordinates are Julian-day doubles. Near the present a double
+     * resolves a Julian day to about 40 µs, so instants computed on the two sides of
+     * a coupling (an accumulated step on one, a parsed timestamp on the other) rarely
+     * agree to the last bit. Every comparison the standard calls "exact" —
+     * TimeInterpolation::None, matching a consumer's times() against a provider's —
+     * uses this tolerance. It sits well above the resolution and below a
+     * millisecond, so no time step a coupling exchanges on collapses under it.
+     */
+    constexpr double TIME_EQUALITY_TOLERANCE_DAYS = 1.0e-8;
+
+    /*!
+     * \brief The intervalLength() a time-series item returns when its intervals are
+     * contiguous but not of one length (calendar months, an irregular record).
+     *
+     * \details Interval i then runs from time i-1 to time i, and interval 0 from the
+     * start of timeSpan(). Any negative intervalLength() has this meaning; this is
+     * the value to return.
+     */
+    constexpr double INTERVAL_LENGTH_CONTIGUOUS = -1.0;
+
+    /*!
      * \brief What a value's time coordinate refers to.
      *
      * A time-series item carries times and values but does not say whether a
@@ -73,7 +97,7 @@ namespace HydroCouple
     enum class TimeInterpolation : uint8_t
     {
       Unknown = 0, //!< Not declared. validate() must treat a connection whose two ends both say Unknown as an error.
-      None,        //!< Exact match required; a query at an instant not held is refused.
+      None,        //!< Exact match required (within TIME_EQUALITY_TOLERANCE_DAYS); a query at an instant not held is refused.
       Previous,    //!< Hold the most recent earlier value (step function).
       Nearest,     //!< The nearer of the two neighbours.
       Linear       //!< Linear in time between neighbours.
@@ -255,9 +279,13 @@ namespace HydroCouple
 
       /*!
        * \brief Length of the averaging or accumulation interval (days).
-       * \details Zero for Instantaneous. Meaningless unless timeKind() names an
-       * interval, and a consumer that needs it should treat zero as "not declared"
-       * rather than as an instant.
+       * \details Meaningless unless timeKind() names an interval. Three cases:
+       *  - positive: every interval has this length and ends at its time coordinate;
+       *  - INTERVAL_LENGTH_CONTIGUOUS (any negative value): intervals are contiguous
+       *    and of varying length — interval i runs from time i-1 to time i, and
+       *    interval 0 from the start of timeSpan();
+       *  - zero: not declared (and what Instantaneous items return). A consumer that
+       *    needs the interval must then refuse rather than treat it as an instant.
        */
       [[nodiscard]] virtual double intervalLength() const = 0;
 

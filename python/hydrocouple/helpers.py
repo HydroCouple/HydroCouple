@@ -158,12 +158,16 @@ def is_valid_component_status_transition(from_status: ComponentStatus,
 
 _WS = WorkflowStatus
 
+# Kept identical to Helpers::isValidWorkflowStatusTransition(); compared pair
+# by pair against the compiled C++ table by tests/test_transition_parity.py.
 _VALID_WORKFLOW_TRANSITIONS: dict[WorkflowStatus, frozenset[WorkflowStatus]] = {
     _WS.Created: frozenset({_WS.Initializing}),
     _WS.Initializing: frozenset({_WS.Initialized}),
     _WS.Initialized: frozenset({_WS.Validating, _WS.Initializing, _WS.Finishing}),
-    _WS.Validating: frozenset({_WS.Validated}),
+    _WS.Validating: frozenset({_WS.Validated, _WS.Invalid}),
     _WS.Validated: frozenset({_WS.Preparing, _WS.Validating, _WS.Finishing}),
+    # A composition with problems is fixed and validated again, not failed.
+    _WS.Invalid: frozenset({_WS.Validating, _WS.Finishing}),
     _WS.Preparing: frozenset({_WS.Prepared}),
     _WS.Prepared: frozenset({_WS.Updating, _WS.Finishing}),
     _WS.Updating: frozenset({_WS.Updated, _WS.Paused, _WS.Done}),

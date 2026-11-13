@@ -205,3 +205,25 @@ def test_pxd_enum_members_exist_in_order(pxd, header):
         assert all(m in remaining for m in members), (
             f"{pxd} {cython_name} is not an in-order subset of C++ "
             f"{cpp_name}: pxd={members} cpp={cpp_members}")
+
+
+def _parse_cpp_double_constant(header: str, name: str) -> float:
+    path = os.path.join(HEADER_DIR, header)
+    text = open(path, encoding="utf-8").read()
+    match = re.search(r"constexpr\s+double\s+" + re.escape(name) +
+                      r"\s*=\s*([-+0-9.eE]+)\s*;", text)
+    if not match:
+        raise AssertionError(f"constant {name} not found in {header}")
+    return float(match.group(1))
+
+
+class TestTemporalConstantParity:
+    """The temporal constants are part of the contract, like the enums."""
+
+    @pytest.mark.parametrize("name", ["TIME_EQUALITY_TOLERANCE_DAYS",
+                                      "INTERVAL_LENGTH_CONTIGUOUS"])
+    def test_constant(self, name):
+        import hydrocouple.temporal as temporal
+        assert getattr(temporal, name) == _parse_cpp_double_constant(
+            "hydrocoupletemporal.h", name)
+

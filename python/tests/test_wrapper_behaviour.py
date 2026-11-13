@@ -148,12 +148,18 @@ class TestComponentItems:
         assert unit.dimensions.power(FundamentalUnitDimension.Length) == 3
         assert unit.dimensions.power(FundamentalUnitDimension.Time) == -1
         assert unit.dimensions.power(FundamentalUnitDimension.Mass) == 0
+        # The vocabulary binding (ABI 5): standard name, concept URI, unit codes.
+        assert value.standard_name == "water_volume_transport_in_river_channel"
+        assert value.concept_uri == (
+            "http://qudt.org/vocab/quantitykind/VolumeFlowRate")
+        assert (unit.symbol, unit.ucum_code) == ("ft3 s-1", "[ft_i]3/s")
 
     def test_a_quality_carries_its_categories(self, component):
         value = component.results[0].value_definition
         assert isinstance(value, IQuality)
         assert value.categories == ["water", "forest", "urban"]
         assert value.is_ordered is False
+        assert (value.standard_name, value.concept_uri) == ("", "")
 
     def test_dimensions_carry_roles(self, component):
         (cells,) = component.outputs[0].dimensions
@@ -292,6 +298,20 @@ class TestExchangeItems:
         assert [p.id for p in inflows.providers] == ["discharge", "refused"]
         assert inflows.remove_provider(discharge)
         assert [p.id for p in inflows.providers] == ["refused"]
+
+    def test_add_consumer_wires_a_multi_input_in_its_role(self, native,
+                                                          component):
+        # add_consumer is the single wiring entry point (ABI 5): for a
+        # multi-input the output passes the role on to add_provider itself,
+        # so both ends agree without the orchestrator touching the input.
+        inflows, discharge = component.inputs[0], component.outputs[0]
+        (upstream,) = inflows.provider_labels
+        discharge.add_consumer(inflows, upstream)
+        assert discharge.consumers == [inflows]
+        assert [p.id for p in inflows.providers] == ["discharge"]
+        assert discharge.remove_consumer(inflows)
+        assert discharge.consumers == []
+        assert inflows.providers == []
 
     def test_update_values_reaches_the_output(self, native, component):
         component.outputs[0].update_values(component.inputs[0])

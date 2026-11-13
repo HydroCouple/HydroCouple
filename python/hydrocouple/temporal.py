@@ -23,6 +23,20 @@ if TYPE_CHECKING:
     import numpy as np
 
 
+#: Two instants are the same instant when their Julian days differ by no more
+#: than this (1e-8 days, about 0.86 ms). Mirrors C++
+#: ``Temporal::TIME_EQUALITY_TOLERANCE_DAYS``; every "exact" time comparison
+#: (``TimeInterpolation.NoInterpolation``, matching a consumer's times against
+#: a provider's) uses it.
+TIME_EQUALITY_TOLERANCE_DAYS = 1.0e-8
+
+#: The ``interval_length`` of an item whose intervals are contiguous but not of
+#: one length: interval *i* runs from time *i-1* to time *i*, interval 0 from
+#: the start of ``time_span``. Mirrors C++
+#: ``Temporal::INTERVAL_LENGTH_CONTIGUOUS``; any negative value means this.
+INTERVAL_LENGTH_CONTIGUOUS = -1.0
+
+
 class TimeKind(IntEnum):
     """What a value's time coordinate refers to; mirrors C++
     ``Temporal::TimeKind``."""
@@ -40,7 +54,7 @@ class TimeInterpolation(IntEnum):
     ``Temporal::TimeInterpolation``."""
 
     Unknown = 0
-    NoInterpolation = 1  # C++ ``None``; not a legal Python identifier
+    NoInterpolation = 1  # C++ ``None``; exact match within TIME_EQUALITY_TOLERANCE_DAYS
     Previous = 2
     Nearest = 3
     Linear = 4
@@ -185,7 +199,13 @@ class ITimeSeriesComponentDataItem(IComponentDataItem):
     @property
     @abstractmethod
     def interval_length(self) -> float:
-        """Averaging/accumulation interval in days; 0 for instantaneous."""
+        """Averaging/accumulation interval in days.
+
+        Positive: every interval has this length and ends at its time
+        coordinate. :data:`INTERVAL_LENGTH_CONTIGUOUS` (any negative value):
+        contiguous intervals of varying length. Zero: not declared (and what
+        instantaneous items return).
+        """
         raise NotImplementedError
 
     @property

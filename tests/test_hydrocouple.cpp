@@ -36,6 +36,8 @@ TEST(ByteOrderTest, IsEnumClass)
     EXPECT_TRUE(std::is_enum_v<ByteOrder>);
     // enum class should NOT be implicitly convertible to int
     EXPECT_FALSE((std::is_convertible_v<ByteOrder, int>));
+    // Declared inside the standard's namespace (ABI 5), not at global scope.
+    EXPECT_TRUE((std::is_same_v<ByteOrder, HydroCouple::ByteOrder>));
 }
 
 // ============================================================================
@@ -65,6 +67,8 @@ TEST(ComponentStatusTest, IsEnumClass)
 {
     EXPECT_TRUE(std::is_enum_v<IModelComponent::ComponentStatus>);
     EXPECT_FALSE((std::is_convertible_v<IModelComponent::ComponentStatus, int>));
+    // Pinned width: proxies carry statuses across processes.
+    EXPECT_TRUE((std::is_same_v<std::underlying_type_t<IModelComponent::ComponentStatus>, uint8_t>));
 }
 
 // ============================================================================
@@ -108,12 +112,15 @@ TEST(WorkflowStatusTest, EnumValues)
     EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Finishing), 11);
     EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Finished), 12);
     EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Failed), 13);
+    // Appended in ABI 5 so that no earlier value changed meaning.
+    EXPECT_EQ(static_cast<int>(IWorkflowComponent::WorkflowStatus::Invalid), 14);
 }
 
 TEST(WorkflowStatusTest, IsEnumClass)
 {
     EXPECT_TRUE(std::is_enum_v<IWorkflowComponent::WorkflowStatus>);
     EXPECT_FALSE((std::is_convertible_v<IWorkflowComponent::WorkflowStatus, int>));
+    EXPECT_TRUE((std::is_same_v<std::underlying_type_t<IWorkflowComponent::WorkflowStatus>, uint8_t>));
 }
 
 // ============================================================================

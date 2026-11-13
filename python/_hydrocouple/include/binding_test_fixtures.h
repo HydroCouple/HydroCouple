@@ -142,6 +142,8 @@ public:
     }
     [[nodiscard]] double conversionFactorToSI() const override { return 0.0283168; }
     [[nodiscard]] double offsetToSI() const override { return 0.0; }
+    [[nodiscard]] std::string symbol() const override { return "ft3 s-1"; }
+    [[nodiscard]] std::string ucumCode() const override { return "[ft_i]3/s"; }
 
 private:
     FixtureUnitDimensions m_dimensions;
@@ -152,6 +154,14 @@ class FixtureQuantity final : public QuietDescription<IQuantity>
 public:
     FixtureQuantity() : QuietDescription<IQuantity>("Discharge") {}
     [[nodiscard]] ValueKind valueKind() const override { return ValueKind::Flux; }
+    [[nodiscard]] std::string standardName() const override
+    {
+        return "water_volume_transport_in_river_channel";
+    }
+    [[nodiscard]] std::string conceptURI() const override
+    {
+        return "http://qudt.org/vocab/quantitykind/VolumeFlowRate";
+    }
     [[nodiscard]] double missingValue() const override { return -9999.0; }
     [[nodiscard]] double defaultValue() const override { return 0.0; }
     [[nodiscard]] IUnit *unit() const override { return const_cast<FixtureUnit *>(&m_unit); }
@@ -167,6 +177,9 @@ class FixtureQuality final : public QuietDescription<IQuality>
 public:
     FixtureQuality() : QuietDescription<IQuality>("Land use") {}
     [[nodiscard]] ValueKind valueKind() const override { return ValueKind::Intensive; }
+    // Land use has no CF standard name: both undeclared.
+    [[nodiscard]] std::string standardName() const override { return {}; }
+    [[nodiscard]] std::string conceptURI() const override { return {}; }
     [[nodiscard]] double missingValue() const override { return -1.0; }
     [[nodiscard]] double defaultValue() const override { return 0.0; }
     [[nodiscard]] std::vector<std::string> categories() const override
@@ -390,13 +403,27 @@ public:
         : SignalingItem<IOutput>(std::move(id), owner, value) {}
 
     [[nodiscard]] std::vector<IInput *> consumers() const override { return m_consumers; }
-    void addConsumer(IInput *consumer) override
+    void addConsumer(IInput *consumer, const IIdentity *providerRole = nullptr) override
     {
+        // The IOutput::addConsumer() contract: a multi-input is wired through
+        // addProvider() with the role, any other input through setProvider().
         std::string message;
-        if (!consumer->canConsume(this, message))
-            throw std::invalid_argument(message);
-        if (!consumer->setProvider(this))
-            throw std::invalid_argument("the input refused this output as its provider");
+        if (auto *multi = dynamic_cast<IMultiInput *>(consumer))
+        {
+            if (!multi->canConsume(this, message, providerRole))
+                throw std::invalid_argument(message);
+            if (!multi->addProvider(this, providerRole))
+                throw std::invalid_argument("the multi-input refused this output as a provider");
+        }
+        else
+        {
+            if (providerRole)
+                throw std::invalid_argument("a provider role applies only to a multi-input");
+            if (!consumer->canConsume(this, message))
+                throw std::invalid_argument(message);
+            if (!consumer->setProvider(this))
+                throw std::invalid_argument("the input refused this output as its provider");
+        }
         m_consumers.push_back(consumer);
     }
     bool removeConsumer(IInput *consumer) override
@@ -405,6 +432,10 @@ public:
         if (it == m_consumers.end())
             return false;
         m_consumers.erase(it);
+        if (auto *multi = dynamic_cast<IMultiInput *>(consumer))
+            (void)multi->removeProvider(this);
+        else
+            (void)consumer->setProvider(nullptr);
         return true;
     }
     [[nodiscard]] std::vector<IAdaptedOutput *> adaptedOutputs() const override { return m_adapted; }
@@ -450,7 +481,7 @@ public:
     ~FixtureAdaptedOutput() override { --liveAdaptedOutputs(); }
 
     [[nodiscard]] std::vector<IInput *> consumers() const override { return {}; }
-    void addConsumer(IInput *) override {}
+    void addConsumer(IInput *, const IIdentity * = nullptr) override {}
     bool removeConsumer(IInput *) override { return false; }
     [[nodiscard]] std::vector<IAdaptedOutput *> adaptedOutputs() const override { return {}; }
     void addAdaptedOutput(IAdaptedOutput *) override {}

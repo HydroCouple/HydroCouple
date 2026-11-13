@@ -6,8 +6,8 @@ Installation
 ============
 
 Requires a C++20 compiler, Python ≥ 3.10, NumPy, and Cython ≥ 3.0. The
-package version is single-sourced from the repository's
-``include/version.h``.
+package version is single-sourced from the repository's ``CMakeLists.txt``
+(``project(... VERSION ...)`` plus ``HYDROCOUPLE_VERSION_SUFFIX``).
 
 .. code-block:: bash
 

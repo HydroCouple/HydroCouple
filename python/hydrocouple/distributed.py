@@ -43,6 +43,16 @@ class IExchangeRequest(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def wait_for(self, timeout_seconds: float) -> bool:
+        """Block until the operation completes or the timeout elapses.
+
+        :returns: ``True`` if the operation has completed (successfully or
+            not), ``False`` if it is still pending. A non-positive timeout
+            tests once without blocking, as :meth:`test` does.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def cancel(self) -> bool:
         """Ask to abandon the operation; True if it is now complete, False if
         this transport cannot cancel and the caller must still :meth:`wait`."""
@@ -71,6 +81,14 @@ class ITransport(IIdentity):
     Mirrors C++ ``Distributed::ITransport``. Payloads are NumPy arrays;
     message ordering is guaranteed only between a fixed
     ``(sender, receiver, tag)`` triple.
+
+    A payload whose size the receiver cannot know (text, a growing list) is
+    sent as its extent first -- a one-element ``int64`` array -- and then the
+    payload itself as a 1-D array on the same tag; text travels as UTF-8
+    bytes in a ``uint8`` array. A transport that can detect a lost peer
+    completes every pending operation with it as failed; callers bound their
+    waits with the asynchronous operations and
+    :meth:`IExchangeRequest.wait_for`.
     """
 
     @property
@@ -148,6 +166,10 @@ class IProxyModelComponent(IDistributedModelComponent):
     proxy from a local component. If the peer dies or a request times out,
     the proxy transitions to ``Failed``, queues a ``Fatal``
     :class:`~hydrocouple.core.ErrorEntry`, and fires its status signal.
+
+    The command protocol between a proxy and its peer belongs to the SDK
+    that provides both ends; proxies from different SDKs need not
+    interoperate.
     """
 
     @property

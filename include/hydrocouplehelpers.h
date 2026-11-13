@@ -1,17 +1,22 @@
 /*!
  * \file hydrocouplehelpers.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0-alpha.2
- * \brief Non-normative convenience helpers for the HydroCouple interface standard.
+ * \version 2.0.0-beta.1
+ * \brief Convenience helpers for the HydroCouple interface standard, and the
+ * normative lifecycle transition tables.
  * \details This header is the single deliberate exception to the standard's
  * no-implementation rule: the interface headers (hydrocouple.h and companions)
  * contain only pure declarations, enums, and plain aggregates, while the small
  * executable conveniences that nearly every implementer and consumer would
  * otherwise rewrite — DataKind metadata, BufferDescriptor arithmetic, the
- * lifecycle transition table, and typed wrappers over the hyperslab API — live
- * here. Nothing in this header is required to implement or consume the standard;
- * it may be ignored entirely.
- * \license
+ * lifecycle transition tables, and typed wrappers over the hyperslab API — live
+ * here.
+ * \details Everything here is non-normative and may be ignored, with one
+ * exception: isValidComponentStatusTransition() and
+ * isValidWorkflowStatusTransition() *are* the normative definition of the two
+ * lifecycle state machines. An implementation need not call them, but it must not
+ * perform a transition they reject.
+ * \par License
  * This file and its associated files and libraries are free software.
  * You can redistribute them and/or modify them under the terms of the
  * MIT License. They are distributed in the hope that they will be useful,
@@ -25,6 +30,8 @@
 #define HYDROCOUPLEHELPERS_H
 
 #include "hydrocouple.h"
+
+#include <type_traits>
 
 /*!
  * These interfaces cross shared-library boundaries by design — a component
@@ -41,7 +48,8 @@
 
 namespace HydroCouple
 {
-  //! Non-normative convenience helpers for the HydroCouple interface standard.
+  //! Convenience helpers for the HydroCouple interface standard; non-normative
+  //! except for the two lifecycle transition tables.
   namespace Helpers
   {
     /*!
@@ -68,24 +76,57 @@ namespace HydroCouple
       }
     }
 
+    namespace Detail
+    {
+      //! The DataKind of a C++ element type, or Unknown when it has none.
+      template <typename U>
+      constexpr DataKind deduceDataKind()
+      {
+        if constexpr (std::is_same_v<U, bool>)
+          return DataKind::Boolean;
+        else if constexpr (std::is_integral_v<U>)
+        {
+          // By width and signedness, not by name: `long` and `long long` are
+          // distinct types of the same width, and which one int64_t names
+          // differs between platforms.
+          constexpr bool isSigned = std::is_signed_v<U>;
+          if constexpr (sizeof(U) == 1) return isSigned ? DataKind::Int8 : DataKind::UInt8;
+          else if constexpr (sizeof(U) == 2) return isSigned ? DataKind::Int16 : DataKind::UInt16;
+          else if constexpr (sizeof(U) == 4) return isSigned ? DataKind::Int32 : DataKind::UInt32;
+          else if constexpr (sizeof(U) == 8) return isSigned ? DataKind::Int64 : DataKind::UInt64;
+          else return DataKind::Unknown;
+        }
+        else if constexpr (std::is_same_v<U, float>)
+          return DataKind::Float32;
+        else if constexpr (std::is_same_v<U, double>)
+          return DataKind::Float64;
+        else if constexpr (std::is_same_v<U, std::string>)
+          return DataKind::String;
+        else
+          return DataKind::Unknown;
+      }
+    }
+
     /*!
      * \brief DataKindOf maps a C++ type to its DataKind at compile time.
-     * \tparam T is the C++ element type.
+     * \details Every integer type maps by width and signedness (so `long`,
+     * `long long` and `size_t` all have a kind), `float`/`double` to
+     * Float32/Float64, `bool` to Boolean and `std::string` to String. Any other
+     * type is a compile error rather than a silent Opaque: an Opaque descriptor
+     * needs an element size the kind cannot supply, so describe opaque elements
+     * with makeOpaqueContiguous() instead.
+     * \tparam T is the C++ element type (cv-qualifiers are ignored).
      */
     template <typename T>
-    struct DataKindOf { static constexpr DataKind kind = DataKind::Opaque; };
-    template <> struct DataKindOf<int8_t>      { static constexpr DataKind kind = DataKind::Int8; };
-    template <> struct DataKindOf<uint8_t>     { static constexpr DataKind kind = DataKind::UInt8; };
-    template <> struct DataKindOf<int16_t>     { static constexpr DataKind kind = DataKind::Int16; };
-    template <> struct DataKindOf<uint16_t>    { static constexpr DataKind kind = DataKind::UInt16; };
-    template <> struct DataKindOf<int32_t>     { static constexpr DataKind kind = DataKind::Int32; };
-    template <> struct DataKindOf<uint32_t>    { static constexpr DataKind kind = DataKind::UInt32; };
-    template <> struct DataKindOf<int64_t>     { static constexpr DataKind kind = DataKind::Int64; };
-    template <> struct DataKindOf<uint64_t>    { static constexpr DataKind kind = DataKind::UInt64; };
-    template <> struct DataKindOf<float>       { static constexpr DataKind kind = DataKind::Float32; };
-    template <> struct DataKindOf<double>      { static constexpr DataKind kind = DataKind::Float64; };
-    template <> struct DataKindOf<bool>        { static constexpr DataKind kind = DataKind::Boolean; };
-    template <> struct DataKindOf<std::string> { static constexpr DataKind kind = DataKind::String; };
+    struct DataKindOf
+    {
+      //! The DataKind of T.
+      static constexpr DataKind kind = Detail::deduceDataKind<std::remove_cv_t<T>>();
+      static_assert(kind != DataKind::Unknown,
+                    "HydroCouple::Helpers::DataKindOf<T>: T has no DataKind. Use an "
+                    "integer, float, double, bool or std::string element type, or "
+                    "describe opaque elements with makeOpaqueContiguous().");
+    };
 
     /*!
      * \brief Size in bytes of one element of a descriptor: its itemSizeBytes when set,
@@ -159,14 +200,14 @@ namespace HydroCouple
         int64_t stride = itemSize(d);
         for (int32_t k = d.rank - 1; k >= 0; --k)
         {
-          offset += index[k] * stride;
+          offset += index[static_cast<size_t>(k)] * stride;
           stride *= d.shape[k];
         }
       }
       else
       {
         for (int32_t k = 0; k < d.rank; ++k)
-          offset += index[k] * d.stridesBytes[k];
+          offset += index[static_cast<size_t>(k)] * d.stridesBytes[k];
       }
       return offset;
     }
@@ -216,8 +257,8 @@ namespace HydroCouple
 
     /*!
      * \brief Encodes the normative component lifecycle state machine.
-     * \details Implementations must not perform status transitions for which this
-     * function returns false.
+     * \details Normative (the exception in this header): implementations must not
+     * perform status transitions for which this function returns false.
      * \param[in] from is the current status.
      * \param[in] to is the proposed next status.
      * \returns True if the transition is legal.
@@ -264,8 +305,8 @@ namespace HydroCouple
 
     /*!
      * \brief Encodes the normative workflow lifecycle state machine.
-     * \details Implementations must not perform status transitions for which this
-     * function returns false.
+     * \details Normative (the exception in this header): implementations must not
+     * perform status transitions for which this function returns false.
      * \param[in] from is the current status.
      * \param[in] to is the proposed next status.
      * \returns True if the transition is legal.
@@ -286,9 +327,12 @@ namespace HydroCouple
         case WS::Initializing: return to == WS::Initialized || to == WS::Failed;
         case WS::Initialized:  return to == WS::Validating || to == WS::Initializing ||
                                       to == WS::Finishing;
-        case WS::Validating:   return to == WS::Validated || to == WS::Failed;
+        case WS::Validating:   return to == WS::Validated || to == WS::Invalid;
         case WS::Validated:    return to == WS::Preparing || to == WS::Validating ||
                                       to == WS::Finishing;
+        // A composition with problems can be fixed and validated again, exactly
+        // as a component's Invalid can; only an unrecoverable error is Failed.
+        case WS::Invalid:      return to == WS::Validating || to == WS::Finishing;
         case WS::Preparing:    return to == WS::Prepared || to == WS::Failed;
         case WS::Prepared:     return to == WS::Updating || to == WS::Finishing;
         case WS::Updating:     return to == WS::Updated || to == WS::Paused ||

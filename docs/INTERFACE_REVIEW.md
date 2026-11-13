@@ -1,5 +1,11 @@
 # HydroCouple Interface Definitions — Critical Review
 
+> **Historical document.** This is the August 2026 review of the 2.0 rewrite at
+> ABI 2. Its recommendations were carried out in the 2.0 pre-releases (ABI 3–5);
+> the findings below describe the headers as they were then, not as they are now.
+> See [CHANGELOG.md](../CHANGELOG.md) for what changed and the headers in
+> `include/` for the current contract.
+
 **Scope:** `hydrocouple.h`, `hydrocoupletemporal.h`, `hydrocouplespatial.h`, `hydrocouplespatiotemporal.h`, `hydrocouplespatialwkb.h` (v2.0.0, ABI 2)
 **Lens:** HPC simulation, GPU acceleration, cloud/distributed execution, message passing with local virtual node representation, and computational efficiency.
 **Date:** 2026-08-22

@@ -1,7 +1,7 @@
 /*!
  * \file hydrocoupledistributed.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0-alpha.2
+ * \version 2.0.0-beta.1
  * \brief Distributed-execution interface definitions for the HydroCouple component-based modeling framework.
  * \details This header file contains the transport-neutral interfaces for distributed
  * and cloud execution: message transports, distributed model components, proxies for
@@ -9,7 +9,7 @@
  * entity representation. MPI is one possible transport backend; nothing in this
  * standard names an MPI type, so the same interfaces serve TCP/gRPC/UCX transports
  * in cloud deployments.
- * \license
+ * \par License
  * This file and its associated files and libraries are free software.
  * You can redistribute them and/or modify them under the terms of the
  * MIT License. They are distributed in the hope that they will be useful,
@@ -56,8 +56,12 @@ namespace HydroCouple
        * \brief IExchangeRequest::~IExchangeRequest is a virtual destructor.
        * \details Destroying an incomplete request always blocks until it completes —
        * one behaviour, so that a caller who lets a request go out of scope can rely
-       * on its buffers being free afterwards. A caller that wants the other
-       * behaviour asks for it with cancel() first.
+       * on its buffers being free afterwards. A caller that must not block bounds the
+       * wait with waitFor() and then asks for cancellation with cancel(); a request
+       * that is still pending after both is an operation the transport cannot
+       * abandon, and the caller treats the composition as failed rather than destroy
+       * it. See ITransport for when a transport completes a request whose peer is
+       * gone.
        */
       virtual ~IExchangeRequest() = default;
 
@@ -80,6 +84,17 @@ namespace HydroCouple
        * \brief Blocks until the operation completes.
        */
       virtual void wait() = 0;
+
+      /*!
+       * \brief Blocks until the operation completes or the timeout elapses.
+       * \details The bounded form of wait(), for callers that must not hang on a
+       * peer that has stopped answering. A non-positive timeout tests once without
+       * blocking, exactly as test() does.
+       * \param[in] timeoutSeconds is the longest the call may block.
+       * \returns True if the operation has completed (successfully or not); false if
+       * it is still pending when the timeout elapses.
+       */
+      [[nodiscard]] virtual bool waitFor(double timeoutSeconds) = 0;
 
       /*!
        * \brief Checks whether the operation completed with an error.
@@ -107,6 +122,24 @@ namespace HydroCouple
      * itemSizeBytes. Collective operations (barrier, reductions) are deliberately not
      * part of this interface until a composition in the ecosystem needs them from
      * the standard rather than from its transport's native API.
+     *
+     * \details Payloads of a size the receiver cannot know. receive() and
+     * receiveAsync() fill a pre-allocated buffer, so the receiver must know the
+     * payload's shape. When it cannot — text such as an error message or a
+     * checkpoint token, a list that grows — the sender first sends the extent as a
+     * one-element DataKind::Int64 payload and then the payload itself, as a rank-1
+     * buffer, on the same tag. Ordering per (sender, receiver, tag) guarantees the
+     * receiver reads them in that order. Text travels as its UTF-8 bytes in a
+     * DataKind::UInt8 buffer, never as DataKind::String.
+     *
+     * \details Lost peers. A transport that can detect the loss of a peer (a closed
+     * connection, a process that has exited) must complete every pending operation
+     * with that peer, with failed() reporting the loss, so that wait() and a
+     * request's destructor return. A transport that cannot detect loss (plain MPI,
+     * where a lost rank typically aborts the job) must say so in its documentation;
+     * callers then bound their waits with the asynchronous operations and
+     * IExchangeRequest::waitFor(). The blocking send() and receive() carry no
+     * timeout: a caller that needs one uses the asynchronous form.
      */
     class ITransport : public virtual IIdentity
     {
@@ -227,6 +260,11 @@ namespace HydroCouple
      * The status is updated, and the signal fired, on whatever thread services the
      * transport; status() is atomic per the threading convention, and a slot connected
      * to the proxy must be prepared to run off the orchestrator's thread.
+     *
+     * \details Scope. The standard fixes what an orchestrator sees of a proxy, not
+     * the command protocol between the proxy and the process hosting its peer: that
+     * protocol belongs to the SDK that provides both ends. A proxy and a peer server
+     * from different SDKs are not required to interoperate.
      */
     class IProxyModelComponent : public virtual IDistributedModelComponent
     {

@@ -705,6 +705,16 @@ cdef class CppValueDefinitionWrapper(CppDescriptionWrapper):
         return ValueKind(<int>self._ptr.valueKind())
 
     @property
+    def standard_name(self) -> str:
+        """The CF standard name of the quantity, or ``""``."""
+        return self._ptr.standardName().decode("utf-8")
+
+    @property
+    def concept_uri(self) -> str:
+        """A URI naming the quantity in a published vocabulary, or ``""``."""
+        return self._ptr.conceptURI().decode("utf-8")
+
+    @property
     def missing_value(self) -> float:
         """The sentinel used to indicate missing data (numeric kinds)."""
         return self._ptr.missingValue()
@@ -758,6 +768,16 @@ cdef class CppUnitWrapper(CppDescriptionWrapper):
     def offset_to_si(self) -> float:
         """Add this after multiplying to get SI."""
         return self._ptr.offsetToSI()
+
+    @property
+    def symbol(self) -> str:
+        """The unit as a UDUNITS-2 string, or ``""``."""
+        return self._ptr.symbol().decode("utf-8")
+
+    @property
+    def ucum_code(self) -> str:
+        """The unit as a UCUM code, or ``""``."""
+        return self._ptr.ucumCode().decode("utf-8")
 
 
 cdef class CppQuantityWrapper(CppValueDefinitionWrapper):
@@ -1204,13 +1224,17 @@ cdef class CppOutputWrapper(CppComponentDataItemWrapper):
         cdef vector[cpp.IInput*] c = self._output.consumers()
         return [owned_by(_wrap_input(c[i]), self) for i in range(c.size())]
 
-    def add_consumer(self, consumer):
-        """Register an input as a consumer of this output (the provider
-        checks ``can_consume`` and may refuse by raising)."""
+    def add_consumer(self, consumer, provider_role=None):
+        """Connect an input to this output -- the single wiring entry point.
+
+        ``provider_role`` is the role this output fills for a multi-input
+        consumer (one of its ``provider_labels``), or ``None``. The output
+        checks ``can_consume`` and may refuse by raising.
+        """
         cdef cpp.IInput* input = _input_pointer(consumer)
         if input == NULL:
             raise ValueError("consumer must not be None")
-        self._output.addConsumer(input)
+        self._output.addConsumer(input, _identity_pointer(provider_role))
 
     def remove_consumer(self, consumer) -> bool:
         """Remove an input from this output's consumer list."""

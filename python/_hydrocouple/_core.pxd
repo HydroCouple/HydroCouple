@@ -184,7 +184,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # ------------------------------------------------------------------
     # IModelComponent — nested enum + methods
     # ------------------------------------------------------------------
-    cdef enum class IModelComponent_ComponentStatus "HydroCouple::IModelComponent::ComponentStatus":
+    cdef enum class IModelComponent_ComponentStatus "HydroCouple::IModelComponent::ComponentStatus"(uint8_t):
         Created
         Initializing
         Initialized
@@ -277,6 +277,8 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # ------------------------------------------------------------------
     cdef cppclass IValueDefinition(IDescription):
         ValueKind valueKind() const
+        string standardName() const
+        string conceptURI() const
         double missingValue() const
         double defaultValue() const
 
@@ -344,6 +346,8 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         IUnitDimensions* dimensions() const
         double conversionFactorToSI() const
         double offsetToSI() const
+        string symbol() const
+        string ucumCode() const
 
     cdef cppclass IQuantity(IValueDefinition):
         IUnit* unit() const
@@ -426,7 +430,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # ------------------------------------------------------------------
     cdef cppclass IOutput(IExchangeItem):
         vector[IInput*] consumers() const
-        void addConsumer(IInput* consumer) except +
+        void addConsumer(IInput* consumer, const IIdentity* providerRole) except +
         bint removeConsumer(IInput* consumer) except +
         vector[IAdaptedOutput*] adaptedOutputs() const
         void addAdaptedOutput(IAdaptedOutput* adaptedOutput) except +
@@ -494,7 +498,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
     # IWorkflowComponent — nested enum
     # ------------------------------------------------------------------
     cdef enum class IWorkflowComponent_WorkflowStatus \
-            "HydroCouple::IWorkflowComponent::WorkflowStatus":
+            "HydroCouple::IWorkflowComponent::WorkflowStatus"(uint8_t):
         Created
         Initializing
         Initialized
@@ -509,6 +513,7 @@ cdef extern from "hydrocouple.h" namespace "HydroCouple":
         Finishing
         Finished
         Failed
+        Invalid
 
     cdef cppclass IWorkflowComponentInfo(IComponentInfo):
         unique_ptr[IWorkflowComponent] createComponentInstance() except +

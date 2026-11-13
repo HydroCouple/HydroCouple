@@ -70,8 +70,8 @@ from hydrocouple.core import (
     IWorkflowComponentStatusChangeEventArgs,
 )
 
-# PEP 440 form of the C++ release designation 2.0.0-alpha.2
-__version__ = "2.0.0a2"
+# PEP 440 form of the C++ release designation 2.0.0-beta.1
+__version__ = "2.0.0b1"
 
 __all__ = [
     "ArgumentInputType",

@@ -72,7 +72,12 @@
 #define HYDROCOUPLE_ABI_STRINGIFY(x)  HYDROCOUPLE_ABI_STRINGIFY_(x)
 
 //! Revision of this loading convention itself (not of the interfaces).
-#define HYDROCOUPLE_COMPONENT_ABI_REVISION "1"
+//! 2 (ABI 5): the stamp names the standard library's ABI variant and, on
+//! Windows, the C runtime and iterator-debug level; MSVC is named by its
+//! binary-compatible toolset family instead of its exact version; the pointer
+//! width no longer depends on a GCC/Clang-only macro and is labelled `ptr`
+//! (it is a size in bytes, which the old `bits` label misstated).
+#define HYDROCOUPLE_COMPONENT_ABI_REVISION "2"
 
 /*!
  * \brief Interface ABI this convention targets, as a number the preprocessor
@@ -84,7 +89,7 @@
  * generically-named macros (PROJECT_VERSION_MAJOR) any other project may also
  * define. The duplication this forces is closed by the static_assert below.
  */
-#define HYDROCOUPLE_COMPONENT_IFACE_VERSION_NUMBER 4
+#define HYDROCOUPLE_COMPONENT_IFACE_VERSION_NUMBER 5
 #define HYDROCOUPLE_COMPONENT_IFACE_VERSION \
     HYDROCOUPLE_ABI_STRINGIFY(HYDROCOUPLE_COMPONENT_IFACE_VERSION_NUMBER)
 
@@ -97,40 +102,93 @@ static_assert(HYDROCOUPLE_COMPONENT_IFACE_VERSION_NUMBER ==
               "ABI was bumped without bumping the component stamp; every component "
               "would stamp the wrong iface and hosts would accept mismatched pairs.");
 
-#if defined(__clang__)
+// Compiler. MSVC is tested first because clang-cl defines _MSC_VER and follows
+// the MSVC ABI. Visual Studio 2015 onward (_MSC_VER 19xx, toolsets v140-v14x)
+// is one binary-compatible family, so the stamp names the family, not the
+// exact version: an update to the compiler must not reject every library.
+#if defined(_MSC_VER)
+#  if _MSC_VER >= 1900 && _MSC_VER < 2000
+#    define HYDROCOUPLE_ABI_COMPILER "msvc-v14x"
+#  else
+#    define HYDROCOUPLE_ABI_COMPILER "msvc-" HYDROCOUPLE_ABI_STRINGIFY(_MSC_VER)
+#  endif
+#elif defined(__clang__)
 #  define HYDROCOUPLE_ABI_COMPILER "clang-" HYDROCOUPLE_ABI_STRINGIFY(__clang_major__)
 #elif defined(__GNUC__)
 #  define HYDROCOUPLE_ABI_COMPILER "gcc-" HYDROCOUPLE_ABI_STRINGIFY(__GNUC__)
-#elif defined(_MSC_VER)
-#  define HYDROCOUPLE_ABI_COMPILER "msvc-" HYDROCOUPLE_ABI_STRINGIFY(_MSC_VER)
 #else
 #  define HYDROCOUPLE_ABI_COMPILER "unknown"
 #endif
 
+// Standard library, with the build settings that change the layout of the
+// std::string and std::vector objects the interfaces pass by value:
+// libstdc++'s dual ABI (_GLIBCXX_USE_CXX11_ABI) and debug mode, libc++'s ABI
+// version, and the MSVC STL's iterator-debug level.
 #if defined(_LIBCPP_VERSION)
-#  define HYDROCOUPLE_ABI_STDLIB "libc++"
+#  define HYDROCOUPLE_ABI_STDLIB "libc++" HYDROCOUPLE_ABI_STRINGIFY(_LIBCPP_ABI_VERSION)
 #elif defined(__GLIBCXX__)
-#  define HYDROCOUPLE_ABI_STDLIB "libstdc++"
+#  if defined(_GLIBCXX_DEBUG)
+#    define HYDROCOUPLE_ABI_STDLIB_DEBUG "-debug"
+#  else
+#    define HYDROCOUPLE_ABI_STDLIB_DEBUG ""
+#  endif
+#  if defined(_GLIBCXX_USE_CXX11_ABI) && _GLIBCXX_USE_CXX11_ABI == 0
+#    define HYDROCOUPLE_ABI_STDLIB "libstdc++-cow" HYDROCOUPLE_ABI_STDLIB_DEBUG
+#  else
+#    define HYDROCOUPLE_ABI_STDLIB "libstdc++-cxx11" HYDROCOUPLE_ABI_STDLIB_DEBUG
+#  endif
 #elif defined(_MSVC_STL_VERSION)
-#  define HYDROCOUPLE_ABI_STDLIB "msvcstl"
+#  define HYDROCOUPLE_ABI_STDLIB "msvcstl-idl" HYDROCOUPLE_ABI_STRINGIFY(_ITERATOR_DEBUG_LEVEL)
 #else
 #  define HYDROCOUPLE_ABI_STDLIB "unknown"
+#endif
+
+// C runtime (Windows only). Debug and release CRTs lay out and allocate
+// differently, and a static CRT (/MT) gives each image its own heap, which the
+// STL-by-value rule cannot survive: a std::string allocated in a component and
+// freed in the host would cross heaps. /MT builds are therefore stamped so a
+// host can name the problem, but they cannot work.
+#if defined(_MSC_VER)
+#  if defined(_DLL) && defined(_DEBUG)
+#    define HYDROCOUPLE_ABI_CRT ";crt=mdd"
+#  elif defined(_DLL)
+#    define HYDROCOUPLE_ABI_CRT ";crt=md"
+#  elif defined(_DEBUG)
+#    define HYDROCOUPLE_ABI_CRT ";crt=mtd"
+#  else
+#    define HYDROCOUPLE_ABI_CRT ";crt=mt"
+#  endif
+#else
+#  define HYDROCOUPLE_ABI_CRT ""
+#endif
+
+// Pointer width in bytes. __SIZEOF_POINTER__ is GCC/Clang only.
+#if defined(__SIZEOF_POINTER__)
+#  define HYDROCOUPLE_ABI_POINTER_BYTES HYDROCOUPLE_ABI_STRINGIFY(__SIZEOF_POINTER__)
+#elif defined(_WIN64)
+#  define HYDROCOUPLE_ABI_POINTER_BYTES "8"
+#elif defined(_WIN32)
+#  define HYDROCOUPLE_ABI_POINTER_BYTES "4"
+#else
+#  error "hydrocouplecomponentabi.h: cannot determine the pointer width for the ABI stamp"
 #endif
 
 /*!
  * \brief The toolchain fingerprint both sides must agree on.
  *
- * Deliberately coarse: compiler family and major version, standard library,
- * pointer width, and the interface major version. Finer granularity would
- * reject libraries that are in fact compatible; coarser would admit ones that
- * are not.
+ * Deliberately coarse: compiler family (and major version for GCC and Clang),
+ * standard library and its ABI-affecting settings, the C runtime on Windows,
+ * pointer width, and the interface ABI. Finer granularity would reject
+ * libraries that are in fact compatible; coarser would admit ones that are not.
+ * The `iface` field is second and followed by `;`, so tools may locate it.
  */
 #define HYDROCOUPLE_COMPONENT_ABI_STAMP                                        \
     "hc-abi/" HYDROCOUPLE_COMPONENT_ABI_REVISION                               \
     ";iface=" HYDROCOUPLE_COMPONENT_IFACE_VERSION                              \
     ";cxx=" HYDROCOUPLE_ABI_COMPILER                                           \
     ";stdlib=" HYDROCOUPLE_ABI_STDLIB                                          \
-    ";bits=" HYDROCOUPLE_ABI_STRINGIFY(__SIZEOF_POINTER__)
+    HYDROCOUPLE_ABI_CRT                                                        \
+    ";ptr=" HYDROCOUPLE_ABI_POINTER_BYTES
 
 // ── Entry-point names (kept as string literals for the loader's dlsym) ──────
 #define HYDROCOUPLE_COMPONENT_ABI_SYMBOL  "hydrocouple_component_abi_v1"

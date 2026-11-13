@@ -115,10 +115,11 @@ class Unit(_Described, IUnit):
     """A unit expressed by its conversion to SI."""
 
     def __init__(self, id_: str, caption: str, factor_to_si: float,
-                 offset_to_si: float = 0.0):
+                 offset_to_si: float = 0.0, symbol: str = ""):
         _Described.__init__(self, id_, caption)
         self._factor = factor_to_si
         self._offset = offset_to_si
+        self._symbol = symbol
 
     @property
     def dimensions(self):
@@ -133,6 +134,14 @@ class Unit(_Described, IUnit):
     @property
     def offset_to_si(self):
         return self._offset
+
+    @property
+    def symbol(self):
+        return self._symbol
+
+    @property
+    def ucum_code(self):
+        return ""  # not declared
 
 
 class Quantity(_Described, IQuantity):
@@ -155,6 +164,14 @@ class Quantity(_Described, IQuantity):
         return self._value_kind
 
     @property
+    def standard_name(self):
+        return ""  # not declared; the example matches by unit and kind
+
+    @property
+    def concept_uri(self):
+        return ""
+
+    @property
     def missing_value(self):
         return float("nan")
 
@@ -173,12 +190,12 @@ class Quantity(_Described, IQuantity):
 
 RUNOFF_DEPTH = Quantity(
     "runoff-depth", "Runoff depth",
-    Unit("mm/hr", "millimetre per hour", MM_PER_HR_TO_M_PER_S),
+    Unit("mm/hr", "millimetre per hour", MM_PER_HR_TO_M_PER_S, symbol="mm h-1"),
     ValueKind.Intensive)
 
 VOLUMETRIC_FLOW = Quantity(
     "volumetric-flow", "Volumetric flow rate",
-    Unit("m3/s", "cubic metre per second", 1.0),
+    Unit("m3/s", "cubic metre per second", 1.0, symbol="m3 s-1"),
     ValueKind.Flux)
 
 

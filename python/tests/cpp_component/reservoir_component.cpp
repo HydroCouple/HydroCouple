@@ -198,7 +198,7 @@ class OutflowOutput final : public virtual IOutput, public VectorItem
 public:
     explicit OutflowOutput(IModelComponent *owner) : VectorItem(owner, "outflow", 0.0) {}
     [[nodiscard]] std::vector<IInput *> consumers() const override { return m_consumers; }
-    void addConsumer(IInput *consumer) override { m_consumers.push_back(consumer); }
+    void addConsumer(IInput *consumer, const IIdentity * = nullptr) override { m_consumers.push_back(consumer); }
     [[nodiscard]] bool removeConsumer(IInput *) override { return false; }
     [[nodiscard]] std::vector<IAdaptedOutput *> adaptedOutputs() const override { return {}; }
     void addAdaptedOutput(IAdaptedOutput *) override {}

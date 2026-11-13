@@ -2,6 +2,149 @@
 
 ## Unreleased
 
+## 2.0.0-beta.1 — 2026-11-13
+
+First beta of the 2.0 interface, and the release that fixes ABI 5. It settles
+the contract gaps a release-readiness review found — the places where two
+independent implementers, reading the same headers, would build things that
+do not work together — lands the vocabulary binding held back since the
+2026-09-29 review, publishes the standard's own concepts as a
+machine-readable vocabulary generated from the headers, and cleans up the
+release itself.
+
+### Migrating from 2.0.0-alpha.2
+
+Every library must be rebuilt: `HYDROCOUPLE_ABI_VERSION` is 5 and the
+component stamp is revision 2, so a host refuses alpha.2 components. Source
+changes, by what you implement:
+
+- **An `IOutput` or `IAdaptedOutput`:** `addConsumer(IInput *consumer,
+  const IIdentity *providerRole = nullptr)`. Wire a multi-input through
+  `canConsume(this, message, providerRole)` and `addProvider(this,
+  providerRole)`; any other input as before, refusing a non-null role.
+  `removeConsumer()` calls `removeProvider(this)` on a multi-input.
+- **An `IExchangeRequest`:** add `waitFor(double timeoutSeconds)`.
+- **An `IValueDefinition` (quantity or quality):** add `standardName()` and
+  `conceptURI()`. **An `IUnit`:** add `symbol()` and `ucumCode()`. Return an
+  empty string for anything not declared.
+- **An orchestrator:** wire multi-inputs through `addConsumer(input, role)`,
+  never `addProvider()` directly. A workflow whose `validate()` finds
+  problems is now `Invalid`, not `Failed`; test the returned problems (or
+  `Invalid`) rather than `status() == Failed`.
+- **Anything that included `version.h`:** include `hydrocoupleversion.h`;
+  every macro is now `HYDROCOUPLE_`-prefixed (`HYDROCOUPLE_VERSION`,
+  `HYDROCOUPLE_VERSION_MAJOR`, ...).
+- **Anything that named `::ByteOrder`:** it is `HydroCouple::ByteOrder`.
+- **Users of `Helpers::DataKindOf<T>`:** a type with no `DataKind` is now a
+  compile error instead of a silent `Opaque`.
+
+### Contract (ABI 5)
+
+- **One wiring entry point.** `IOutput::addConsumer()` carries the provider
+  role, so it connects every kind of input. Before, a multi-input could only
+  be wired by calling `IMultiInput::addProvider()` directly, which never told
+  the output: its `consumers()` did not list the multi-input it was feeding.
+  `addProvider()`/`removeProvider()` are now callbacks, like `setProvider()`,
+  and `IInput::provider()` is `nullptr` for a multi-input.
+- **Lifetime and teardown.** A new convention: the items a component hands
+  out stay valid until it is destroyed or re-initialized — `finish()`
+  releases computation, not items — and a composition is dismantled in a
+  stated order (adapters from the consumer end, then connections, then
+  components, then libraries), so no destructor calls into something
+  already gone.
+- **Vocabulary binding.** `IValueDefinition::standardName()` (a CF standard
+  name) and `conceptURI()` (any published vocabulary: CSDMS, QUDT, SWEET,
+  HY_Features) say *what* a value measures, and `IUnit::symbol()` (UDUNITS-2)
+  and `ucumCode()` (UCUM) say what its unit is called, so persistence needs no
+  side table and a composer can match quantities without reading captions.
+  A difference between two declared names is a warning, never an error.
+- **Distributed execution.** `IExchangeRequest::waitFor()` bounds a wait. A
+  transport that can detect a lost peer must fail that peer's pending
+  operations; one that cannot (MPI) must say so. A payload whose size the
+  receiver cannot know is sent extent-first on the same tag, and text
+  travels as UTF-8 bytes. The proxy-to-peer protocol is the SDK's, and
+  proxies from different SDKs need not interoperate.
+- **Time.** Two instants are the same when their Julian days differ by no
+  more than `Temporal::TIME_EQUALITY_TOLERANCE_DAYS` (1e-8 days, about
+  0.86 ms) — the meaning of "exact" in `TimeInterpolation::None`.
+  `Temporal::INTERVAL_LENGTH_CONTIGUOUS` declares contiguous intervals of
+  varying length (calendar months, irregular records).
+- **Lifecycle.** `WorkflowStatus::Invalid` (appended as 14):
+  `Validating → Validated | Invalid`, `Invalid → Validating | Finishing`, so
+  a composition with problems can be fixed and validated again;
+  `IModelComponent::update()` is documented as legal from `WaitingForData`,
+  as the table always allowed. Both status enums are `uint8_t` with pinned
+  values, because proxies carry them between processes.
+- **Component-loading stamp, revision 2.** It now names the standard
+  library's ABI-affecting settings (libstdc++'s dual ABI and debug mode,
+  libc++'s ABI version, the MSVC iterator-debug level) and, on Windows, the C
+  runtime; it names MSVC by its binary-compatible toolset family (`msvc-v14x`)
+  rather than its exact version, works out the pointer width on MSVC (and
+  calls it `ptr`, since it is a size in bytes), and is evaluated as MSVC
+  under clang-cl.
+- `ByteOrder` moved into the `HydroCouple` namespace, beside every other
+  type of the standard.
+- Stale wording carried over from OpenMI and earlier revisions was replaced
+  (`Checkpointing`, `Finished`, `IQuality`, `IUnitDimensions::power()`,
+  `IArgument`, `IOutput`, `removeAdaptedOutput()`, the workflow status
+  event).
+
+### Vocabulary (new)
+
+The standard's concepts, published for tools that do not parse C++, under
+`https://hydrocouple.org/HydroCouple/vocabulary/#`:
+
+- every interface and aggregate is an `owl:Class` (C++ bases become
+  `rdfs:subClassOf`); every const accessor, and every aggregate field, a
+  property with its domain and its range (an interface, an enumeration or an
+  XML Schema type), functional when it returns one value;
+- every enumeration is a `skos:ConceptScheme` whose concepts carry their
+  numeric values as `skos:notation`;
+- the component and workflow state machines are `hc:mayTransitionTo` links
+  between status concepts, and each data item's canonical dimension ordering
+  is attached to its class.
+
+`tools/generate_vocabulary.py` writes it to `docs/vocabulary/` as Turtle,
+JSON-LD and a term index in which every term IRI has an anchor; the
+documentation site serves it, and the Python suite fails when the committed
+files no longer match the headers (and, with rdflib installed, checks that the
+Turtle and JSON-LD are the same graph). The headers remain normative.
+
+### Helpers
+
+- `DataKindOf<T>` maps every integer type by width and signedness (`long`,
+  `long long` and `size_t` were silently `Opaque` on some platforms) and
+  rejects types with no `DataKind` at compile time.
+- The header states its one normative exception: the two lifecycle
+  transition tables. The workflow table admits `Invalid`.
+- Every header compiles without warnings under `-Wall -Wextra -Wpedantic
+  -Wconversion -Wsign-conversion`.
+
+### Python mirror
+
+- `IOutput.add_consumer(consumer, provider_role=None)`, and the C++ wrapper
+  passes the role through.
+- `IValueDefinition.standard_name` / `concept_uri` and `IUnit.symbol` /
+  `ucum_code`, on the ABCs and the C++ wrappers.
+- `IExchangeRequest.wait_for()`; `WorkflowStatus.Invalid` and the workflow
+  transition table; `temporal.TIME_EQUALITY_TOLERANCE_DAYS` and
+  `temporal.INTERVAL_LENGTH_CONTIGUOUS`, held to the C++ values by a parity
+  test.
+- Version `2.0.0b1`.
+
+### Packaging and documentation
+
+- The generated version header is `hydrocoupleversion.h`, with
+  `HYDROCOUPLE_`-prefixed macros and include guard; a header named
+  `version.h` defining `PROJECT_VERSION` collided with any project that did
+  the same. The README's install list now names every installed header.
+- The documentation site builds without warnings: Doxygen markup fixed in
+  every header, obsolete Doxyfile options and a hard-coded Graphviz path
+  removed, README links resolve (GitHub-style heading ids; the changelog and
+  the Python README are pages of the site).
+- `docs/INTERFACE_REVIEW.md` is marked as the historical August 2026 review.
+- The vcpkg port's version follows the release.
+
 ## 2.0.0-alpha.2 — 2026-10-02
 
 Second pre-release of the 2.0 interface, and the release that fixes ABI 4.
@@ -174,9 +317,11 @@ loader) remains accepted and is reported as unstamped.
 
 ### Contract-consistency round (breaking; ABI 4) — 2026-09-29
 
-Follows the review in `plans/hydrocouple/INTERFACE_REVIEW_2026-09-29.md`
-(§3 robustness, §4 comprehensiveness). Ontology items (§2, §5 items 5 and 13)
-are deliberately not part of this round. Every change below is one of:
+Follows the second interface review of 2026-09-29 (its robustness and
+comprehensiveness findings; the review itself is a maintainer's working
+document and is not part of the repository). Its ontology items — standard
+names, concept URIs, unit symbols, a generated vocabulary — are deliberately
+not part of this round. Every change below is one of:
 two normative statements that disagreed, a rule stated in prose but not in
 the type, or a principle the standard proclaims that a newer addition
 violated.

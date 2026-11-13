@@ -8,9 +8,13 @@
 #include <gtest/gtest.h>
 
 #include "hydrocouple.h"
+#include "hydrocouplecomponentabi.h"
+#include "hydrocoupledistributed.h"
 #include "hydrocouplehelpers.h"
+#include "hydrocoupletemporal.h"
 
 #include <array>
+#include <cmath>
 #include <cstring>
 #include <numeric>
 #include <span>
@@ -70,9 +74,15 @@ TEST(DataKindTest, TraitsMapping)
     static_assert(DataKindOf<double>::kind == DataKind::Float64);
     static_assert(DataKindOf<bool>::kind == DataKind::Boolean);
     static_assert(DataKindOf<std::string>::kind == DataKind::String);
-    // Unmapped types are Opaque
-    struct Custom {};
-    static_assert(DataKindOf<Custom>::kind == DataKind::Opaque);
+    // Integer types map by width and signedness, not by name: long and
+    // long long are distinct types, and int64_t is one or the other depending
+    // on the platform. (A type with no DataKind is a compile error.)
+    static_assert(DataKindOf<long>::kind == (sizeof(long) == 8 ? DataKind::Int64 : DataKind::Int32));
+    static_assert(DataKindOf<unsigned long>::kind == (sizeof(long) == 8 ? DataKind::UInt64 : DataKind::UInt32));
+    static_assert(DataKindOf<long long>::kind == DataKind::Int64);
+    static_assert(DataKindOf<unsigned long long>::kind == DataKind::UInt64);
+    static_assert(DataKindOf<size_t>::kind == (sizeof(size_t) == 8 ? DataKind::UInt64 : DataKind::UInt32));
+    static_assert(DataKindOf<const double>::kind == DataKind::Float64);
     SUCCEED();
 }
 
@@ -251,8 +261,9 @@ TEST(CheckpointTest, SavedStatesCanBeReleased)
     Release release = &ICheckpointableModelComponent::releaseState;
     EXPECT_NE(release, nullptr);
     // Adding a pure virtual grew the vtable: the ABI version says so
-    // (3 for releaseState(); 4 for the 2026-09-29 contract-consistency round).
-    EXPECT_GE(HYDROCOUPLE_ABI_VERSION, 3);
+    // (3 for releaseState(); 4 for the 2026-09-29 contract-consistency round;
+    // 5 for the 2026-11-13 release-readiness round).
+    EXPECT_GE(HYDROCOUPLE_ABI_VERSION, 5);
 }
 
 TEST(DifferentialTest, RoleValues)
@@ -511,12 +522,24 @@ TEST(WorkflowTransitionTest, PauseResumeAndStop)
 TEST(WorkflowTransitionTest, FailedIsReachableFromEveryStatusButFinished)
 {
     constexpr WS all[] = {WS::Created, WS::Initializing, WS::Initialized, WS::Validating,
-                          WS::Validated, WS::Preparing, WS::Prepared, WS::Updating,
-                          WS::Updated, WS::Paused, WS::Done, WS::Finishing};
+                          WS::Validated, WS::Invalid, WS::Preparing, WS::Prepared,
+                          WS::Updating, WS::Updated, WS::Paused, WS::Done,
+                          WS::Finishing};
     for (WS from : all)
         EXPECT_TRUE(isValidWorkflowStatusTransition(from, WS::Failed))
             << "status " << static_cast<int>(from);
     EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Finished, WS::Failed));
+}
+
+TEST(WorkflowTransitionTest, InvalidCompositionCanBeFixedAndRevalidated)
+{
+    // A composition with problems is Invalid, not Failed: the caller rewires
+    // and validates again without re-initializing, as for a component.
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Validating, WS::Invalid));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Invalid, WS::Validating));
+    EXPECT_TRUE(isValidWorkflowStatusTransition(WS::Invalid, WS::Finishing));
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Invalid, WS::Preparing));
+    EXPECT_FALSE(isValidWorkflowStatusTransition(WS::Invalid, WS::Validated));
 }
 
 TEST(WorkflowTransitionTest, IllegalAndTerminal)
@@ -841,4 +864,62 @@ TEST_F(GridDataItemTest, WrongRankRejected)
     EXPECT_FALSE(grid.getValuesInto(
         makeContiguous(out.data(), DataKind::Float64, count), start, count, &message));
     EXPECT_EQ(message, "selection rank must be 2");
+}
+
+// ============================================================================
+// ABI 5 release-readiness round
+// ============================================================================
+
+TEST(WiringTest, AddConsumerCarriesTheProviderRole)
+{
+    // One entry point for every input: the role reaches a multi-input through
+    // the output, which then calls IMultiInput::addProvider() itself.
+    using AddConsumer = void (IOutput::*)(IInput *, const IIdentity *);
+    AddConsumer add = &IOutput::addConsumer;
+    EXPECT_NE(add, nullptr);
+}
+
+TEST(TransportTest, RequestsHaveABoundedWait)
+{
+    using WaitFor = bool (Distributed::IExchangeRequest::*)(double);
+    WaitFor waitFor = &Distributed::IExchangeRequest::waitFor;
+    EXPECT_NE(waitFor, nullptr);
+}
+
+TEST(TemporalConstantsTest, ToleranceIsAboveResolutionAndBelowAMillisecond)
+{
+    // A Julian day near the present resolves to about 40 us in a double.
+    const double jd = 2461000.5;
+    const double ulp = std::nextafter(jd, 2.0 * jd) - jd;
+    EXPECT_GT(Temporal::TIME_EQUALITY_TOLERANCE_DAYS, 10.0 * ulp);
+    EXPECT_LT(Temporal::TIME_EQUALITY_TOLERANCE_DAYS, 1.0 / 86400000.0);
+    EXPECT_LT(Temporal::INTERVAL_LENGTH_CONTIGUOUS, 0.0);
+}
+
+TEST(OntologyBindingTest, QuantitiesAndUnitsNameThemselvesInPublishedVocabularies)
+{
+    // The ontology binding held since 2026-09-29, landed in ABI 5: a value
+    // definition names its quantity (CF standard name, concept URI) and a unit
+    // its codes (UDUNITS-2, UCUM), so two components can be matched without a
+    // human reading their captions.
+    using Text = std::string (IValueDefinition::*)() const;
+    Text standardName = &IValueDefinition::standardName;
+    Text conceptURI = &IValueDefinition::conceptURI;
+    using UnitText = std::string (IUnit::*)() const;
+    UnitText symbol = &IUnit::symbol;
+    UnitText ucumCode = &IUnit::ucumCode;
+    EXPECT_NE(standardName, nullptr);
+    EXPECT_NE(conceptURI, nullptr);
+    EXPECT_NE(symbol, nullptr);
+    EXPECT_NE(ucumCode, nullptr);
+}
+
+TEST(ComponentAbiTest, StampCarriesInterfaceAbiAndPointerWidth)
+{
+    const std::string stamp = HYDROCOUPLE_COMPONENT_ABI_STAMP;
+    EXPECT_EQ(stamp.rfind("hc-abi/2;", 0), 0u) << stamp;
+    EXPECT_NE(stamp.find(";iface=" + std::to_string(HYDROCOUPLE_ABI_VERSION) + ";"),
+              std::string::npos) << stamp;
+    EXPECT_NE(stamp.find(";ptr=" + std::to_string(sizeof(void *))), std::string::npos) << stamp;
+    EXPECT_EQ(stamp.find("unknown"), std::string::npos) << stamp;
 }

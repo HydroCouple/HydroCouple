@@ -1,14 +1,14 @@
 /*!
  * \file hydrocouplespatial.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0-alpha.2
+ * \version 2.0.0-beta.1
  * \brief Geospatial interface definitions for the HydroCouple component-based modeling framework.
  * \details This header file contains the geospatial interface definitions for the
  * HydroCouple component-based modeling framework. It defines interfaces following the
  * OGC Simple Features Access specification for geometry types, spatial reference systems,
  * mesh/network data structures, raster data, regular grids, and their corresponding
  * component data item interfaces.
- * \license
+ * \par License
  * This file and its associated files and libraries are free software.
  * You can redistribute them and/or modify them under the terms of the
  * MIT License. They are distributed in the hope that they will be useful,
@@ -485,7 +485,7 @@ namespace HydroCouple
        */
       [[nodiscard]] virtual std::unique_ptr<IGeometry> locateBetween(double mStart, double mEnd) const = 0;
 
-      ///@}
+      //@}
 
       /** @name Spatial Analysis
        * Spatial analysis functions. Every geometry-valued result is a newly
@@ -2219,7 +2219,7 @@ namespace HydroCouple
     /*!
      * \brief A polyhedral surface whose values are resolved into vertical layers.
      *
-     * The unstructured counterpart of \ref IRegularGrid3DComponentDataItem: a 2-D
+     * The unstructured counterpart of IRegularGrid3DComponentDataItem: a 2-D
      * mesh extruded downward. `IPolyhedralSurfaceComponentDataItem` indexes values
      * by a single entity dimension, which cannot express a layered model, and the
      * regular-grid item carries three dimensions but only for a structured grid.

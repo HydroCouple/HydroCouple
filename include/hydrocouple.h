@@ -1,13 +1,13 @@
 /*!
  * \file hydrocouple.h
  * \author Caleb Buahin <caleb.buahin@gmail.com>
- * \version 2.0.0-alpha.2
+ * \version 2.0.0-beta.1
  * \brief Core interface definitions for the HydroCouple component-based modeling framework.
  * \details This header file contains the core interface definitions for the
  * HydroCouple component-based modeling framework. It defines the fundamental
  * abstractions for model components, exchange items, signals/slots, value
  * definitions, dimensions, arguments, and workflow management.
- * \license
+ * \par License
  * This file and its associated files and libraries are free software.
  * You can redistribute them and/or modify them under the terms of the
  * MIT License. They are distributed in the hope that they will be useful,
@@ -32,23 +32,6 @@
 #include <typeinfo>
 #include <unordered_map>
 
-
-/*!
- * \brief The ByteOrder enum class indicates the byte order of serialized data.
- */
-enum class ByteOrder : uint8_t
-{
-
-  /*!
-   * \brief BigEndian serialized data byte order (most significant byte first).
-   */
-  BigEndian = 0,
-
-  /*!
-   * \brief LittleEndian serialized data byte order (least significant byte first).
-   */
-  LittleEndian = 1
-};
 
 /*!
  * \brief HydroCouple namespace contains the core interface specifications
@@ -78,7 +61,31 @@ namespace HydroCouple
   //!    IAdaptedOutput::states(), IDifferentiableAdaptedOutput::
   //!    differentiableStates() and ICheckpointableAdaptedOutput (stateful
   //!    adapters, 2026-10-02 -- the same, still unreleased, ABI 4).
-  constexpr int HYDROCOUPLE_ABI_VERSION = 4;
+  //! 5: release-readiness round (2026-11-13): IOutput::addConsumer() carries
+  //!    the provider role, so it is the one wiring entry point for multi-inputs
+  //!    too; IExchangeRequest::waitFor(); WorkflowStatus::Invalid; the two
+  //!    status enums are uint8_t with pinned values; ByteOrder moved into this
+  //!    namespace; IValueDefinition::standardName()/conceptURI() and
+  //!    IUnit::symbol()/ucumCode() bind exchanged quantities to published
+  //!    vocabularies (the ontology items held since 2026-09-29).
+  constexpr int HYDROCOUPLE_ABI_VERSION = 5;
+
+  /*!
+   * \brief The ByteOrder enum class indicates the byte order of serialized data.
+   */
+  enum class ByteOrder : uint8_t
+  {
+
+    /*!
+     * \brief BigEndian serialized data byte order (most significant byte first).
+     */
+    BigEndian = 0,
+
+    /*!
+     * \brief LittleEndian serialized data byte order (least significant byte first).
+     */
+    LittleEndian = 1
+  };
 
   /*!
    * \page hc_conventions Normative conventions that apply to every interface
@@ -91,6 +98,24 @@ namespace HydroCouple
    * `std::unique_ptr` and the caller owns the result. No interface method
    * returns a raw pointer the caller must delete. Containers of pointers
    * (`std::vector<IInput*>`) are snapshots of non-owning observers.
+   *
+   * **Lifetime and teardown.** The objects a component hands out — its
+   * exchange items, arguments, results, states and their metadata — stay
+   * valid until the component is destroyed or re-initialized (initialize() may
+   * rebuild them). finish() releases computational resources, not these
+   * objects (see ComponentStatus::Finished), so a finished component's items
+   * may still be read and unwired. A connection must never outlive either of
+   * its ends, so an orchestrator dismantles a composition in this order:
+   *  1. destroy the adapted outputs it owns, the consumer end of each chain
+   *     first; each deregisters itself from its adaptee
+   *     (IOutput::addAdaptedOutput());
+   *  2. call IOutput::removeConsumer() for every remaining connection;
+   *  3. destroy the components (finish() them first, before or after steps
+   *     1–2);
+   *  4. unload the libraries they came from (hydrocouplecomponentabi.h).
+   * Steps 1–2 also precede re-initializing a component that has connections.
+   * An implementation may tolerate other orders, but none may rely on another
+   * implementation doing so.
    *
    * **Error channel.** The `errors()` diagnostic queue is the normative
    * failure channel: it is the only one that crosses process, C-ABI and
@@ -185,7 +210,7 @@ namespace HydroCouple
     Float64,     //!< double
     Boolean,     //!< bool (stored one element per byte)
     String,      //!< std::string (host memory only)
-    Opaque       //!< Implementation-defined bytes (element size must be agreed out of band).
+    Opaque       //!< Implementation-defined bytes; meaning agreed out of band, size in BufferDescriptor::itemSizeBytes.
   };
 
   /*!
@@ -674,20 +699,23 @@ namespace HydroCouple
     /*!
      * \brief HydroCouple::ComponentStatus is an enumerator that describes the status of
      * a component over the course of its lifetime.
+     * \details The values are pinned: proxies carry them across processes and the
+     * language bindings mirror them, so a value never changes meaning and new
+     * statuses are appended.
      */
-    enum class ComponentStatus
+    enum class ComponentStatus : uint8_t
     {
       /*!
        * \brief The IModelComponent instance has just been created.
        * This status must and will be followed by HydroCouple::Initializing.
        */
-      Created,
+      Created = 0,
 
       /*!
        * \brief The IModelComponent is initializing itself.
        * This status will end in a status change to HydroCouple::Initialized or HydroCouple::Failed.
        */
-      Initializing,
+      Initializing = 1,
 
       /*!
        * \brief The IModelComponent has successfully initialized itself by calling
@@ -695,7 +723,7 @@ namespace HydroCouple
        * other components can be established.
        *
        */
-      Initialized,
+      Initialized = 2,
 
       /*!
        * \brief After links between an IModelComponent's inputs/outputs and
@@ -706,21 +734,21 @@ namespace HydroCouple
        * This Validating status will when the IModelComponent::status()
        * changes to HydroCouple::Valid or HydroCouple::Invalid.
        */
-      Validating,
+      Validating = 3,
 
       /*!
        * \brief The IModelComponent is in a HydroCouple::Valid state.
        * When updating itself its required input will be available,
        * and it will be able to provide the required output.
        */
-      Valid,
+      Valid = 4,
 
       /*!
        * \brief The IModelComponent wants to update itself,
        * but is not yet able to perform the actual computation,
        * because it is still waiting for input data from other components.
        */
-      WaitingForData,
+      WaitingForData = 5,
 
       /*!
        * \brief The IModelComponent is in an HydroCouple::Invalid state.
@@ -730,7 +758,7 @@ namespace HydroCouple
        * between the IModelComponent's inputs/outputs and those of
        * other components, the HydroCouple::Validating state can be entered again
        */
-      Invalid,
+      Invalid = 6,
 
       /*!
        * \brief The IModelComponent is preparing itself for the first
@@ -739,7 +767,7 @@ namespace HydroCouple
        * to HydroCouple::Updated or HydroCouple::Failed.
        *
        */
-      Preparing,
+      Preparing = 7,
 
       /*!
        * \brief The IModelComponent is updating itself. It has received
@@ -748,25 +776,26 @@ namespace HydroCouple
        * This HydroCouple::Updating state will end in a status change to
        * HydroCouple::Updated, HydroCouple::Done or HydroCouple::Failed.
        */
-      Updating,
+      Updating = 8,
 
       /*!
        * \brief The IModelComponent has successfully updated itself.
        */
-      Updated,
+      Updated = 9,
 
       /*!
        * \brief The IModelComponent is saving or restoring a checkpoint of its state
-       * (see ICheckpointableModelComponent). This status will end in a status change
-       * to HydroCouple::Updated or HydroCouple::Failed.
+       * (see ICheckpointableModelComponent). A save returns to the status it was
+       * entered from (HydroCouple::Updated or HydroCouple::Done); a successful restore
+       * always lands in HydroCouple::Updated; a failure lands in HydroCouple::Failed.
        */
-      Checkpointing,
+      Checkpointing = 10,
 
       /*!
        * \brief The last update process that the IModelComponent performed was the final one.
        * A next call to the IModelComponent::update() method will leave the IModelComponent's internal state unchanged.
        */
-      Done,
+      Done = 11,
 
       /*!
        * \brief The IModelComponent was requested to perform the actions to be performed before it will either be
@@ -775,12 +804,13 @@ namespace HydroCouple
        * When all required actions have been performed, the status switches to HydroCouple::Created when re-initialization is possible.
        * The status switches to HydroCouple::Finished when the IModelComponent is to be disposed
        */
-      Finishing,
+      Finishing = 12,
 
       /*!
        * \brief The IModelComponent has successfully performed its finalization actions.
        * Re-initialization of the IModelComponent instance is not possible and should not be attempted.
-       * Instead the instance should be disposed, e.g. through the garbage collection mechanism
+       * Instead the instance should be destroyed by its owner, after its connections
+       * are dismantled (see the lifetime convention).
        *
        * \details What a component releases in this state is its *computational*
        * resources — solver state, threads, scratch memory. Its data items may
@@ -791,7 +821,7 @@ namespace HydroCouple
        * implies unreadable values; a component that genuinely cannot serve
        * values after finalization should say so through its data items.
        */
-      Finished,
+      Finished = 13,
 
       /*!
        * \brief The IModelComponent has encountered an unrecoverable error.
@@ -800,13 +830,13 @@ namespace HydroCouple
        * Diagnostics describing the failure must be available from IModelComponent::errors().
        * From this state the component may be re-initialized by calling initialize()
        * if it supports re-initialization, or finished and disposed via finish(). */
-      Failed,
+      Failed = 14,
     };
 
-    // The legal lifecycle transitions form a normative state machine. The
-    // non-normative constexpr helper isValidComponentStatusTransition() in
-    // hydrocouplehelpers.h encodes the transition table; implementations must not
-    // perform transitions that table rejects. In summary:
+    // The legal lifecycle transitions form a normative state machine, encoded by
+    // isValidComponentStatusTransition() in hydrocouplehelpers.h (the one normative
+    // part of that header); implementations must not perform transitions that
+    // table rejects. In summary:
     //
     //   Created ─► Initializing ─► Initialized ─► Validating ─► Valid ─► Preparing ─► Updated
     //   Updated ⇄ Updating ─► Done            Updating ⇄ WaitingForData
@@ -870,23 +900,23 @@ namespace HydroCouple
     /*!
      * \brief The list of consumer items for which a component can receive values.
      *
-     * \details Available from the moment initialize() succeeds until finish() is
-     * called: orchestrators wire connections between Initialized and Validating, and
-     * providers read their consumers' inputs during every update(). Accessing the
-     * list before initialize() is an error (see the error-channel convention).
-     * The set of inputs is fixed after initialize(); their *values* change.
+     * \details Available from the moment initialize() succeeds: orchestrators wire
+     * connections between Initialized and Validating, and providers read their
+     * consumers' inputs during every update(). Accessing the list before
+     * initialize() is an error (see the error-channel convention). The set of inputs
+     * is fixed after initialize(); their *values* change.
      *
      * \returns Non-owning observers of this component's IInput items (see the
      * ownership convention). The vector is a snapshot; the items stay valid until
-     * finish().
+     * the component is destroyed or re-initialized (see the lifetime convention).
      */
     [[nodiscard]] virtual std::vector<IInput *> inputs() const = 0;
 
     /*!
      * \brief The list of IOutputs for which a component can produce results.
      *
-     * \details Available from the moment initialize() succeeds until finish() is
-     * called, under the same rules as inputs().
+     * \details Available from the moment initialize() succeeds, under the same rules
+     * as inputs().
      *
      * \details The list only contains the core IOutput items of the IModelComponent, not
      * the IAdaptedOutput items derived from each IOutput. To get a complete
@@ -894,7 +924,7 @@ namespace HydroCouple
      * IOutput items returned in the list.
      *
      * \returns Non-owning observers of this component's IOutput items; a snapshot,
-     * valid until finish().
+     * valid until the component is destroyed or re-initialized.
      */
     [[nodiscard]] virtual std::vector<IOutput *> outputs() const = 0;
 
@@ -914,8 +944,8 @@ namespace HydroCouple
      * results() or outputs(). A component whose update() does not depend on its past
      * returns an empty vector. Items may appear here and in outputs() at once.
      *
-     * \details Available under the same rules as inputs(): from initialize() to
-     * finish(); non-owning observers.
+     * \details Available under the same rules as inputs(): from initialize(); non-owning
+     * observers valid until the component is destroyed or re-initialized.
      * \returns The state items, in a stable order.
      */
     [[nodiscard]] virtual std::vector<IComponentDataItem *> states() const = 0;
@@ -986,8 +1016,9 @@ namespace HydroCouple
     /*!
      * \brief This method is called to let the component update itself, thus reaching its next state.
      *
-     * \details Legal from HydroCouple::Updated. Immediately after this method is invoked,
-     * it changes the component's status() to HydroCouple::Updating.
+     * \details Legal from HydroCouple::Updated and HydroCouple::WaitingForData (the retry
+     * after a provider has caught up). Immediately after this method is invoked, it
+     * changes the component's status() to HydroCouple::Updating.
      *
      * \details The type of actions a component takes during update() depends
      * on the type of component. A numerical model that progresses in time will typically
@@ -1412,6 +1443,30 @@ namespace HydroCouple
     [[nodiscard]] virtual ValueKind valueKind() const = 0;
 
     /*!
+     * \brief The CF standard name of the quantity these values measure.
+     * \details An entry of the CF Standard Name Table (for example
+     * "water_volume_transport_in_river_channel"), the vocabulary NetCDF and UGRID
+     * persistence already writes as `standard_name`. An empty string means not
+     * declared. A definition must not invent a name outside the table; a quantity
+     * the table does not cover is identified by conceptURI() alone.
+     */
+    [[nodiscard]] virtual std::string standardName() const = 0;
+
+    /*!
+     * \brief An absolute URI naming the quantity in a published vocabulary.
+     * \details Whatever vocabulary the component's community uses — a CSDMS
+     * Standard Name, a QUDT QuantityKind, a SWEET or HY_Features concept. An empty
+     * string means not declared.
+     *
+     * \details Matching. Two definitions name the same quantity when their concept
+     * URIs are equal, or — when either is undeclared — when their standard names are
+     * equal; captions never decide it. Two *different* declared names do not by
+     * themselves make a connection wrong (one model's outflow is another's
+     * inflow), so a validator reports the difference as a warning, not an error.
+     */
+    [[nodiscard]] virtual std::string conceptURI() const = 0;
+
+    /*!
      * \brief The value representing that data is missing.
      * \details Meaningful for numeric DataKinds only; for String and Opaque kinds the
      * returned value must be ignored (missing entries are represented by empty values).
@@ -1528,7 +1583,7 @@ namespace HydroCouple
     [[nodiscard]] virtual std::vector<std::string> categories() const = 0;
 
     /*!
-     * \brief Checks if the IQuality is defined by an ordered set of ICategory or not.
+     * \brief Whether categories() has a defined order (ordinal) or not (nominal).
      */
     [[nodiscard]] virtual bool isOrdered() const = 0;
   };
@@ -1611,24 +1666,19 @@ namespace HydroCouple
      * \param[in] dimension represents the fundamental unit.
      *
      * \details For a quantity such as flow, which may have the unit m<sup>3</sup>/s,
-     * The getPower method must work as follows:
+     * power() must work as follows:
      *
-     *  * getPower( FundamentalUnitDimension::AmountOfSubstance )
-     * \returns 0
-     *  * getPower( FundamentalUnitDimension::Currency )
-     * \returns 0
-     *  * getPower( FundamentalUnitDimension::ElectricCurrent )
-     * \returns 0
-     *  * getPower( FundamentalUnitDimension::Length )
-     * \returns 3
-     *  * getPower( FundamentalUnitDimension::LuminousIntensity )
-     * \returns 0
-     *  * getPower( FundamentalUnitDimension::Mass )
-     * \returns 0
-     *  * getPower( FundamentalUnitDimension::Temperature )
-     * \returns 0
-     *  * getPower( FundamentalUnitDimension::Time )
-     * \returns -1
+     *  * power( FundamentalUnitDimension::AmountOfSubstance ) returns 0
+     *  * power( FundamentalUnitDimension::Currency ) returns 0
+     *  * power( FundamentalUnitDimension::ElectricCurrent ) returns 0
+     *  * power( FundamentalUnitDimension::Length ) returns 3
+     *  * power( FundamentalUnitDimension::LuminousIntensity ) returns 0
+     *  * power( FundamentalUnitDimension::Mass ) returns 0
+     *  * power( FundamentalUnitDimension::Temperature ) returns 0
+     *  * power( FundamentalUnitDimension::Time ) returns -1
+     *  * power( FundamentalUnitDimension::PlaneAngle ) returns 0
+     *
+     * \returns The exponent of \p dimension in this unit.
      */
     [[nodiscard]] virtual double power(HydroCouple::IUnitDimensions::FundamentalUnitDimension dimension) const = 0;
   };
@@ -1720,6 +1770,21 @@ namespace HydroCouple
      * \brief OffSet to SI ('B' in: SI-value = A * quant-value + B).
      */
     [[nodiscard]] virtual double offsetToSI() const = 0;
+
+    /*!
+     * \brief The unit as a UDUNITS-2 string, e.g. "m3 s-1" or "ft3/s".
+     * \details What a CF `units` attribute carries, so persistence can write the
+     * unit without a side table. It must agree with dimensions(),
+     * conversionFactorToSI() and offsetToSI(). An empty string means not declared.
+     */
+    [[nodiscard]] virtual std::string symbol() const = 0;
+
+    /*!
+     * \brief The unit as a case-sensitive UCUM code, e.g. "m3/s" or "[ft_i]3/s".
+     * \details The form unit registries and QUDT exchange. An empty string means
+     * not declared.
+     */
+    [[nodiscard]] virtual std::string ucumCode() const = 0;
   };
 
   /*!
@@ -1987,13 +2052,14 @@ namespace HydroCouple
     /*!
      * \brief Specifies whether the argument is optional or not.
      *
-     * \details If the getValue property returns null and isOptional == false,
-     * a value has to be set before the argument can be used
+     * \details A non-optional argument must be given a value (through initialize() or
+     * setValuesFrom()) before the owning component's initialize() is called.
      */
     [[nodiscard]] virtual bool isOptional() const = 0;
 
     /*!
-     * \brief Defines whether the Values property may be edited.
+     * \brief Whether the argument's values may be changed (through initialize() or
+     * setValuesFrom()).
      *
      * \details This is used to let a IModelComponent or an IAdaptedOutput
      * present the actual value of an argument that can not be changed by the user,
@@ -2002,7 +2068,8 @@ namespace HydroCouple
     [[nodiscard]] virtual bool isReadOnly() const = 0;
 
     /*!
-     * \brief String/XML representation for this IArgument
+     * \brief A human-readable rendering of this argument's current value, for display
+     * and logs. serialize() is the round-trippable form.
      */
     [[nodiscard]] virtual std::string toString() const = 0;
 
@@ -2109,37 +2176,43 @@ namespace HydroCouple
     /*!
      * \brief  Input items that will consume the values by calling the IOutput::updateValues() method.
      *
-     * \details Every input item that will call this method needs to call the addConsumer()
-     * method first. If the input item is not interested any longer in calling
-     * updateValues(), it should remove itself by calling the removeConsumer() method.
-     * The list is readonly. Add and remove from the list by using addConsumer() and removeConsumer().
-     * Please be aware that the "unadulterated" values in the output item, provided by the read only Values property,
-     * may be called anyway, even if there are no values available.
+     * \details Every connected input appears here, multi-inputs included. The list
+     * is read-only; it changes only through addConsumer() and removeConsumer(). This
+     * output's own values (getValuesInto()) may be read whether or not it has
+     * consumers.
      *
      */
     [[nodiscard]] virtual std::vector<IInput *> consumers() const = 0;
 
     /*!
-     * \brief Add a consumer to this output item. Every input item that wants to call
-     *  the IOutput::updateValues() method needs to add itself as a consumer first.
+     * \brief Connects a consumer to this output item. Every input item that wants to
+     * call the IOutput::updateValues() method must be connected first.
      *
-     * \details This is the single entry point for wiring a connection. The output
-     * checks consumer->canConsume(this, message); on success it records the consumer
-     * and calls consumer->setProvider(this) so both ends agree; on failure it queues a
-     * Severity::Error entry on its owning component and may throw. Orchestrators call
-     * addConsumer()/removeConsumer() only, never IInput::setProvider() directly.
+     * \details This is the single entry point for wiring a connection, for every kind
+     * of input. Orchestrators call addConsumer()/removeConsumer() only, never
+     * IInput::setProvider() or IMultiInput::addProvider()/removeProvider() directly;
+     * those are the callbacks through which the output makes both ends agree:
+     *  - when \p consumer is an IMultiInput, the output checks
+     *    canConsume(this, message, providerRole) and then calls
+     *    addProvider(this, providerRole);
+     *  - otherwise \p providerRole must be nullptr, and the output checks
+     *    canConsume(this, message) and then calls setProvider(this).
+     * Only when the check and the callback both succeed does the output record the
+     * consumer. On failure it records nothing, queues a Severity::Error entry on its
+     * owning component and may throw.
      *
      * \param[in] consumer that has to be added (non-owning; the consumer's component owns it)
-     *
+     * \param[in] providerRole the role this output fills for a multi-input consumer
+     * (one of its providerLabels()), or nullptr for none.
      */
-    virtual void addConsumer(IInput *consumer) = 0;
+    virtual void addConsumer(IInput *consumer, const IIdentity *providerRole = nullptr) = 0;
 
     /*!
-     * \brief Remove a consumer.
+     * \brief Disconnects a consumer.
      *
-     * \details If an input item is not interested any longer in calling the
-     *  IOutput::updateValues() method, it should remove itself by calling removeConsumer().
-     *  On success the output calls consumer->setProvider(nullptr).
+     * \details The counterpart of addConsumer(): on success the output calls
+     * removeProvider(this) on a multi-input consumer and setProvider(nullptr) on any
+     * other.
      *
      * \param[in] consumer that has to be removed
      * \returns True if the consumer was registered and has been removed.
@@ -2180,11 +2253,11 @@ namespace HydroCouple
     /*!
      * \brief Removes an IAdaptedOutput.
      *
-     * \details If a adaptedOutput is not interested any longer in this output item data,
-     * it should remove itself by calling removeConsumer().
+     * \details Called by an adapted output's destructor (see addAdaptedOutput()), and by
+     * an adapter that no longer wants this output's data.
      *
-     * \param[in] adaptedOutput is a consumer that has to be removed.
-     *
+     * \param[in] adaptedOutput is the adapter to deregister.
+     * \returns True if the adapter was registered and has been removed.
      */
     [[nodiscard]] virtual bool removeAdaptedOutput(IAdaptedOutput *adaptedOutput) = 0;
 
@@ -2559,6 +2632,9 @@ namespace HydroCouple
 
     /*!
      * \brief Gets the producer this consumer should get its values from.
+     * \details An IMultiInput returns nullptr: its providers are read through
+     * IMultiInput::providers(), so code that walks connections checks for a
+     * multi-input first.
      */
     [[nodiscard]] virtual IOutput *provider() const = 0;
 
@@ -2569,7 +2645,8 @@ namespace HydroCouple
      * IOutput::removeConsumer() (with nullptr) — the output is the single entry point
      * for wiring, and orchestrators must not call this directly. An implementation
      * may still refuse (returning false) if it holds a different provider; the output
-     * then treats the wiring as failed.
+     * then treats the wiring as failed. A conforming output never calls this on an
+     * IMultiInput; it calls IMultiInput::addProvider()/removeProvider() instead.
      *
      * \param provider is the IOutput that supplies the data to this IInput, or nullptr.
      * \returns True if the provider was recorded.
@@ -2600,7 +2677,8 @@ namespace HydroCouple
     using IInput::canConsume;
 
     /*!
-     * \return vector of identifiers for the provides that a required by this consumer if any.
+     * \brief The roles this multi-input's providers fill (empty when it names none).
+     * \return The role labels; pass one to IOutput::addConsumer() as the provider role.
      */
     [[nodiscard]] virtual std::vector<IIdentity *> providerLabels() const = 0;
 
@@ -2627,14 +2705,23 @@ namespace HydroCouple
     [[nodiscard]] virtual bool canConsume(IOutput *provider, std::string &message, const IIdentity *providerRoleIdentifier = nullptr) const = 0;
 
     /*!
-     * \brief addProvider adds a provider to the list of providers.
+     * \brief Records a provider in a role.
+     * \details The multi-input's counterpart of IInput::setProvider(): called by
+     * IOutput::addConsumer(this, role) after canConsume() has accepted the provider,
+     * so that the output's consumers() and this input's providers() agree.
+     * Orchestrators must not call it directly. Returning false refuses the provider,
+     * and the output then treats the wiring as failed.
      * \param provider is the IOutput to add to the list of providers.
-     * \param id is the IIdentity label specifying where to add the provider.
+     * \param providerRoleIdentifier is the role the provider fills (one of
+     * providerLabels()), or nullptr for none.
+     * \return True if the provider was recorded.
      */
     [[nodiscard]] virtual bool addProvider(IOutput *provider, const IIdentity *providerRoleIdentifier = nullptr) = 0;
 
     /*!
      * \brief Removes a provider from the list of providers.
+     * \details Called by IOutput::removeConsumer(this); orchestrators must not call it
+     * directly.
      * \param provider is the IOutput to remove from the list of providers.
      * \return True if the provider was removed successfully, otherwise false.
      */
@@ -2707,45 +2794,50 @@ namespace HydroCouple
     /*!
      * \brief The WorkflowStatus enum describes the status of
      * a workflow component over the course of its lifetime.
+     * \details The values are pinned, as for IModelComponent::ComponentStatus; new
+     * statuses are appended (Invalid was, in ABI 5), so source order is not value order.
      */
-    enum class WorkflowStatus
+    enum class WorkflowStatus : uint8_t
     {
       //! The workflow component has just been created.
-      Created,
+      Created = 0,
       //! The workflow component is initializing itself.
-      Initializing,
+      Initializing = 1,
       //! The workflow component has successfully initialized.
-      Initialized,
+      Initialized = 2,
       //! The workflow component is validating the composition (cross-component links, required roles).
-      Validating,
+      Validating = 3,
       //! The workflow component found the composition valid and ready to prepare.
-      Validated,
+      Validated = 4,
       //! The workflow component is preparing the composition for computation (e.g., driving IModelComponent::prepare(), building execution schedules, negotiating exchange patterns).
-      Preparing,
+      Preparing = 5,
       //! The workflow component has prepared the composition and can begin updating.
-      Prepared,
+      Prepared = 6,
       //! The workflow component is performing an update step.
-      Updating,
+      Updating = 7,
       //! The workflow component has successfully updated.
-      Updated,
+      Updated = 8,
       //! The workflow component is paused at a synchronization point (see requestPause()) and can be resumed.
-      Paused,
+      Paused = 9,
       //! The workflow component has completed all update steps.
-      Done,
+      Done = 10,
       //! The workflow component is finalizing and releasing resources.
-      Finishing,
+      Finishing = 11,
       //! The workflow component has finished and cannot be restarted.
-      Finished,
-      //! The workflow component encountered an error.
-      Failed
+      Finished = 12,
+      //! The workflow component encountered an unrecoverable error.
+      Failed = 13,
+      //! The workflow component found problems in the composition; fix the composition and validate() again.
+      Invalid = 14
     };
 
-    // The legal workflow transitions are encoded in the non-normative helper
+    // The legal workflow transitions form a normative state machine, encoded by
     // isValidWorkflowStatusTransition() in hydrocouplehelpers.h:
     //
-    //   Created ─► Initializing ─► Initialized ─► Validating ─► Validated ─► Preparing ─► Prepared
+    //   Created ─► Initializing ─► Initialized ─► Validating ─► Validated | Invalid
+    //   Validated ─► Preparing ─► Prepared         Invalid | Validated ─► Validating
     //   Prepared | Updated ─► Updating ─► Updated | Paused | Done      Paused ─► Updated (resume)
-    //   Initialized | Validated | Prepared | Updated | Paused | Done | Failed ─► Finishing ─► Finished
+    //   Initialized | Validated | Invalid | Prepared | Updated | Paused | Done | Failed ─► Finishing ─► Finished
     //   every status except Finished ─► Failed                          Failed ─► Initializing
 
     /*!
@@ -2792,9 +2884,15 @@ namespace HydroCouple
      * filled (see isRequiredModelComponent()), that connected exchange items are
      * compatible, and that any feedback loops in the connection graph are ones the
      * workflow's execution strategy can resolve. Must only be called after
-     * initialize() and after the exchange connections have been established.
-     * Transitions status() through WorkflowStatus::Validating to
-     * WorkflowStatus::Validated on success or WorkflowStatus::Failed otherwise.
+     * initialize() and after the exchange connections have been established;
+     * legal from WorkflowStatus::Initialized, WorkflowStatus::Validated and
+     * WorkflowStatus::Invalid. Transitions status() through
+     * WorkflowStatus::Validating to WorkflowStatus::Validated when the composition
+     * is valid, or to WorkflowStatus::Invalid when it has problems — which the
+     * caller may fix (rewire, add or replace components) before validating again.
+     * WorkflowStatus::Failed is reserved for an unrecoverable error during
+     * validation. Every returned problem is also queued on errors() at
+     * Severity::Error.
      *
      * \return An empty vector when the composition is valid; otherwise one
      * human-readable description per problem found.
@@ -2918,25 +3016,25 @@ namespace HydroCouple
   {
   public:
     /*!
-     * \brief ~IComponentStatusChangeEventArgs destructor
+     * \brief ~IWorkflowComponentStatusChangeEventArgs destructor
      */
     virtual ~IWorkflowComponentStatusChangeEventArgs() = default;
 
     /*!
-     * \brief Gets the IModelComponent that fired the event.
-     * \returns The IModelComponent that threw the event.
+     * \brief Gets the IWorkflowComponent that fired the event.
+     * \returns The IWorkflowComponent that fired the event.
      */
     [[nodiscard]] virtual IWorkflowComponent *workflowComponent() const = 0;
 
     /*!
      * \brief Gets the IWorkflowComponent's status before the status change.
-     * \returns The previous ComponentStatus of the component that threw the event.
+     * \returns The previous WorkflowStatus of the workflow that fired the event.
      */
     [[nodiscard]] virtual IWorkflowComponent::WorkflowStatus previousStatus() const = 0;
 
     /*!
      * \brief Gets the IWorkflowComponent's status after the status change.
-     * \returns The new ComponentStatus of the component that threw the event.
+     * \returns The new WorkflowStatus of the workflow that fired the event.
      */
     [[nodiscard]] virtual IWorkflowComponent::WorkflowStatus status() const = 0;
 

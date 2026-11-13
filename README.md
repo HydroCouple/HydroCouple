@@ -23,6 +23,7 @@ Two principles govern the standard: the interface headers contain **no executabl
 - [Consuming with CMake](#consuming-with-cmake)
 - [Consuming with vcpkg](#consuming-with-vcpkg)
 - [API Overview](#api-overview)
+- [Vocabulary](#vocabulary)
 - [Python Bindings](#python-bindings)
 - [Testing](#testing)
 - [Continuous Integration](#continuous-integration)
@@ -35,20 +36,20 @@ Two principles govern the standard: the interface headers contain **no executabl
 
 ## Overview
 
-HydroCouple version **2.0.0-alpha.2** defines eight header files — each targeting a distinct modeling concern — that together describe a full component coupling framework:
+HydroCouple version **2.0.0-beta.1** defines eight header files — each targeting a distinct modeling concern — that together describe a full component coupling framework:
 
 | Header | Namespace | Concern |
 |---|---|---|
 | `hydrocouple.h` | `HydroCouple` | Core model component lifecycle, the typed `BufferDescriptor` hyperslab data plane, exchange items, signals/slots, capabilities, error queues |
 | `hydrocoupledistributed.h` | `HydroCouple::Distributed` | Transport-neutral distributed execution: transports, remote-component proxies, partitioned data items with local virtual (ghost/halo) entities |
-| `hydrocouplehelpers.h` | `HydroCouple::Helpers` | Non-normative conveniences: `DataKind` metadata, descriptor arithmetic, the lifecycle transition table, typed wrappers |
+| `hydrocouplehelpers.h` | `HydroCouple::Helpers` | Conveniences (`DataKind` metadata, descriptor arithmetic, typed wrappers) plus the two normative lifecycle transition tables |
 | `hydrocouplecomponentabi.h` | *(global, `extern "C"`)* | The component-loading convention: two C entry points and a toolchain/interface ABI stamp a host checks before crossing a vtable |
 | `hydrocoupletemporal.h` | `HydroCouple::Temporal` | Time representation, time-marching components, time-series data items |
 | `hydrocouplespatial.h` | `HydroCouple::Spatial` | OGC Simple Features geometry, UGRID-congruent bulk mesh views, networks, rasters, regular grids |
 | `hydrocouplespatialwkb.h` | *(global)* | C-compatible OGC WKB binary geometry structures |
 | `hydrocouplespatiotemporal.h` | `HydroCouple::SpatioTemporal` | Combined spatio-temporal component data items |
 
-All interfaces use pure-virtual destructors and are designed to be implemented by concrete model components, with a name convention of `I` prefix (e.g., `IModelComponent`, `IOutput`). Field data moves exclusively through the typed hyperslab API (`getValuesInto`/`setValuesFrom` over `BufferDescriptor` — a DLPack-style dtype/shape/strides/memory-space descriptor), making exchange `memcpy`-able and directly compatible with SIMD, MPI datatypes, HDF5 hyperslabs, GPU staging, and NumPy.
+All interfaces have virtual destructors and are designed to be implemented by concrete model components, with a name convention of `I` prefix (e.g., `IModelComponent`, `IOutput`). Field data moves exclusively through the typed hyperslab API (`getValuesInto`/`setValuesFrom` over `BufferDescriptor` — a DLPack-style dtype/shape/strides/memory-space descriptor), making exchange `memcpy`-able and directly compatible with SIMD, MPI datatypes, HDF5 hyperslabs, GPU staging, and NumPy.
 
 ---
 
@@ -57,9 +58,9 @@ All interfaces use pure-virtual destructors and are designed to be implemented b
 - **Header-only, implementation-free** — zero compiled artifacts and no executable code in the interface headers; link with `HydroCouple::HydroCouple` as a CMake INTERFACE target.
 - **Typed hyperslab data plane** — all field exchange goes through `getValuesInto`/`setValuesFrom` over `BufferDescriptor` (dtype, `int64_t` shape, byte strides, memory space): zero-copy, `memcpy`-able, strided-view aware, and GPU/MPI/HDF5/NumPy compatible.
 - **Distributed-execution contracts** — `ITransport` (MPI-neutral tagged messaging), remote-component proxies with normative failure semantics, and `IPartitionedComponentDataItem` with local virtual (ghost/halo) entity representation and epoch-stamped asynchronous halo synchronization.
-- **Normative lifecycle** — 15-state component state machine and 14-state workflow state machine with the legal transitions encoded in `Helpers::isValidComponentStatusTransition()` / `isValidWorkflowStatusTransition()`; `capabilities()` discovery and `errors()` diagnostic queues that cross process/ABI/language boundaries; one stated ownership rule and one stated error channel for every interface.
+- **Normative lifecycle** — 15-state component and workflow state machines with the legal transitions encoded in `Helpers::isValidComponentStatusTransition()` / `isValidWorkflowStatusTransition()`; `capabilities()` discovery and `errors()` diagnostic queues that cross process/ABI/language boundaries; one stated ownership rule and one stated error channel for every interface.
 - **C++20** — `std::span`, `std::unique_ptr`, `constexpr`, and `[[nodiscard]]` throughout.
-- **ABI-versioned** — `HydroCouple::HYDROCOUPLE_ABI_VERSION = 4`.
+- **ABI-versioned** — `HydroCouple::HYDROCOUPLE_ABI_VERSION = 5`, stamped into every component library and checked by the host before any vtable is crossed.
 - **Signal/Slot** — lightweight, type-safe observer pattern (`ISignal<Args...>` / `ISlot<Args...>`) built into the interface hierarchy, with no Qt or OpenMI dependencies.
 - **OGC + UGRID friendly** — geometry hierarchy follows the OGC Simple Features Access (SFA) specification; WKB structures match ISO 19125 binary encoding; `IMeshView` exposes UGRID-congruent structure-of-arrays mesh access.
 - **Python bindings** — a 1:1 ABC mirror of the standard plus a zero-copy Cython bridge in both directions: load compiled C++ components from Python, or hand Python components to C++ workflows (see [`python/`](python/README.md)).
@@ -87,9 +88,9 @@ No runtime library dependencies are required — all headers use only the C++ st
 
 ```
 HydroCouple/
-├── CMakeLists.txt              # Build configuration (v2.0.0-alpha.2, header-only INTERFACE target)
+├── CMakeLists.txt              # Build configuration (v2.0.0-beta.1, header-only INTERFACE target)
 ├── CMakePresets.json           # Presets for Windows, Linux, macOS
-├── vcpkg.json                  # vcpkg manifest (hydrocouple 2.0.0-alpha.2)
+├── vcpkg.json                  # vcpkg manifest (hydrocouple 2.0.0-beta.1)
 ├── vcpkg-configuration.json    # vcpkg registry configuration
 ├── License                     # MIT License
 ├── CHANGELOG.md                # Release notes
@@ -98,19 +99,23 @@ HydroCouple/
 │   └── HydroCoupleConfig.cmake.in  # CMake package config template
 ├── include/
 │   ├── hydrocouple.h           # Core interfaces + typed data plane (HydroCouple)
+│   ├── hydrocouplecomponentabi.h # Component-loading convention + ABI stamp (extern "C")
 │   ├── hydrocoupledistributed.h # Distributed execution (HydroCouple::Distributed)
-│   ├── hydrocouplehelpers.h    # Non-normative helpers (HydroCouple::Helpers)
+│   ├── hydrocouplehelpers.h    # Helpers + normative transition tables (HydroCouple::Helpers)
 │   ├── hydrocoupletemporal.h   # Temporal interfaces (HydroCouple::Temporal)
 │   ├── hydrocouplespatial.h    # Geospatial interfaces + IMeshView (HydroCouple::Spatial)
 │   ├── hydrocouplespatialwkb.h # WKB geometry structures (global)
 │   ├── hydrocouplespatiotemporal.h # Spatio-temporal interfaces (HydroCouple::SpatioTemporal)
-│   └── version.h.in            # Version header template (configure_file input)
+│   └── hydrocoupleversion.h.in # Version header template (configure_file input)
 ├── python/                     # Python bindings (ABCs + zero-copy Cython bridge)
 │   ├── hydrocouple/            # Pure-Python ABC mirror of the standard
 │   ├── _hydrocouple/           # Cython bridge (both directions)
 │   ├── docs/                   # Sphinx docs (deployed under /python/)
 │   └── tests/                  # pytest suite incl. C++/Python interop proof
 ├── docs/                       # Doxygen configuration (deployed at site root)
+│   └── vocabulary/             # Generated OWL/SKOS vocabulary (Turtle, JSON-LD, term index)
+├── tools/
+│   └── generate_vocabulary.py  # Regenerates docs/vocabulary/ from the headers
 ├── tests/
 │   ├── CMakeLists.txt          # Test executable: hydrocouple_tests (GTest)
 │   ├── test_core_types.cpp     # Data plane, lifecycle table, reference data item
@@ -175,7 +180,7 @@ cmake --install build --prefix /usr/local
 
 This installs:
 
-- **Headers** (`hydrocouple.h`, `hydrocouplecomponentabi.h`, `hydrocouplespatial.h`, `hydrocouplespatialwkb.h`, `hydrocouplespatiotemporal.h`, `hydrocoupletemporal.h`, generated `version.h`) → `${prefix}/include/`
+- **Headers** (`hydrocouple.h`, `hydrocouplecomponentabi.h`, `hydrocoupledistributed.h`, `hydrocouplehelpers.h`, `hydrocouplespatial.h`, `hydrocouplespatialwkb.h`, `hydrocouplespatiotemporal.h`, `hydrocoupletemporal.h`, and the generated `hydrocoupleversion.h`, whose macros are all `HYDROCOUPLE_`-prefixed) → `${prefix}/include/`
 - **CMake config files** (`HydroCoupleConfig.cmake`, `HydroCoupleConfigVersion.cmake`, `HydroCoupleTargets.cmake`) → `${prefix}/lib/cmake/HydroCouple/`
 - **License** → `${prefix}/share/HydroCouple/`
 
@@ -186,9 +191,9 @@ cmake --build build --target package
 ```
 
 Generates:
-- **Windows:** `HydroCouple-2.0.0-alpha.2-win64.zip` + `HydroCouple.x64.windows.2.0.0-alpha.2.nupkg`
-- **Linux:** `HydroCouple-2.0.0-alpha.2-linux.tar.gz` + `HydroCouple.x64.linux.2.0.0-alpha.2.nupkg`
-- **macOS:** `HydroCouple-2.0.0-alpha.2-macos.tar.gz` + `HydroCouple.arm64.osx.2.0.0-alpha.2.nupkg`
+- **Windows:** `HydroCouple-2.0.0-beta.1-win64.zip` + `HydroCouple.x64.windows.2.0.0-beta.1.nupkg`
+- **Linux:** `HydroCouple-2.0.0-beta.1-linux.tar.gz` + `HydroCouple.x64.linux.2.0.0-beta.1.nupkg`
+- **macOS:** `HydroCouple-2.0.0-beta.1-macos.tar.gz` + `HydroCouple.arm64.osx.2.0.0-beta.1.nupkg`
 
 NuGet packages are published to the [HydroCouple GitHub Packages feed](https://nuget.pkg.github.com/HydroCouple/index.json).
 
@@ -238,7 +243,7 @@ The vcpkg manifest (`vcpkg.json`) declares the following:
 | Field | Value |
 |---|---|
 | `name` | `hydrocouple` |
-| `version-semver` | `2.0.0-alpha.2` |
+| `version-semver` | `2.0.0-beta.1` |
 | `license` | `MIT` |
 | `homepage` | `https://hydrocouple.org` |
 | Host dependencies | `vcpkg-cmake`, `vcpkg-cmake-config` |
@@ -251,14 +256,14 @@ The registry is configured to the official Microsoft vcpkg registry at baseline 
 
 ## API Overview
 
-HydroCouple version 2.0.0-alpha.2 provides eight header files defining interfaces for component-based integrated modeling:
+HydroCouple version 2.0.0-beta.1 provides eight header files defining interfaces for component-based integrated modeling:
 
 | Header | Namespace | Purpose |
 |---|---|---|
 | **`hydrocouple.h`** | `HydroCouple` | Core component lifecycle (`IModelComponent`), the typed hyperslab data plane (`IComponentDataItem::getValuesInto`/`setValuesFrom` over `BufferDescriptor`), exchange items (`IInput`/`IOutput`), `capabilities()` discovery, `errors()` diagnostic queues, signal/slot pattern, units, value definitions, and component metadata |
 | **`hydrocoupledistributed.h`** | `HydroCouple::Distributed` | Transport-neutral distributed execution: `ITransport`, `IDistributedModelComponent`, `IProxyModelComponent` (remote-component stand-ins), and `IPartitionedComponentDataItem` (local virtual ghost/halo entities with epoch-stamped asynchronous synchronization) |
-| **`hydrocouplehelpers.h`** | `HydroCouple::Helpers` | Non-normative conveniences — the single deliberate exception to the no-implementation rule: `DataKind` metadata, `BufferDescriptor` arithmetic, the lifecycle transition table, typed get/set wrappers |
-| **`hydrocouplecomponentabi.h`** | *(global, `extern "C"`)* | How a shared library publishes a component: `hydrocouple_component_abi_v1()` (a pure-C stamp of compiler, standard library, pointer width and interface ABI) and `hydrocouple_component_info_v1()`, emitted by `HYDROCOUPLE_DECLARE_COMPONENT(InfoType)`. Macros only — code exists only where a component invokes the macro. The interface ABI in the stamp is `static_assert`ed against `HYDROCOUPLE_ABI_VERSION` |
+| **`hydrocouplehelpers.h`** | `HydroCouple::Helpers` | The single deliberate exception to the no-implementation rule: non-normative conveniences (`DataKind` metadata, `BufferDescriptor` arithmetic, typed get/set wrappers) and the two lifecycle transition tables, which are normative |
+| **`hydrocouplecomponentabi.h`** | *(global, `extern "C"`)* | How a shared library publishes a component: `hydrocouple_component_abi_v1()` (a pure-C stamp of compiler, standard library and its ABI-affecting settings, the Windows C runtime, pointer width and interface ABI) and `hydrocouple_component_info_v1()`, emitted by `HYDROCOUPLE_DECLARE_COMPONENT(InfoType)`. Macros only — code exists only where a component invokes the macro. The interface ABI in the stamp is `static_assert`ed against `HYDROCOUPLE_ABI_VERSION` |
 | **`hydrocoupletemporal.h`** | `HydroCouple::Temporal` | Time representation (`IDateTime`, `ITimeSpan`), time-marching components (`ITimeModelComponent`), and time-series data items with bulk `times()` access |
 | **`hydrocouplespatial.h`** | `HydroCouple::Spatial` | OGC Simple Features geometry hierarchy (`IGeometry`, `IPoint`, `IPolygon`, etc.), `IMeshView` UGRID-congruent bulk mesh access, spatial reference systems, networks, rasters, and regular grids with bulk coordinate/activity arrays |
 | **`hydrocouplespatialwkb.h`** | *(global)* | C-compatible OGC WKB (Well-Known Binary) geometry structures for serialization |
@@ -270,9 +275,32 @@ For detailed API documentation, see [https://hydrocouple.org/HydroCouple/](https
 
 ---
 
+## Vocabulary
+
+The standard's concepts are also published as a vocabulary that tools can load
+without a C++ parser. Every interface and aggregate is an OWL class, with its C++
+bases as `rdfs:subClassOf`. Every accessor is a property with its domain and range,
+every enumeration a SKOS concept scheme carrying its numeric values, and the two
+lifecycle state machines are `hc:mayTransitionTo` links between status concepts.
+Each data item's canonical dimension ordering is attached to its class.
+
+Term IRIs live under `https://hydrocouple.org/HydroCouple/vocabulary/#` and resolve
+to the [term index](https://hydrocouple.org/HydroCouple/vocabulary/); the same graph
+is published as [Turtle](https://hydrocouple.org/HydroCouple/vocabulary/hydrocouple.ttl)
+and [JSON-LD](https://hydrocouple.org/HydroCouple/vocabulary/hydrocouple.jsonld).
+This vocabulary names the *standard's* concepts. The physical quantities components
+exchange are named in external vocabularies (CF standard names, QUDT, CSDMS) through
+`IValueDefinition::standardName()` and `conceptURI()`.
+
+The files under `docs/vocabulary/` are generated by `python tools/generate_vocabulary.py`
+and committed; the Python test suite fails when they no longer match the headers,
+which remain the normative definition.
+
+---
+
 ## Python Bindings
 
-The [`python/`](python/README.md) package (`hydrocouple`, PEP 440 version `2.0.0a2`) mirrors the standard 1:1 as Python abstract base classes and bridges both directions through Cython:
+The [`python/`](python/README.md) package (`hydrocouple`, PEP 440 version `2.0.0b1`) mirrors the standard 1:1 as Python abstract base classes and bridges both directions through Cython:
 
 - **Python consuming C++:** `hydrocouple.loader.load()` opens a compiled component library and drives it from Python, exchanging fields as NumPy arrays through the zero-copy hyperslab data plane (the ndarray *is* the `BufferDescriptor` — data pointer, dtype, shape, strides), with the GIL released around C++ compute.
 - **C++ consuming Python:** `PyComponentBridge` presents a Python component to C++ workflows as a real `IModelComponent*`, including its data items, `capabilities()`, and `errors()` queue.
@@ -314,7 +342,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-The Python bindings carry their own pytest suite (114 tests) including enum-parity checks that parse these headers directly and an end-to-end C++/Python interop proof; see [`python/README.md`](python/README.md).
+The Python bindings carry their own pytest suite, including enum-parity checks that parse these headers directly and an end-to-end C++/Python interop proof; see [`python/README.md`](python/README.md).
 
 ---
 

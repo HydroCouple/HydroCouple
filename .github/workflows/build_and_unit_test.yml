@@ -153,7 +153,9 @@ jobs:
 
       - name: Install build and test dependencies
         working-directory: python
-        run: python -m pip install --upgrade pip "Cython>=3.0" "numpy>=1.21" "setuptools>=64" pytest
+        # rdflib lets tests/test_vocabulary.py parse the generated vocabulary
+        # (it skips that one check when rdflib is absent).
+        run: python -m pip install --upgrade pip "Cython>=3.0" "numpy>=1.21" "setuptools>=64" pytest rdflib
 
       - name: Build Cython extension in place
         working-directory: python

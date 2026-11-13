@@ -3,7 +3,7 @@ Build script for the HydroCouple Python bindings.
 
 Compiles the Cython extension modules in ``_hydrocouple/`` that bridge
 the C++ v2.0.0 header-only HydroCouple interfaces to Python. The package
-version is single-sourced from the repository's ``include/version.h``.
+version is single-sourced from the repository's ``CMakeLists.txt``.
 """
 
 import os
@@ -40,7 +40,7 @@ def _semver_to_pep440(version: str) -> str:
 
 def _read_version() -> str:
     # CMakeLists.txt is the authoritative, always-in-repo source
-    # (the generated version.h is gitignored and may be stale).
+    # (the generated hydrocoupleversion.h is gitignored and may be stale).
     cmake_lists = os.path.normpath(
         os.path.join(HERE, "..", "CMakeLists.txt"))
     try:
@@ -54,16 +54,16 @@ def _read_version() -> str:
     except OSError:
         pass
     # Fallback for sdist layouts without the repository root.
-    version_h = os.path.join(HYDROCOUPLE_INCLUDE, "version.h")
+    version_h = os.path.join(HYDROCOUPLE_INCLUDE, "hydrocoupleversion.h")
     try:
         with open(version_h, encoding="utf-8") as fh:
-            match = re.search(r'#define\s+PROJECT_VERSION\s+"([^"@]+)"',
+            match = re.search(r'#define\s+HYDROCOUPLE_VERSION\s+"([^"@]+)"',
                               fh.read())
             if match:
                 return _semver_to_pep440(match.group(1))
     except OSError:
         pass
-    return "2.0.0a2"
+    return "2.0.0b1"
 
 
 # ---------------------------------------------------------------------------

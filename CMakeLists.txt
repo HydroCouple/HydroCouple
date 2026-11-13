@@ -28,8 +28,8 @@ project(
 
 # Pre-release designation. CMake's project(VERSION) only accepts numeric
 # components, so the suffix is carried separately and composed into the
-# full version used for version.h, packaging, and docs.
-set(HYDROCOUPLE_VERSION_SUFFIX "-alpha.2")
+# full version used for hydrocoupleversion.h, packaging, and docs.
+set(HYDROCOUPLE_VERSION_SUFFIX "-beta.1")
 set(HYDROCOUPLE_FULL_VERSION "${PROJECT_VERSION}${HYDROCOUPLE_VERSION_SUFFIX}")
 
 include(GNUInstallDirs)
@@ -101,8 +101,8 @@ set(BUILD_BRANCH "${GIT_BRANCH_NAME}")
 set(BUILD_COMMIT "${GIT_COMMIT_HASH}")
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h.in 
-    ${CMAKE_CURRENT_BINARY_DIR}/include/version.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/hydrocoupleversion.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/include/hydrocoupleversion.h
 )
 
 # ---- Testing ----
@@ -160,7 +160,7 @@ install(
     include/hydrocouplespatialwkb.h
     include/hydrocouplespatiotemporal.h
     include/hydrocoupletemporal.h
-    ${CMAKE_CURRENT_BINARY_DIR}/include/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/include/hydrocoupleversion.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 

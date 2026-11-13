@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
 
 class ByteOrder(IntEnum):
-    """Byte-order enumeration mirroring C++ ``ByteOrder``.
+    """Byte-order enumeration mirroring C++ ``HydroCouple::ByteOrder``.
 
     - ``BigEndian``    -- Most-significant byte first (network order).
     - ``LittleEndian`` -- Least-significant byte first (x86 native).
@@ -267,6 +267,9 @@ class WorkflowStatus(IntEnum):
     Finishing = 11
     Finished = 12
     Failed = 13
+    #: The composition has problems; fix it and validate again (appended in
+    #: ABI 5, so earlier values keep their meaning).
+    Invalid = 14
 
 
 # ---------------------------------------------------------------------------
@@ -863,6 +866,25 @@ class IValueDefinition(IDescription):
 
     @property
     @abstractmethod
+    def standard_name(self) -> str:
+        """The CF standard name of the measured quantity, or ``""`` when
+        not declared. Never a name outside the CF Standard Name Table."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def concept_uri(self) -> str:
+        """An absolute URI naming the quantity in a published vocabulary
+        (CSDMS Standard Names, QUDT, SWEET, HY_Features, ...), or ``""``.
+
+        Two definitions name the same quantity when their concept URIs are
+        equal or, when either is undeclared, their standard names are; a
+        difference between two declared names is a warning, not an error.
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def missing_value(self) -> float:
         """Value representing missing data.
 
@@ -955,6 +977,18 @@ class IUnit(IDescription):
     @abstractmethod
     def offset_to_si(self) -> float:
         """'B' in: SI-value = A * value + B."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def symbol(self) -> str:
+        """The unit as a UDUNITS-2 string (``"m3 s-1"``), or ``""``."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def ucum_code(self) -> str:
+        """The unit as a case-sensitive UCUM code (``"m3/s"``), or ``""``."""
         raise NotImplementedError
 
 
@@ -1240,13 +1274,23 @@ class IOutput(IExchangeItem):
         raise NotImplementedError
 
     @abstractmethod
-    def add_consumer(self, consumer: "IInput") -> None:
-        """Add a consumer to this output."""
+    def add_consumer(self, consumer: "IInput",
+                     provider_role: Optional[IIdentity] = None) -> None:
+        """Connect a consumer to this output.
+
+        The single wiring entry point for every kind of input. For an
+        :class:`IMultiInput` the output checks
+        ``consumer.can_consume(self, provider_role)`` and calls
+        ``consumer.add_provider(self, provider_role)``; for any other input
+        ``provider_role`` must be ``None`` and the output checks
+        ``can_consume`` and calls ``set_provider(self)``. Raises on refusal.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def remove_consumer(self, consumer: "IInput") -> bool:
-        """Remove a consumer from this output."""
+        """Disconnect a consumer (``remove_provider`` on a multi-input,
+        ``set_provider(None)`` on any other)."""
         raise NotImplementedError
 
     @property
@@ -1455,12 +1499,18 @@ class IInput(IExchangeItem):
     @property
     @abstractmethod
     def provider(self) -> Optional[IOutput]:
-        """The output this input gets its values from."""
+        """The output this input gets its values from (``None`` for a
+        multi-input, whose providers are read through ``providers``)."""
         raise NotImplementedError
 
     @abstractmethod
     def set_provider(self, provider: Optional[IOutput]) -> bool:
-        """Set the provider of this input."""
+        """Record the provider of this input.
+
+        A callback of :meth:`IOutput.add_consumer` and
+        :meth:`IOutput.remove_consumer`; orchestrators wire through the
+        output and never call this directly.
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -1499,12 +1549,16 @@ class IMultiInput(IInput):
     def add_provider(self, provider: IOutput,
                      provider_role_identifier: Optional[IIdentity] = None
                      ) -> bool:
-        """Add a provider."""
+        """Record a provider in a role.
+
+        A callback of :meth:`IOutput.add_consumer`, which passes the role;
+        orchestrators wire through the output and never call this directly.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def remove_provider(self, provider: IOutput) -> bool:
-        """Remove a provider."""
+        """Remove a provider (a callback of :meth:`IOutput.remove_consumer`)."""
         raise NotImplementedError
 
 
