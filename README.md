@@ -324,7 +324,7 @@ Unit tests are built when `HYDROCOUPLE_BUILD_TESTS=ON`. The test executable is `
 - A functional reference `IComponentDataItem` implementation exercising hyperslab correctness: interior slabs, strided/pitched destinations, and kind/bounds/rank rejection
 
 **Test file `test_hydrocouple.cpp`** covers:
-- Enum class values and implicit-conversion behaviour across all headers
+- Enum class values and implicit-conversion behavior across all headers
 - Interface type properties (abstractness, virtual destructors, inheritance chains) for the core, temporal, spatial, spatiotemporal, and distributed interfaces
 - Hyperslab parameter acceptance through a stub data item
 

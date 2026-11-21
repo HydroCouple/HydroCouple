@@ -178,7 +178,7 @@ namespace HydroCouple
       /*!
        * \brief The measurement distance units of the vertical axis.
        * \details May differ from distanceUnits() (a geographic system in degrees whose
-       * heights are in metres is the common case).
+       * heights are in meters is the common case).
        */
       [[nodiscard]] virtual HydroCouple::IUnit::DistanceUnits verticalDistanceUnits() const = 0;
     };
@@ -1244,9 +1244,9 @@ namespace HydroCouple
 
       /*!
        * \brief The collection of polygons in this surface that share an edge with the given polygon.
-       * \param[in] polygon whose neighbours are requested.
+       * \param[in] polygon whose neighbors are requested.
        * \returns A newly constructed collection owned by the caller; its elements are
-       * non-owning references to this surface's patches. For bulk neighbour queries use
+       * non-owning references to this surface's patches. For bulk neighbor queries use
        * meshView()->edgeFaces().
        */
       [[nodiscard]] virtual std::unique_ptr<IMultiPolygon> boundingPolygons(const IPolygon *polygon) const = 0;
@@ -1296,7 +1296,7 @@ namespace HydroCouple
        * \brief The data type associated with a raster band.
        * \details Mirrors GDAL's band types. The mapping to the data plane is fixed:
        * Byte→UInt8, UInt16/Int16/UInt32/Int32/Float32/Float64→the DataKind of the same
-       * name; the complex and colour kinds have no DataKind and are carried as
+       * name; the complex and color kinds have no DataKind and are carried as
        * DataKind::Opaque with itemSizeBytes of 4, 8, 8, 16, 4 and 4 respectively.
        * An IRasterComponentDataItem holds one DataKind for all its bands, so bands of
        * mixed type belong in separate items.

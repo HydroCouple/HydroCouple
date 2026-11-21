@@ -75,7 +75,7 @@
 //! 2 (ABI 5): the stamp names the standard library's ABI variant and, on
 //! Windows, the C runtime and iterator-debug level; MSVC is named by its
 //! binary-compatible toolset family instead of its exact version; the pointer
-//! width no longer depends on a GCC/Clang-only macro and is labelled `ptr`
+//! width no longer depends on a GCC/Clang-only macro and is labeled `ptr`
 //! (it is a size in bytes, which the old `bits` label misstated).
 #define HYDROCOUPLE_COMPONENT_ABI_REVISION "2"
 

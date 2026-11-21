@@ -400,9 +400,9 @@ carries (times, geometry, value definition). New
 
 **Space.** `ISpatialReferenceSystem` gains a vertical reference
 (`verticalAuthName()/verticalAuthSRID()/verticalSrText()/verticalDistanceUnits()`);
-`IVerticalCoordinate` and `ICrossSection` no longer hardcode metres and
+`IVerticalCoordinate` and `ICrossSection` no longer hardcode meters and
 refer to it. `IMeshView` gains face→edge and edge→face connectivity (with
-boundary markers) and optional metrics (face centres/areas, edge
+boundary markers) and optional metrics (face centers/areas, edge
 lengths/normals). `IVerticalCoordinate` gains `columnCount()`,
 `geometryEpoch()` and a bulk `interfaceElevations()` span. `ICrossSection`
 gains a bulk `evaluate()`. `IGeometry::relate()` takes its DE-9IM pattern;

@@ -2,7 +2,7 @@
  * interface_casts.h
  *
  * dynamic_cast spellings for the bindings, one per side interface or
- * subtype a wrapper needs to recognise: Cython has no dynamic_cast of its
+ * subtype a wrapper needs to recognize: Cython has no dynamic_cast of its
  * own (see differential_bridge.h, layered_casts.h). A null result means
  * "not that". The dispatchers use them to hand Python the most specific
  * wrapper for whatever C++ object they are given.

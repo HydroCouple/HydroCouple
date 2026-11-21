@@ -55,7 +55,7 @@ namespace HydroCouple
       /*!
        * \brief IExchangeRequest::~IExchangeRequest is a virtual destructor.
        * \details Destroying an incomplete request always blocks until it completes —
-       * one behaviour, so that a caller who lets a request go out of scope can rely
+       * one behavior, so that a caller who lets a request go out of scope can rely
        * on its buffers being free afterwards. A caller that must not block bounds the
        * wait with waitFor() and then asks for cancellation with cancel(); a request
        * that is still pending after both is an operation the transport cannot
@@ -67,7 +67,7 @@ namespace HydroCouple
 
       /*!
        * \brief Asks the implementation to abandon the operation.
-       * \details Returns true if the request is now complete (cancelled, or it had
+       * \details Returns true if the request is now complete (canceled, or it had
        * already finished) and its buffers may be reused; false if this transport
        * cannot cancel an in-flight operation, in which case the request is still
        * pending and the caller must wait() as usual. Never blocks.

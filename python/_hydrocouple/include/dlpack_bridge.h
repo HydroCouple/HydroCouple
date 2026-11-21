@@ -413,7 +413,7 @@ inline std::atomic<int64_t> &liveExportsSlot()
 
 inline int64_t liveExports() { return liveExportsSlot().load(); }
 
-/// One exported tensor: the managed tensor (either flavour) plus the shape
+/// One exported tensor: the managed tensor (either flavor) plus the shape
 /// and element-stride storage it points at. The memory itself is borrowed.
 struct Export
 {

@@ -1266,7 +1266,7 @@ namespace HydroCouple
      * orchestrator that keeps checkpoints for replay (reverse-mode
      * differentiation among them) saves far more states than it ever restores
      * and calls this for each one it drops, so a component whose token names
-     * storage must honour it or leak that storage for the length of the run.
+     * storage must honor it or leak that storage for the length of the run.
      * A component whose token IS the state has nothing to free and returns
      * true. After this call the token is dead: restoring or releasing it again
      * is an error the component may refuse.
@@ -1551,7 +1551,7 @@ namespace HydroCouple
    * within a number of predefined (possible) categories. These categories can be ordered or not.
    *
    * \details Qualitative data describes items in terms of some quality or categorization that may be 'informal'
-   * or may use relatively ill-defined characteristics such as warmth and flavour. However,
+   * or may use relatively ill-defined characteristics such as warmth and flavor. However,
    * qualitative data can include well-defined aspects such as gender, nationality or commodity type.
    *
    * \details For qualitative data, the IComponentDataItem data exchanged between components contains

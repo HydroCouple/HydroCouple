@@ -313,7 +313,7 @@ private:
             return fail(message, "element count mismatch");
 
         // The buffer is walked as a (count0, count1) box when it is rank 2,
-        // else as a flat run; its own strides are honoured either way.
+        // else as a flat run; its own strides are honored either way.
         auto *base = static_cast<char *>(d.data);
         for (int64_t i = 0; i < count[0]; ++i)
         {

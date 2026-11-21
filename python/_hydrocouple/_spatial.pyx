@@ -2009,7 +2009,7 @@ def as_layered(item):
     :class:`CppLayeredNetworkComponentDataItemWrapper` or
     :class:`CppLayeredMeshComponentDataItemWrapper` when it is one of those,
     a bare :class:`CppLayeringWrapper` when it is layered some other way.
-    The time-varying variants are recognised by
+    The time-varying variants are recognized by
     ``_hydrocouple._spatiotemporal.as_time_layered``.
     """
     if not isinstance(item, CppComponentDataItemWrapper):
