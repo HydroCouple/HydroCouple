@@ -37,9 +37,6 @@ extensions = [
     # sphinx-design: grid / grid-item-card directives used on the landing
     # page, matching the openswmm.engine docs.
     'sphinx_design',
-    # sphinxcontrib-mermaid: diagrams rendered client-side, matching the
-    # Doxygen side of the site.
-    'sphinxcontrib.mermaid',
 ]
 
 # MyST (Markdown) settings
@@ -118,11 +115,7 @@ exclude_patterns = [
     '_build',
 ]
 
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-if not on_rtd:
-    html_theme = 'pydata_sphinx_theme'
-else:
-    html_theme = 'default'
+html_theme = 'pydata_sphinx_theme'
 
 html_theme_options = {
     "logo": {
@@ -151,14 +144,6 @@ html_theme_options = {
     "use_edit_page_button": False,
     "show_toc_level": 2,
     "navbar_end": ["theme-switcher.html", "navbar-icon-links.html"],
-} if not on_rtd else {
-    # Classic theme colors for the existing Read the Docs build.
-    "sidebarbgcolor": "#0a1c2e",
-    "sidebarlinkcolor": "#8ecfff",
-    "relbarbgcolor": "#00518c",
-    "headbgcolor": "#eef5fb",
-    "headtextcolor": "#0a1c2e",
-    "linkcolor": "#00518c",
 }
 
 html_logo = 'images/hydrocouple_logo.png'
@@ -166,7 +151,7 @@ html_title = 'HydroCouple'
 html_favicon = 'images/hydrocouple_logo.png'
 
 html_static_path = ['_static']
-html_css_files = ['hydrocouple.css', 'hydrocouple-palette.css']
+html_css_files = ['hydrocouple.css']
 
 htmlhelp_basename = 'hydrocoupledoc'
 
@@ -187,3 +172,27 @@ latex_documents = [
 man_pages = [
     (master_doc, 'hydrocouple', 'HydroCouple Documentation', [author], 1)
 ]
+
+
+# -- HydroCouple documentation theme ---------------------------------------
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "_hydrocouple"))
+import hydrocouple_theme  # noqa: E402
+
+hydrocouple_theme.configure(
+    globals(),
+    manual_id="HydroCouple.python",
+    project_label="HydroCouple · Python",
+    repository="https://github.com/HydroCouple/HydroCouple",
+    hero={
+        "kicker": "HydroCouple · Python",
+        "title": "The HydroCouple interface standard in Python",
+        "lede": "The hydrocouple package mirrors the C++20 interface standard as Python "
+                "abstract base classes, and its bridge passes NumPy arrays to and from "
+                "compiled components without copying.",
+        "actions": [
+            {"label": "Get started", "url": "quickstart", "style": "solid"},
+            {"label": "API reference", "url": "api", "style": "ghost"},
+            {"label": "C++ interface reference", "url": "https://www.hydrocouple.org/HydroCouple/", "style": "ghost"},
+        ],
+    },
+)

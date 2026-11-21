@@ -187,7 +187,7 @@ SHORT_NAMES            = NO
 # description.)
 # The default value is: NO.
 
-JAVADOC_AUTOBRIEF      = NO
+JAVADOC_AUTOBRIEF      = YES
 
 # If the QT_AUTOBRIEF tag is set to YES then doxygen will interpret the first
 # line (until the first dot) of a Qt-style comment as the brief description. If
@@ -195,7 +195,7 @@ JAVADOC_AUTOBRIEF      = NO
 # requiring an explicit \brief command for a brief description.)
 # The default value is: NO.
 
-QT_AUTOBRIEF           = NO
+QT_AUTOBRIEF           = YES
 
 # The MULTILINE_CPP_IS_BRIEF tag can be set to YES to make doxygen treat a
 # multi-line C++ special comment block (i.e. a block of //! or /// comments) as
@@ -238,9 +238,9 @@ TAB_SIZE               = 4
 # "Side Effects:". You can put \n's in the value part of an alias to insert
 # newlines.
 
-ALIASES                = "license=\par License\n" \
-                         "description=\par Discription\n" \
-                         "mod=\par Modified\n" \
+ALIASES                = "license=\par License^^" \
+                         "description=\par Description^^" \
+                         "mod=\par Modified^^" \
                          "moditem{3}=\b \date\1 \author\2 \3\n"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
@@ -1194,7 +1194,11 @@ HTML_STYLESHEET        =
 # list). For an example see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = ./custom/css/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  = ./custom/css/doxygen-awesome.css \
+                         ./custom/hydrocouple/hc-fonts.css \
+                         ./custom/hydrocouple/hc-tokens.css \
+                         ./custom/hydrocouple/hc-diagrams.css \
+                         ./custom/hydrocouple/hydrocouple-doxygen.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -1209,7 +1213,21 @@ HTML_EXTRA_FILES       = custom/js/doxygen-awesome-darkmode-toggle.js \
                          custom/js/doxygen-awesome-fragment-copy-button.js \
                          custom/js/doxygen-awesome-interactive-toc.js \
                          custom/js/doxygen-awesome-paragraph-link.js \
-                         custom/js/doxygen-awesome-tabs.js
+                         custom/js/doxygen-awesome-tabs.js \
+                         custom/hydrocouple/hc-doxygen.js \
+                         custom/hydrocouple/hc-diagrams.js \
+                         custom/hydrocouple/hydrocouple_logo.png \
+                         custom/hydrocouple/inter-greek.woff2 \
+                         custom/hydrocouple/inter-latin-ext.woff2 \
+                         custom/hydrocouple/inter-latin.woff2 \
+                         custom/hydrocouple/jetbrains-mono-greek.woff2 \
+                         custom/hydrocouple/jetbrains-mono-latin-ext.woff2 \
+                         custom/hydrocouple/jetbrains-mono-latin.woff2 \
+                         custom/hydrocouple/sora-latin-ext.woff2 \
+                         custom/hydrocouple/sora-latin.woff2 \
+                         custom/hydrocouple/inter-OFL.txt \
+                         custom/hydrocouple/jetbrainsmono-OFL.txt \
+                         custom/hydrocouple/sora-OFL.txt
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
