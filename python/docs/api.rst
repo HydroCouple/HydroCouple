@@ -11,7 +11,7 @@ API Reference
 The :mod:`hydrocouple` package mirrors the C++20 v2.0.0 interface
 standard 1:1: same names (snake_cased), same inheritance, same
 pure-abstract discipline. For the corresponding C++ declarations see the
-`C++ interface docs <../index.html>`__ at the site root.
+`C++ interface docs <https://www.hydrocouple.org/HydroCouple/>`__ at the site root.
 
 hydrocouple.core
 ================
