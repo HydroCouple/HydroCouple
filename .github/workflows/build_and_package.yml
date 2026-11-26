@@ -135,11 +135,25 @@ jobs:
         run: |
           nuget push "${{github.workspace}}\build-${{ matrix.vcpkg_triplet }}\*.nupkg" -Source github -SkipDuplicate
 
-      - name: Upload NuGet Packages (Unix like)
+      - name: Upload NuGet Packages (macOS)
         working-directory: ${{ env.VCPKG_ROOT }}
-        if: ${{ matrix.os != 'windows-latest' }}
+        if: ${{ startsWith(matrix.os, 'macos') }}
         run: |
           mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}/*.nupkg" -Source github -SkipDuplicate
+
+      # Mono's nuget.exe cannot verify the feed's certificate on the Linux runner
+      # (CERTIFICATE_VERIFY_FAILED), so Linux pushes with the .NET SDK, which uses the
+      # system certificate store.
+      - name: Install .NET SDK (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Upload NuGet Packages (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          dotnet nuget push "${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}/*.nupkg" --source ${{ env.NUGET_FEED_URL }} --api-key ${{ env.NUGET_API_KEY }} --skip-duplicate
 
       - name: Upload Artifacts
         if: ${{ always() }}
