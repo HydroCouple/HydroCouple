@@ -90,6 +90,9 @@ namespace HydroCouple
   /*!
    * \page hc_conventions Normative conventions that apply to every interface
    *
+   * Every HydroCouple interface follows these rules on ownership, lifetime and
+   * teardown, the error channel, the toolchain, threading and signals.
+   *
    * **Ownership.** A method that *returns an existing object* — an accessor,
    * a lookup, a parent/child navigation — returns a non-owning raw pointer or
    * reference that stays valid for the lifetime of the object it was obtained
