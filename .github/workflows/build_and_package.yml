@@ -67,7 +67,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: microsoft/vcpkg
-          ref: 2025.02.14
+          # See build_and_unit_test.yml: pinned MSYS2 packages in old vcpkg
+          # releases disappear from the mirrors, breaking Windows builds.
+          ref: 2026.07.29
           path: vcpkg
         
       - name: Bootstrap VCPKG (Windows)
@@ -84,11 +86,20 @@ jobs:
           ./bootstrap-vcpkg${{ matrix.shell_extension }}
           chmod +x vcpkg
 
+      # Mono 6.14 (Ubuntu 26.04) ships no certificate store of its own; without one its TLS stack
+      # trusts no roots and every NuGet call of vcpkg's binary cache fails with
+      # CERTIFICATE_VERIFY_FAILED. Mono reads <subject hash>.0 PEM files, the layout of
+      # /etc/ssl/certs, so the machine store points there.
       - name: Install Mono (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y mono-complete
+          sudo mkdir -p /usr/share/.mono/new-certs
+          sudo ln -sfn /etc/ssl/certs /usr/share/.mono/new-certs/Trust
+          roots=$(ls /usr/share/.mono/new-certs/Trust/ | grep -cE '^[0-9a-f]{8}\.[0-9]+$' || true)
+          echo "Mono trusts $roots system certificates"
+          [ "$roots" -gt 0 ]
 
       - name: Install Mono (macOS)
         if: ${{ startsWith(matrix.os, 'macos') }}
@@ -133,11 +144,25 @@ jobs:
         run: |
           nuget push "${{github.workspace}}\build-${{ matrix.vcpkg_triplet }}\*.nupkg" -Source github -SkipDuplicate
 
-      - name: Upload NuGet Packages (Unix like)
+      - name: Upload NuGet Packages (macOS)
         working-directory: ${{ env.VCPKG_ROOT }}
-        if: ${{ matrix.os != 'windows-latest' }}
+        if: ${{ startsWith(matrix.os, 'macos') }}
         run: |
           mono `./vcpkg fetch nuget | tail -n 1` push "${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}/*.nupkg" -Source github -SkipDuplicate
+
+      # Mono's nuget.exe cannot verify the feed's certificate on the Linux runner
+      # (CERTIFICATE_VERIFY_FAILED), so Linux pushes with the .NET SDK, which uses the
+      # system certificate store.
+      - name: Install .NET SDK (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Upload NuGet Packages (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          dotnet nuget push "${{github.workspace}}/build-${{ matrix.vcpkg_triplet }}/*.nupkg" --source ${{ env.NUGET_FEED_URL }} --api-key ${{ env.NUGET_API_KEY }} --skip-duplicate
 
       - name: Upload Artifacts
         if: ${{ always() }}

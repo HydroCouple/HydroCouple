@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HydroCouple Vocabulary</title>
+<style>
+:root{--fg:#1d1d1f;--bg:#fff;--muted:#5b5b66;--rule:#e2e2e8;--code:#f3f3f6}
+@media (prefers-color-scheme: dark){:root{--fg:#e8e8ec;--bg:#16161a;--muted:#a0a0ab;--rule:#2e2e36;--code:#23232a}}
+body{font:16px/1.55 system-ui,sans-serif;color:var(--fg);background:var(--bg);max-width:60rem;margin:0 auto;padding:1.5rem 1rem}
+h1{margin-bottom:.2rem}h2{margin-top:2.5rem;border-bottom:1px solid var(--rule)}
+h3{margin:1.6rem 0 .3rem}code{background:var(--code);padding:0 .25em;border-radius:3px}
+.muted{color:var(--muted)}table{border-collapse:collapse;width:100%}
+td,th{border-bottom:1px solid var(--rule);padding:.3rem .5rem;text-align:left;vertical-align:top}a{color:inherit}
+</style>
+</head>
+<body>
+<h1>HydroCouple Vocabulary</h1>
+<p class="muted">2.0.0-beta.1 · interface ABI 5 · namespace <code>https://hydrocouple.org/HydroCouple/vocabulary/#</code></p>
+<p>The concepts of the HydroCouple interface standard, generated from its C++ headers (which remain normative). Machine-readable: <a href="hydrocouple.ttl">Turtle</a> · <a href="hydrocouple.jsonld">JSON-LD</a>.</p>
+<h2>Classes</h2>
+<h3 id="BufferDescriptor">BufferDescriptor</h3>
+<p class="muted"><code>HydroCouple::BufferDescriptor</code></p>
+<p>BufferDescriptor describes a typed, possibly strided, possibly device-resident multi-dimensional array. It is the sole currency of field data exchange.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="BufferDescriptor.backend"><td><code>backend</code></td><td><a href="#DeviceBackend"><code>DeviceBackend</code></a></td><td>Runtime owning the device memory when space is Device/Unified.</td></tr>
+<tr id="BufferDescriptor.data"><td><code>data</code></td><td></td><td>Base address of element (0, 0, ..., 0).</td></tr>
+<tr id="BufferDescriptor.deviceId"><td><code>deviceId</code></td><td><code>xsd:int</code></td><td>Device ordinal within the backend when space is Device/Unified.</td></tr>
+<tr id="BufferDescriptor.itemSizeBytes"><td><code>itemSizeBytes</code></td><td><code>xsd:long</code></td><td>Size of one element; 0 =&gt; the kind&#x27;s natural size (illegal for Opaque).</td></tr>
+<tr id="BufferDescriptor.kind"><td><code>kind</code></td><td><a href="#DataKind"><code>DataKind</code></a></td><td>Element type.</td></tr>
+<tr id="BufferDescriptor.queue"><td><code>queue</code></td><td></td><td>Opaque backend stream/queue for asynchronous transfers; nullptr =&gt; default stream, synchronous.</td></tr>
+<tr id="BufferDescriptor.rank"><td><code>rank</code></td><td><code>xsd:int</code></td><td>Number of dimensions; 0 denotes a scalar.</td></tr>
+<tr id="BufferDescriptor.shape"><td><code>shape</code></td><td><code>xsd:long</code></td><td>Extent per dimension; length == rank.</td></tr>
+<tr id="BufferDescriptor.space"><td><code>space</code></td><td><a href="#MemorySpace"><code>MemorySpace</code></a></td><td>Memory space holding the bytes.</td></tr>
+<tr id="BufferDescriptor.stridesBytes"><td><code>stridesBytes</code></td><td><code>xsd:long</code></td><td>Byte step per dimension; nullptr =&gt; C-contiguous.</td></tr>
+</table>
+<h3 id="DifferentialEntry">DifferentialEntry</h3>
+<p class="muted"><code>HydroCouple::DifferentialEntry</code></p>
+<p>DifferentialEntry pairs one data item, in one role, with a buffer holding its tangent (forward mode) or cotangent (reverse mode).</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="DifferentialEntry.item"><td><code>item</code></td><td><a href="#IComponentDataItem"><code>IComponentDataItem</code></a></td><td>The item this derivative belongs to.</td></tr>
+<tr id="DifferentialEntry.role"><td><code>role</code></td><td><a href="#DifferentialRole"><code>DifferentialRole</code></a></td><td>Which side of the step.</td></tr>
+<tr id="DifferentialEntry.value"><td><code>value</code></td><td><a href="#BufferDescriptor"><code>BufferDescriptor</code></a></td><td>The tangent or cotangent buffer.</td></tr>
+</table>
+<h3 id="Endpoint">Endpoint</h3>
+<p class="muted"><code>HydroCouple::Distributed::ITransport::Endpoint</code></p>
+<p>Endpoint identifies one participant reachable through this transport.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="Endpoint.address"><td><code>address</code></td><td><code>xsd:string</code></td><td>Transport-specific address (empty for rank-addressed transports).</td></tr>
+<tr id="Endpoint.rank"><td><code>rank</code></td><td><code>xsd:int</code></td><td>Participant rank for rank-addressed transports; -1 otherwise.</td></tr>
+</table>
+<h3 id="ErrorEntry">ErrorEntry</h3>
+<p class="muted"><code>HydroCouple::ErrorEntry</code></p>
+<p>ErrorEntry is one diagnostic record in a component&#x27;s error queue.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ErrorEntry.code"><td><code>code</code></td><td><code>xsd:int</code></td><td>Implementation-defined error code.</td></tr>
+<tr id="ErrorEntry.message"><td><code>message</code></td><td><code>xsd:string</code></td><td>Human-readable description.</td></tr>
+<tr id="ErrorEntry.severity"><td><code>severity</code></td><td><a href="#Severity"><code>Severity</code></a></td><td>Severity of this record.</td></tr>
+<tr id="ErrorEntry.source"><td><code>source</code></td><td><code>xsd:string</code></td><td>Id of the originating entity.</td></tr>
+</table>
+<h3 id="IAdaptedOutput">IAdaptedOutput</h3>
+<p class="muted"><code>HydroCouple::IAdaptedOutput</code></p>
+<p>An IAdaptedOutput adds one or more data operations on top of an IOutput.</p>
+<p>Specializes <a href="#IOutput"><code>IOutput</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IAdaptedOutput.adaptedOutputFactory"><td><code>adaptedOutputFactory</code></td><td><a href="#IAdaptedOutputFactory"><code>IAdaptedOutputFactory</code></a></td><td>IAdaptedOutputFactory that generated this IAdaptedOutput.</td></tr>
+<tr id="IAdaptedOutput.adaptee"><td><code>adaptee</code></td><td><a href="#IOutput"><code>IOutput</code></a></td><td>IOutput that this IAdaptedOutput extracts content from. In the adapter design pattern, it is the item being adapted.</td></tr>
+<tr id="IAdaptedOutput.arguments"><td><code>arguments</code></td><td><a href="#IArgument"><code>IArgument</code></a></td><td>IArgument represents input parameters needed for this IAdaptedOutput.</td></tr>
+<tr id="IAdaptedOutput.states"><td><code>states</code></td><td><a href="#IComponentDataItem"><code>IComponentDataItem</code></a></td><td>The data items that make up the state carried from one refresh() to the next.</td></tr>
+</table>
+<h3 id="IAdaptedOutputFactory">IAdaptedOutputFactory</h3>
+<p class="muted"><code>HydroCouple::IAdaptedOutputFactory</code></p>
+<p>IAdaptedOutputFactory is used to create instances of IAdaptedOutput.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<h3 id="IAdaptedOutputFactoryComponent">IAdaptedOutputFactoryComponent</h3>
+<p class="muted"><code>HydroCouple::IAdaptedOutputFactoryComponent</code></p>
+<p>IAdaptedOutputFactoryComponent is an IAdaptedOutputFactory generated from an IAdaptedOutputFactoryComponentInfo.</p>
+<p>Specializes <a href="#IAdaptedOutputFactory"><code>IAdaptedOutputFactory</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IAdaptedOutputFactoryComponent.componentInfo"><td><code>componentInfo</code></td><td><a href="#IAdaptedOutputFactoryComponentInfo"><code>IAdaptedOutputFactoryComponentInfo</code></a></td><td>Contains the metadata about this IAdaptedOutputFactoryComponent.</td></tr>
+</table>
+<h3 id="IAdaptedOutputFactoryComponentInfo">IAdaptedOutputFactoryComponentInfo</h3>
+<p class="muted"><code>HydroCouple::IAdaptedOutputFactoryComponentInfo</code></p>
+<p>IAdaptedOutputFactoryComponentInfo interface class provides information about an IAdaptedOutputFactoryComponent.</p>
+<p>Specializes <a href="#IComponentInfo"><code>IComponentInfo</code></a>.</p>
+<h3 id="IArgument">IArgument</h3>
+<p class="muted"><code>HydroCouple::IArgument</code></p>
+<p>IArgument interface class used to set the arguments for components. They can be complex or simple multi-dimensional datasets</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IArgument.currentArgumentInputType"><td><code>currentArgumentInputType</code></td><td><a href="#ArgumentInputType"><code>ArgumentInputType</code></a></td><td>Gets the current input type used for this argument.</td></tr>
+<tr id="IArgument.fileFilters"><td><code>fileFilters</code></td><td><code>xsd:string</code></td><td>File type extensions that can be read by this IArgument.</td></tr>
+<tr id="IArgument.isOptional"><td><code>isOptional</code></td><td><code>xsd:boolean</code></td><td>Specifies whether the argument is optional or not.</td></tr>
+<tr id="IArgument.isReadOnly"><td><code>isReadOnly</code></td><td><code>xsd:boolean</code></td><td>Whether the argument&#x27;s values may be changed (through initialize() or setValuesFrom()).</td></tr>
+<tr id="IArgument.role"><td><code>role</code></td><td><a href="#ArgumentRole"><code>ArgumentRole</code></a></td><td>What this argument is to the model.</td></tr>
+<tr id="IArgument.toString"><td><code>toString</code></td><td><code>xsd:string</code></td><td>A human-readable rendering of this argument&#x27;s current value, for display and logs. serialize() is the round-trippable form.</td></tr>
+<tr id="IArgument.validComponentDataItemTypes"><td><code>validComponentDataItemTypes</code></td><td></td><td>Gets the valid IComponentDataItem instance types that can be read by this argument.</td></tr>
+</table>
+<h3 id="ICheckpointableAdaptedOutput">ICheckpointableAdaptedOutput</h3>
+<p class="muted"><code>HydroCouple::ICheckpointableAdaptedOutput</code></p>
+<p>ICheckpointableAdaptedOutput is an adapted output that can save and restore the state it carries between refreshes.</p>
+<p>Specializes <a href="#IAdaptedOutput"><code>IAdaptedOutput</code></a>.</p>
+<h3 id="ICheckpointableModelComponent">ICheckpointableModelComponent</h3>
+<p class="muted"><code>HydroCouple::ICheckpointableModelComponent</code></p>
+<p>ICheckpointableModelComponent is an IModelComponent that can save and restore its complete simulation state.</p>
+<p>Specializes <a href="#IModelComponent"><code>IModelComponent</code></a>.</p>
+<h3 id="ICloneableModelComponent">ICloneableModelComponent</h3>
+<p class="muted"><code>HydroCouple::ICloneableModelComponent</code></p>
+<p>The ICloneableModelComponent class is an IModelComponent that supports deep cloning of itself and its configuration.</p>
+<p>Specializes <a href="#IModelComponent"><code>IModelComponent</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ICloneableModelComponent.clones"><td><code>clones</code></td><td><a href="#ICloneableModelComponent"><code>ICloneableModelComponent</code></a></td><td>The ICloneableModelComponent instances cloned from this instance that are still alive.</td></tr>
+<tr id="ICloneableModelComponent.parent"><td><code>parent</code></td><td><a href="#ICloneableModelComponent"><code>ICloneableModelComponent</code></a></td><td>Parent ICloneableModelComponent object from which current component was cloned from.</td></tr>
+</table>
+<h3 id="IComponentDataItem">IComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::IComponentDataItem</code></p>
+<p>IComponentDataItem is a fundamental unit of data for a component.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IComponentDataItem.dataKind"><td><code>dataKind</code></td><td><a href="#DataKind"><code>DataKind</code></a></td><td>The element type of this data item&#x27;s values.</td></tr>
+<tr id="IComponentDataItem.dimensions"><td><code>dimensions</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The axes of this item&#x27;s index space, in storage order.</td></tr>
+<tr id="IComponentDataItem.modelComponent"><td><code>modelComponent</code></td><td><a href="#IModelComponent"><code>IModelComponent</code></a></td><td>Gets the owner IModelComponent of this IComponentItem. For an IOutput component item this is the component responsible for providing the content of the IOutput.</td></tr>
+<tr id="IComponentDataItem.shape"><td><code>shape</code></td><td><code>xsd:long</code></td><td>The extent of each dimension of this data item&#x27;s index space.</td></tr>
+<tr id="IComponentDataItem.valueDefinition"><td><code>valueDefinition</code></td><td><a href="#IValueDefinition"><code>IValueDefinition</code></a></td><td>IValueDefinition for this IComponentDataItem defines the variable type associated with this object.</td></tr>
+</table>
+<h3 id="IComponentDataItemValueChanged">IComponentDataItemValueChanged</h3>
+<p class="muted"><code>HydroCouple::IComponentDataItemValueChanged</code></p>
+<p>IComponentDataItemValueChanged interface class used to notify when the values of a IComponentDataItem change.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IComponentDataItemValueChanged.componentDataItem"><td><code>componentDataItem</code></td><td><a href="#IComponentDataItem"><code>IComponentDataItem</code></a></td><td>Gets the IComponentDataItem that fired the event.</td></tr>
+<tr id="IComponentDataItemValueChanged.count"><td><code>count</code></td><td><code>xsd:long</code></td><td>Gets the extent of the hyperslab that changed.</td></tr>
+<tr id="IComponentDataItemValueChanged.start"><td><code>start</code></td><td><code>xsd:long</code></td><td>Gets the start index of the hyperslab that changed.</td></tr>
+</table>
+<h3 id="IComponentInfo">IComponentInfo</h3>
+<p class="muted"><code>HydroCouple::IComponentInfo</code></p>
+<p>IComponentInfo interface class is a factory that provides detailed metadata about a component and creates new instances of a component.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IComponentInfo.copyright"><td><code>copyright</code></td><td><code>xsd:string</code></td><td>Component copyright info.</td></tr>
+<tr id="IComponentInfo.developer"><td><code>developer</code></td><td><code>xsd:string</code></td><td>Component developer information.</td></tr>
+<tr id="IComponentInfo.documentation"><td><code>documentation</code></td><td><code>xsd:string</code></td><td>Documentation associated with this component.</td></tr>
+<tr id="IComponentInfo.email"><td><code>email</code></td><td><code>xsd:string</code></td><td>Component developer email.</td></tr>
+<tr id="IComponentInfo.iconFilePath"><td><code>iconFilePath</code></td><td><code>xsd:string</code></td><td>File path to Component icon. Must be specified relative to the component library.</td></tr>
+<tr id="IComponentInfo.libraryFilePath"><td><code>libraryFilePath</code></td><td><code>xsd:string</code></td><td>File path to Component library.</td></tr>
+<tr id="IComponentInfo.license"><td><code>license</code></td><td><code>xsd:string</code></td><td>Component license info.</td></tr>
+<tr id="IComponentInfo.tags"><td><code>tags</code></td><td><code>xsd:string</code></td><td>tags used to classify this component.</td></tr>
+<tr id="IComponentInfo.url"><td><code>url</code></td><td><code>xsd:string</code></td><td>Component developer url.</td></tr>
+<tr id="IComponentInfo.version"><td><code>version</code></td><td><code>xsd:string</code></td><td>Component version info.</td></tr>
+</table>
+<h3 id="IComponentStatusChangeEventArgs">IComponentStatusChangeEventArgs</h3>
+<p class="muted"><code>HydroCouple::IComponentStatusChangeEventArgs</code></p>
+<p>The IComponentStatusChangeEventArgs contains the information that will be passed when the IModelComponent fires a signal.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IComponentStatusChangeEventArgs.component"><td><code>component</code></td><td><a href="#IModelComponent"><code>IModelComponent</code></a></td><td>Gets the IModelComponent that fired the event.</td></tr>
+<tr id="IComponentStatusChangeEventArgs.hasProgressMonitor"><td><code>hasProgressMonitor</code></td><td><code>xsd:boolean</code></td><td>Indicates whether this event has a progress monitor.</td></tr>
+<tr id="IComponentStatusChangeEventArgs.message"><td><code>message</code></td><td><code>xsd:string</code></td><td>Gets additional information about the status change.</td></tr>
+<tr id="IComponentStatusChangeEventArgs.percentProgress"><td><code>percentProgress</code></td><td><code>xsd:float</code></td><td>Number between 0 and 100 indicating the progress made by a component in its simulation.</td></tr>
+<tr id="IComponentStatusChangeEventArgs.previousStatus"><td><code>previousStatus</code></td><td><a href="#ComponentStatus"><code>ComponentStatus</code></a></td><td>Gets the IModelComponent&#x27;s status before the status change.</td></tr>
+<tr id="IComponentStatusChangeEventArgs.status"><td><code>status</code></td><td><a href="#ComponentStatus"><code>ComponentStatus</code></a></td><td>Gets the IModelComponent&#x27;s status after the status change.</td></tr>
+</table>
+<h3 id="ICrossSection">ICrossSection</h3>
+<p class="muted"><code>HydroCouple::Spatial::ICrossSection</code></p>
+<p>The shape of a channel at one place, as a function of stage.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ICrossSection.invertElevation"><td><code>invertElevation</code></td><td><code>xsd:double</code></td><td>Lowest elevation in the section (positive up).</td></tr>
+<tr id="ICrossSection.kind"><td><code>kind</code></td><td><a href="#CrossSectionKind"><code>CrossSectionKind</code></a></td><td>How the producer holds this shape.</td></tr>
+<tr id="ICrossSection.stationCount"><td><code>stationCount</code></td><td><code>xsd:long</code></td><td>Number of survey points, or 0 when the producer holds no points.</td></tr>
+</table>
+<h3 id="ICurve">ICurve</h3>
+<p class="muted"><code>HydroCouple::Spatial::ICurve</code></p>
+<p>A Curve is a 1-dimensional geometric object usually stored as a sequence of IPoints, with the subtype of ICurve specifying the form of the interpolation between IPoints.</p>
+<p>Specializes <a href="#IGeometry"><code>IGeometry</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ICurve.endPoint"><td><code>endPoint</code></td><td><a href="#IPoint"><code>IPoint</code></a></td><td>The end IPoint of this ICurve.</td></tr>
+<tr id="ICurve.isClosed"><td><code>isClosed</code></td><td><code>xsd:boolean</code></td><td>Returns True if this ICurve is closed[startPoint() = endPoint()].</td></tr>
+<tr id="ICurve.isRing"><td><code>isRing</code></td><td><code>xsd:boolean</code></td><td>and this ICurve is simple(does not pass through the same Point more than once).</td></tr>
+<tr id="ICurve.length"><td><code>length</code></td><td><code>xsd:double</code></td><td>The length of this ICurve in its associated ISpatialReferenceSystem.</td></tr>
+<tr id="ICurve.startPoint"><td><code>startPoint</code></td><td><a href="#IPoint"><code>IPoint</code></a></td><td>The start IPoint of this ICurve.</td></tr>
+</table>
+<h3 id="IDateTime">IDateTime</h3>
+<p class="muted"><code>HydroCouple::Temporal::IDateTime</code></p>
+<p>IDateTime interface based on a Julian day</p>
+<p>Specializes <a href="#IPropertyChanged"><code>IPropertyChanged</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IDateTime.julianDay"><td><code>julianDay</code></td><td><code>xsd:double</code></td><td>Date and time as a Julian day value (days since 4713 BC January 1, 12:00 UTC).</td></tr>
+<tr id="IDateTime.modifiedJulianDay"><td><code>modifiedJulianDay</code></td><td><code>xsd:double</code></td><td>Modified Julian day value: julianDay() - 2400000.5 (days since 1858-11-17 00:00 UTC).</td></tr>
+<tr id="IDateTime.serialDate"><td><code>serialDate</code></td><td><code>xsd:double</code></td><td>Serial date number in the MATLAB `datenum` convention: days since 0000-01-00 in the proleptic Gregorian calendar, i.e. julianDay() - 1721058.5. (Excel&#x27;s 1900 serial differs from this by 693960 days and is not what is meant.)</td></tr>
+</table>
+<h3 id="IDescription">IDescription</h3>
+<p class="muted"><code>HydroCouple::IDescription</code></p>
+<p>IDescription interface class provides descriptive information on a HydroCouple object.</p>
+<p>Specializes <a href="#IPropertyChanged"><code>IPropertyChanged</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IDescription.caption"><td><code>caption</code></td><td><code>xsd:string</code></td><td>Gets caption for the entity.</td></tr>
+<tr id="IDescription.description"><td><code>description</code></td><td><code>xsd:string</code></td><td>Gets additional descriptive information for the entity.</td></tr>
+</table>
+<h3 id="IDifferentiableAdaptedOutput">IDifferentiableAdaptedOutput</h3>
+<p class="muted"><code>HydroCouple::IDifferentiableAdaptedOutput</code></p>
+<p>IDifferentiableAdaptedOutput is an adapted output that can report the derivative of its most recent refresh().</p>
+<p>Specializes <a href="#IAdaptedOutput"><code>IAdaptedOutput</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IDifferentiableAdaptedOutput.differentiableArguments"><td><code>differentiableArguments</code></td><td><a href="#IArgument"><code>IArgument</code></a></td><td>The arguments of this adapter a derivative reaches (may be empty).</td></tr>
+<tr id="IDifferentiableAdaptedOutput.differentiableStates"><td><code>differentiableStates</code></td><td><a href="#IComponentDataItem"><code>IComponentDataItem</code></a></td><td>The data items that carry state from one refresh() to the next and that the derivative follows; a subset of states().</td></tr>
+</table>
+<h3 id="IDifferentiableModelComponent">IDifferentiableModelComponent</h3>
+<p class="muted"><code>HydroCouple::IDifferentiableModelComponent</code></p>
+<p>IDifferentiableModelComponent is a model component that can report the derivative of its most recent step.</p>
+<p>Specializes <a href="#IModelComponent"><code>IModelComponent</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IDifferentiableModelComponent.differentiableArguments"><td><code>differentiableArguments</code></td><td><a href="#IArgument"><code>IArgument</code></a></td><td>The arguments (parameters) a derivative reaches.</td></tr>
+<tr id="IDifferentiableModelComponent.differentiableInputs"><td><code>differentiableInputs</code></td><td><a href="#IInput"><code>IInput</code></a></td><td>The inputs a derivative reaches. Inputs not listed are treated as constant.</td></tr>
+<tr id="IDifferentiableModelComponent.differentiableOutputs"><td><code>differentiableOutputs</code></td><td><a href="#IOutput"><code>IOutput</code></a></td><td>The outputs whose derivative the component can report.</td></tr>
+<tr id="IDifferentiableModelComponent.differentiableStates"><td><code>differentiableStates</code></td><td><a href="#IComponentDataItem"><code>IComponentDataItem</code></a></td><td>The data items that make up the state carried from one step to the next.</td></tr>
+</table>
+<h3 id="IDimension">IDimension</h3>
+<p class="muted"><code>HydroCouple::IDimension</code></p>
+<p>IDimension provides the properties of one axis of a data item&#x27;s index space.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IDimension.lengthType"><td><code>lengthType</code></td><td><a href="#LengthType"><code>LengthType</code></a></td><td>Gets the length type of the dimension.</td></tr>
+<tr id="IDimension.role"><td><code>role</code></td><td><a href="#DimensionRole"><code>DimensionRole</code></a></td><td>What this axis means.</td></tr>
+</table>
+<h3 id="IDistributedModelComponent">IDistributedModelComponent</h3>
+<p class="muted"><code>HydroCouple::Distributed::IDistributedModelComponent</code></p>
+<p>IDistributedModelComponent is an IModelComponent that participates in distributed execution through a transport.</p>
+<p>Specializes <a href="#IModelComponent"><code>IModelComponent</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IDistributedModelComponent.partitionCount"><td><code>partitionCount</code></td><td><code>xsd:int</code></td><td>The number of partitions this component&#x27;s domain is decomposed into.</td></tr>
+<tr id="IDistributedModelComponent.partitionRank"><td><code>partitionRank</code></td><td><code>xsd:int</code></td><td>The partition this instance computes.</td></tr>
+<tr id="IDistributedModelComponent.transport"><td><code>transport</code></td><td><a href="#ITransport"><code>ITransport</code></a></td><td>The transport this component communicates through.</td></tr>
+</table>
+<h3 id="IEdge">IEdge</h3>
+<p class="muted"><code>HydroCouple::Spatial::IEdge</code></p>
+<p>A directed edge from one vertex to another, adjacent to two faces. Based on Dani Lischinski&#x27;s code from Graphics Gems IV. Original quad-edge data structure due to Guibas and Stolfi (1985). Does not inherit from geometry to reduce size. since each edge has 4 pointers.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IEdge.dest"><td><code>dest</code></td><td><a href="#IVertex"><code>IVertex</code></a></td><td>The destination IVertex of this IEdge.</td></tr>
+<tr id="IEdge.destNext"><td><code>destNext</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The next ccw edge around (into) the destination of this edge.</td></tr>
+<tr id="IEdge.destPrev"><td><code>destPrev</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The next cw edge around (into) the destination of this edge.</td></tr>
+<tr id="IEdge.face"><td><code>face</code></td><td><a href="#IPolygon"><code>IPolygon</code></a></td><td>The target face of this edge, if dual. Otherwise null if not dual.</td></tr>
+<tr id="IEdge.index"><td><code>index</code></td><td><code>xsd:long</code></td><td>Index of this edge in its owning mesh or network (IMeshView::edgeNodes() order).</td></tr>
+<tr id="IEdge.invRot"><td><code>invRot</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The dual of this IEdge, directed from its left to its right.</td></tr>
+<tr id="IEdge.left"><td><code>left</code></td><td><a href="#IPolygon"><code>IPolygon</code></a></td><td>The left face of this edge.</td></tr>
+<tr id="IEdge.leftNext"><td><code>leftNext</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The ccw edge around the left face following this edge.</td></tr>
+<tr id="IEdge.leftPrev"><td><code>leftPrev</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The ccw edge around the left face before this edge.</td></tr>
+<tr id="IEdge.orig"><td><code>orig</code></td><td><a href="#IVertex"><code>IVertex</code></a></td><td>The origin IVertex of this IEdge.</td></tr>
+<tr id="IEdge.origNext"><td><code>origNext</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The next ccw edge around (from) the origin of this IEdge.</td></tr>
+<tr id="IEdge.origPrev"><td><code>origPrev</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The next cw edge around (from) the origin of this edge.</td></tr>
+<tr id="IEdge.right"><td><code>right</code></td><td><a href="#IPolygon"><code>IPolygon</code></a></td><td>The right face of this edge.</td></tr>
+<tr id="IEdge.rightNext"><td><code>rightNext</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The edge around the right face ccw following this edge.</td></tr>
+<tr id="IEdge.rightPrev"><td><code>rightPrev</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The IEdge around the right face ccw before this IEdge.</td></tr>
+<tr id="IEdge.rot"><td><code>rot</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The dual of this edge, directed from its right to its left.</td></tr>
+<tr id="IEdge.sym"><td><code>sym</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>The IEdge from the destination to the origin of this IEdge.</td></tr>
+</table>
+<h3 id="IEnvelope">IEnvelope</h3>
+<p class="muted"><code>HydroCouple::Spatial::IEnvelope</code></p>
+<p>IEnvelope represents the minimum bounding box of a geometry.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IEnvelope.maxX"><td><code>maxX</code></td><td><code>xsd:double</code></td><td>The maximum x-coordinate value for this IEnvelope.</td></tr>
+<tr id="IEnvelope.maxY"><td><code>maxY</code></td><td><code>xsd:double</code></td><td>The maximum y-coordinate value for this IEnvelope.</td></tr>
+<tr id="IEnvelope.maxZ"><td><code>maxZ</code></td><td><code>xsd:double</code></td><td>The maximum z-coordinate value for this IEnvelope.</td></tr>
+<tr id="IEnvelope.minX"><td><code>minX</code></td><td><code>xsd:double</code></td><td>The minimum x-coordinate value for this IEnvelope.</td></tr>
+<tr id="IEnvelope.minY"><td><code>minY</code></td><td><code>xsd:double</code></td><td>The minimum y-coordinate value for this IEnvelope.</td></tr>
+<tr id="IEnvelope.minZ"><td><code>minZ</code></td><td><code>xsd:double</code></td><td>The minimum z-coordinate value for this IEnvelope.</td></tr>
+</table>
+<h3 id="IExchangeItem">IExchangeItem</h3>
+<p class="muted"><code>HydroCouple::IExchangeItem</code></p>
+<p>IExchangeItem the base data item the can be exchanged between components at runtime.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<h3 id="IExchangeRequest">IExchangeRequest</h3>
+<p class="muted"><code>HydroCouple::Distributed::IExchangeRequest</code></p>
+<p>IExchangeRequest is a handle to an asynchronous communication operation.</p>
+<h3 id="IGeometry">IGeometry</h3>
+<p class="muted"><code>HydroCouple::Spatial::IGeometry</code></p>
+<p>IGeometry is the root class of the geometry hierarchy.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IGeometry.boundary"><td><code>boundary</code></td><td><a href="#IGeometry"><code>IGeometry</code></a></td><td>Returns the closure of the combinatorial boundary of this geometric object (Reference [1], section 3.12.2).</td></tr>
+<tr id="IGeometry.convexHull"><td><code>convexHull</code></td><td><a href="#IGeometry"><code>IGeometry</code></a></td><td>Returns a geometric object that represents the convex hull of this geometric object.</td></tr>
+<tr id="IGeometry.coordinateDimension"><td><code>coordinateDimension</code></td><td><code>xsd:int</code></td><td>Get the dimension of the coordinates in this object.</td></tr>
+<tr id="IGeometry.dimension"><td><code>dimension</code></td><td><code>xsd:int</code></td><td>The inherent dimension of this geometric object, which must be less than or equal to the coordinate dimension. In non - homogeneous collections, this will return the largest topological dimension of the contained objects.</td></tr>
+<tr id="IGeometry.envelope"><td><code>envelope</code></td><td><a href="#IEnvelope"><code>IEnvelope</code></a></td><td>The minimum bounding box for this Geometry.</td></tr>
+<tr id="IGeometry.geometryType"><td><code>geometryType</code></td><td><a href="#GeometryType"><code>GeometryType</code></a></td><td>Gets the geometry type of this object.</td></tr>
+<tr id="IGeometry.getWKB"><td><code>getWKB</code></td><td><code>xsd:unsignedByte</code></td><td>Exports this geometric object to a specific Well-known byte Representation of Geometry.</td></tr>
+<tr id="IGeometry.getWKT"><td><code>getWKT</code></td><td><code>xsd:string</code></td><td>Exports this geometric object to a specific Well-known Text Representation of Geometry.</td></tr>
+<tr id="IGeometry.id"><td><code>id</code></td><td><code>xsd:string</code></td><td>id of the geometry.</td></tr>
+<tr id="IGeometry.index"><td><code>index</code></td><td><code>xsd:long</code></td><td>index of the geometry if it is part of a collection.</td></tr>
+<tr id="IGeometry.is3D"><td><code>is3D</code></td><td><code>xsd:boolean</code></td><td>Returns true if this geometric object has z coordinate values.</td></tr>
+<tr id="IGeometry.isEmpty"><td><code>isEmpty</code></td><td><code>xsd:boolean</code></td><td>If true, then this geometric object represents the empty point set ∅ for the coordinate space.</td></tr>
+<tr id="IGeometry.isMeasured"><td><code>isMeasured</code></td><td><code>xsd:boolean</code></td><td>Returns true if this geometric object has m coordinate values.</td></tr>
+<tr id="IGeometry.isSimple"><td><code>isSimple</code></td><td><code>xsd:boolean</code></td><td>Returns true if this geometric object has no anomalous geometric points, such as self intersection or self tangency.</td></tr>
+<tr id="IGeometry.spatialReferenceSystem"><td><code>spatialReferenceSystem</code></td><td><a href="#ISpatialReferenceSystem"><code>ISpatialReferenceSystem</code></a></td><td>Spatial reference system of geometric object.</td></tr>
+</table>
+<h3 id="IGeometryCollection">IGeometryCollection</h3>
+<p class="muted"><code>HydroCouple::Spatial::IGeometryCollection</code></p>
+<p>An IGeometryCollection is a geometric object that is a collection of some number of IGeometry objects.</p>
+<p>Specializes <a href="#IGeometry"><code>IGeometry</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IGeometryCollection.geometryCount"><td><code>geometryCount</code></td><td><code>xsd:long</code></td><td>The number of geometries in this IGeometryCollection</td></tr>
+</table>
+<h3 id="IGeometryComponentDataItem">IGeometryComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::IGeometryComponentDataItem</code></p>
+<p>IGeometryComponentDataItem is an IComponentDataItem whose data is associated with a collection of IGeometry objects. This class must be implemented as an abstract class.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: the geometry dimension is dimension 0 of shape() (IDimension::DimensionRole::Entity); any additional dimensions follow.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IGeometryComponentDataItem.envelope"><td><code>envelope</code></td><td><a href="#IEnvelope"><code>IEnvelope</code></a></td><td>The IEnvelope bounding all geometries of this data item.</td></tr>
+<tr id="IGeometryComponentDataItem.geometryCount"><td><code>geometryCount</code></td><td><code>xsd:long</code></td><td>The number of geometries associated with this data item.</td></tr>
+<tr id="IGeometryComponentDataItem.geometryDimension"><td><code>geometryDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the geometries (dimension 0 of shape()).</td></tr>
+<tr id="IGeometryComponentDataItem.geometryType"><td><code>geometryType</code></td><td><a href="#GeometryType"><code>GeometryType</code></a></td><td>The type of the geometries this data item is associated with.</td></tr>
+</table>
+<h3 id="IIdBasedComponentDataItem">IIdBasedComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::IIdBasedComponentDataItem</code></p>
+<p>IIdBasedComponentDataItem is an IComponentDataItem whose data is indexed by string identifiers.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: the identifier dimension is dimension 0 of shape(); any additional dimensions follow.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IIdBasedComponentDataItem.identifierDimension"><td><code>identifierDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>identifierDimension returns the identifier dimension of the id based component item.</td></tr>
+<tr id="IIdBasedComponentDataItem.identifiers"><td><code>identifiers</code></td><td><code>xsd:string</code></td><td>Gets the identifiers associated with this id-based component data item.</td></tr>
+</table>
+<h3 id="IIdentity">IIdentity</h3>
+<p class="muted"><code>HydroCouple::IIdentity</code></p>
+<p>IIdentity interface class defines a method to get the Id of an HydroCouple entity.</p>
+<p>Specializes <a href="#IDescription"><code>IDescription</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IIdentity.id"><td><code>id</code></td><td><code>xsd:string</code></td><td>Gets a unique identifier for the entity.</td></tr>
+</table>
+<h3 id="IInput">IInput</h3>
+<p class="muted"><code>HydroCouple::IInput</code></p>
+<p>An IInput item that can accept values for an IModelComponent.</p>
+<p>Specializes <a href="#IExchangeItem"><code>IExchangeItem</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IInput.provider"><td><code>provider</code></td><td><a href="#IOutput"><code>IOutput</code></a></td><td>Gets the producer this consumer should get its values from.</td></tr>
+</table>
+<h3 id="ILayeredMeshComponentDataItem">ILayeredMeshComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::ILayeredMeshComponentDataItem</code></p>
+<p>A polyhedral surface whose values are resolved into vertical layers.</p>
+<p>Specializes <a href="#IPolyhedralSurfaceComponentDataItem"><code>IPolyhedralSurfaceComponentDataItem</code></a>, <a href="#ILayering"><code>ILayering</code></a>.</p>
+<h3 id="ILayeredNetworkComponentDataItem">ILayeredNetworkComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::ILayeredNetworkComponentDataItem</code></p>
+<p>A network carrying a vertical profile, and optionally a channel shape, at each node or edge.</p>
+<p>Specializes <a href="#INetworkComponentDataItem"><code>INetworkComponentDataItem</code></a>, <a href="#ILayering"><code>ILayering</code></a>.</p>
+<h3 id="ILayering">ILayering</h3>
+<p class="muted"><code>HydroCouple::Spatial::ILayering</code></p>
+<p>Values resolved into vertical layers, whatever the plan geometry.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ILayering.layerDimension"><td><code>layerDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the layers (IDimension::DimensionRole::Layer).</td></tr>
+<tr id="ILayering.verticalCoordinate"><td><code>verticalCoordinate</code></td><td><a href="#IVerticalCoordinate"><code>IVerticalCoordinate</code></a></td><td>Where those layers are.</td></tr>
+</table>
+<h3 id="ILicensedComponent">ILicensedComponent</h3>
+<p class="muted"><code>HydroCouple::ILicensedComponent</code></p>
+<p>ILicensedComponent is an optional side interface for components that require license validation.</p>
+<h3 id="ILine">ILine</h3>
+<p class="muted"><code>HydroCouple::Spatial::ILine</code></p>
+<p>The ILine class is an ILineString with exactly 2 IPoints.</p>
+<p>Specializes <a href="#ILineString"><code>ILineString</code></a>.</p>
+<h3 id="ILineString">ILineString</h3>
+<p class="muted"><code>HydroCouple::Spatial::ILineString</code></p>
+<p>An ILineString is a Curve with linear interpolation between Points. Each consecutive pair of Points defines a Line segment.</p>
+<p>Specializes <a href="#ICurve"><code>ICurve</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ILineString.pointCount"><td><code>pointCount</code></td><td><code>xsd:long</code></td><td>The number of IPoints in this ILineString.</td></tr>
+</table>
+<h3 id="ILinearRing">ILinearRing</h3>
+<p class="muted"><code>HydroCouple::Spatial::ILinearRing</code></p>
+<p>An ILinearRing is an ILineString that is both isClosed() and isSimple().</p>
+<p>Specializes <a href="#ILineString"><code>ILineString</code></a>.</p>
+<h3 id="IMeshView">IMeshView</h3>
+<p class="muted"><code>HydroCouple::Spatial::IMeshView</code></p>
+<p>IMeshView is a bulk, structure-of-arrays view of an unstructured mesh or network: flat coordinate spans plus CSR (compressed sparse row) connectivity.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IMeshView.edgeCount"><td><code>edgeCount</code></td><td><code>xsd:long</code></td><td>The number of edges in the mesh.</td></tr>
+<tr id="IMeshView.edgeFaces"><td><code>edgeFaces</code></td><td><code>xsd:long</code></td><td>The two faces of every edge: edge e separates edgeFaces()[2*e] (left, looking from edgeNodes()[2*e] toward edgeNodes()[2*e+1]) from edgeFaces()[2*e+1] (right); -1 marks the outside of the mesh, so a boundary edge has exactly one -1 [edge_face_connectivity].</td></tr>
+<tr id="IMeshView.edgeLengths"><td><code>edgeLengths</code></td><td><code>xsd:double</code></td><td>Length of every edge in the reference system&#x27;s distance units; edgeCount() or empty.</td></tr>
+<tr id="IMeshView.edgeNodes"><td><code>edgeNodes</code></td><td><code>xsd:long</code></td><td>Node index pairs of all edges: edge e connects edgeNodes()[2*e] and edgeNodes()[2*e + 1].</td></tr>
+<tr id="IMeshView.edgeNormalX"><td><code>edgeNormalX</code></td><td><code>xsd:double</code></td><td>x component of every edge&#x27;s unit normal, pointing from the left face to the right face as edgeFaces() orders them; edgeCount() or empty.</td></tr>
+<tr id="IMeshView.edgeNormalY"><td><code>edgeNormalY</code></td><td><code>xsd:double</code></td><td>y component of every edge&#x27;s unit normal; edgeCount() or empty.</td></tr>
+<tr id="IMeshView.faceAreas"><td><code>faceAreas</code></td><td><code>xsd:double</code></td><td>Plan area of every face in the reference system&#x27;s distance units squared; faceCount() or empty.</td></tr>
+<tr id="IMeshView.faceCount"><td><code>faceCount</code></td><td><code>xsd:long</code></td><td>The number of faces (patches/cells) in the mesh; 0 for a pure network.</td></tr>
+<tr id="IMeshView.faceEdgeOffsets"><td><code>faceEdgeOffsets</code></td><td><code>xsd:long</code></td><td>CSR row offsets into faceEdges(): the edges of face f are faceEdges()[faceEdgeOffsets()[f] ... faceEdgeOffsets()[f+1]).</td></tr>
+<tr id="IMeshView.faceEdges"><td><code>faceEdges</code></td><td><code>xsd:long</code></td><td>Concatenated edge indexes of all faces [face_edge_connectivity].</td></tr>
+<tr id="IMeshView.faceNodeOffsets"><td><code>faceNodeOffsets</code></td><td><code>xsd:long</code></td><td>CSR row offsets into faceNodes(): the nodes of face f are faceNodes()[faceNodeOffsets()[f] ... faceNodeOffsets()[f+1]).</td></tr>
+<tr id="IMeshView.faceNodes"><td><code>faceNodes</code></td><td><code>xsd:long</code></td><td>Concatenated node indexes of all faces, ordered counter-clockwise per face.</td></tr>
+<tr id="IMeshView.faceX"><td><code>faceX</code></td><td><code>xsd:double</code></td><td>x coordinate of every face&#x27;s representative point (centroid or circumcentre, producer&#x27;s choice) [face_x]; faceCount() or empty.</td></tr>
+<tr id="IMeshView.faceY"><td><code>faceY</code></td><td><code>xsd:double</code></td><td>y coordinate of every face&#x27;s representative point [face_y]; faceCount() or empty.</td></tr>
+<tr id="IMeshView.nodeCount"><td><code>nodeCount</code></td><td><code>xsd:long</code></td><td>The number of nodes (vertices) in the mesh.</td></tr>
+<tr id="IMeshView.nodeX"><td><code>nodeX</code></td><td><code>xsd:double</code></td><td>x coordinates of all nodes; the span has nodeCount() elements.</td></tr>
+<tr id="IMeshView.nodeY"><td><code>nodeY</code></td><td><code>xsd:double</code></td><td>y coordinates of all nodes; the span has nodeCount() elements.</td></tr>
+<tr id="IMeshView.nodeZ"><td><code>nodeZ</code></td><td><code>xsd:double</code></td><td>z coordinates of all nodes; the span has nodeCount() elements, or is empty for a 2D mesh.</td></tr>
+</table>
+<h3 id="IModelComponent">IModelComponent</h3>
+<p class="muted"><code>HydroCouple::IModelComponent</code></p>
+<p>IModelComponent interface is the core interface in the HydroCouple standard defining a model component.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IModelComponent.arguments"><td><code>arguments</code></td><td><a href="#IArgument"><code>IArgument</code></a></td><td>Arguments needed to let the component do its work. An unmodifiable list of (modifiable) arguments must be returned that is to be used to get information about the arguments and to set argument values.</td></tr>
+<tr id="IModelComponent.capabilities"><td><code>capabilities</code></td><td><a href="#Capability"><code>Capability</code></a></td><td>The set of optional capabilities this component supports.</td></tr>
+<tr id="IModelComponent.componentInfo"><td><code>componentInfo</code></td><td><a href="#IModelComponentInfo"><code>IModelComponentInfo</code></a></td><td>Contains the metadata about this IModelComponent instance.</td></tr>
+<tr id="IModelComponent.inputs"><td><code>inputs</code></td><td><a href="#IInput"><code>IInput</code></a></td><td>The list of consumer items for which a component can receive values.</td></tr>
+<tr id="IModelComponent.outputs"><td><code>outputs</code></td><td><a href="#IOutput"><code>IOutput</code></a></td><td>The list of IOutputs for which a component can produce results.</td></tr>
+<tr id="IModelComponent.referenceDirectory"><td><code>referenceDirectory</code></td><td><code>xsd:string</code></td><td>Gets the reference directory for this component instance.</td></tr>
+<tr id="IModelComponent.results"><td><code>results</code></td><td><a href="#IComponentDataItem"><code>IComponentDataItem</code></a></td><td>List of the model&#x27;s output results</td></tr>
+<tr id="IModelComponent.states"><td><code>states</code></td><td><a href="#IComponentDataItem"><code>IComponentDataItem</code></a></td><td>The data items that make up the state carried from one update() to the next.</td></tr>
+<tr id="IModelComponent.status"><td><code>status</code></td><td><a href="#ComponentStatus"><code>ComponentStatus</code></a></td><td>Defines current status of the IModelComponent. See IModelComponent::ComponentStatus for the possible values.</td></tr>
+<tr id="IModelComponent.workflow"><td><code>workflow</code></td><td><a href="#IWorkflowComponent"><code>IWorkflowComponent</code></a></td><td>Gets the workflow that this component is part of.</td></tr>
+</table>
+<h3 id="IModelComponentInfo">IModelComponentInfo</h3>
+<p class="muted"><code>HydroCouple::IModelComponentInfo</code></p>
+<p>IModelComponentInfo interface inherits from the IComponentInfo interface which provides detailed metadata about an IModelComponent. Additionally, it creates new instances of a component.</p>
+<p>Specializes <a href="#IComponentInfo"><code>IComponentInfo</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IModelComponentInfo.adaptedOutputFactories"><td><code>adaptedOutputFactories</code></td><td><a href="#IAdaptedOutputFactory"><code>IAdaptedOutputFactory</code></a></td><td>Gets a list of IAdaptedOutputFactories, each allowing to create IAdaptedOutput item for making outputs fit to inputs in case they do not already do so.</td></tr>
+</table>
+<h3 id="IMultiCurve">IMultiCurve</h3>
+<p class="muted"><code>HydroCouple::Spatial::IMultiCurve</code></p>
+<p>An IMultiCurve is a 1-dimensional IGeometryCollection whose elements are ICurves.</p>
+<p>Specializes <a href="#IGeometryCollection"><code>IGeometryCollection</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IMultiCurve.isClosed"><td><code>isClosed</code></td><td><code>xsd:boolean</code></td><td>closed[startPoint ( ) = endPoint ( ) for each ICurve in this IMultiCurve].</td></tr>
+<tr id="IMultiCurve.length"><td><code>length</code></td><td><code>xsd:double</code></td><td>The Length of this IMultiCurve which is equal to the sum of the lengths of the element ICurves.</td></tr>
+</table>
+<h3 id="IMultiInput">IMultiInput</h3>
+<p class="muted"><code>HydroCouple::IMultiInput</code></p>
+<p>The IMultiInput class is an IInput class that has multiple outputs supplying data to it.</p>
+<p>Specializes <a href="#IInput"><code>IInput</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IMultiInput.providerLabels"><td><code>providerLabels</code></td><td><a href="#IIdentity"><code>IIdentity</code></a></td><td>The roles this multi-input&#x27;s providers fill (empty when it names none).</td></tr>
+<tr id="IMultiInput.providers"><td><code>providers</code></td><td><a href="#IOutput"><code>IOutput</code></a></td><td>Gets the list of providers supplying data to this multi-input.</td></tr>
+</table>
+<h3 id="IMultiLineString">IMultiLineString</h3>
+<p class="muted"><code>HydroCouple::Spatial::IMultiLineString</code></p>
+<p>An IMultiLineString is an IMultiCurve whose elements are ILineStrings.</p>
+<p>Specializes <a href="#IMultiCurve"><code>IMultiCurve</code></a>.</p>
+<h3 id="IMultiPoint">IMultiPoint</h3>
+<p class="muted"><code>HydroCouple::Spatial::IMultiPoint</code></p>
+<p>An IMultiPoint is a 0-dimensional IGeometryCollection.</p>
+<p>Specializes <a href="#IGeometryCollection"><code>IGeometryCollection</code></a>.</p>
+<h3 id="IMultiPolygon">IMultiPolygon</h3>
+<p class="muted"><code>HydroCouple::Spatial::IMultiPolygon</code></p>
+<p>An IMultiPolygon is an IMultiSurface whose elements are IPolygons.</p>
+<p>Specializes <a href="#IMultiSurface"><code>IMultiSurface</code></a>.</p>
+<h3 id="IMultiSurface">IMultiSurface</h3>
+<p class="muted"><code>HydroCouple::Spatial::IMultiSurface</code></p>
+<p>A MultiSurface is a 2-dimensional GeometryCollection whose elements are Surfaces, all using coordinates from the same coordinate reference system.</p>
+<p>Specializes <a href="#IGeometryCollection"><code>IGeometryCollection</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IMultiSurface.area"><td><code>area</code></td><td><code>xsd:double</code></td><td>The area of this ISurface, as measured in the spatial reference system of this ISurface.</td></tr>
+<tr id="IMultiSurface.centroid"><td><code>centroid</code></td><td><a href="#IPoint"><code>IPoint</code></a></td><td>The mathematical centroid for this ISurface as an IPoint. The result is not guaranteed to be on this ISurface. Newly constructed; owned by the caller.</td></tr>
+<tr id="IMultiSurface.pointOnSurface"><td><code>pointOnSurface</code></td><td><a href="#IPoint"><code>IPoint</code></a></td><td>A Point guaranteed to be on this ISurface. Newly constructed; owned by the caller.</td></tr>
+</table>
+<h3 id="INetwork">INetwork</h3>
+<p class="muted"><code>HydroCouple::Spatial::INetwork</code></p>
+<p>INetwork represents a graph structure of connected vertices and edges.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="INetwork.edgeCount"><td><code>edgeCount</code></td><td><code>xsd:long</code></td><td>The number of edges in the network.</td></tr>
+<tr id="INetwork.meshView"><td><code>meshView</code></td><td><a href="#IMeshView"><code>IMeshView</code></a></td><td>Bulk structure-of-arrays view of this network&#x27;s geometry and connectivity.</td></tr>
+<tr id="INetwork.vertexCount"><td><code>vertexCount</code></td><td><code>xsd:long</code></td><td>The number of vertices in the network.</td></tr>
+</table>
+<h3 id="INetworkComponentDataItem">INetworkComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::INetworkComponentDataItem</code></p>
+<p>INetworkComponentDataItem is an IComponentDataItem whose data is associated with the edges or the nodes of an INetwork.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: the entity dimension selected by location() (Node or Edge; DimensionRole::Entity) is dimension 0 of shape(); a Component dimension follows when networkDataType() is not Scalar; any additional dimensions follow that.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="INetworkComponentDataItem.entityDimension"><td><code>entityDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the entities (dimension 0 of shape()).</td></tr>
+<tr id="INetworkComponentDataItem.location"><td><code>location</code></td><td><a href="#MeshLocation"><code>MeshLocation</code></a></td><td>Which network entity (Node or Edge) this data item&#x27;s values are attached to.</td></tr>
+<tr id="INetworkComponentDataItem.network"><td><code>network</code></td><td><a href="#INetwork"><code>INetwork</code></a></td><td>The INetwork this data item is associated with.</td></tr>
+<tr id="INetworkComponentDataItem.networkDataType"><td><code>networkDataType</code></td><td><a href="#SpatialDataType"><code>SpatialDataType</code></a></td><td>The algebraic structure of the value at each entity (scalar, vector, ...).</td></tr>
+<tr id="INetworkComponentDataItem.vectorBasis"><td><code>vectorBasis</code></td><td><a href="#VectorBasis"><code>VectorBasis</code></a></td><td>The frame of vector/tensor values; VectorBasis::Unknown is legal only when networkDataType() is Scalar or MultiScalar.</td></tr>
+</table>
+<h3 id="IOutput">IOutput</h3>
+<p class="muted"><code>HydroCouple::IOutput</code></p>
+<p>An output exchange item that can deliver values from an IModelComponent.</p>
+<p>Specializes <a href="#IExchangeItem"><code>IExchangeItem</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IOutput.adaptedOutputs"><td><code>adaptedOutputs</code></td><td><a href="#IAdaptedOutput"><code>IAdaptedOutput</code></a></td><td>The adaptedOutputs that have this current output item as adaptee.</td></tr>
+<tr id="IOutput.consumers"><td><code>consumers</code></td><td><a href="#IInput"><code>IInput</code></a></td><td>Input items that will consume the values by calling the IOutput::updateValues() method.</td></tr>
+</table>
+<h3 id="IPartitionedComponentDataItem">IPartitionedComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Distributed::IPartitionedComponentDataItem</code></p>
+<p>IPartitionedComponentDataItem is an IComponentDataItem whose entity dimension is decomposed across partitions, with local virtual (ghost/halo) representation of remotely owned entities.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IPartitionedComponentDataItem.globalCount"><td><code>globalCount</code></td><td><code>xsd:long</code></td><td>The global entity count across all partitions.</td></tr>
+<tr id="IPartitionedComponentDataItem.ownedGlobalIndexes"><td><code>ownedGlobalIndexes</code></td><td><code>xsd:long</code></td><td>Global identities of the locally owned entities.</td></tr>
+<tr id="IPartitionedComponentDataItem.partitionedDimension"><td><code>partitionedDimension</code></td><td><code>xsd:int</code></td><td>Which axis of shape() is decomposed across partitions.</td></tr>
+<tr id="IPartitionedComponentDataItem.synchronizationEpoch"><td><code>synchronizationEpoch</code></td><td><code>xsd:unsignedLong</code></td><td>The synchronization epoch of the virtual entities.</td></tr>
+<tr id="IPartitionedComponentDataItem.virtualGlobalIndexes"><td><code>virtualGlobalIndexes</code></td><td><code>xsd:long</code></td><td>Global identities of the local virtual (ghost/halo) entities.</td></tr>
+<tr id="IPartitionedComponentDataItem.virtualOwners"><td><code>virtualOwners</code></td><td><code>xsd:int</code></td><td>Owner partition of each virtual entity.</td></tr>
+</table>
+<h3 id="IPoint">IPoint</h3>
+<p class="muted"><code>HydroCouple::Spatial::IPoint</code></p>
+<p>An IPoint is a 0-dimensional geometric object and represents a single location in coordinate space.</p>
+<p>Specializes <a href="#IGeometry"><code>IGeometry</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IPoint.m"><td><code>m</code></td><td><code>xsd:double</code></td><td>The m-coordinate value for this IPoint. Returns NIL otherwise.</td></tr>
+<tr id="IPoint.x"><td><code>x</code></td><td><code>xsd:double</code></td><td>The x-coordinate value for this IPoint.</td></tr>
+<tr id="IPoint.y"><td><code>y</code></td><td><code>xsd:double</code></td><td>The y-coordinate value for this IPoint.</td></tr>
+<tr id="IPoint.z"><td><code>z</code></td><td><code>xsd:double</code></td><td>The z-coordinate value for this IPoint. Returns NIL otherwise.</td></tr>
+</table>
+<h3 id="IPolygon">IPolygon</h3>
+<p class="muted"><code>HydroCouple::Spatial::IPolygon</code></p>
+<p>A IPolygon is a planar ISurface defined by 1 exterior boundary and 0 or more interior boundaries.</p>
+<p>Specializes <a href="#ISurface"><code>ISurface</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IPolygon.edge"><td><code>edge</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>An arbitrary adjacent edge for this IPolygon.</td></tr>
+<tr id="IPolygon.exteriorRing"><td><code>exteriorRing</code></td><td><a href="#ILineString"><code>ILineString</code></a></td><td>Returns the exterior ring of this IPolygon.</td></tr>
+<tr id="IPolygon.interiorRingCount"><td><code>interiorRingCount</code></td><td><code>xsd:long</code></td><td>Returns the number of interior rings in this IPolygon.</td></tr>
+<tr id="IPolygon.polyhedralSurface"><td><code>polyhedralSurface</code></td><td><a href="#IPolyhedralSurface"><code>IPolyhedralSurface</code></a></td><td>Gets the polyhedral surface this polygon belongs to.</td></tr>
+</table>
+<h3 id="IPolyhedralSurface">IPolyhedralSurface</h3>
+<p class="muted"><code>HydroCouple::Spatial::IPolyhedralSurface</code></p>
+<p>An IPolyhedralSurface is a contiguous collection of polygon patches or facets stitched together along their shared boundary edges.</p>
+<p>Specializes <a href="#ISurface"><code>ISurface</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IPolyhedralSurface.isClosed"><td><code>isClosed</code></td><td><code>xsd:boolean</code></td><td>Checks whether this surface is closed and therefore bounds a solid.</td></tr>
+<tr id="IPolyhedralSurface.meshView"><td><code>meshView</code></td><td><a href="#IMeshView"><code>IMeshView</code></a></td><td>Bulk structure-of-arrays view of this surface&#x27;s geometry and connectivity.</td></tr>
+<tr id="IPolyhedralSurface.patchCount"><td><code>patchCount</code></td><td><code>xsd:long</code></td><td>The number of polygon patches in this surface.</td></tr>
+<tr id="IPolyhedralSurface.vertexCount"><td><code>vertexCount</code></td><td><code>xsd:long</code></td><td>The number of vertices in this surface.</td></tr>
+</table>
+<h3 id="IPolyhedralSurfaceComponentDataItem">IPolyhedralSurfaceComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::IPolyhedralSurfaceComponentDataItem</code></p>
+<p>IPolyhedralSurfaceComponentDataItem is an IComponentDataItem whose data is associated with the faces (patches), edges, or nodes of an IPolyhedralSurface.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: the entity dimension selected by location() (DimensionRole::Entity) is dimension 0 of shape(); a Component dimension follows when meshDataType() is not Scalar; any additional dimensions follow that.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IPolyhedralSurfaceComponentDataItem.entityDimension"><td><code>entityDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the entities (dimension 0 of shape()).</td></tr>
+<tr id="IPolyhedralSurfaceComponentDataItem.location"><td><code>location</code></td><td><a href="#MeshLocation"><code>MeshLocation</code></a></td><td>Which mesh entity (Node, Edge or Face; Volume for a layered item) this data item&#x27;s values are attached to.</td></tr>
+<tr id="IPolyhedralSurfaceComponentDataItem.meshDataType"><td><code>meshDataType</code></td><td><a href="#SpatialDataType"><code>SpatialDataType</code></a></td><td>The algebraic structure of the value at each entity (scalar, vector, ...).</td></tr>
+<tr id="IPolyhedralSurfaceComponentDataItem.polyhedralSurface"><td><code>polyhedralSurface</code></td><td><a href="#IPolyhedralSurface"><code>IPolyhedralSurface</code></a></td><td>The IPolyhedralSurface this data item is associated with.</td></tr>
+<tr id="IPolyhedralSurfaceComponentDataItem.vectorBasis"><td><code>vectorBasis</code></td><td><a href="#VectorBasis"><code>VectorBasis</code></a></td><td>The frame of vector/tensor values; VectorBasis::Unknown is legal only when meshDataType() is Scalar or MultiScalar.</td></tr>
+</table>
+<h3 id="IPropertyChanged">IPropertyChanged</h3>
+<p class="muted"><code>HydroCouple::IPropertyChanged</code></p>
+<p>IPropertyChanged interface is used to emit signal/event when a property of an object changes.</p>
+<h3 id="IProxyModelComponent">IProxyModelComponent</h3>
+<p class="muted"><code>HydroCouple::Distributed::IProxyModelComponent</code></p>
+<p>The IProxyModelComponent class is a local stand-in for a remote IModelComponent reachable through a transport.</p>
+<p>Specializes <a href="#IDistributedModelComponent"><code>IDistributedModelComponent</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IProxyModelComponent.isConnected"><td><code>isConnected</code></td><td><code>xsd:boolean</code></td><td>Checks whether the proxy currently holds a live connection.</td></tr>
+<tr id="IProxyModelComponent.remoteEndpoint"><td><code>remoteEndpoint</code></td><td><a href="#Endpoint"><code>Endpoint</code></a></td><td>The endpoint of the remote component this proxy represents.</td></tr>
+<tr id="IProxyModelComponent.remoteId"><td><code>remoteId</code></td><td><code>xsd:string</code></td><td>The unique identifier of the remote component this proxy represents.</td></tr>
+<tr id="IProxyModelComponent.requestTimeout"><td><code>requestTimeout</code></td><td><code>xsd:double</code></td><td>The timeout applied to forwarded requests.</td></tr>
+</table>
+<h3 id="IQuality">IQuality</h3>
+<p class="muted"><code>HydroCouple::IQuality</code></p>
+<p>IQuality describes qualitative data, where a value is specified as one category within a number of predefined (possible) categories. These categories can be ordered or not.</p>
+<p>Specializes <a href="#IValueDefinition"><code>IValueDefinition</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IQuality.categories"><td><code>categories</code></td><td><code>xsd:string</code></td><td>The possible category labels allowed for this IQuality.</td></tr>
+<tr id="IQuality.isOrdered"><td><code>isOrdered</code></td><td><code>xsd:boolean</code></td><td>Whether categories() has a defined order (ordinal) or not (nominal).</td></tr>
+</table>
+<h3 id="IQuantity">IQuantity</h3>
+<p class="muted"><code>HydroCouple::IQuantity</code></p>
+<p>IQuantity specifies values as an amount of some unit, usually as a floating point number.</p>
+<p>Specializes <a href="#IValueDefinition"><code>IValueDefinition</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IQuantity.maxValue"><td><code>maxValue</code></td><td><code>xsd:double</code></td><td>Gets the maximum allowed value for this quantity.</td></tr>
+<tr id="IQuantity.minValue"><td><code>minValue</code></td><td><code>xsd:double</code></td><td>Gets the minimum allowed value for this quantity.</td></tr>
+<tr id="IQuantity.unit"><td><code>unit</code></td><td><a href="#IUnit"><code>IUnit</code></a></td><td>Unit of quantity.</td></tr>
+</table>
+<h3 id="IRaster">IRaster</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRaster</code></p>
+<p>A Raster spatial feature.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IRaster.rasterBandCount"><td><code>rasterBandCount</code></td><td><code>xsd:long</code></td><td>Number of raster bands.</td></tr>
+<tr id="IRaster.spatialReferenceSystem"><td><code>spatialReferenceSystem</code></td><td><a href="#ISpatialReferenceSystem"><code>ISpatialReferenceSystem</code></a></td><td>The ISpatialReferenceSystem represents the spatial reference system of this raster.</td></tr>
+<tr id="IRaster.xSize"><td><code>xSize</code></td><td><code>xsd:long</code></td><td>Number of pixels in the x direction.</td></tr>
+<tr id="IRaster.ySize"><td><code>ySize</code></td><td><code>xsd:long</code></td><td>Number of pixels in y direction.</td></tr>
+</table>
+<h3 id="IRasterBand">IRasterBand</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRasterBand</code></p>
+<p>IRasterBand is a single raster band for an IRaster.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IRasterBand.dataType"><td><code>dataType</code></td><td><a href="#RasterDataType"><code>RasterDataType</code></a></td><td>Raster data type</td></tr>
+<tr id="IRasterBand.noData"><td><code>noData</code></td><td><code>xsd:double</code></td><td>The nodata value for this IRasterBand.</td></tr>
+<tr id="IRasterBand.raster"><td><code>raster</code></td><td><a href="#IRaster"><code>IRaster</code></a></td><td>Parent IRaster of this IRasterBand</td></tr>
+<tr id="IRasterBand.xSize"><td><code>xSize</code></td><td><code>xsd:long</code></td><td>Number of pixels in the x direction</td></tr>
+<tr id="IRasterBand.ySize"><td><code>ySize</code></td><td><code>xsd:long</code></td><td>Number of pixels in y direction</td></tr>
+</table>
+<h3 id="IRasterComponentDataItem">IRasterComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRasterComponentDataItem</code></p>
+<p>IRasterComponentDataItem is an IComponentDataItem whose data is associated with an IRaster.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: band is dimension 0 (DimensionRole::Band), y (row) is dimension 1 (DimensionRole::Row), x (column) is dimension 2 (DimensionRole::Column) of shape().</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IRasterComponentDataItem.bandDimension"><td><code>bandDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the raster bands (dimension 0 of shape()).</td></tr>
+<tr id="IRasterComponentDataItem.raster"><td><code>raster</code></td><td><a href="#IRaster"><code>IRaster</code></a></td><td>The IRaster this data item is associated with.</td></tr>
+<tr id="IRasterComponentDataItem.xDimension"><td><code>xDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the raster columns (dimension 2 of shape()).</td></tr>
+<tr id="IRasterComponentDataItem.yDimension"><td><code>yDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the raster rows (dimension 1 of shape()).</td></tr>
+</table>
+<h3 id="IRegularGrid2D">IRegularGrid2D</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRegularGrid2D</code></p>
+<p>IRegularGrid2D represents a two-dimensional structured grid of nodes and cells.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IRegularGrid2D.activeCells"><td><code>activeCells</code></td><td><code>xsd:unsignedByte</code></td><td>Bulk activity mask of all cells, row-major [yCell][xCell]; nonzero means active.</td></tr>
+<tr id="IRegularGrid2D.gridType"><td><code>gridType</code></td><td><a href="#RegularGridType"><code>RegularGridType</code></a></td><td>Gets the type of regular grid.</td></tr>
+<tr id="IRegularGrid2D.nodeXs"><td><code>nodeXs</code></td><td><code>xsd:double</code></td><td>Bulk x coordinates of all nodes, row-major [yNode][xNode].</td></tr>
+<tr id="IRegularGrid2D.nodeYs"><td><code>nodeYs</code></td><td><code>xsd:double</code></td><td>Bulk y coordinates of all nodes, row-major [yNode][xNode].</td></tr>
+<tr id="IRegularGrid2D.numXNodes"><td><code>numXNodes</code></td><td><code>xsd:long</code></td><td>numXNodes represents the number of nodes in the x direction.</td></tr>
+<tr id="IRegularGrid2D.numYNodes"><td><code>numYNodes</code></td><td><code>xsd:long</code></td><td>numYNodes represents the number of nodes in the y direction.</td></tr>
+<tr id="IRegularGrid2D.spatialReferenceSystem"><td><code>spatialReferenceSystem</code></td><td><a href="#ISpatialReferenceSystem"><code>ISpatialReferenceSystem</code></a></td><td>The ISpatialReferenceSystem represents the spatial reference system of this geometric object.</td></tr>
+</table>
+<h3 id="IRegularGrid2DComponentDataItem">IRegularGrid2DComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRegularGrid2DComponentDataItem</code></p>
+<p>IRegularGrid2DComponentDataItem is an IComponentDataItem whose data is associated with the cells of an IRegularGrid2D.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: y-cell is dimension 0 (DimensionRole::Row), x-cell is dimension 1 (DimensionRole::Column) of shape(); the optional cell edge and cell vertex dimensions (DimensionRole::Other) follow.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IRegularGrid2DComponentDataItem.cellEdgeDimension"><td><code>cellEdgeDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the edges of a cell, when values are attached to cell edges.</td></tr>
+<tr id="IRegularGrid2DComponentDataItem.cellVertexDimension"><td><code>cellVertexDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the vertices of a cell, when values are attached to cell vertices.</td></tr>
+<tr id="IRegularGrid2DComponentDataItem.grid"><td><code>grid</code></td><td><a href="#IRegularGrid2D"><code>IRegularGrid2D</code></a></td><td>The IRegularGrid2D this data item is associated with.</td></tr>
+<tr id="IRegularGrid2DComponentDataItem.location"><td><code>location</code></td><td><a href="#MeshLocation"><code>MeshLocation</code></a></td><td>Which grid entity the values are attached to: Face for cells, Edge for cell edges, Node for cell vertices.</td></tr>
+<tr id="IRegularGrid2DComponentDataItem.xCellDimension"><td><code>xCellDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the cells in the x direction (dimension 1 of shape()).</td></tr>
+<tr id="IRegularGrid2DComponentDataItem.yCellDimension"><td><code>yCellDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the cells in the y direction (dimension 0 of shape()).</td></tr>
+</table>
+<h3 id="IRegularGrid3D">IRegularGrid3D</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRegularGrid3D</code></p>
+<p>IRegularGrid3D represents a three-dimensional structured grid of nodes and cells.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IRegularGrid3D.activeCells"><td><code>activeCells</code></td><td><code>xsd:unsignedByte</code></td><td>Bulk activity mask of all cells, row-major [zCell][yCell][xCell]; nonzero means active.</td></tr>
+<tr id="IRegularGrid3D.gridType"><td><code>gridType</code></td><td><a href="#RegularGridType"><code>RegularGridType</code></a></td><td>Gets the type of regular grid.</td></tr>
+<tr id="IRegularGrid3D.nodeXs"><td><code>nodeXs</code></td><td><code>xsd:double</code></td><td>Bulk x coordinates of all nodes in a horizontal layer, row-major [yNode][xNode].</td></tr>
+<tr id="IRegularGrid3D.nodeYs"><td><code>nodeYs</code></td><td><code>xsd:double</code></td><td>Bulk y coordinates of all nodes in a horizontal layer, row-major [yNode][xNode].</td></tr>
+<tr id="IRegularGrid3D.nodeZs"><td><code>nodeZs</code></td><td><code>xsd:double</code></td><td>Bulk z coordinates of all nodes, row-major [zNode][yNode][xNode].</td></tr>
+<tr id="IRegularGrid3D.numXNodes"><td><code>numXNodes</code></td><td><code>xsd:long</code></td><td>numXNodes represents the number of nodes in the x direction.</td></tr>
+<tr id="IRegularGrid3D.numYNodes"><td><code>numYNodes</code></td><td><code>xsd:long</code></td><td>numYNodes represents the number of nodes in the y direction.</td></tr>
+<tr id="IRegularGrid3D.numZNodes"><td><code>numZNodes</code></td><td><code>xsd:long</code></td><td>numZNodes represents the number of nodes in the z direction.</td></tr>
+<tr id="IRegularGrid3D.spatialReferenceSystem"><td><code>spatialReferenceSystem</code></td><td><a href="#ISpatialReferenceSystem"><code>ISpatialReferenceSystem</code></a></td><td>The ISpatialReferenceSystem represents the spatial reference system of this grid.</td></tr>
+</table>
+<h3 id="IRegularGrid3DComponentDataItem">IRegularGrid3DComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRegularGrid3DComponentDataItem</code></p>
+<p>IRegularGrid3DComponentDataItem is an IComponentDataItem whose data is associated with the cells of an IRegularGrid3D.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: z-cell is dimension 0 (DimensionRole::Depth), y-cell is dimension 1 (DimensionRole::Row), x-cell is dimension 2 (DimensionRole::Column) of shape(); the optional cell face and cell vertex dimensions (DimensionRole::Other) follow.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IRegularGrid3DComponentDataItem.cellFaceDimension"><td><code>cellFaceDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the faces of a cell, when values are attached to cell faces.</td></tr>
+<tr id="IRegularGrid3DComponentDataItem.cellVertexDimension"><td><code>cellVertexDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the vertices of a cell, when values are attached to cell vertices.</td></tr>
+<tr id="IRegularGrid3DComponentDataItem.grid"><td><code>grid</code></td><td><a href="#IRegularGrid3D"><code>IRegularGrid3D</code></a></td><td>The IRegularGrid3D this data item is associated with.</td></tr>
+<tr id="IRegularGrid3DComponentDataItem.location"><td><code>location</code></td><td><a href="#MeshLocation"><code>MeshLocation</code></a></td><td>Which grid entity the values are attached to: Volume for cells, Face for cell faces, Node for cell vertices.</td></tr>
+<tr id="IRegularGrid3DComponentDataItem.xCellDimension"><td><code>xCellDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the cells in the x direction (dimension 2 of shape()).</td></tr>
+<tr id="IRegularGrid3DComponentDataItem.yCellDimension"><td><code>yCellDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the cells in the y direction (dimension 1 of shape()).</td></tr>
+<tr id="IRegularGrid3DComponentDataItem.zCellDimension"><td><code>zCellDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>The IDimension of the cells in the z direction (dimension 0 of shape()).</td></tr>
+</table>
+<h3 id="ISpatialReferenceSystem">ISpatialReferenceSystem</h3>
+<p class="muted"><code>HydroCouple::Spatial::ISpatialReferenceSystem</code></p>
+<p>ISpatialReferenceSystem describes the coordinate reference system for spatial geometric objects.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ISpatialReferenceSystem.authName"><td><code>authName</code></td><td><code>xsd:string</code></td><td>The Authority Specific Spatial Reference System Identifier.</td></tr>
+<tr id="ISpatialReferenceSystem.authSRID"><td><code>authSRID</code></td><td><code>xsd:int</code></td><td>Returns the Spatial Reference System ID (SRID) for a geometric object. This will normally be a foreign key to an index of reference systems stored in either the same or some other datastore.</td></tr>
+<tr id="ISpatialReferenceSystem.distanceUnits"><td><code>distanceUnits</code></td><td><a href="#DistanceUnits"><code>DistanceUnits</code></a></td><td>The measurement distance units for the horizontal axes of the Spatial Reference System.</td></tr>
+<tr id="ISpatialReferenceSystem.srText"><td><code>srText</code></td><td><code>xsd:string</code></td><td>Well-known Text description of the Spatial Reference System.</td></tr>
+<tr id="ISpatialReferenceSystem.verticalAuthName"><td><code>verticalAuthName</code></td><td><code>xsd:string</code></td><td>Authority of the vertical reference system (e.g. &quot;EPSG&quot;), or empty if undeclared.</td></tr>
+<tr id="ISpatialReferenceSystem.verticalAuthSRID"><td><code>verticalAuthSRID</code></td><td><code>xsd:int</code></td><td>The authority&#x27;s identifier of the vertical reference system (e.g. 5703 for NAVD88 height), or 0 if undeclared.</td></tr>
+<tr id="ISpatialReferenceSystem.verticalDistanceUnits"><td><code>verticalDistanceUnits</code></td><td><a href="#DistanceUnits"><code>DistanceUnits</code></a></td><td>The measurement distance units of the vertical axis.</td></tr>
+<tr id="ISpatialReferenceSystem.verticalSrText"><td><code>verticalSrText</code></td><td><code>xsd:string</code></td><td>Well-known Text of the vertical reference system, or empty if undeclared.</td></tr>
+</table>
+<h3 id="ISurface">ISurface</h3>
+<p class="muted"><code>HydroCouple::Spatial::ISurface</code></p>
+<p>A ISurface is a 2-dimensional IGeometry object.</p>
+<p>Specializes <a href="#IGeometry"><code>IGeometry</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ISurface.area"><td><code>area</code></td><td><code>xsd:double</code></td><td>The area of this ISurface, as measured in the spatial reference system of this ISurface.</td></tr>
+<tr id="ISurface.boundaryMultiCurve"><td><code>boundaryMultiCurve</code></td><td><a href="#IMultiCurve"><code>IMultiCurve</code></a></td><td>Gets the boundary of this surface as a multi-curve.</td></tr>
+<tr id="ISurface.centroid"><td><code>centroid</code></td><td><a href="#IPoint"><code>IPoint</code></a></td><td>The mathematical centroid for this ISurface as a Point. The result is not guaranteed to be on this ISurface. Newly constructed; owned by the caller.</td></tr>
+<tr id="ISurface.pointOnSurface"><td><code>pointOnSurface</code></td><td><a href="#IPoint"><code>IPoint</code></a></td><td>A Point guaranteed to be on this Surface. Newly constructed; owned by the caller.</td></tr>
+</table>
+<h3 id="ITIN">ITIN</h3>
+<p class="muted"><code>HydroCouple::Spatial::ITIN</code></p>
+<p>An ITIN is a triangulated irregular network IPolyhedralSurface consisting only of ITriangle patches.</p>
+<p>Specializes <a href="#IPolyhedralSurface"><code>IPolyhedralSurface</code></a>.</p>
+<h3 id="ITINComponentDataItem">ITINComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Spatial::ITINComponentDataItem</code></p>
+<p>ITINComponentDataItem is an IPolyhedralSurfaceComponentDataItem whose surface is an ITIN.</p>
+<p>Specializes <a href="#IPolyhedralSurfaceComponentDataItem"><code>IPolyhedralSurfaceComponentDataItem</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITINComponentDataItem.TIN"><td><code>TIN</code></td><td><a href="#ITIN"><code>ITIN</code></a></td><td>The ITIN this data item is associated with.</td></tr>
+</table>
+<h3 id="ITimeGeometryComponentDataItem">ITimeGeometryComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeGeometryComponentDataItem</code></p>
+<p>ITimeGeometryComponentDataItem is a geometry component data item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeSeriesComponentDataItem"><code>ITimeSeriesComponentDataItem</code></a>, <a href="#IGeometryComponentDataItem"><code>IGeometryComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, the geometry dimension is dimension 1 of shape(); any additional dimensions follow.</p>
+<h3 id="ITimeIdBasedComponentDataItem">ITimeIdBasedComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Temporal::ITimeIdBasedComponentDataItem</code></p>
+<p>ITimeIdBasedComponentDataItem is an IComponentDataItem with both temporal and identifier-based dimensions for accessing multi-dimensional time-series data.</p>
+<p>Specializes <a href="#ITimeSeriesComponentDataItem"><code>ITimeSeriesComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0 (DimensionRole::Time), the identifier dimension is dimension 1 (DimensionRole::Entity); any additional dimensions follow.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITimeIdBasedComponentDataItem.identifierDimension"><td><code>identifierDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>identifierDimension associated with this data item.</td></tr>
+<tr id="ITimeIdBasedComponentDataItem.identifiers"><td><code>identifiers</code></td><td><code>xsd:string</code></td><td>identifiers associated with the identifier dimension.</td></tr>
+</table>
+<h3 id="ITimeLayeredMeshComponentDataItem">ITimeLayeredMeshComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeLayeredMeshComponentDataItem</code></p>
+<p>A layered mesh item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeSeriesPolyhedralSurfaceComponentDataItem"><code>ITimeSeriesPolyhedralSurfaceComponentDataItem</code></a>, <a href="#ILayeredMeshComponentDataItem"><code>ILayeredMeshComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, the entity (face or volume) dimension is dimension 1, the layer dimension is dimension 2 of shape(); a Component dimension follows when meshDataType() is not Scalar.</p>
+<h3 id="ITimeLayeredNetworkComponentDataItem">ITimeLayeredNetworkComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeLayeredNetworkComponentDataItem</code></p>
+<p>A layered network item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeNetworkComponentDataItem"><code>ITimeNetworkComponentDataItem</code></a>, <a href="#ILayeredNetworkComponentDataItem"><code>ILayeredNetworkComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, the entity (node or edge) dimension is dimension 1, the layer dimension is dimension 2 of shape(); a Component dimension follows when networkDataType() is not Scalar.</p>
+<h3 id="ITimeModelComponent">ITimeModelComponent</h3>
+<p class="muted"><code>HydroCouple::Temporal::ITimeModelComponent</code></p>
+<p>ITimeModelComponent is an IModelComponent that advances through time during simulation and provides access to the current simulation time.</p>
+<p>Specializes <a href="#IModelComponent"><code>IModelComponent</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITimeModelComponent.currentDateTime"><td><code>currentDateTime</code></td><td><a href="#IDateTime"><code>IDateTime</code></a></td><td>Gets the current date and time of the model simulation.</td></tr>
+<tr id="ITimeModelComponent.nextDateTimeJulianDay"><td><code>nextDateTimeJulianDay</code></td><td><code>xsd:double</code></td><td>The time (Julian day) the next update() will advance currentDateTime() to.</td></tr>
+<tr id="ITimeModelComponent.simulationPeriod"><td><code>simulationPeriod</code></td><td><a href="#ITimeSpan"><code>ITimeSpan</code></a></td><td>simulationPeriod of the model.</td></tr>
+</table>
+<h3 id="ITimeNetworkComponentDataItem">ITimeNetworkComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeNetworkComponentDataItem</code></p>
+<p>ITimeNetworkComponentDataItem is a network component data item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeSeriesComponentDataItem"><code>ITimeSeriesComponentDataItem</code></a>, <a href="#INetworkComponentDataItem"><code>INetworkComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, the entity dimension selected by location() is dimension 1 of shape(); a Component dimension follows when networkDataType() is not Scalar.</p>
+<h3 id="ITimeRegularGrid2DComponentDataItem">ITimeRegularGrid2DComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeRegularGrid2DComponentDataItem</code></p>
+<p>ITimeRegularGrid2DComponentDataItem is a 2D regular grid component data item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeSeriesComponentDataItem"><code>ITimeSeriesComponentDataItem</code></a>, <a href="#IRegularGrid2DComponentDataItem"><code>IRegularGrid2DComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, y-cell is dimension 1, x-cell is dimension 2 of shape(); the optional cell edge and cell vertex dimensions follow.</p>
+<h3 id="ITimeRegularGrid3DComponentDataItem">ITimeRegularGrid3DComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeRegularGrid3DComponentDataItem</code></p>
+<p>ITimeRegularGrid3DComponentDataItem is a 3D regular grid component data item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeSeriesComponentDataItem"><code>ITimeSeriesComponentDataItem</code></a>, <a href="#IRegularGrid3DComponentDataItem"><code>IRegularGrid3DComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, z-cell is dimension 1, y-cell is dimension 2, x-cell is dimension 3 of shape(); the optional cell face and cell vertex dimensions follow.</p>
+<h3 id="ITimeSeriesComponentDataItem">ITimeSeriesComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::Temporal::ITimeSeriesComponentDataItem</code></p>
+<p>ITimeSeriesComponentDataItem is an IComponentItem with a temporal attribute.</p>
+<p>Specializes <a href="#IComponentDataItem"><code>IComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: the time dimension is dimension 0 of shape() and reports IDimension::DimensionRole::Time; any additional dimensions follow.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITimeSeriesComponentDataItem.intervalLength"><td><code>intervalLength</code></td><td><code>xsd:double</code></td><td>Length of the averaging or accumulation interval (days).</td></tr>
+<tr id="ITimeSeriesComponentDataItem.timeCount"><td><code>timeCount</code></td><td><code>xsd:long</code></td><td>Gets the number of times.</td></tr>
+<tr id="ITimeSeriesComponentDataItem.timeDimension"><td><code>timeDimension</code></td><td><a href="#IDimension"><code>IDimension</code></a></td><td>Gets the IDimension of the times.</td></tr>
+<tr id="ITimeSeriesComponentDataItem.timeExtrapolation"><td><code>timeExtrapolation</code></td><td><a href="#TimeExtrapolation"><code>TimeExtrapolation</code></a></td><td>What this item does — or, for an input, accepts — outside its held range.</td></tr>
+<tr id="ITimeSeriesComponentDataItem.timeInterpolation"><td><code>timeInterpolation</code></td><td><a href="#TimeInterpolation"><code>TimeInterpolation</code></a></td><td>What this item does — or, for an input, accepts — between held instants.</td></tr>
+<tr id="ITimeSeriesComponentDataItem.timeKind"><td><code>timeKind</code></td><td><a href="#TimeKind"><code>TimeKind</code></a></td><td>What each value&#x27;s time coordinate refers to.</td></tr>
+<tr id="ITimeSeriesComponentDataItem.timeSpan"><td><code>timeSpan</code></td><td><a href="#ITimeSpan"><code>ITimeSpan</code></a></td><td>Gets the ITimeSpan associated with this data item.</td></tr>
+<tr id="ITimeSeriesComponentDataItem.times"><td><code>times</code></td><td><code>xsd:double</code></td><td>Bulk access to all time coordinates as Julian day values.</td></tr>
+</table>
+<h3 id="ITimeSeriesPolyhedralSurfaceComponentDataItem">ITimeSeriesPolyhedralSurfaceComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeSeriesPolyhedralSurfaceComponentDataItem</code></p>
+<p>ITimeSeriesPolyhedralSurfaceComponentDataItem is a polyhedral surface component data item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeSeriesComponentDataItem"><code>ITimeSeriesComponentDataItem</code></a>, <a href="#IPolyhedralSurfaceComponentDataItem"><code>IPolyhedralSurfaceComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, the entity dimension selected by location() is dimension 1 of shape(); a Component dimension follows when meshDataType() is not Scalar.</p>
+<h3 id="ITimeSeriesRasterComponentDataItem">ITimeSeriesRasterComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeSeriesRasterComponentDataItem</code></p>
+<p>ITimeSeriesRasterComponentDataItem is a raster component data item whose values also vary in time.</p>
+<p>Specializes <a href="#ITimeSeriesComponentDataItem"><code>ITimeSeriesComponentDataItem</code></a>, <a href="#IRasterComponentDataItem"><code>IRasterComponentDataItem</code></a>.</p>
+<p>Canonical dimension ordering: time is dimension 0, band is dimension 1, y (row) is dimension 2, and x (column) is dimension 3 of shape().</p>
+<h3 id="ITimeSeriesTINComponentDataItem">ITimeSeriesTINComponentDataItem</h3>
+<p class="muted"><code>HydroCouple::SpatioTemporal::ITimeSeriesTINComponentDataItem</code></p>
+<p>ITimeSeriesTINComponentDataItem is an ITimeSeriesPolyhedralSurfaceComponentDataItem whose surface is an ITIN.</p>
+<p>Specializes <a href="#ITimeSeriesPolyhedralSurfaceComponentDataItem"><code>ITimeSeriesPolyhedralSurfaceComponentDataItem</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITimeSeriesTINComponentDataItem.TIN"><td><code>TIN</code></td><td><a href="#ITIN"><code>ITIN</code></a></td><td>The ITIN this data item is associated with.</td></tr>
+</table>
+<h3 id="ITimeSpan">ITimeSpan</h3>
+<p class="muted"><code>HydroCouple::Temporal::ITimeSpan</code></p>
+<p>ITimeSpan specifies an interval of time.</p>
+<p>Specializes <a href="#IDateTime"><code>IDateTime</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITimeSpan.duration"><td><code>duration</code></td><td><code>xsd:double</code></td><td>Duration of the timespan in days; non-negative.</td></tr>
+<tr id="ITimeSpan.endJulianDay"><td><code>endJulianDay</code></td><td><code>xsd:double</code></td><td>End of the interval as a Julian day: julianDay() + duration().</td></tr>
+</table>
+<h3 id="ITransport">ITransport</h3>
+<p class="muted"><code>HydroCouple::Distributed::ITransport</code></p>
+<p>ITransport is a transport-neutral, tagged message channel between processes.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITransport.localEndpoint"><td><code>localEndpoint</code></td><td><a href="#Endpoint"><code>Endpoint</code></a></td><td>The endpoint of the calling process on this transport.</td></tr>
+<tr id="ITransport.participantCount"><td><code>participantCount</code></td><td><code>xsd:int</code></td><td>The number of participants reachable through this transport.</td></tr>
+</table>
+<h3 id="ITriangle">ITriangle</h3>
+<p class="muted"><code>HydroCouple::Spatial::ITriangle</code></p>
+<p>An ITriangle is a IPolygon with 3 distinct, non-collinear vertices and no interior boundary.</p>
+<p>Specializes <a href="#IPolygon"><code>IPolygon</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="ITriangle.vertex1"><td><code>vertex1</code></td><td><a href="#IVertex"><code>IVertex</code></a></td><td>The first vertex of this ITriangle.</td></tr>
+<tr id="ITriangle.vertex2"><td><code>vertex2</code></td><td><a href="#IVertex"><code>IVertex</code></a></td><td>The second vertex of this ITriangle.</td></tr>
+<tr id="ITriangle.vertex3"><td><code>vertex3</code></td><td><a href="#IVertex"><code>IVertex</code></a></td><td>The third vertex of this ITriangle.</td></tr>
+</table>
+<h3 id="IUIProvider">IUIProvider</h3>
+<p class="muted"><code>HydroCouple::IUIProvider</code></p>
+<p>IUIProvider is an optional side interface for entities that can present a graphical editor and/or viewer.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IUIProvider.hasEditor"><td><code>hasEditor</code></td><td><code>xsd:boolean</code></td><td>hasEditor indicates whether this entity has a UI editor.</td></tr>
+<tr id="IUIProvider.hasViewer"><td><code>hasViewer</code></td><td><code>xsd:boolean</code></td><td>hasViewer indicates whether this entity has a UI viewer.</td></tr>
+</table>
+<h3 id="IUnit">IUnit</h3>
+<p class="muted"><code>HydroCouple::IUnit</code></p>
+<p>IUnit interface, describing the physical unit of a IQuantity.</p>
+<p>Specializes <a href="#IDescription"><code>IDescription</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IUnit.conversionFactorToSI"><td><code>conversionFactorToSI</code></td><td><code>xsd:double</code></td><td>Conversion factor to SI (&#x27;A&#x27; in: SI-value = A * quant-value + B)</td></tr>
+<tr id="IUnit.dimensions"><td><code>dimensions</code></td><td><a href="#IUnitDimensions"><code>IUnitDimensions</code></a></td><td>Fundamental dimensions of the unit.</td></tr>
+<tr id="IUnit.offsetToSI"><td><code>offsetToSI</code></td><td><code>xsd:double</code></td><td>OffSet to SI (&#x27;B&#x27; in: SI-value = A * quant-value + B).</td></tr>
+<tr id="IUnit.symbol"><td><code>symbol</code></td><td><code>xsd:string</code></td><td>The unit as a UDUNITS-2 string, e.g. &quot;m3 s-1&quot; or &quot;ft3/s&quot;.</td></tr>
+<tr id="IUnit.ucumCode"><td><code>ucumCode</code></td><td><code>xsd:string</code></td><td>The unit as a case-sensitive UCUM code, e.g. &quot;m3/s&quot; or &quot;[ft_i]3/s&quot;.</td></tr>
+</table>
+<h3 id="IUnitDimensions">IUnitDimensions</h3>
+<p class="muted"><code>HydroCouple::IUnitDimensions</code></p>
+<p>Defines the order of dimension in each FundamentalDimension for a unit.</p>
+<p>Specializes <a href="#IDescription"><code>IDescription</code></a>.</p>
+<h3 id="IValueDefinition">IValueDefinition</h3>
+<p class="muted"><code>HydroCouple::IValueDefinition</code></p>
+<p>IValueDefinition describes the type and properties of values held by an IComponentDataItem.</p>
+<p>Specializes <a href="#IDescription"><code>IDescription</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IValueDefinition.conceptURI"><td><code>conceptURI</code></td><td><code>xsd:string</code></td><td>An absolute URI naming the quantity in a published vocabulary.</td></tr>
+<tr id="IValueDefinition.defaultValue"><td><code>defaultValue</code></td><td><code>xsd:double</code></td><td>Gets the default value for this value definition.</td></tr>
+<tr id="IValueDefinition.missingValue"><td><code>missingValue</code></td><td><code>xsd:double</code></td><td>The value representing that data is missing.</td></tr>
+<tr id="IValueDefinition.standardName"><td><code>standardName</code></td><td><code>xsd:string</code></td><td>The CF standard name of the quantity these values measure.</td></tr>
+<tr id="IValueDefinition.valueKind"><td><code>valueKind</code></td><td><a href="#ValueKind"><code>ValueKind</code></a></td><td>How values of this definition behave under regridding and aggregation.</td></tr>
+</table>
+<h3 id="IVertex">IVertex</h3>
+<p class="muted"><code>HydroCouple::Spatial::IVertex</code></p>
+<p>The IVertex class is an IPoint of a topologically aware IGeometry</p>
+<p>Specializes <a href="#IPoint"><code>IPoint</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IVertex.edge"><td><code>edge</code></td><td><a href="#IEdge"><code>IEdge</code></a></td><td>An arbitrary outgoing IEdge from this vertex.</td></tr>
+</table>
+<h3 id="IVerticalCoordinate">IVerticalCoordinate</h3>
+<p class="muted"><code>HydroCouple::Spatial::IVerticalCoordinate</code></p>
+<p>Where the layers of a layered or volumetric data item actually are.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IVerticalCoordinate.columnCount"><td><code>columnCount</code></td><td><code>xsd:long</code></td><td>Number of columns (plan entities) this coordinate describes.</td></tr>
+<tr id="IVerticalCoordinate.geometryEpoch"><td><code>geometryEpoch</code></td><td><code>xsd:unsignedLong</code></td><td>Counter incremented every time the elevations change.</td></tr>
+<tr id="IVerticalCoordinate.interfaceElevations"><td><code>interfaceElevations</code></td><td><code>xsd:double</code></td><td>All interface elevations of all columns, row-major [column][interface], top interface first within a column.</td></tr>
+<tr id="IVerticalCoordinate.isTimeVarying"><td><code>isTimeVarying</code></td><td><code>xsd:boolean</code></td><td>Whether interface elevations change from step to step.</td></tr>
+<tr id="IVerticalCoordinate.kind"><td><code>kind</code></td><td><a href="#VerticalCoordinateKind"><code>VerticalCoordinateKind</code></a></td><td>The coordinate family.</td></tr>
+<tr id="IVerticalCoordinate.layerCount"><td><code>layerCount</code></td><td><code>xsd:long</code></td><td>Number of layers in a column.</td></tr>
+</table>
+<h3 id="IWorkflowComponent">IWorkflowComponent</h3>
+<p class="muted"><code>HydroCouple::IWorkflowComponent</code></p>
+<p>IWorkflowComponent manages the execution workflow for a set of coupled IModelComponent instances.</p>
+<p>Specializes <a href="#IIdentity"><code>IIdentity</code></a>.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IWorkflowComponent.componentInfo"><td><code>componentInfo</code></td><td><a href="#IWorkflowComponentInfo"><code>IWorkflowComponentInfo</code></a></td><td>Gets the metadata information about this workflow component.</td></tr>
+<tr id="IWorkflowComponent.modelComponentLabels"><td><code>modelComponentLabels</code></td><td><a href="#IIdentity"><code>IIdentity</code></a></td><td>requiredModelComponentIdentifiers returns the vector of IModelComponent identifiers that are required by this component.</td></tr>
+<tr id="IWorkflowComponent.modelComponents"><td><code>modelComponents</code></td><td><a href="#IModelComponent"><code>IModelComponent</code></a></td><td>Gets the model components managed by this workflow.</td></tr>
+<tr id="IWorkflowComponent.status"><td><code>status</code></td><td><a href="#WorkflowStatus"><code>WorkflowStatus</code></a></td><td>Gets the current status of the workflow component.</td></tr>
+</table>
+<h3 id="IWorkflowComponentInfo">IWorkflowComponentInfo</h3>
+<p class="muted"><code>HydroCouple::IWorkflowComponentInfo</code></p>
+<p>IWorkflowComponentInfo provides metadata about an IWorkflowComponent and creates new instances of it.</p>
+<p>Specializes <a href="#IComponentInfo"><code>IComponentInfo</code></a>.</p>
+<h3 id="IWorkflowComponentStatusChangeEventArgs">IWorkflowComponentStatusChangeEventArgs</h3>
+<p class="muted"><code>HydroCouple::IWorkflowComponentStatusChangeEventArgs</code></p>
+<p>The IWorkflowComponentStatusChangeEventArgs contains the information that will be passed when the IWorkflowComponent fires a signal.</p>
+<table><tr><th>Property</th><th>Range</th><th>Meaning</th></tr>
+<tr id="IWorkflowComponentStatusChangeEventArgs.hasProgressMonitor"><td><code>hasProgressMonitor</code></td><td><code>xsd:boolean</code></td><td>Indicates whether this event has a progress monitor.</td></tr>
+<tr id="IWorkflowComponentStatusChangeEventArgs.message"><td><code>message</code></td><td><code>xsd:string</code></td><td>Gets additional information about the status change.</td></tr>
+<tr id="IWorkflowComponentStatusChangeEventArgs.percentProgress"><td><code>percentProgress</code></td><td><code>xsd:float</code></td><td>Number between 0 and 100 indicating the progress made by the workflow component.</td></tr>
+<tr id="IWorkflowComponentStatusChangeEventArgs.previousStatus"><td><code>previousStatus</code></td><td><a href="#WorkflowStatus"><code>WorkflowStatus</code></a></td><td>Gets the IWorkflowComponent&#x27;s status before the status change.</td></tr>
+<tr id="IWorkflowComponentStatusChangeEventArgs.status"><td><code>status</code></td><td><a href="#WorkflowStatus"><code>WorkflowStatus</code></a></td><td>Gets the IWorkflowComponent&#x27;s status after the status change.</td></tr>
+<tr id="IWorkflowComponentStatusChangeEventArgs.workflowComponent"><td><code>workflowComponent</code></td><td><a href="#IWorkflowComponent"><code>IWorkflowComponent</code></a></td><td>Gets the IWorkflowComponent that fired the event.</td></tr>
+</table>
+<h2>Enumerations</h2>
+<h3 id="ArgumentInputType">ArgumentInputType</h3>
+<p class="muted"><code>HydroCouple::IArgument::ArgumentInputType</code></p>
+<p>Enumeration indicating the type of input for the argument.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="ArgumentInputType.String"><td>0</td><td><code>String</code></td><td>Enumeration indicating that the argument was read from string.</td></tr>
+<tr id="ArgumentInputType.File"><td>1</td><td><code>File</code></td><td>Enumeration indicating that the argument was read from a file.</td></tr>
+<tr id="ArgumentInputType.JSON"><td>2</td><td><code>JSON</code></td><td>Enumeration indicating that the argument input is in JSON format.</td></tr>
+<tr id="ArgumentInputType.YAML"><td>3</td><td><code>YAML</code></td><td>Enumeration indicating that the argument input is in YAML format.</td></tr>
+<tr id="ArgumentInputType.XML"><td>4</td><td><code>XML</code></td><td>Enumeration indicating that the argument input is in XML format.</td></tr>
+<tr id="ArgumentInputType.URL"><td>5</td><td><code>URL</code></td><td>Enumeration indicating that the argument was read from a URL.</td></tr>
+<tr id="ArgumentInputType.MEMORY_OBJECT"><td>6</td><td><code>MEMORY_OBJECT</code></td><td>Enumeration indicating that the argument was read from a memory object.</td></tr>
+</table>
+<h3 id="ArgumentRole">ArgumentRole</h3>
+<p class="muted"><code>HydroCouple::IArgument::ArgumentRole</code></p>
+<p>What kind of thing an argument is to the model that owns it.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="ArgumentRole.Configuration"><td>0</td><td><code>Configuration</code></td><td>How the model runs: paths, options, solver settings, output selection.</td></tr>
+<tr id="ArgumentRole.Parameter"><td>1</td><td><code>Parameter</code></td><td>A coefficient of the process equations (roughness, conductivity, rate constants).</td></tr>
+<tr id="ArgumentRole.InitialCondition"><td>2</td><td><code>InitialCondition</code></td><td>The state at the start of the simulation.</td></tr>
+<tr id="ArgumentRole.Forcing"><td>3</td><td><code>Forcing</code></td><td>A prescribed time-varying input that is not supplied through an IInput (a boundary time series read from file).</td></tr>
+<tr id="ArgumentRole.Geometry"><td>4</td><td><code>Geometry</code></td><td>The spatial discretization itself (a mesh, a network, a raster grid).</td></tr>
+</table>
+<h3 id="ByteOrder">ByteOrder</h3>
+<p class="muted"><code>HydroCouple::ByteOrder</code></p>
+<p>The ByteOrder enum class indicates the byte order of serialized data.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="ByteOrder.BigEndian"><td>0</td><td><code>BigEndian</code></td><td>BigEndian serialized data byte order (most significant byte first).</td></tr>
+<tr id="ByteOrder.LittleEndian"><td>1</td><td><code>LittleEndian</code></td><td>LittleEndian serialized data byte order (least significant byte first).</td></tr>
+</table>
+<h3 id="Capability">Capability</h3>
+<p class="muted"><code>HydroCouple::Capability</code></p>
+<p>Capability identifies an optional behavior a component may support.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="Capability.DeviceBuffers"><td>0</td><td><code>DeviceBuffers</code></td><td>Data items can produce/accept Device/Unified BufferDescriptors.</td></tr>
+<tr id="Capability.PartitionedData"><td>1</td><td><code>PartitionedData</code></td><td>Component exposes IPartitionedComponentDataItem items (see hydrocoupledistributed.h).</td></tr>
+<tr id="Capability.DistributedExecution"><td>2</td><td><code>DistributedExecution</code></td><td>Component implements IDistributedModelComponent.</td></tr>
+<tr id="Capability.Checkpointing"><td>3</td><td><code>Checkpointing</code></td><td>Component implements ICheckpointableModelComponent.</td></tr>
+<tr id="Capability.Cloneable"><td>4</td><td><code>Cloneable</code></td><td>Component implements ICloneableModelComponent.</td></tr>
+<tr id="Capability.UserInterface"><td>5</td><td><code>UserInterface</code></td><td>Component implements IUIProvider.</td></tr>
+<tr id="Capability.Licensing"><td>6</td><td><code>Licensing</code></td><td>Component implements ILicensedComponent.</td></tr>
+<tr id="Capability.Differentiable"><td>7</td><td><code>Differentiable</code></td><td>Component implements IDifferentiableModelComponent.</td></tr>
+<tr id="Capability.LayeredData"><td>8</td><td><code>LayeredData</code></td><td>Component exposes data items implementing Spatial::ILayering.</td></tr>
+<tr id="Capability.VendorBase"><td>2147483648</td><td><code>VendorBase</code></td><td>First value of the vendor-reserved range (0x80000000).</td></tr>
+</table>
+<h3 id="ComponentStatus">ComponentStatus</h3>
+<p class="muted"><code>HydroCouple::IModelComponent::ComponentStatus</code></p>
+<p>HydroCouple::ComponentStatus is an enumerator that describes the status of a component over the course of its lifetime.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th><th>May become</th></tr>
+<tr id="ComponentStatus.Created"><td>0</td><td><code>Created</code></td><td>The IModelComponent instance has just been created. This status must and will be followed by HydroCouple::Initializing.</td><td><a href="#ComponentStatus.Initializing">Initializing</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Initializing"><td>1</td><td><code>Initializing</code></td><td>The IModelComponent is initializing itself. This status will end in a status change to HydroCouple::Initialized or HydroCouple::Failed.</td><td><a href="#ComponentStatus.Initialized">Initialized</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Initialized"><td>2</td><td><code>Initialized</code></td><td>The IModelComponent has successfully initialized itself by calling IModelComponent::initialize(). The connections between its inputs/outputs and those of other components can be established.</td><td><a href="#ComponentStatus.Initializing">Initializing</a>, <a href="#ComponentStatus.Validating">Validating</a>, <a href="#ComponentStatus.Finishing">Finishing</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Validating"><td>3</td><td><code>Validating</code></td><td>After links between an IModelComponent&#x27;s inputs/outputs and those of other components have been established, the IModelComponent is HydroCouple::Validating whether its required input will be available when it updates itself, and whether indeed it will be able to provide the required output during this update. This Validating status will when the IModelComponent::status() changes to HydroCouple::Valid or HydroCouple::Invalid.</td><td><a href="#ComponentStatus.Valid">Valid</a>, <a href="#ComponentStatus.Invalid">Invalid</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Valid"><td>4</td><td><code>Valid</code></td><td>The IModelComponent is in a HydroCouple::Valid state. When updating itself its required input will be available, and it will be able to provide the required output.</td><td><a href="#ComponentStatus.Validating">Validating</a>, <a href="#ComponentStatus.Preparing">Preparing</a>, <a href="#ComponentStatus.Finishing">Finishing</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.WaitingForData"><td>5</td><td><code>WaitingForData</code></td><td>The IModelComponent wants to update itself, but is not yet able to perform the actual computation, because it is still waiting for input data from other components.</td><td><a href="#ComponentStatus.Updating">Updating</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Invalid"><td>6</td><td><code>Invalid</code></td><td>The IModelComponent is in an HydroCouple::Invalid state. When updating itself not all required input will be available, and/or it will not be able to provide the required output. After the user has modified the connections between the IModelComponent&#x27;s inputs/outputs and those of other components, the HydroCouple::Validating state can be entered again</td><td><a href="#ComponentStatus.Validating">Validating</a>, <a href="#ComponentStatus.Finishing">Finishing</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Preparing"><td>7</td><td><code>Preparing</code></td><td>The IModelComponent is preparing itself for the first update() and the first IComponentDataItem::getValuesInto() call. This HydroCouple::Preparing state will end in a status change to HydroCouple::Updated or HydroCouple::Failed.</td><td><a href="#ComponentStatus.Updated">Updated</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Updating"><td>8</td><td><code>Updating</code></td><td>The IModelComponent is updating itself. It has received all required input data from other components, and is now performing the actual computation. This HydroCouple::Updating state will end in a status change to HydroCouple::Updated, HydroCouple::Done or HydroCouple::Failed.</td><td><a href="#ComponentStatus.WaitingForData">WaitingForData</a>, <a href="#ComponentStatus.Updated">Updated</a>, <a href="#ComponentStatus.Done">Done</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Updated"><td>9</td><td><code>Updated</code></td><td>The IModelComponent has successfully updated itself.</td><td><a href="#ComponentStatus.Updating">Updating</a>, <a href="#ComponentStatus.Checkpointing">Checkpointing</a>, <a href="#ComponentStatus.Finishing">Finishing</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Checkpointing"><td>10</td><td><code>Checkpointing</code></td><td>The IModelComponent is saving or restoring a checkpoint of its state (see ICheckpointableModelComponent). A save returns to the status it was entered from (HydroCouple::Updated or HydroCouple::Done); a successful restore always lands in HydroCouple::Updated; a failure lands in HydroCouple::Failed.</td><td><a href="#ComponentStatus.Updated">Updated</a>, <a href="#ComponentStatus.Done">Done</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Done"><td>11</td><td><code>Done</code></td><td>The last update process that the IModelComponent performed was the final one. A next call to the IModelComponent::update() method will leave the IModelComponent&#x27;s internal state unchanged.</td><td><a href="#ComponentStatus.Checkpointing">Checkpointing</a>, <a href="#ComponentStatus.Finishing">Finishing</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Finishing"><td>12</td><td><code>Finishing</code></td><td>The IModelComponent was requested to perform the actions to be performed before it will either be disposed or re-initialized again.Typical actions would be writing the final result files, close all open files, free memory, etc. When all required actions have been performed, the status switches to HydroCouple::Created when re-initialization is possible. The status switches to HydroCouple::Finished when the IModelComponent is to be disposed</td><td><a href="#ComponentStatus.Created">Created</a>, <a href="#ComponentStatus.Finished">Finished</a>, <a href="#ComponentStatus.Failed">Failed</a></td></tr>
+<tr id="ComponentStatus.Finished"><td>13</td><td><code>Finished</code></td><td>The IModelComponent has successfully performed its finalization actions. Re-initialization of the IModelComponent instance is not possible and should not be attempted. Instead the instance should be destroyed by its owner, after its connections are dismantled (see the lifetime convention).</td><td></td></tr>
+<tr id="ComponentStatus.Failed"><td>14</td><td><code>Failed</code></td><td>The IModelComponent has encountered an unrecoverable error. Reachable from every status except Finished: a failure can be detected while the component rests (a proxy whose peer dies while it is Updated). Diagnostics describing the failure must be available from IModelComponent::errors(). From this state the component may be re-initialized by calling initialize() if it supports re-initialization, or finished and disposed via finish().</td><td><a href="#ComponentStatus.Initializing">Initializing</a>, <a href="#ComponentStatus.Finishing">Finishing</a></td></tr>
+</table>
+<h3 id="CrossSectionKind">CrossSectionKind</h3>
+<p class="muted"><code>HydroCouple::Spatial::CrossSectionKind</code></p>
+<p>How a cross-section&#x27;s shape is held by whoever produced it.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="CrossSectionKind.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared. Consumers must not assume.</td></tr>
+<tr id="CrossSectionKind.StationElevation"><td>1</td><td><code>StationElevation</code></td><td>Surveyed points across the section (HEC-RAS, SWMM).</td></tr>
+<tr id="CrossSectionKind.WidthElevation"><td>2</td><td><code>WidthElevation</code></td><td>Width as a function of elevation (CE-QUAL-W2).</td></tr>
+<tr id="CrossSectionKind.Analytic"><td>3</td><td><code>Analytic</code></td><td>A closed form: circular, trapezoidal, and the rest.</td></tr>
+</table>
+<h3 id="DataKind">DataKind</h3>
+<p class="muted"><code>HydroCouple::DataKind</code></p>
+<p>DataKind identifies the element type of a typed data buffer.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="DataKind.Unknown"><td>0</td><td><code>Unknown</code></td><td>No/unknown element type.</td></tr>
+<tr id="DataKind.Int8"><td>1</td><td><code>Int8</code></td><td>int8_t</td></tr>
+<tr id="DataKind.UInt8"><td>2</td><td><code>UInt8</code></td><td>uint8_t</td></tr>
+<tr id="DataKind.Int16"><td>3</td><td><code>Int16</code></td><td>int16_t</td></tr>
+<tr id="DataKind.UInt16"><td>4</td><td><code>UInt16</code></td><td>uint16_t</td></tr>
+<tr id="DataKind.Int32"><td>5</td><td><code>Int32</code></td><td>int32_t</td></tr>
+<tr id="DataKind.UInt32"><td>6</td><td><code>UInt32</code></td><td>uint32_t</td></tr>
+<tr id="DataKind.Int64"><td>7</td><td><code>Int64</code></td><td>int64_t</td></tr>
+<tr id="DataKind.UInt64"><td>8</td><td><code>UInt64</code></td><td>uint64_t</td></tr>
+<tr id="DataKind.Float32"><td>9</td><td><code>Float32</code></td><td>float</td></tr>
+<tr id="DataKind.Float64"><td>10</td><td><code>Float64</code></td><td>double</td></tr>
+<tr id="DataKind.Boolean"><td>11</td><td><code>Boolean</code></td><td>bool (stored one element per byte)</td></tr>
+<tr id="DataKind.String"><td>12</td><td><code>String</code></td><td>std::string (host memory only)</td></tr>
+<tr id="DataKind.Opaque"><td>13</td><td><code>Opaque</code></td><td>Implementation-defined bytes; meaning agreed out of band, size in BufferDescriptor::itemSizeBytes.</td></tr>
+</table>
+<h3 id="DeviceBackend">DeviceBackend</h3>
+<p class="muted"><code>HydroCouple::DeviceBackend</code></p>
+<p>DeviceBackend identifies the runtime that owns a device-resident buffer.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="DeviceBackend.None"><td>0</td><td><code>None</code></td><td>Host memory; no device runtime involved.</td></tr>
+<tr id="DeviceBackend.CUDA"><td>1</td><td><code>CUDA</code></td><td>NVIDIA CUDA runtime.</td></tr>
+<tr id="DeviceBackend.HIP"><td>2</td><td><code>HIP</code></td><td>AMD HIP/ROCm runtime.</td></tr>
+<tr id="DeviceBackend.SYCL"><td>3</td><td><code>SYCL</code></td><td>SYCL (any implementation).</td></tr>
+<tr id="DeviceBackend.LevelZero"><td>4</td><td><code>LevelZero</code></td><td>Intel oneAPI Level Zero.</td></tr>
+<tr id="DeviceBackend.OpenCL"><td>5</td><td><code>OpenCL</code></td><td>OpenCL.</td></tr>
+<tr id="DeviceBackend.Other"><td>6</td><td><code>Other</code></td><td>An implementation-defined runtime both endpoints agree on.</td></tr>
+</table>
+<h3 id="DifferentialRole">DifferentialRole</h3>
+<p class="muted"><code>HydroCouple::DifferentialRole</code></p>
+<p>DifferentialRole says which side of a component&#x27;s step a derivative buffer belongs to.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="DifferentialRole.Input"><td>0</td><td><code>Input</code></td><td>An IInput of the component, as consumed by the step.</td></tr>
+<tr id="DifferentialRole.Argument"><td>1</td><td><code>Argument</code></td><td>An IArgument of the component (a parameter of the step).</td></tr>
+<tr id="DifferentialRole.Output"><td>2</td><td><code>Output</code></td><td>An IOutput of the component, as produced by the step.</td></tr>
+<tr id="DifferentialRole.StateBefore"><td>3</td><td><code>StateBefore</code></td><td>A state item&#x27;s value at the start of the step.</td></tr>
+<tr id="DifferentialRole.StateAfter"><td>4</td><td><code>StateAfter</code></td><td>The same state item&#x27;s value at the end of the step.</td></tr>
+</table>
+<h3 id="DimensionRole">DimensionRole</h3>
+<p class="muted"><code>HydroCouple::IDimension::DimensionRole</code></p>
+<p>What an axis of the index space means.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="DimensionRole.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared.</td></tr>
+<tr id="DimensionRole.Time"><td>1</td><td><code>Time</code></td><td>Time steps (Temporal::ITimeSeriesComponentDataItem::times()).</td></tr>
+<tr id="DimensionRole.Entity"><td>2</td><td><code>Entity</code></td><td>Spatial entities: geometries, mesh nodes/edges/faces, network nodes/edges, or the identifiers of an id-based item.</td></tr>
+<tr id="DimensionRole.Layer"><td>3</td><td><code>Layer</code></td><td>Vertical layers (Spatial::ILayering), top first.</td></tr>
+<tr id="DimensionRole.Band"><td>4</td><td><code>Band</code></td><td>Raster bands.</td></tr>
+<tr id="DimensionRole.Row"><td>5</td><td><code>Row</code></td><td>Raster rows / structured-grid y index.</td></tr>
+<tr id="DimensionRole.Column"><td>6</td><td><code>Column</code></td><td>Raster columns / structured-grid x index.</td></tr>
+<tr id="DimensionRole.Depth"><td>7</td><td><code>Depth</code></td><td>Structured-grid z index (IRegularGrid3D).</td></tr>
+<tr id="DimensionRole.Component"><td>8</td><td><code>Component</code></td><td>Vector or tensor components (Spatial::SpatialDataType).</td></tr>
+<tr id="DimensionRole.Realization"><td>9</td><td><code>Realization</code></td><td>Ensemble members.</td></tr>
+<tr id="DimensionRole.Other"><td>10</td><td><code>Other</code></td><td>Declared but none of the above.</td></tr>
+</table>
+<h3 id="DistanceUnits">DistanceUnits</h3>
+<p class="muted"><code>HydroCouple::IUnit::DistanceUnits</code></p>
+<p>HydroCouple::DistanceUnits are the types of units that can be used to measure distance.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="DistanceUnits.Meters"><td>0</td><td><code>Meters</code></td><td>Meters</td></tr>
+<tr id="DistanceUnits.Kilometers"><td>1</td><td><code>Kilometers</code></td><td>Kilometers</td></tr>
+<tr id="DistanceUnits.Feet"><td>2</td><td><code>Feet</code></td><td>Feet</td></tr>
+<tr id="DistanceUnits.NauticalMiles"><td>3</td><td><code>NauticalMiles</code></td><td>NauticalMiles</td></tr>
+<tr id="DistanceUnits.Yards"><td>4</td><td><code>Yards</code></td><td>Yards</td></tr>
+<tr id="DistanceUnits.Miles"><td>5</td><td><code>Miles</code></td><td>Miles</td></tr>
+<tr id="DistanceUnits.Degrees"><td>6</td><td><code>Degrees</code></td><td>Degrees (angular; only meaningful for geographic reference systems).</td></tr>
+<tr id="DistanceUnits.Centimeters"><td>7</td><td><code>Centimeters</code></td><td>Centimeters</td></tr>
+<tr id="DistanceUnits.Millimeters"><td>8</td><td><code>Millimeters</code></td><td>Millimeters</td></tr>
+<tr id="DistanceUnits.Inches"><td>9</td><td><code>Inches</code></td><td>Inches</td></tr>
+<tr id="DistanceUnits.Unknown"><td>10</td><td><code>Unknown</code></td><td>Unknown</td></tr>
+</table>
+<h3 id="FundamentalUnitDimension">FundamentalUnitDimension</h3>
+<p class="muted"><code>HydroCouple::IUnitDimensions::FundamentalUnitDimension</code></p>
+<p>HydroCouple::FundamentalUnitDimension are the fundamental units that can be combined to form all types of units.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="FundamentalUnitDimension.Length"><td>0</td><td><code>Length</code></td><td>Fundamental dimension for length.</td></tr>
+<tr id="FundamentalUnitDimension.Mass"><td>1</td><td><code>Mass</code></td><td>Fundamental dimension for mass.</td></tr>
+<tr id="FundamentalUnitDimension.Time"><td>2</td><td><code>Time</code></td><td>Fundamental dimension for time.</td></tr>
+<tr id="FundamentalUnitDimension.ElectricCurrent"><td>3</td><td><code>ElectricCurrent</code></td><td>Fundamental dimension for electric current.</td></tr>
+<tr id="FundamentalUnitDimension.Temperature"><td>4</td><td><code>Temperature</code></td><td>Fundamental dimension for temperature.</td></tr>
+<tr id="FundamentalUnitDimension.AmountOfSubstance"><td>5</td><td><code>AmountOfSubstance</code></td><td>Fundamental dimension for amount of substance.</td></tr>
+<tr id="FundamentalUnitDimension.LuminousIntensity"><td>6</td><td><code>LuminousIntensity</code></td><td>Fundamental dimension for luminous intensity.</td></tr>
+<tr id="FundamentalUnitDimension.Currency"><td>7</td><td><code>Currency</code></td><td>Fundamental dimension for currency.</td></tr>
+<tr id="FundamentalUnitDimension.Unitless"><td>8</td><td><code>Unitless</code></td><td>Fundamental dimension for unitless quantities (all powers zero).</td></tr>
+<tr id="FundamentalUnitDimension.PlaneAngle"><td>9</td><td><code>PlaneAngle</code></td><td>Fundamental dimension for plane angle (radian).</td></tr>
+</table>
+<h3 id="GeometryType">GeometryType</h3>
+<p class="muted"><code>HydroCouple::Spatial::IGeometry::GeometryType</code></p>
+<p>The type of IGeometry.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="GeometryType.Geometry"><td>0</td><td><code>Geometry</code></td><td></td></tr>
+<tr id="GeometryType.Point"><td>1</td><td><code>Point</code></td><td></td></tr>
+<tr id="GeometryType.LineString"><td>2</td><td><code>LineString</code></td><td></td></tr>
+<tr id="GeometryType.Polygon"><td>3</td><td><code>Polygon</code></td><td></td></tr>
+<tr id="GeometryType.Triangle"><td>17</td><td><code>Triangle</code></td><td></td></tr>
+<tr id="GeometryType.MultiPoint"><td>4</td><td><code>MultiPoint</code></td><td></td></tr>
+<tr id="GeometryType.MultiLineString"><td>5</td><td><code>MultiLineString</code></td><td></td></tr>
+<tr id="GeometryType.MultiPolygon"><td>6</td><td><code>MultiPolygon</code></td><td></td></tr>
+<tr id="GeometryType.GeometryCollection"><td>7</td><td><code>GeometryCollection</code></td><td></td></tr>
+<tr id="GeometryType.CircularString"><td>8</td><td><code>CircularString</code></td><td></td></tr>
+<tr id="GeometryType.CompoundCurve"><td>9</td><td><code>CompoundCurve</code></td><td></td></tr>
+<tr id="GeometryType.CurvePolygon"><td>10</td><td><code>CurvePolygon</code></td><td></td></tr>
+<tr id="GeometryType.MultiCurve"><td>11</td><td><code>MultiCurve</code></td><td></td></tr>
+<tr id="GeometryType.MultiSurface"><td>12</td><td><code>MultiSurface</code></td><td></td></tr>
+<tr id="GeometryType.Curve"><td>13</td><td><code>Curve</code></td><td></td></tr>
+<tr id="GeometryType.Surface"><td>14</td><td><code>Surface</code></td><td></td></tr>
+<tr id="GeometryType.PolyhedralSurface"><td>15</td><td><code>PolyhedralSurface</code></td><td></td></tr>
+<tr id="GeometryType.TIN"><td>16</td><td><code>TIN</code></td><td></td></tr>
+<tr id="GeometryType.GeometryZ"><td>1000</td><td><code>GeometryZ</code></td><td></td></tr>
+<tr id="GeometryType.PointZ"><td>1001</td><td><code>PointZ</code></td><td></td></tr>
+<tr id="GeometryType.LineStringZ"><td>1002</td><td><code>LineStringZ</code></td><td></td></tr>
+<tr id="GeometryType.PolygonZ"><td>1003</td><td><code>PolygonZ</code></td><td></td></tr>
+<tr id="GeometryType.TriangleZ"><td>1017</td><td><code>TriangleZ</code></td><td></td></tr>
+<tr id="GeometryType.MultiPointZ"><td>1004</td><td><code>MultiPointZ</code></td><td></td></tr>
+<tr id="GeometryType.MultiLineStringZ"><td>1005</td><td><code>MultiLineStringZ</code></td><td></td></tr>
+<tr id="GeometryType.MultiPolygonZ"><td>1006</td><td><code>MultiPolygonZ</code></td><td></td></tr>
+<tr id="GeometryType.GeometryCollectionZ"><td>1007</td><td><code>GeometryCollectionZ</code></td><td></td></tr>
+<tr id="GeometryType.CircularStringZ"><td>1008</td><td><code>CircularStringZ</code></td><td></td></tr>
+<tr id="GeometryType.CompoundCurveZ"><td>1009</td><td><code>CompoundCurveZ</code></td><td></td></tr>
+<tr id="GeometryType.CurvePolygonZ"><td>1010</td><td><code>CurvePolygonZ</code></td><td></td></tr>
+<tr id="GeometryType.MultiCurveZ"><td>1011</td><td><code>MultiCurveZ</code></td><td></td></tr>
+<tr id="GeometryType.MultiSurfaceZ"><td>1012</td><td><code>MultiSurfaceZ</code></td><td></td></tr>
+<tr id="GeometryType.CurveZ"><td>1013</td><td><code>CurveZ</code></td><td></td></tr>
+<tr id="GeometryType.SurfaceZ"><td>1014</td><td><code>SurfaceZ</code></td><td></td></tr>
+<tr id="GeometryType.PolyhedralSurfaceZ"><td>1015</td><td><code>PolyhedralSurfaceZ</code></td><td></td></tr>
+<tr id="GeometryType.TINZ"><td>1016</td><td><code>TINZ</code></td><td></td></tr>
+<tr id="GeometryType.GeometryM"><td>2000</td><td><code>GeometryM</code></td><td></td></tr>
+<tr id="GeometryType.PointM"><td>2001</td><td><code>PointM</code></td><td></td></tr>
+<tr id="GeometryType.LineStringM"><td>2002</td><td><code>LineStringM</code></td><td></td></tr>
+<tr id="GeometryType.PolygonM"><td>2003</td><td><code>PolygonM</code></td><td></td></tr>
+<tr id="GeometryType.TriangleM"><td>2017</td><td><code>TriangleM</code></td><td></td></tr>
+<tr id="GeometryType.MultiPointM"><td>2004</td><td><code>MultiPointM</code></td><td></td></tr>
+<tr id="GeometryType.MultiLineStringM"><td>2005</td><td><code>MultiLineStringM</code></td><td></td></tr>
+<tr id="GeometryType.MultiPolygonM"><td>2006</td><td><code>MultiPolygonM</code></td><td></td></tr>
+<tr id="GeometryType.GeometryCollectionM"><td>2007</td><td><code>GeometryCollectionM</code></td><td></td></tr>
+<tr id="GeometryType.CircularStringM"><td>2008</td><td><code>CircularStringM</code></td><td></td></tr>
+<tr id="GeometryType.CompoundCurveM"><td>2009</td><td><code>CompoundCurveM</code></td><td></td></tr>
+<tr id="GeometryType.CurvePolygonM"><td>2010</td><td><code>CurvePolygonM</code></td><td></td></tr>
+<tr id="GeometryType.MultiCurveM"><td>2011</td><td><code>MultiCurveM</code></td><td></td></tr>
+<tr id="GeometryType.MultiSurfaceM"><td>2012</td><td><code>MultiSurfaceM</code></td><td></td></tr>
+<tr id="GeometryType.CurveM"><td>2013</td><td><code>CurveM</code></td><td></td></tr>
+<tr id="GeometryType.SurfaceM"><td>2014</td><td><code>SurfaceM</code></td><td></td></tr>
+<tr id="GeometryType.PolyhedralSurfaceM"><td>2015</td><td><code>PolyhedralSurfaceM</code></td><td></td></tr>
+<tr id="GeometryType.TINM"><td>2016</td><td><code>TINM</code></td><td></td></tr>
+<tr id="GeometryType.GeometryZM"><td>3000</td><td><code>GeometryZM</code></td><td></td></tr>
+<tr id="GeometryType.PointZM"><td>3001</td><td><code>PointZM</code></td><td></td></tr>
+<tr id="GeometryType.LineStringZM"><td>3002</td><td><code>LineStringZM</code></td><td></td></tr>
+<tr id="GeometryType.PolygonZM"><td>3003</td><td><code>PolygonZM</code></td><td></td></tr>
+<tr id="GeometryType.TriangleZM"><td>3017</td><td><code>TriangleZM</code></td><td></td></tr>
+<tr id="GeometryType.MultiPointZM"><td>3004</td><td><code>MultiPointZM</code></td><td></td></tr>
+<tr id="GeometryType.MultiLineStringZM"><td>3005</td><td><code>MultiLineStringZM</code></td><td></td></tr>
+<tr id="GeometryType.MultiPolygonZM"><td>3006</td><td><code>MultiPolygonZM</code></td><td></td></tr>
+<tr id="GeometryType.GeometryCollectionZM"><td>3007</td><td><code>GeometryCollectionZM</code></td><td></td></tr>
+<tr id="GeometryType.CircularStringZM"><td>3008</td><td><code>CircularStringZM</code></td><td></td></tr>
+<tr id="GeometryType.CompoundCurveZM"><td>3009</td><td><code>CompoundCurveZM</code></td><td></td></tr>
+<tr id="GeometryType.CurvePolygonZM"><td>3010</td><td><code>CurvePolygonZM</code></td><td></td></tr>
+<tr id="GeometryType.MultiCurveZM"><td>3011</td><td><code>MultiCurveZM</code></td><td></td></tr>
+<tr id="GeometryType.MultiSurfaceZM"><td>3012</td><td><code>MultiSurfaceZM</code></td><td></td></tr>
+<tr id="GeometryType.CurveZM"><td>3013</td><td><code>CurveZM</code></td><td></td></tr>
+<tr id="GeometryType.SurfaceZM"><td>3014</td><td><code>SurfaceZM</code></td><td></td></tr>
+<tr id="GeometryType.PolyhedralSurfaceZM"><td>3015</td><td><code>PolyhedralSurfaceZM</code></td><td></td></tr>
+<tr id="GeometryType.TINZM"><td>3016</td><td><code>TINZM</code></td><td></td></tr>
+</table>
+<h3 id="LengthType">LengthType</h3>
+<p class="muted"><code>HydroCouple::IDimension::LengthType</code></p>
+<p>IDimension::LengthType dimension length type</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="LengthType.Static"><td>0</td><td><code>Static</code></td><td>Static length type</td></tr>
+<tr id="LengthType.Dynamic"><td>1</td><td><code>Dynamic</code></td><td>Dynamic length type</td></tr>
+</table>
+<h3 id="MemorySpace">MemorySpace</h3>
+<p class="muted"><code>HydroCouple::MemorySpace</code></p>
+<p>MemorySpace identifies where a buffer&#x27;s bytes physically live.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="MemorySpace.Host"><td>0</td><td><code>Host</code></td><td>Ordinary pageable host memory.</td></tr>
+<tr id="MemorySpace.HostPinned"><td>1</td><td><code>HostPinned</code></td><td>Page-locked host memory (fast staging to/from devices).</td></tr>
+<tr id="MemorySpace.Device"><td>2</td><td><code>Device</code></td><td>Accelerator-resident memory addressed by (backend, deviceId).</td></tr>
+<tr id="MemorySpace.Unified"><td>3</td><td><code>Unified</code></td><td>Unified/managed memory accessible from host and device.</td></tr>
+</table>
+<h3 id="MeshLocation">MeshLocation</h3>
+<p class="muted"><code>HydroCouple::Spatial::MeshLocation</code></p>
+<p>Which mesh or network entity a data item&#x27;s values are attached to.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="MeshLocation.Node"><td>0</td><td><code>Node</code></td><td>Mesh nodes / network nodes (vertices).</td></tr>
+<tr id="MeshLocation.Edge"><td>1</td><td><code>Edge</code></td><td>Mesh edges / network edges (links, conduits, reaches).</td></tr>
+<tr id="MeshLocation.Face"><td>2</td><td><code>Face</code></td><td>Mesh faces: the patches of a polyhedral surface, the triangles of a TIN.</td></tr>
+<tr id="MeshLocation.Volume"><td>3</td><td><code>Volume</code></td><td>Extruded cells of a layered mesh (Spatial::ILayering).</td></tr>
+</table>
+<h3 id="RasterDataType">RasterDataType</h3>
+<p class="muted"><code>HydroCouple::Spatial::IRaster::RasterDataType</code></p>
+<p>The data type associated with a raster band.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="RasterDataType.Unknown"><td>0</td><td><code>Unknown</code></td><td>Unknown or unspecified type</td></tr>
+<tr id="RasterDataType.Byte"><td>1</td><td><code>Byte</code></td><td>Eight bit unsigned integer</td></tr>
+<tr id="RasterDataType.UInt16"><td>2</td><td><code>UInt16</code></td><td>Sixteen bit unsigned integer</td></tr>
+<tr id="RasterDataType.Int16"><td>3</td><td><code>Int16</code></td><td>Sixteen bit signed integer</td></tr>
+<tr id="RasterDataType.UInt32"><td>4</td><td><code>UInt32</code></td><td>Thirty two bit unsigned integer</td></tr>
+<tr id="RasterDataType.Int32"><td>5</td><td><code>Int32</code></td><td>Thirty two bit signed integer</td></tr>
+<tr id="RasterDataType.Float32"><td>6</td><td><code>Float32</code></td><td>Thirty two bit floating point</td></tr>
+<tr id="RasterDataType.Float64"><td>7</td><td><code>Float64</code></td><td>Sixty four bit floating point</td></tr>
+<tr id="RasterDataType.CInt16"><td>8</td><td><code>CInt16</code></td><td>Complex Int16</td></tr>
+<tr id="RasterDataType.CInt32"><td>9</td><td><code>CInt32</code></td><td>Complex Int32</td></tr>
+<tr id="RasterDataType.CFloat32"><td>10</td><td><code>CFloat32</code></td><td>Complex Float32</td></tr>
+<tr id="RasterDataType.CFloat64"><td>11</td><td><code>CFloat64</code></td><td>Complex Float64</td></tr>
+<tr id="RasterDataType.ARGB32"><td>12</td><td><code>ARGB32</code></td><td>Colour: alpha, red, green, blue, one byte each, most significant byte first.</td></tr>
+<tr id="RasterDataType.ARGB32_Premultiplied"><td>13</td><td><code>ARGB32_Premultiplied</code></td><td>Colour as ARGB32 with red, green and blue premultiplied by alpha.</td></tr>
+</table>
+<h3 id="RegularGridType">RegularGridType</h3>
+<p class="muted"><code>HydroCouple::Spatial::RegularGridType</code></p>
+<p>The types of regular grids.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="RegularGridType.Cartesian"><td>0</td><td><code>Cartesian</code></td><td>Cartesian grid.</td></tr>
+<tr id="RegularGridType.Rectilinear"><td>1</td><td><code>Rectilinear</code></td><td>Rectilinear grid.</td></tr>
+<tr id="RegularGridType.Curvilinear"><td>2</td><td><code>Curvilinear</code></td><td>Curvilinear grid.</td></tr>
+</table>
+<h3 id="Severity">Severity</h3>
+<p class="muted"><code>HydroCouple::ErrorEntry::Severity</code></p>
+<p>Severity of an ErrorEntry.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="Severity.Information"><td>0</td><td><code>Information</code></td><td>Informational message.</td></tr>
+<tr id="Severity.Warning"><td>1</td><td><code>Warning</code></td><td>Recoverable anomaly.</td></tr>
+<tr id="Severity.Error"><td>2</td><td><code>Error</code></td><td>Operation failed; component may continue.</td></tr>
+<tr id="Severity.Fatal"><td>3</td><td><code>Fatal</code></td><td>Component is in the Failed state.</td></tr>
+</table>
+<h3 id="SpatialDataType">SpatialDataType</h3>
+<p class="muted"><code>HydroCouple::Spatial::SpatialDataType</code></p>
+<p>The algebraic structure of the value at each entity: a scalar, a set of independent scalars, a vector or a tensor.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="SpatialDataType.Scalar"><td>0</td><td><code>Scalar</code></td><td>One value per entity; no component dimension.</td></tr>
+<tr id="SpatialDataType.MultiScalar"><td>1</td><td><code>MultiScalar</code></td><td>Several independent scalars per entity (e.g. constituents); component dimension of that count, basis irrelevant.</td></tr>
+<tr id="SpatialDataType.Vector"><td>2</td><td><code>Vector</code></td><td>A vector per entity; component dimension of length 2 or 3 in the order vectorBasis() defines.</td></tr>
+<tr id="SpatialDataType.Tensor"><td>3</td><td><code>Tensor</code></td><td>A rank-2 tensor per entity; component dimension holding the row-major flattening (4 or 9 entries) in the basis vectorBasis() defines.</td></tr>
+</table>
+<h3 id="TimeExtrapolation">TimeExtrapolation</h3>
+<p class="muted"><code>HydroCouple::Temporal::TimeExtrapolation</code></p>
+<p>How a provider produces a value at an instant beyond the last (or before the first) it holds.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="TimeExtrapolation.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared. validate() must treat a connection whose two ends both say Unknown as an error.</td></tr>
+<tr id="TimeExtrapolation.Refuse"><td>1</td><td><code>Refuse</code></td><td>A query outside the held range is refused; the provider must be advanced first.</td></tr>
+<tr id="TimeExtrapolation.HoldLast"><td>2</td><td><code>HoldLast</code></td><td>Repeat the boundary value.</td></tr>
+<tr id="TimeExtrapolation.Linear"><td>3</td><td><code>Linear</code></td><td>Extend the last two values linearly.</td></tr>
+</table>
+<h3 id="TimeInterpolation">TimeInterpolation</h3>
+<p class="muted"><code>HydroCouple::Temporal::TimeInterpolation</code></p>
+<p>How a provider produces a value at an instant that is between two it holds.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="TimeInterpolation.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared. validate() must treat a connection whose two ends both say Unknown as an error.</td></tr>
+<tr id="TimeInterpolation.None"><td>1</td><td><code>None</code></td><td>Exact match required (within TIME_EQUALITY_TOLERANCE_DAYS); a query at an instant not held is refused.</td></tr>
+<tr id="TimeInterpolation.Previous"><td>2</td><td><code>Previous</code></td><td>Hold the most recent earlier value (step function).</td></tr>
+<tr id="TimeInterpolation.Nearest"><td>3</td><td><code>Nearest</code></td><td>The nearer of the two neighbours.</td></tr>
+<tr id="TimeInterpolation.Linear"><td>4</td><td><code>Linear</code></td><td>Linear in time between neighbours.</td></tr>
+</table>
+<h3 id="TimeKind">TimeKind</h3>
+<p class="muted"><code>HydroCouple::Temporal::TimeKind</code></p>
+<p>What a value&#x27;s time coordinate refers to.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="TimeKind.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared. Consumers must not assume Instantaneous.</td></tr>
+<tr id="TimeKind.Instantaneous"><td>1</td><td><code>Instantaneous</code></td><td>A reading at the time coordinate.</td></tr>
+<tr id="TimeKind.IntervalMean"><td>2</td><td><code>IntervalMean</code></td><td>Mean over the interval ending at the time coordinate.</td></tr>
+<tr id="TimeKind.IntervalMinimum"><td>3</td><td><code>IntervalMinimum</code></td><td>Minimum over that interval.</td></tr>
+<tr id="TimeKind.IntervalMaximum"><td>4</td><td><code>IntervalMaximum</code></td><td>Maximum over that interval.</td></tr>
+<tr id="TimeKind.Accumulated"><td>5</td><td><code>Accumulated</code></td><td>Total accumulated over that interval.</td></tr>
+</table>
+<h3 id="ValueKind">ValueKind</h3>
+<p class="muted"><code>HydroCouple::ValueKind</code></p>
+<p>How a value behaves when it is regridded or aggregated.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="ValueKind.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared. Adapters must not guess; they should refuse or ask.</td></tr>
+<tr id="ValueKind.Intensive"><td>1</td><td><code>Intensive</code></td><td>Independent of extent — temperature, concentration, elevation. Averages.</td></tr>
+<tr id="ValueKind.Extensive"><td>2</td><td><code>Extensive</code></td><td>Proportional to extent — mass, volume, heat content. Sums.</td></tr>
+<tr id="ValueKind.Flux"><td>3</td><td><code>Flux</code></td><td>Per unit area and time. Integrates over the area it crosses.</td></tr>
+<tr id="ValueKind.Density"><td>4</td><td><code>Density</code></td><td>Per unit volume. Integrates over the volume it fills.</td></tr>
+</table>
+<h3 id="VectorBasis">VectorBasis</h3>
+<p class="muted"><code>HydroCouple::Spatial::VectorBasis</code></p>
+<p>The frame a vector or tensor value is expressed in.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="VectorBasis.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared. Consumers must not assume.</td></tr>
+<tr id="VectorBasis.Cartesian"><td>1</td><td><code>Cartesian</code></td><td>Components along the reference system&#x27;s x, y (and z) axes, in that order.</td></tr>
+<tr id="VectorBasis.EastNorthUp"><td>2</td><td><code>EastNorthUp</code></td><td>Components along local east, north (and up) for geographic reference systems.</td></tr>
+<tr id="VectorBasis.NormalTangential"><td>3</td><td><code>NormalTangential</code></td><td>For edge/face data: component 0 normal to the entity (positive from left face to right face as IMeshView::edgeFaces() orders them), component 1 tangential, component 2 (if any) vertical.</td></tr>
+<tr id="VectorBasis.AlongEntity"><td>4</td><td><code>AlongEntity</code></td><td>For network edges: one component along the edge from its first node to its second.</td></tr>
+</table>
+<h3 id="VerticalCoordinateKind">VerticalCoordinateKind</h3>
+<p class="muted"><code>HydroCouple::Spatial::VerticalCoordinateKind</code></p>
+<p>The family a vertical coordinate belongs to.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th></tr>
+<tr id="VerticalCoordinateKind.Unknown"><td>0</td><td><code>Unknown</code></td><td>Not declared. Consumers must not assume.</td></tr>
+<tr id="VerticalCoordinateKind.Sigma"><td>1</td><td><code>Sigma</code></td><td>Terrain-following; layers stretch with the free surface.</td></tr>
+<tr id="VerticalCoordinateKind.ZLevel"><td>2</td><td><code>ZLevel</code></td><td>Fixed elevations; the top layer thins as the surface falls.</td></tr>
+<tr id="VerticalCoordinateKind.ZStar"><td>3</td><td><code>ZStar</code></td><td>Fixed levels rescaled by total depth.</td></tr>
+<tr id="VerticalCoordinateKind.Hybrid"><td>4</td><td><code>Hybrid</code></td><td>Sigma near the surface, z below a transition depth.</td></tr>
+<tr id="VerticalCoordinateKind.Isopycnal"><td>5</td><td><code>Isopycnal</code></td><td>Layers of constant density.</td></tr>
+<tr id="VerticalCoordinateKind.DepthBelowSurface"><td>6</td><td><code>DepthBelowSurface</code></td><td>Fixed depths measured down from the moving surface.</td></tr>
+</table>
+<h3 id="WorkflowStatus">WorkflowStatus</h3>
+<p class="muted"><code>HydroCouple::IWorkflowComponent::WorkflowStatus</code></p>
+<p>The WorkflowStatus enum describes the status of a workflow component over the course of its lifetime.</p>
+<table><tr><th>Value</th><th>Concept</th><th>Meaning</th><th>May become</th></tr>
+<tr id="WorkflowStatus.Created"><td>0</td><td><code>Created</code></td><td>The workflow component has just been created.</td><td><a href="#WorkflowStatus.Initializing">Initializing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Initializing"><td>1</td><td><code>Initializing</code></td><td>The workflow component is initializing itself.</td><td><a href="#WorkflowStatus.Initialized">Initialized</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Initialized"><td>2</td><td><code>Initialized</code></td><td>The workflow component has successfully initialized.</td><td><a href="#WorkflowStatus.Initializing">Initializing</a>, <a href="#WorkflowStatus.Validating">Validating</a>, <a href="#WorkflowStatus.Finishing">Finishing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Validating"><td>3</td><td><code>Validating</code></td><td>The workflow component is validating the composition (cross-component links, required roles).</td><td><a href="#WorkflowStatus.Validated">Validated</a>, <a href="#WorkflowStatus.Failed">Failed</a>, <a href="#WorkflowStatus.Invalid">Invalid</a></td></tr>
+<tr id="WorkflowStatus.Validated"><td>4</td><td><code>Validated</code></td><td>The workflow component found the composition valid and ready to prepare.</td><td><a href="#WorkflowStatus.Validating">Validating</a>, <a href="#WorkflowStatus.Preparing">Preparing</a>, <a href="#WorkflowStatus.Finishing">Finishing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Preparing"><td>5</td><td><code>Preparing</code></td><td>The workflow component is preparing the composition for computation (e.g., driving IModelComponent::prepare(), building execution schedules, negotiating exchange patterns).</td><td><a href="#WorkflowStatus.Prepared">Prepared</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Prepared"><td>6</td><td><code>Prepared</code></td><td>The workflow component has prepared the composition and can begin updating.</td><td><a href="#WorkflowStatus.Updating">Updating</a>, <a href="#WorkflowStatus.Finishing">Finishing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Updating"><td>7</td><td><code>Updating</code></td><td>The workflow component is performing an update step.</td><td><a href="#WorkflowStatus.Updated">Updated</a>, <a href="#WorkflowStatus.Paused">Paused</a>, <a href="#WorkflowStatus.Done">Done</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Updated"><td>8</td><td><code>Updated</code></td><td>The workflow component has successfully updated.</td><td><a href="#WorkflowStatus.Updating">Updating</a>, <a href="#WorkflowStatus.Finishing">Finishing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Paused"><td>9</td><td><code>Paused</code></td><td>The workflow component is paused at a synchronization point (see requestPause()) and can be resumed.</td><td><a href="#WorkflowStatus.Updated">Updated</a>, <a href="#WorkflowStatus.Finishing">Finishing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Done"><td>10</td><td><code>Done</code></td><td>The workflow component has completed all update steps.</td><td><a href="#WorkflowStatus.Finishing">Finishing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Finishing"><td>11</td><td><code>Finishing</code></td><td>The workflow component is finalizing and releasing resources.</td><td><a href="#WorkflowStatus.Finished">Finished</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+<tr id="WorkflowStatus.Finished"><td>12</td><td><code>Finished</code></td><td>The workflow component has finished and cannot be restarted.</td><td></td></tr>
+<tr id="WorkflowStatus.Failed"><td>13</td><td><code>Failed</code></td><td>The workflow component encountered an unrecoverable error.</td><td><a href="#WorkflowStatus.Initializing">Initializing</a>, <a href="#WorkflowStatus.Finishing">Finishing</a></td></tr>
+<tr id="WorkflowStatus.Invalid"><td>14</td><td><code>Invalid</code></td><td>The workflow component found problems in the composition; fix the composition and validate() again.</td><td><a href="#WorkflowStatus.Validating">Validating</a>, <a href="#WorkflowStatus.Finishing">Finishing</a>, <a href="#WorkflowStatus.Failed">Failed</a></td></tr>
+</table>
+<h2>Vocabulary properties</h2>
+<table><tr><th>Property</th><th>Meaning</th></tr>
+<tr id="mayTransitionTo"><td><code>mayTransitionTo</code></td><td>A legal lifecycle transition (normative: Helpers::isValidComponentStatusTransition() and isValidWorkflowStatusTransition()).</td></tr>
+<tr id="canonicalDimensionOrdering"><td><code>canonicalDimensionOrdering</code></td><td>The order of a data item&#x27;s axes, as its C++ documentation states it.</td></tr>
+<tr id="cppName"><td><code>cppName</code></td><td>The fully qualified C++ name the term is generated from.</td></tr>
+</table>
+</body>
+</html>

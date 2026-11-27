@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=77", "wheel", "Cython>=3.0", "numpy>=1.21"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hydrocouple"
+dynamic = ["version"]
+description = "Python interface definitions for the HydroCouple component-based modeling framework"
+readme = "README.md"
+requires-python = ">=3.10"
+# An SPDX expression (setuptools >= 77); the TOML-table form and License
+# classifiers are deprecated and stop building on 2027-02-18.
+license = "MIT"
+authors = [
+    {name = "Caleb Buahin"},
+]
+dependencies = [
+    "numpy>=1.21",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Cython",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Typing :: Typed",
+]
+
+[project.optional-dependencies]
+# The overlays; the core package and the interface never need either.
+torch = ["torch>=2.1"]
+jax = ["jax>=0.4.31"]
+
+[project.urls]
+Homepage = "https://github.com/HydroCouple/HydroCouple"
+
+[tool.setuptools.packages.find]
+include = ["hydrocouple*", "_hydrocouple*"]
+
+[tool.cibuildwheel]
+# CPython 3.10-3.13 on 64-bit Linux (glibc), macOS and Windows. manylinux_2_28
+# carries a C++20-capable GCC.
+build = "cp310-* cp311-* cp312-* cp313-*"
+skip = "*-musllinux_* *-win32 *_i686"
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+test-requires = ["pytest"]
+# The suite runs against the installed wheel, so nothing may put the source tree
+# (which has no compiled modules) ahead of it: importlib mode keeps pytest from
+# inserting python/ on sys.path, and the ini's pythonpath "." is narrowed to
+# tests/. Tests that compile C++ skip where no compiler is on PATH.
+test-command = "pytest {package}/tests -q -p no:cacheprovider --import-mode=importlib -o pythonpath={package}/tests"
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64"]
+environment = { MACOSX_DEPLOYMENT_TARGET = "11.0" }
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]

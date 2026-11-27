@@ -1,0 +1,30 @@
+# Development environment for the HydroCouple Python bindings and their
+# test and falsifier suites (verification/g0g1/falsify.sh).
+#
+#   conda env create -f python/environment.yml     # from the HydroCouple root
+#   conda activate hydrocouple
+#   conda env update -f python/environment.yml --prune   # after edits here
+#
+# torch and jax come from PyPI on purpose: the SDK's optional Torch layer
+# (HydroCoupleSDK, HYDROCOUPLESDK_WITH_TORCH) links the LibTorch inside the
+# pip `torch` wheel, so Python and the SDK share one LibTorch (plan §5.1).
+# Both are needed for a complete run: without them the torch and JAX tests
+# skip, and the falsifier reports their rows as SKIPPED GATE.
+#
+# numpy comes from PyPI too. conda-forge's numpy links an OpenMP OpenBLAS,
+# whose libomp is a second OpenMP runtime next to the one the torch wheel
+# bundles; on macOS `import torch` then aborts (OMP: Error #15).
+name: hydrocouple
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pip
+  - cython>=3.0
+  - setuptools>=64
+  - wheel
+  - pytest
+  - pip:
+      - numpy>=1.21
+      - torch>=2.1
+      - jax>=0.4.31
